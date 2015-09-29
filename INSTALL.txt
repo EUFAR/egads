@@ -1,0 +1,51 @@
+==================
+EGADS Installation
+==================
+
+Information about EGADS and the latest release can be found at:
+!!!! http://eufar-egads.googlecode.com !!!!
+
+!!!! The latest development snapshot can be checked out from the SVN repository:
+svn checkout http://eufar-egads.googlecode.com/svn/trunk/ !!!!
+
+Prerequisites
+=============
+To use EGADS, the following packages must be installed:
+
+ 1. Python 2.5 or newer. Available at http://www.python.org
+ 
+ 2. numpy 1.3.0 or newer. Available at http://numpy.scipy.org
+
+ 3. scipy 0.6.0 or newer. Available at http://www.scipy.org
+
+ 4. Python netCDF4 libraries 0.8.2. Available at 
+    http://netcdf4-python.googlecode.com
+
+ 5. NAPpy 0.9.9 or newer. Available at http://proj.badc.rl.ac.uk/ndg/wiki/nappy
+
+Installation
+============
+EGADS is a pure Python distribution, thus, it does not need to built. However,
+to use it, it must be installed to a location on the Python path. To install
+EGADS (assuming priviledged user rights), run the following command from the egads directory:
+
+  python setup.py install
+
+To install as an unpriviledged user, or to install to a directory of your choosing, the following command can be used:
+
+  python setup.py install --prefix MYDIR
+
+For information on other install options the --help option can be used:
+
+  python setup.py install --help
+
+
+Testing
+=======
+
+To test the EGADS installation, run the run_test.py Python script, or from within Python run the following commands:
+
+  >>> import egads
+  >>> egads.test()
+
+

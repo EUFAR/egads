@@ -1,0 +1,5 @@
+numpy >= 1.3.0
+netCDF4 >= 0.8.2
+quantities >= 0.10.0
+python_dateutil >= 1.5
+cdat_lite

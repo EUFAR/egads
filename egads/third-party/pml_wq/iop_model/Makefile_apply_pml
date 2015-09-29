@@ -1,0 +1,26 @@
+CC=gcc
+CFLAGS=	-I/usr/include/hdf -g -O2 -pedantic -Wall --std=c99
+LDFLAGS= -L/usr/lib/hdf -lmfhdf -ldf -ljpeg -lz -lm
+
+EXE=	apply_pml_iop_model
+SRCS=	apply_pml_iop_model.c pml_iop_model.c pml_iop_config.c pml_iop_tables.c pml_iop_calculate.c
+
+all:	$(EXE)
+
+install: $(EXE)
+
+PML_IOP_MODEL_DEPEND = pml_iop_model.o pml_iop_config.o pml_iop_tables.o pml_iop_calculate.o hdf_utils.o apply_pml_iop_model.o
+
+hdf_utils.o: hdf_utils.c hdf_utils.h
+	$(CC) -c $(CFLAGS) hdf_utils.c
+   
+pml_iop_model: $(PML_IOP_MODEL_DEPEND)
+	$(CC) -o $@ $(CFLAGS) pml_iop_model.o pml_iop_config.o pml_iop_tables.o pml_iop_calculate.o hdf_utils.o -lm $(LDFLAGS) #-lefence
+
+apply_pml_iop_model: $(PML_IOP_MODEL_DEPEND)
+	$(CC) -o $@ $(CFLAGS) apply_pml_iop_model.o pml_iop_config.o pml_iop_tables.o pml_iop_calculate.o hdf_utils.o -lm $(LDFLAGS) #-lefence
+
+clean:
+	@rm -f core
+	rm -f $(EXE)
+	rm -f *.o
