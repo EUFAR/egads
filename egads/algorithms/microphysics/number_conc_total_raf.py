@@ -43,7 +43,12 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'SV'],
                                                           'InputUnits':['', 'm^3'],
+                                                          'InputTypes':['array','array'],
+                                                          'InputDescription':['Particle counts in each bin over time','Sample volume for each bin over time'],
                                                           'Outputs':['N_t'],
+                                                          'OutputDescription':['Total number concentration'],
+                                                          'Purpose':'Calculates total number concentration for a particle probe',
+                                                          'Description':'Calculates total number concentration for a generic particle probe given counts for each bin and probe sample volume',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

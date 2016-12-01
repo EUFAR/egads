@@ -47,7 +47,12 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'P_s', 'dP', 'cpa', 'Racpa'],
                                                           'InputUnits':['K', 'hPa', 'hPa', 'J/K/kg', ''],
+                                                          'InputTypes':['vector','vector','vector','coeff','coeff'],
+                                                          'InputDescription':['Static temperature','Static pressure','Dynamic pressure','specific heat of air (dry air is 1004 J K-1 kg-1)','R_a/c_pa'],
                                                           'Outputs':['V_p'],
+                                                          'OutputDescription':['true airspeed'],
+                                                          'Purpose':'Calculate true airspeed',
+                                                          'Description':"Calculates true airspeed based on static temperature, static pressure and dynamic pressure using St Venant's formula",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

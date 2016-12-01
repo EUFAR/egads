@@ -46,7 +46,12 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i'],
                                                           'InputUnits':['', 'um'],
+                                                          'InputTypes':['array','vector'],
+                                                          'InputDescription':['Particle counts in each bin over time','Diameter of each channel'],
                                                           'Outputs':['D_bar'],
+                                                          'OutputDescription':['Mean diameter'],
+                                                          'Purpose':'Calculates mean diameter of particles',
+                                                          'Description':'Calculates mean diameter of particles given an array of particle counts and a vector of their corresponding sizes, using the methods given in the NCAR RAF Bulletin #24',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

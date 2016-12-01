@@ -52,7 +52,12 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 's_i'],
                                                           'InputUnits':['cm^-3', 'um', ''],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':['S'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

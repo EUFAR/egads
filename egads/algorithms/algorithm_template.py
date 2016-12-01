@@ -56,7 +56,12 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
         #         outputs.
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[''],
                                                           'InputUnits':[''],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':['template'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

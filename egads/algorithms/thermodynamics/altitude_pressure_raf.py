@@ -42,7 +42,12 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['P_s'],
                                                           'InputUnits':['hPa'],
+                                                          'InputTypes':['vector'],
+                                                          'InputDescription':['Static pressure'],
                                                           'Outputs':['alt_p'],
+                                                          'OutputDescription':['Pressure altitude'],
+                                                          'Purpose':'Calculate pressure altitude',
+                                                          'Description':'Calculate pressure altitude using static pressure and the US Standard Atmosphere definitions',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

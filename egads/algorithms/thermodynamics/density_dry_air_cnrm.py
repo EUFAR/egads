@@ -41,7 +41,12 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['P_s', 'T_s'],
                                                           'InputUnits':['hPa', 'K'],
+                                                          'InputTypes':['vector','vector'],
+                                                          'InputDescription':['Static pressure','Static temperature'],
                                                           'Outputs':['rho'],
+                                                          'OutputDescription':['Density'],
+                                                          'Purpose':'Calculates density of dry air',
+                                                          'Description':'Calculates density of dry air given static temperature and pressure. If virtual temperature is used instead of static, this algorithm calculates density of humid air',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

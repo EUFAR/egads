@@ -24,7 +24,7 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
                 of the capacitive probe.
 
     INPUT       Ucapf       vector  Hz      output frequency of capacitive probe
-                T_s         vector  C       Static temperature
+                T_s         vector  C       static temperature
                 P_s         vector  hPa     static pressure
                 dP          vector  hPa     dynamic pressure
                 C_t         coeff.  %/C     temperature correction coefficient
@@ -51,7 +51,12 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['Ucapf', 'T_s', 'P_s', 'dP', 'C_t', 'Fmin', 'C_0', 'C_1', 'C_2'],
                                                           'InputUnits':['Hz', 'K', 'hPa', 'hPa', '%/degC', 'Hz', '', '', ''],
+                                                          'InputTypes':['vector','vector','vector','vector','coeff','coeff','coeff','coeff','coeff'],
+                                                          'InputDescription':['Output frequency of capacitive probe','Static temperature','Static pressure','Dynamic pressure','Temperature correction coefficient','Minimal acceptable frequency','Calibration law 0th degree coefficient','Calibration law 1st degree coefficient','Calibration law 2nd degree coefficient'],
                                                           'Outputs':['H_u'],
+                                                          'OutputDescription':['Relative humidity'],
+                                                          'Purpose':'Calculate relative humidity from capacitive probe',
+                                                          'Description':'Calculates relative humidity of the air based on the frequency of the capacitive probe',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

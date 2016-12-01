@@ -44,7 +44,12 @@ class VelocityMachRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['dP', 'Ps'],
                                                           'InputUnits':['hPa', 'hPa'],
+                                                          'InputTypes':['vector','vector'],
+                                                          'InputDescription':['Dynamic pressure','Static pressure'],
                                                           'Outputs':['M'],
+                                                          'OutputDescription':['Mach number'],
+                                                          'Purpose':'Calculates mach number based on dynamic and static pressure',
+                                                          'Description':'No description',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

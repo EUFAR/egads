@@ -42,7 +42,12 @@ class SampleAreaScattingRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['DOF', 'BD'],
                                                           'InputUnits':['m', 'm'],
+                                                          'InputTypes':['coeff','coeff'],
+                                                          'InputDescription':['Depth of field','Beam diameter'],
                                                           'Outputs':['SA'],
+                                                          'OutputDescription':['Sample area'],
+                                                          'Purpose':'Calculation of sampling area for scattering probes',
+                                                          'Description':'Calculation of sampling area for scattering probes such as the FSSP, CAS, CIP, etc., given depth of field and beam diameter',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

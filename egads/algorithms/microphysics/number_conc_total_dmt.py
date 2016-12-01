@@ -48,7 +48,12 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['c_i'],
                                                           'InputUnits':['cm^-3'],
+                                                          'InputTypes':['array'],
+                                                          'InputDescription':['Number concentration of hydrometeors in size category i'],
                                                           'Outputs':['N'],
+                                                          'OutputDescription':['Total number concentration'],
+                                                          'Purpose':'Calculation of total number concentration given distribution of particle counts from a particle sampling probe',
+                                                          'Description':'alculation of total number concentration given distribution of particle counts from a particle sampling probe',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

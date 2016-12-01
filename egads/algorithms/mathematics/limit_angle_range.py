@@ -43,7 +43,12 @@ class LimitAngleRange(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['angle'],
                                                           'InputUnits':['deg'],
+                                                          'InputTypes':['vector'],
+                                                          'InputDescription':['Angle to limit to between 0 and 360 degrees'],
                                                           'Outputs':['angle_limited'],
+                                                          'OutputDescription':['Resulting angles'],
+                                                          'Purpose':'This function calculates the corresponding angle between 0 and 360 degrees given an angle of any size',
+                                                          'Description':'No description',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

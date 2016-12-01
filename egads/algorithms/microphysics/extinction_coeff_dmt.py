@@ -49,7 +49,12 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 'Q_e'],
                                                           'InputUnits':['cm^-3', 'um', ''],
+                                                          'InputTypes':['array','vector','vector_optional'],
+                                                          'InputDescription':['Number concentration of hydrometeors in size category i','Average diameter of size category i','Extinction efficiency; default is 2'],
                                                           'Outputs':['B_e'],
+                                                          'OutputDescription':['Extinction coefficient'],
+                                                          'Purpose':'Calculates extinction coefficient based on a particle size distribution',
+                                                          'Description':'No description',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

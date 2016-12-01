@@ -54,7 +54,12 @@ class MassConcDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['c_i', 'd_i', 's_i', 'rho_i'],
                                                           'InputUnits':['cm^-3', 'um', '', 'g/cm^3'],
+                                                          'InputTypes':['array','vector','array','vector'],
+                                                          'InputDescription':['Number concentration of hydrometeors in size category i','Average diameter of size category i','Shape factor of hydrometeor in size category i to account for asphericity','density of the hydrometeor in size category i'],
                                                           'Outputs':['M'],
+                                                          'OutputDescription':['Mass concentration'],
+                                                          'Purpose':'Calculates mass concentration given a size distribution',
+                                                          'Description':'Calculates mass concentration given a size distribution. Can be used to calculate liquid or ice water content depending on the types of hydrometeors being sampled',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

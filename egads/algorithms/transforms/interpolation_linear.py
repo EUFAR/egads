@@ -48,7 +48,12 @@ class InterpolationLinear(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['x', 'f', 'x_interp', 'f_left', 'f_right'],
                                                           'InputUnits':[None, None, None, None, None],
+                                                          'InputTypes':['vector','vector','vector','coeff_optional','coeff_optional'],
+                                                          'InputDescription':['x-coordinates of the data points (must be increasing)','Data points to interpolate','New set of coordinates to use in interpolation','value to return for x_interp < x[0], default is f[0]','Value to return when x_interp > x[-1], default is f[-1]'],
                                                           'Outputs':['interpolated values of f'],
+                                                          'OutputDescription':['Interpolated values of f'],
+                                                          'Purpose':'Calculate linear interpolation of a variable',
+                                                          'Description':'Calculates the one-dimensional piecewise linear interpolation of a variable between two coordinate systems',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

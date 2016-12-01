@@ -1,0 +1,93 @@
+=========
+CHANGELOG
+=========
+
+
+July XX 2016, Release version 0.8.0
+=======================================
+  Matplotlib package is used to generate all figures. A logging system has been introduced.
+  As more bugs have been found in Nappy and to prevent future compatibility issues, a new function to read and write NASA Ames format will be coded.
+  Since version 0.7.0, EGADS and EGADS gui are divided into two entities based on the operating system : EGADS for Windows and EGADS for Linux.
+  
+  ADDED:
+    - a simple function to plot data has been introduced.
+    - a new plot window with custom icons has been designed. It has been connected to the official Matplotlib API.
+    - figure options have been added to the plot window.
+    - the user has the possibility to generate single plot or multiple subplots.
+    - figure options have been expanded to include subplots.
+    - plot options have been introduced to the plot window.
+    - a new function has been added to EGADS core to add new units not available in Quantities
+
+  FIXED:
+    - EGADS core couldn't process correctly variable units if the unit is 'unicode' and not 'str'.
+    - EGADS core couldn't process correclty time units if the unit is composed of 'time' (seconds, minutes, hours, ...) and ' since xxxxx'.
+    - as the netcdf gui function changed, the closing function wasn't cleaning the GUI properly.
+    - fixed a bug with set_linestyle, markers weren't displayed correctly
+    - the deletion of two or more variables brings a TypeError. It has been fixed
+    - during the creation of a new variable through the process window, the dimensions of the new variable wasn't set correctly. It has been fixed
+    - once a new variable is created and selected in the new variables tab, the icon to migrate the variable is not enabled. It has been fixed
+    - if a new variable is created with a list as Category metadata, the variable couldn't be saved. It has been fixed.
+    - if multiple time series are displayed in the same plot window, clearing the window bring an error and doesn't clean all options, this has been fixed.
+
+
+February 16 2016, Release version 0.7.0
+=======================================
+  As Nappy, a module for python, calls CDMS2, it is incompatible with Window for now. A test with Pyinstaller for Linux is a success. A solution will be found for Windows.
+  
+  FIXED:
+    - in the variable metadata window, if "show other attributes" is clicked two times (to show and to hide), once Save is clicked, the program crashes. It has been fixed.
+    - a temporary solution has been found to allow Quantities module to correctly read CF1.0 time unit format. The modification has been introduced in "egads_core.py"
+    
+  ADDED:
+    - a function to delete a variable has been introduced.
+    - a function to apply an algorithm (just one) has been introduced to prepare the introduction of new variables. Applying an algorithm create a new workspace to store new variables.
+    - a function to migrate new varibles to the main workspace.
+    - a new window to allow processing operations has been introduced.
+    - new metadata have been added to all algorithms : input type (vector, scalar, time, ...), input description, output description, purpose and description. Those modifications have been made to allow a user to know all caracteritics of an algorithm.
+    - info boxes have been added to the processing window.
+    - the number of input and output object in the processing window depends now on the metadata of the algorithm.
+    - information about the selected algorithm are displayed in the processing window
+    - the processing window can now handle multiple coefficients for one LineEdit.
+    - in the processing window, the "Save" button will be available only if all fields have been filled in. Optionnal fields are not taken into account to activate the "Save" button.
+    - a function and a window to display a variable has been introduced.
+    - the processing window is now linked with the "new variable" tab and functional.
+    - algorithms with multiple outputs are now managed by the processing window.
+    
+  MODIFIED:
+    - the function to save a file has been modified to allow proper operation once a variable has been deleted.
+    - the GUI has been modified to allow proper operations with new variables.
+    - the gui can handle modification/deletion/addition of metadata linked to new variables
+    - the gui can handle multiple categories for the Category metadata.
+    - a new stylesheet has been used for the processing window.
+    - in the processing window, for an algorithm, if an input is optional, a default message is added to the information window.
+
+
+January 25 2016, Release version 0.6.0
+======================================
+  Two incompatibilites with the latest version of Numpy have been found in Nappy. Until the official fix, a modified nappy is proposed with EGADS.
+  First version of the main GUI.
+  
+  ADDED:
+    - a function to open netcdf files has been introduced, with all needed functions to feed the gui and close the file.
+    - a function to save netcdf files to netcdf, NASA Ames and csv format has been introduced.
+    - a function to read NASA Ames files has been introduced, with all needed functions to feed the gui and close the file.
+    - it is now possible to save a NASA Ames file to netcdf file using the dedicated nappy API.
+    - a list of variables is shown in the dedicated tab.
+    - metadata (global and linked to variables) are now displayed in the GUI.
+    - the status bar is fed with information (file name, file size, conventions)
+    - it is now possible to modify the global metadata directly in the GUI.
+    - it is now possible to modify the variable metadata directly in the GUI.
+    - a new window to modify global metadata (accessible via an icon in the toolbar) has been added.
+    - it is possible to add, modify and delete metadata through the new global metadata window.
+
+  MODIFIED:
+    - if a variable is selected, and a metadata has been modified before, it will now reflect the modification of the metadata even if another variable is selected.
+    - if a variable is selected, and a metadata is modified but not saved, selecting another variable will cancel the modication.
+    - the function to save netcdf also save the modified metadata.
+
+
+December 1 2015 - 4 January 2016
+================================
+  First design of the new GUI dedicated to EGADS.
+  EGADS version is currently 0.5.8. It appears to have critical issues with Nappy, as this one calls old numpy functions which have been discarded from newer versions.
+

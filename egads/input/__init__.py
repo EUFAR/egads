@@ -12,3 +12,4 @@ from text_file_io import EgadsFile
 from text_file_io import EgadsCsv
 from text_file_io import parse_string_array
 
+#from nasa_ames import *

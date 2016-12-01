@@ -69,7 +69,12 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['date_time', 'lat', 'long', 'elevation', 'pressure', 'temperature'],
                                                           'InputUnits':['', 'degrees', 'degrees', 'm', 'hPa', 'degC'],
+                                                          'InputTypes':['time','vector','vector','vector','vector','vector'],
+                                                          'InputDescription':['ISO string of current date time in UTC', 'Latitude', 'Longitude', 'Elevation','Local pressure','Local temperature'],
                                                           'Outputs':['Theta', 'Phi'],
+                                                          'OutputDescription':['Solar zenith angle','Solar azimuth angle'],
+                                                          'Purpose':'Calculates the solar vector based on current date/time, elevation, latitude and longitude',
+                                                          'Description':'Calculates the solar vector based on current date/time, elevation, latitude and longitude. Takes additional optional arguments of pressure and temperature to correct for atmospheric refraction effects. The zenith and azimuth angle calculated by this algorithm have uncertainties equal to +/- 0.0003 degrees in the period from year -2000 to 6000',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

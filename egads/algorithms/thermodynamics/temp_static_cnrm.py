@@ -44,7 +44,12 @@ class TempStaticCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_t', 'dP', 'P_s', 'r_f', 'Racpa'],
                                                           'InputUnits':['K','hPa','hPa','', ''],
+                                                          'InputTypes':['vector','vector','vector','coeff','coeff'],
+                                                          'InputDescription':['Total temperature','Dynamic pressure','Static pressure','','R_a/c_pa'],
                                                           'Outputs':['T_s'],
+                                                          'OutputDescription':['Static temperature'],
+                                                          'Purpose':'Calculate static temperature',
+                                                          'Description':'Calculates static temperature of the air based on total temperature and dynamic pressure',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

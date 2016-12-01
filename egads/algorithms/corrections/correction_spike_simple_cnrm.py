@@ -44,7 +44,12 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['X', 'S0'],
                                                           'InputUnits':[None, None],
+                                                          'InputTypes':['vector','coeff'],
+                                                          'InputDescription':['Parameter for analysis','Spike detection threshold (same units as X, must be positive)'],
                                                           'Outputs':['X_corr'],
+                                                          'OutputDescription':['Parameter with corrections applied'],
+                                                          'Purpose':'Detects and corrects spikes which exceed a specific threshold',
+                                                          'Description':'This algorithm detects spikes exceeding a specified threshold and corrects the spike with a mean of the surrounding values. This algorithm does not apply well to variables that are naturally discontinuous',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

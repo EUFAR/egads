@@ -46,7 +46,12 @@ class DiameterEffectiveDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i'],
                                                           'InputUnits':['cm^-3', 'um'],
+                                                          'InputTypes':['array','vector'],
+                                                          'InputDescription':['Number concentration of hydrometeors in size category i','Average diameter in size category i'],
                                                           'Outputs':['D_e'],
+                                                          'OutputDescription':['Effective diameter'],
+                                                          'Purpose':'Calculation of effective radius of a size distribution',
+                                                          'Description':'This algorithm calculates the effective radius given a size distribution. In general, this definition is only meaningful for water clouds',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

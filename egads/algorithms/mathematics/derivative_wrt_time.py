@@ -42,7 +42,12 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['x', 't'],
                                                           'InputUnits':[None, 's'],
+                                                          'InputTypes':['vector','time'],
+                                                          'InputDescription':['Parameter to calculate first derivative','Time signal'],
                                                           'Outputs':['x_dot'],
+                                                          'OutputDescription':['First derivative of x'],
+                                                          'Description':'Calculates the first derivative of a generic parameter wrt time. Calculations of this derivative are centered for all except the first and last values in the vector (Nones are returned for these values). Returns None for scalar parameters',
+                                                          'Purpose':'Calculate first derivative of a generic parameter',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

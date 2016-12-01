@@ -43,7 +43,12 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'P_s', 'Racpa'],
                                                           'InputUnits':['K', 'hPa', ''],
+                                                          'InputTypes':['vector','vector','coeff'],
+                                                          'InputDescription':['Static temperature','Static pressure','gas constant of air divided by specific heat of air at constant pressure'],
                                                           'Outputs':['theta'],
+                                                          'OutputDescription':['Potential temperature'],
+                                                          'Purpose':'Calculates potential temperature',
+                                                          'Description':'Calculates potential temperature given static temperature, pressure, and the ratio of gas constant and specific heat of air',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

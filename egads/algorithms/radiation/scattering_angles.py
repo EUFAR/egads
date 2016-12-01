@@ -45,7 +45,12 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_x', 'n_y', 'theta_c', 'phi_c', 'theta_sun', 'phi_sun'],
                                                           'InputUnits':['', '', 'deg', 'deg', 'deg', 'deg'],
+                                                          'InputTypes':['coeff','coeff','array','array','coeff','coeff'],
+                                                          'InputDescription':['Number of pixels in x dimension','Number of pixels in y dimension','Camera viewing zenith angle','Camera viewing azimuth angle (0 deg = flight dir)','Solar zenith angle','Solar azimuth angle'],
                                                           'Outputs':['theta_scat'],
+                                                          'OutputDescription':['Scattering angles of each pixel'],
+                                                          'Purpose':'Calculates the scattering angle for each pixel on an image given the camera viewing angle and solar vector',
+                                                          'Description':'No description',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

@@ -46,7 +46,12 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['Lambda', 'D_arms', 'dD', 'M', 'N'],
                                                           'InputUnits':['nm', 'mm', 'um', '', ''],
+                                                          'InputTypes':['coeff','coeff','coeff','coeff','coeff'],
+                                                          'InputDescription':['Laser wavelength','Distance between probe arms','Diode diameter','Probe magnification factor','Number of diodes in array'],
                                                           'Outputs':['SA'],
+                                                          'OutputDescription':['Sample area'],
+                                                          'Purpose':'Calculation of "center-in" sample area size for OAP probes',
+                                                          'Description':'Calculation of "center-in" sample area size for OAP probes such as the 2DP, CIP, etc. The sample area varies by the number of shadowed diodes. This routine calculates a sample area per bin',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

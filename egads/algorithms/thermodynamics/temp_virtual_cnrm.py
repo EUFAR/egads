@@ -40,7 +40,12 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'r'],
                                                           'InputUnits':['K','g/kg'],
+                                                          'InputTypes':['vector','vector'],
+                                                          'InputDescription':['Static temperature','Water vapor mixing ratio'],
                                                           'Outputs':['T_v'],
+                                                          'OutputDescription':['Virtual temperature'],
+                                                          'Purpose':'Calculate virtual temperature',
+                                                          'Description':'Calculates virtual temperature given static pressure and mixing ratio',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

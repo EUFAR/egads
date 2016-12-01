@@ -5,9 +5,9 @@ __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import netCDF4
 import egads
-import nappy
-
+#import nappy  # @UnresolvedImport
 from egads.input import FileCore
+
 
 class NetCdf(FileCore):
     """
@@ -156,8 +156,24 @@ class NetCdf(FileCore):
             value = varin[eval(obj)]
 
         return value
+    
+    
+    def change_variable_name(self, varname, newname):
+        """
+        Change the variable name in currently opened NetCDF file.
+        
+        :param string varname:
+            Name of variable to rename.
+        :param string oldname:
+            the new name.
+        
+        """
+        
+        if self.f is not None:
+            self.f.renameVariable(varname, newname)
+    
 
-    def write_variable(self, value, varname, dims=None, type='double', fill_value=None):
+    def write_variable(self, value, varname, dims=None, ftype='double', fillvalue=None):
         """
         Writes/creates variable in currently opened NetCDF file.
 
@@ -180,15 +196,16 @@ class NetCdf(FileCore):
         """
 
         if self.f is not None:
-            try:
-                varout = self.f.variables[varname]
-            except KeyError:
+            #try:
+            #    print "test1"
+            #    varout = self.f.variables[varname]
+            #except KeyError:
                 try:
-                    varout = self.f.createVariable(varname, self.TYPE_DICT[type], dims)
+                    varout = self.f.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value = fillvalue)
                 except KeyError:
-                    varout = self.f.createVariable(varname, type, dims)
+                    varout = self.f.createVariable(varname, ftype, dims, fillvalue)
 
-            varout[:] = value
+                varout[:] = value
 
 
     def add_dim(self, name, size):
@@ -231,10 +248,10 @@ class NetCdf(FileCore):
         else:
             print 'ERROR: No file open'
 
-    def convert_to_nasa_ames(self, na_file=None, var_ids=None, na_items_to_override={},
+    '''def convert_to_nasa_ames(self, na_file=None, var_ids=None, na_items_to_override={},
                              only_return_file_names=False, exclude_vars=[],
                              requested_ffi=None, delimiter='    ', float_format='%g',
-                             size_limit=None, annotation=False, no_header=False):
+                             size_limit=None, annotation=False, no_header=False, temp_file = False):
         """
         Convert currently open NetCDF file to one or more NASA Ames files
         using the Nappy API.
@@ -274,13 +291,18 @@ class NetCdf(FileCore):
 
 
         """
-
-        nappy.convertNCToNA(self.filename, na_file, var_ids, na_items_to_override,
+        
+        if temp_file:
+            filename = temp_file
+        else:
+            filename = self.filename
+        nappy.convertNCToNA(filename, na_file, var_ids, na_items_to_override,
                             only_return_file_names, exclude_vars, requested_ffi,
                             delimiter, float_format, size_limit, annotation,
-                            no_header)
+                            no_header)'''
 
-    def convert_to_csv(self, csv_file=None):
+
+    '''def convert_to_csv(self, csv_file=None, temp_file = False):
         """
         Converts currently open NetCDF file to CSV file using Nappy API.
         
@@ -288,8 +310,12 @@ class NetCdf(FileCore):
             Optional - Name of output CSV file. If none is provided, name of current
             NetCDF is used and suffix changed to .csv
         """
-
-        nappy.convertNCToCSV(self.filename, csv_file)
+        
+        if temp_file:
+            filename = temp_file
+        else:
+            filename = self.filename
+        nappy.convertNCToCSV(filename, csv_file)'''
 
 
     def _open_file(self, filename, perms):
@@ -306,7 +332,7 @@ class NetCdf(FileCore):
         self.close()
 
         try:
-            self.f = netCDF4.Dataset(filename, perms)
+            self.f = netCDF4.Dataset(filename, perms)  # @UndefinedVariable
             self.filename = filename
             self.perms = perms
         except RuntimeError:
@@ -373,8 +399,6 @@ class NetCdf(FileCore):
             return self.f.variables.keys()
         else:
             raise # TODO Add specific file exception
-
-
 
 
 class EgadsNetCdf(NetCdf):
@@ -568,7 +592,7 @@ class EgadsNetCdf(NetCdf):
 
         return data
 
-    def write_variable(self, data, varname=None, dims=None, type='double'):
+    def write_variable(self, data, varname=None, dims=None, ftype='double'):
         """
         Writes/creates varible in currently opened NetCDF file.
 
@@ -596,7 +620,7 @@ class EgadsNetCdf(NetCdf):
             try:
                 varout = self.f.variables[varname]
             except KeyError:
-                varout = self.f.createVariable(varname, self.TYPE_DICT[type.lower()], dims)
+                varout = self.f.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims)
 
             varout[:] = data.value
 
@@ -618,7 +642,7 @@ class EgadsNetCdf(NetCdf):
         self.close()
 
         try:
-            self.f = netCDF4.Dataset(filename, perms)
+            self.f = netCDF4.Dataset(filename, perms)  # @UndefinedVariable
             self.filename = filename
             self.perms = perms
             attr_dict = self.get_attribute_list()

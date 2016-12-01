@@ -19,7 +19,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
     CATEGORY    Comparisons
 
     PURPOSE     This algorithm computes a similarity factor between two timeseries using
-                the Longest Common Subsequence (LCSS) method. 
+                the Longest Common Subsequence (LCSS) method.
 
     DESCRIPTION This algorithm uses the Morse-Patel method to evaluate the Longest
                 Common Subsequence for two timeseries. The timeseries compared can be
@@ -48,9 +48,14 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
                                                                'standard_name':'',
                                                                'Category':['']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['R','S'],
-                                                          'InputUnits':[None, None],
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['R','S','epsilon'],
+                                                          'InputUnits':[None, None, None],
+                                                          'InputTypes':['vector','vector','coeff'],
+                                                          'InputDescription':['First timeseries to compare','Second timeseries for comparison','Matching criteria'],
                                                           'Outputs':['max'],
+                                                          'OutputDescription':['Maximum common subsequence length'],
+                                                          'Purpose':'This algorithm computes a similarity factor between two timeseries using the Longest Common Subsequence (LCSS) method',
+                                                          'Description':'This algorithm uses the Morse-Patel method to evaluate the Longest Common Subsequence for two timeseries. The timeseries compared can be multi-dimensional. The returned value represents the longest common subsequence length, i.e. the number of corresponding points',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

@@ -55,7 +55,12 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 's_i', 'rho_i'],
                                                           'InputUnits':['cm^-3', 'um', '', 'g/cm^3'],
+                                                          'InputTypes':['array','vector','array_optional', 'vector_optional'],
+                                                          'InputDescription':['Number concentration of hydrometeors in bin i','Average diameter of bin i','Shape factor of hydrometeor in size category i to account for asphericity','Density of hydrometeor in bin i, default is 1.0 g/cm^3'],
                                                           'Outputs':['D_mvd'],
+                                                          'OutputDescription':['Median volume diameter'],
+                                                          'Purpose':'Calculation of median volume diameter',
+                                                          'Description':'Calculates the median volume diameter given a size distribution. The median volume  diameter is the size of droplet below which 50% of the total water volume resides',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

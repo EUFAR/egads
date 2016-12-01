@@ -609,6 +609,9 @@ class ConvertFormatTestCase(unittest.TestCase):
         f.close()
 
         self.ncfilename = tempfile.mktemp('.nc')
+        
+        print self.ncfilename
+        
         f = netCDF4.Dataset(self.ncfilename, 'w')
         f.attribute = GLOBAL_ATTRIBUTE
         f.Conventions = CONVENTIONS

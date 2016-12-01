@@ -3,18 +3,17 @@ __date__ = "$Date:: 2012-07-06 17:42#$"
 __version__ = "$Revision:: 146       $"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
-from collections import defaultdict
+
 import types
 import weakref
 import datetime
 import re
 import warnings
-from functools import wraps
-
 import numpy
-import quantities as pq
-
+import quantities as pq  # @UnresolvedImport
 import metadata
+from functools import wraps
+from collections import defaultdict
 
 
 class EgadsData(pq.Quantity):
@@ -27,8 +26,12 @@ class EgadsData(pq.Quantity):
     """
 
     __refs__ = defaultdict(list)
+    
 
     def __new__(cls, value, units='', variable_metadata={}, dtype=None, **attrs):
+        
+        _add_new_units()
+        
         if isinstance(units, metadata.VariableMetadata):
             if not variable_metadata:
                 variable_metadata = units
@@ -36,17 +39,19 @@ class EgadsData(pq.Quantity):
 
         if variable_metadata and (not units):
             units = variable_metadata.get('units', '')
-
+            if not units:
+                units = variable_metadata.get('Units', '')
 
 
         units = _validate_units(units)
 
-
-
         if isinstance(value, pq.Quantity):
             ret = pq.Quantity.__new__(cls, value, value.units, dtype=dtype)
         else:
-            ret = pq.Quantity.__new__(cls, value, units, dtype=dtype)
+            try:
+                ret = pq.Quantity.__new__(cls, value, units, dtype=dtype)
+            except (LookupError, SyntaxError):
+                ret = pq.Quantity.__new__(cls, value, units="", dtype=dtype)
 
         if isinstance(variable_metadata, metadata.VariableMetadata):
             ret.metadata = variable_metadata
@@ -455,23 +460,40 @@ def _validate_units(units):
     In quantities 0.10.1, the '%' symbol is not correctly recognized. Thus corrects
     the '%' symbol to 'percent'.
     
-     
+    In quantities, the time unit 'time since ...' is not correctly recognized. Thus
+    corrects the 'time since ...' to 'time'.
     """
-
-    if isinstance(units, str):
+    
+    # few patches have been introduced for compatibility"
+    if "degree_" in units or "decimal degree" in units:
+        units = "degree"
+    if units == "-":
+        units = ""
+    if " since " in units:
+        units = units[:units.index(" since ")]
+        
+    if " / " in units:
+        units = units[:units.index(" / ")] + "/" + units[units.index(" / ")+3:]
+    if isinstance(units, str) or isinstance(units, unicode):
+        
         regex = re.compile('(?<=[A-Za-z])[0-9-]')
-
         match = regex.search(units)
         while match is not None:
             units = units[:match.start()] + "^" + units[match.start():]
             match = regex.search(units)
-
         regex_space = re.compile('[ ]+')
-
         units = regex_space.sub('*', units)
-
-        if '%' in units: units = units.replace('%', 'percent')
-
-
+        if '%' in units:
+            units = units.replace('%', 'percent')
+    
     return units
+
+
+def _add_new_units():
+    """
+    Function to add units which are not natively present in Quantities but are
+    important for airborne research.
+    """
+
+    pq.UnitQuantity('microgram', pq.milligram/1e6, symbol='ug', aliases=['micrograms'])
 

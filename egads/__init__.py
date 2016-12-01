@@ -15,19 +15,21 @@ except ImportError:
 import os
 import sys
 import site
+
+
 path = os.path.abspath(os.path.dirname(__file__))
 ver = 'python%d.%d' % sys.version_info[:2]
-thirdparty = os.path.join(path, 'third-party')
+thirdparty = os.path.join(path, 'thirdparty')
 site.addsitedir(thirdparty)
 
-import quantities as units
+
+import quantities as units  # @UnresolvedImport
 
 units.hPa = units.UnitQuantity('hectopascal', units.Pa * 100, symbol='hPa')
 
 import core
 import core.metadata
 import algorithms
-import input
 from input import get_file_list
 
 from core.egads_core import *

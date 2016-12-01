@@ -41,7 +41,12 @@ class TempBlackbody(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['rad', 'lambda'],
                                                           'InputUnits':['W m^-2 sr^-1 nm^-1', 'nm'],
+                                                          'InputTypes':['vector','coeff'],
+                                                          'InputDescription':['Blackbody radiance','Wavelength'],
                                                           'Outputs':['T'],
+                                                          'OutputDescription':['Temperature'],
+                                                          'Purpose':'Calculates the blackbody temperature for a given radiance at a specific wavelength',
+                                                          'Description':'No description',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

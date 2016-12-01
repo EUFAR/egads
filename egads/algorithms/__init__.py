@@ -14,4 +14,5 @@ import egads.algorithms.microphysics
 import egads.algorithms.thermodynamics
 import egads.algorithms.transforms
 import egads.algorithms.radiation
+import egads.algorithms.tests
 

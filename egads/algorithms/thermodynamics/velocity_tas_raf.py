@@ -51,7 +51,12 @@ class VelocityTasRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_r', 'M', 'e'],
                                                           'InputUnits':['K', '', ''],
+                                                          'InputTypes':['vector','vector','coeff'],
+                                                          'InputDescription':['Measured temperature','Mach number','Thermometer recovery factor'],
                                                           'Outputs':['V_t'],
+                                                          'OutputDescription':['True air speed'],
+                                                          'Purpose':'Calculates true air speed based on Mach number, measured temperature and thermometer recovery factor',
+                                                          'Description':'Calculation of true air speed given Mach number, measured temperature and thermometer recovery factor. Typical values of thermometer recovery value range from 0.75-0.9 for platinum wire ratiometer (flash bulb type) thermometers, and around 1.0 for TAT type thermometers',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
