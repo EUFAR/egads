@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{NDLI}
+\algdescgeneral{NDLI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (NDLI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Normalized Difference Lignin Index (NDLI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - dry vegetation (stress) indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 1754nm and 1680nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with NDLI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+NDLI = \frac{log\frac{1}{R_{1754}}- log\frac{1}{R_{1680}} } {log\frac{1}{R_{1754}} + log\frac{1}{R_{1680}}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Serrano, L., Penuelas, J., Ustin, L.S. (2002): Remote sensing of nitrogen and lignin in Mediterranean vegetaion from AVIRIS data: Decomposing biochemical from structural signals. In: Remote Sensing of Environment, 81, p.355-364
+}

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/148/doc/algorithms/transforms
+END
+interpolate_linear.tex
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/148/doc/algorithms/transforms/interpolate_linear.tex
+END
+isotime_to_elements.tex
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/148/doc/algorithms/transforms/isotime_to_elements.tex
+END
+isotime_to_seconds.tex
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/148/doc/algorithms/transforms/isotime_to_seconds.tex
+END
+seconds_to_isotime.tex
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/148/doc/algorithms/transforms/seconds_to_isotime.tex
+END
+interpolate_linear_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/136/doc/algorithms/transforms/interpolate_linear_cnrm.tex
+END

@@ -1,0 +1,40 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{NDVI}
+\algdescgeneral{NDVI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (NDVI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Normalised Difference Vegetation index (NDVI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - broad band VIS
+}
+%
+{ %%%%%% Inputs %%%%%%
+Multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 671nm and 864nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with NDVI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+NDVI = \frac{R_{864}-R_{671}}{R_{864}+R_{671}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Rouse, J. W., Haas, R. H., Schell, J. A. and Deering, J. A. (1973). Monitoring vegetation systems in the great plains with erts. In: Proceedings of the Third Symposium on Significant Results Obtained with ERTS  Vol. 1, p. 309–317
+}
+
+

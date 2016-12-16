@@ -1,0 +1,50 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 176 $
+\index{diameter\_median\_volume\_dmt}
+\algdesc{Median Volume Diameter}
+{ %%%%%% Algorithm name %%%%%%
+diameter\_median\_volume\_dmt
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the median volume diameter given a size distribution. The median volume diameter
+is the size of droplet below which 50\% of the total water volume resides. 
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$c_i$ & Array[time, bins] & Number concentration of hydrometeors in size category $i$ [cm$^{-3}$] \\
+$d_i$ & Vector[bins] & Average diameter of size category $i$ [$\mu$m] \\
+$s_i$ & Array[time, bins],Optional & Shape factor of the hydrometeor of size category $i$ to account for asphericity \\
+$\rho_i$ & Vector[bins],Optional & Density of hydrometeor in size category $i$ [g cm$^{-3}$]. Default is $\rho_w$ = 1.0 g cm$^-3$
+}
+{ %%%%%% Outputs %%%%%%
+$D_{mvd}$ & Vector[time] & Median volume diameter [$\mu$m]
+}
+{ %%%%%% Formula %%%%%%
+Step 1: Compute liquid water content
+%
+\begin{displaymath}
+ W = \frac{\pi}{6} \sum \limits_{i=1}^m{c_i d_i^3 \rho_i s_i}
+\end{displaymath}
+
+Step 2: Beginning at the first size channel, calculate the accumulated mass $S_n = w_1 + w_2 + ... w_n$
+where $w_1$ is the mass of water in channel 1, and $w_n$ is the channel where the accumulated mass is
+greater than or equal to 0.5$W$, i.e. greater than or equal to 50\% of the total LWC.
+
+Step 3: Compute the median volume diameter, $D_{mvd}$ by interpolating linearly between the channels
+that bracket where the accumulated mass exceeded the total LWC:
+%
+\begin{displaymath}
+ D_{mvd} = d_{n-1} + (0.5 - S_{n-1}/S_n) (d_n - d_{n-1})
+\end{displaymath}
+ 
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+    ``Data Analysis User's Guide Chapter I: Single Particle Light Scattering,`` Droplet Measurement Technologies, 33. \cite{DMT1}
+}
+
+

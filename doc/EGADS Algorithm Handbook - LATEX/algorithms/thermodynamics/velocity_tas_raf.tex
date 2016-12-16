@@ -1,0 +1,45 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 149 $
+\index{velocity\_tas\_raf}
+\algdesc{True air speed (RAF)}
+{ %%%%%% Algorithm name %%%%%%
+velocity\_tas\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates true air speed based on Mach number, measured temperature and thermometer recovery factor. 
+Typical values of the themometer recovery factor range from 0.75-0.9 for platinum wire ratiometer (flush bulb type) thermometers,
+and around 1.0 for TAT type thermometers.
+
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$T_r$ & Vector & Measured temperature [K] \\
+$M$ & Vector & Mach number \\
+$e$ & Coeff. & thermometer recovery factor
+}
+{ %%%%%% Outputs %%%%%%
+$V_t$ & Vector & True air speed [m/s]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+V_t = \sqrt{\frac{R \gamma T_r M^2}{1 + 0.5(\gamma - 1) e M^2}}
+\end{displaymath}
+%
+where the recovery factor $e$ can be determined for a thermometer by comparing its measured
+temperature with the actual total and static temperature.
+%
+\begin{displaymath}
+ e \equiv \frac{T_r - T_s}{T_t - T_s}
+\end{displaymath}
+
+}
+{ %%%%%% Author %%%%%%
+NCAR-EOL
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin \#23 \cite{NCAR23} 
+}
+
+

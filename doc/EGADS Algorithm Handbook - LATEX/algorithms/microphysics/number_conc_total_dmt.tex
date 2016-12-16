@@ -1,0 +1,33 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{number\_conc\_total\_dmt}
+\algdesc{Total Number Concentration (DMT)}
+{ %%%%%% Algorithm name %%%%%%
+number\_conc\_total\_dmt
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of total number concentration given distribution of particle counts from a particle sampling probe.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$c_i$ & Array[time, bins] & Number concentration of hydrometeors in size category $i$ [cm$^{-3}$]
+}
+{ %%%%%% Outputs %%%%%%
+$N$ & Vector[time] & Total number concentration [cm$^{-3}$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ N = \sum \limits_{i=1}^m c_i
+\end{displaymath}
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+    ``Data Analysis User's Guide Chapter I: Single Particle Light Scattering,`` Droplet Measurement Technologies, 30. \cite{DMT1}
+}
+
+

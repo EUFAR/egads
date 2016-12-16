@@ -1,0 +1,44 @@
+%% $Date: 2012-06-22 17:20:40#$
+%% $Revision: 148 $
+\index{correction\_spike\_simple\_cnrm}
+\algdesc{Simple correction of spikes}
+{ %%%%%% Algorithm name %%%%%%
+correction\_spike\_simple\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Detection of spikes which exceed a specified threshold. The detected value is replaced with the mean of the surrounding values.
+
+This algorithm does not apply well to variables that are naturally discontinuous.
+}
+{ %%%%%% Category %%%%%%
+Corrections
+}
+{ %%%%%% Inputs %%%%%%
+$X$ & Vector & Parameter for analysis \\
+$S_{0}$ & Coeff & Spike detection threshold (same units as $X$, and must be positive)
+}
+{ %%%%%% Outputs %%%%%%
+$X_{c}$ & Vector & Parameter with corrections applied
+}
+{ %%%%%% Formula %%%%%%
+The $i$th term is considered a spike if the following are all true:
+\begin{eqnarray}
+\|X[i] - X[i - 1]\| > S_{0} \\
+\|X[i] - X[i + 1]\| > S_{0} \\
+(X[i] - X[i - 1])(X[i] - X[i + 1]) > 0 
+\end{eqnarray}
+with
+\begin{displaymath}
+X_{c}[i] = \frac{X[i + 1] + X[i - 1]}{2}
+\end{displaymath}
+
+Otherwise, $X_{c}[i] = X[i]$
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

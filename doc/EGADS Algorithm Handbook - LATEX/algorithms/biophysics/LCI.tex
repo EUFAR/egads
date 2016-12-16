@@ -1,0 +1,32 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{LCI}
+\algdescgeneral{LCI}
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (LCI is one index calculated within the overall program)
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Leaf Chlorophyll Index (LCI)
+}
+{ %%%%%% Category %%%%%%
+Biophysics - narrow band chlorophyll indices
+}
+{ %%%%%% Inputs %%%%%%
+Multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 710nm and 850nm.\bigskip
+}
+{ %%%%%% Outputs %%%%%%
+Single band with LCI values
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+LCI = \frac{R_{850}-R_{710}}{R_{850}+R_{710}}
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

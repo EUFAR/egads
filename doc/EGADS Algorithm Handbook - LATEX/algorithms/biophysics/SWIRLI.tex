@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{SWIRLI}
+\algdescgeneral{SWIRLI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (SWIRLI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation SWIR index: litter (SWIRLI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - cover indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 2090nm, 2210nm and 2280nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with SWIRLI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+SWIRLI= 3.87 * (R_{2210}-R_{2090}) -27.51 * (R_{2280} - R_{2090}) -0.20
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Lobell, D.B., Asner, G.P., Law, B.E., Treuhaft R.N. (2001): Subpixel canopy cover estimation of coniferous forests in Oregon using SWIR imaging spectrometry. In: Journal of geophysical research, 106, p.5151-5160
+}

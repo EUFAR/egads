@@ -1,0 +1,39 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 152 $
+\index{scattering\_angles}
+\algdesc{Scattering Angles}
+{ %%%%%% Algorithm name %%%%%%
+scattering\_angles
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the scattering angle for each pixel of an image given the camera viewing angle and solar vector.
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+$n_x$ & Coeff & Number of pixels in x dimension \\
+$n_y$ & Coeff & Number of pixels in y dimension \\
+$\theta_c$ & Array[$n_x$, $n_y$] & Camera viewing zenith angle [degrees] \\
+$\Phi_c$ & Array[$n_x$, $n_y$] & Camera viewing azimuth angle [degrees] (0\deg = flight direction) \\
+$\theta_\odot$ & Coeff & Solar zenith angle [degrees] \\
+$\Phi_\odot$ & Coeff & Solar azimuth angle [degrees] (0\deg = North)
+}
+{ %%%%%% Outputs %%%%%%
+$\theta_{scat}$ & Array[$n_x$, $n_y$] & Scattering angles of each pixel [degrees] \\
+}
+{ %%%%%% Formula %%%%%%
+\begin{align*}
+ \theta_{scat} & = \cos^{-1} (-\sin{\theta_\odot} \cos{\Phi_\odot} \sin{\theta_c} \cos{\Phi_c} 
+ - \sin{\theta_\odot} \sin{\Phi_\odot} \sin{\theta_c} \sin{\Phi_c} 
+ + \cos{\theta_\odot} \cos{\theta_c})
+\end{align*}
+}
+{ %%%%%% Author %%%%%%
+Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

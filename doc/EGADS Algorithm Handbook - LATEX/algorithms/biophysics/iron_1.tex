@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{iron\_1}
+\algdescgeneral{iron\_1}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (iron\_1 is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of iron ratio (iron\_1)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - soil indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 780nm, 920nm and 1245nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with iron\_1 values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+iron\_1 = 0.5 * ( R_{780} + R_{1245} ) - R_{920}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+
+}

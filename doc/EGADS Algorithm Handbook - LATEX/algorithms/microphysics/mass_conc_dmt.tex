@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{mass\_conc\_dmt}
+\algdesc{Mass Concentration}
+{ %%%%%% Algorithm name %%%%%%
+mass\_conc\_dmt
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates mass concentration given a size distribution. Can be used to calculate liquid or ice
+water content depending on the types of hydrometeors being sampled.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$c_i$ & Array[time, bins] & Number concentration of hydrometeors in size category $i$ [cm$^{-3}$] \\
+$d_i$ & Vector[bins] & Average diameter of size category $i$ [$\mu$m] \\
+$s_i$ & Array[time, bins] & Shape factor of the hydrometeor of size category $i$ to account for asphericity \\
+$\rho_i$ & Vector[time, bins] & Density of the hydrometeor in size category $i$ [g cm$^{-3}$]
+}
+{ %%%%%% Outputs %%%%%%
+$M$ & Vector[time] & Mass concentration [g cm$^{-3}$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ M = \frac{\pi}{6} \sum \limits_{i=1}^{m} s_i \rho_i c_i d_i^3
+\end{displaymath}
+
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+    ``Data Analysis User's Guide Chapter I: Single Particle Light Scattering,`` Droplet Measurement Technologies, 30. \cite{DMT1}
+}
+
+

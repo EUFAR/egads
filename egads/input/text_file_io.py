@@ -5,26 +5,26 @@ __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
 import sys
-
 from egads.input import FileCore
 import numpy
 
-class EgadsFile(FileCore): #TODO: add error handling to EgadsFile.
+class EgadsFile(FileCore): 
     """
     Generic class for interfacing with text files.
+    
+    TODO: add error handling to EgadsFile.
     """
 
     def __init__(self, filename=None, perms='r'):
         """
         Initializes instance of EgadsFile object.
 
-
-        :param string filename : string, optional
-            Name of file to open.
-        :param char perms: Optional -
-            Permissions used to open file. Options are ``w`` for write (overwrites
-            data), ``a`` for append ``r+`` for read and write, and ``r`` for read. ``r``
-            is the default value.
+        :param string filename:
+            Optional - Name of file to open.
+        :param char perms: 
+            Optional - Permissions used to open file. Options are ``w`` for write (overwrites
+            data), ``a`` for append ``r+`` for read and write, and ``r`` for read. ``r`` is the 
+            default value.
         """
 
         FileCore.__init__(self, filename, perms, pos=0)
@@ -43,13 +43,12 @@ class EgadsFile(FileCore): #TODO: add error handling to EgadsFile.
         """
         Private method for opening file.
 
-
         :param string filename:
             Name of file to open.
-        :param char perms: Optional -
-            Permissions used to open file. Options are ``w`` for write (overwrites
-            data), ``a`` for append ``r+`` for read and write, and ``r`` for read. ``r`` is the default
-            value.
+        :param char perms:
+            Optional - Permissions used to open file. Options are ``w`` for write (overwrites
+            data), ``a`` for append ``r+`` for read and write, and ``r`` for read. ``r`` is the 
+            default value.
         """
 
         self.close()
@@ -83,7 +82,6 @@ class EgadsFile(FileCore): #TODO: add error handling to EgadsFile.
         """
         Returns current position in file.
 
-
         """
 
         self.pos = self.f.tell()
@@ -93,12 +91,11 @@ class EgadsFile(FileCore): #TODO: add error handling to EgadsFile.
     def seek(self, location, from_where=None):
         """
         Change current position in file.
-        
 
         :param integer location:
             Position in file to seek to.
-        :param char from_where: Optional -
-            Where to seek from. Valid options are ``b`` for beginning, ``c`` for
+        :param char from_where: 
+            Optional - Where to seek from. Valid options are ``b`` for beginning, ``c`` for
             current and ``e`` for end.
         """
 
@@ -329,7 +326,7 @@ class EgadsCsv(EgadsFile):
 
         data_arr = numpy.column_stack(tuple(data))
 
-#        data_arr = data_arr.transpose()
+        #data_arr = data_arr.transpose()
 
 
         self.writer.writerows(data_arr)

@@ -1,6 +1,6 @@
-WARNING !
+Version:
 
-The project has been overtaken and is still in early development. Installer is broken.
+EGADS 0.6.0
 
 Project Overview:
 

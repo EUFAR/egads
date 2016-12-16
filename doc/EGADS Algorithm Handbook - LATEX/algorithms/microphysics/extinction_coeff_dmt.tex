@@ -1,0 +1,35 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 162 $
+\index{extinction\_coeff\_dmt}
+\algdesc{Extinction Coefficient}
+{ %%%%%% Algorithm name %%%%%%
+extinction\_coeff\_dmt
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates extinction coefficient given a particle size distribution. 
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$c_i$ & Array[time, bins] & Number concentration of hydrometeors in size category $i$ [cm$^{-3}$] \\
+$d_i$ & Vector[bins] & Average diameter of size category $i$ [$\mu$m] \\
+$Q_e$ & Vector[bins], Optional & Extinction efficiency; default is $Q_e = 2$
+}
+{ %%%%%% Outputs %%%%%%
+$B_e$ & Vector[time] & Extinction coefficient [km$^{-1}$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ B_e = \frac{\pi}{4} \sum \limits_{i=1}^m Q_e c_i d_i^2
+\end{displaymath}
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+    ``Data Analysis User's Guide Chapter I: Single Particle Light Scattering,`` Droplet Measurement Technologies, 30.  \cite{DMT1} 
+}
+
+

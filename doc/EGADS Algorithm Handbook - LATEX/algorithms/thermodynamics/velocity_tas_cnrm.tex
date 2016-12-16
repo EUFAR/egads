@@ -1,0 +1,36 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 149 $
+\index{velocity\_tas\_cnrm}
+\algdesc{True air speed (CNRM)}
+{ %%%%%% Algorithm name %%%%%%
+velocity\_tas\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates true air speed based on static pressure, static temperature and dynamic pressure using the Barr\'e-St Venant formula.  
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$T_s$ &	Vector & Static temperature [K] \\
+${\Delta}P$ & Vector & Dynamic pressure [hPa] \\
+$P_s$ & Vector & Static pressure [hPa] \\
+$c_{pa}$ & Coeff. & Specific heat of air at constant pressure (for dry air 1004 J K$^{-1}$ kg$^{-1}$) \\ 
+$R_a/c_{pa}$ & Coeff. & Gas constant of air divided by specific heat of air at constant pressure
+}
+{ %%%%%% Outputs %%%%%%
+$V_t$ & Vector & True air speed [m/s]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+V_t^2 = 2 c_{pa} T_s \left[\left(1+\frac{\Delta P}{P_s}\right)^{R_a/c_{pa}}-1\right]
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin \#23 \cite{NCAR23}, \textit{M\'echanique des fluides}, Candel \cite{Candel} 
+}
+
+

@@ -1,0 +1,39 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 152 $
+\index{planck\_emission}
+\algdesc{Planck Emission}
+{ %%%%%% Algorithm name %%%%%%
+planck\_emission
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the Planck emission of a surface at a given wavelength given its temperature.
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+$T$ & Vector & Temperature [K] \\
+$\lambda$ & Coeff & Wavelength [nm] \\
+}
+{ %%%%%% Outputs %%%%%%
+$rad$ & Vector & Black body radiance [W m-2 sr-1 nm-1] \\
+}
+{ %%%%%% Formula %%%%%%
+After converting $\lambda$ to meters, the radiance is calculated by:
+%
+\begin{displaymath}
+rad = \frac{2 h c^2}{\lambda^5 (\exp(\frac{h c}{k_B \lambda T}) - 1)} * 10^{-9}
+\end{displaymath}
+
+where $c$ is the speed of light in m/s, $h$ is the Planck constant in J s and $k_B$ is the Boltzmann
+constant in J/K.
+
+}
+{ %%%%%% Author %%%%%%
+Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

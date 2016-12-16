@@ -1,0 +1,51 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 149 $
+\index{pressure\_angle\_incidence\_cnrm}
+\algdesc{Pressure and angle of incidence (CNRM)}
+{ %%%%%% Algorithm name %%%%%%
+pressure\_angle\_incidence\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates static pressure and dynamic pressure by correction of static error. Angle of attack and sideslip are calculated from the horizontal and vertical differential pressures.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$P_{sr}$ & Vector & Raw static pressure [hPa] \\
+$\Delta P_r$ & Vector & Raw dynamic pressure [hPa] \\
+$\Delta P_h$ & Vector & Horizontal differential pressure [hPa] \\
+$\Delta P_v$ & Vector & Vertical differential pressure [hPa] \\
+$C_\alpha$ & Coeff.[2] & Angle of attack calibration coefficients \\
+$C_\beta$ & Coeff.[2] & Slip calibration coefficients \\
+$C_{errstat}$ & Coeff.[4] & Static error coefficients 
+}
+{ %%%%%% Outputs %%%%%%
+$P_s$ & Vector & Static Pressure [hPa] \\
+$\Delta P$ & Vector & Dynamic pressure corrected with static error [hPa] \\
+$\alpha$ & Vector & Angle of attack [rad] \\
+$\beta$ & Vector & Sideslip [rad] 
+}
+{ %%%%%% Formula %%%%%%
+If $\Delta P_r > 25$hPa:
+\begin{displaymath}
+ Errstat = C_{errstat}[0] + C_{errstat}[1] \Delta P_r + C_{errstat}[2] \Delta P_r^2 + C_{errstat}[3] \Delta P_r^3
+\end{displaymath}
+%
+otherwise:
+\begin{eqnarray}
+ Errstat = \frac{\Delta P_r}{25} \textrm{ Errstat @ 25 hPa} \\ \nonumber
+ P_s = P_{sr} - Errstat \\ \nonumber
+ \Delta P = \Delta P_r + Errstat \\ \nonumber
+ \alpha = C_\alpha [0] + C_\alpha [1] \frac{\Delta P_v}{\Delta P} \\ \nonumber
+ \beta = C_\beta [0] + C_\beta [1] \frac{\Delta P_h}{\Delta P} \nonumber
+\end{eqnarray}
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

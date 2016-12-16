@@ -1,0 +1,40 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 152 $
+\index{temp\_blackbody}
+\algdesc{Blackbody Temperature}
+{ %%%%%% Algorithm name %%%%%%
+temp\_blackbody
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the blackbody temperature for a given radiance at a specific wavelength.
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+$rad$ & Vector & Blackbody radiance [W m-2 sr-1 nm-1] \\
+$\lambda$ & Coeff & Wavelength [nm] \\
+}
+{ %%%%%% Outputs %%%%%%
+$T$ & Vector & Temperature [K] \\
+}
+{ %%%%%% Formula %%%%%%
+After converting $\lambda$ to m and $rad$ to W m-3 sr-1, the blackbody temperature is calculated by:
+%
+\begin{displaymath}
+T = \frac{h c}{k_B \lambda \ln(\frac{2 h c^2}{\lambda^5 rad} +1)}
+\end{displaymath}
+
+where $c$ is the speed of light in m/s, $h$ is the Planck constant in J s and $k_B$ is the Boltzmann
+constant in J/K.
+
+}
+{ %%%%%% Author %%%%%%
+Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
+
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

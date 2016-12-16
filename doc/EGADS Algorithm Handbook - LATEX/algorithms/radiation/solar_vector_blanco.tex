@@ -1,0 +1,82 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 162 $
+\index{solar\_vector\_blanco}
+\algdesc{Solar Vector Calculation (Blanco)}
+{ %%%%%% Algorithm name %%%%%%
+solar\_vector\_blanco
+}
+{ %%%%%% Algorithm summary %%%%%%
+This algorithm comuptes the current solar vector, given current date, time, latitude and longitude.
+Algorithm is most accurate between 1999-2005, but calculations out to 2015 show the solar vector
+can be determined with an error of less than 0.5 minutes of arc. 
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+Date\_time & Vector & ISO String of current date/time in UTC [yyyymmddThhmmss] \\
+$lat$ & Vector & Latitude [degrees] \\
+$long$ & Vector & Longitude [degrees] \\
+\
+}
+{ %%%%%% Outputs %%%%%%
+$ra$ & Vector & Right ascension [radians] \\
+$\delta$ & Vector & Declination [radians] \\
+$\theta_z$ & Vector & Solar Zenith [radians] \\
+$\gamma$ & Vector & Solar Azimuth [radians] \\
+}
+{ %%%%%% Formula %%%%%%
+%
+\begin{align*}
+jd &= \frac{1461}{4} (y + 4800 + (m - 14)/12) + \frac{367}{12} (m - 2 - 12 ((m - 14)/12)) \\
+    & \qquad {} - \frac{3}{4} (y + 4900 + (m - 14) / 12) /100 + d - 32075 - 0.5 + hour/24.0\\
+jd &= (1461 (y + 4800 + (m - 14) / 12))/4 + (367 (m - 2 - 12 ((m - 14) / 12)))/12 \\
+     & \qquad {} - (3 ((y + 4900 + (m - 14) / 12) / 100 )) / 4 + d + 32075 - 0.5 + hour/24.0
+\end{align*}
+where $y$ is the year, $m$ is the month, $d$ is the day of the month and $hour$ is the current hour
+in decimal format, i.e. with minutes and seconds as fractions of an hour. Note that all divisions 
+in this calculation are integer divisions except the last.
+
+The ecliptic coordinates of the sun are computed from the Julian Day by:
+%
+\begin{gather*}
+n = jd - 2451545.0 \\
+\Omega = 2.1429 - 0.0010394594 n \\
+L \text{ (mean longitude) } = 4.8950630 + 0.017202791698 n \\ 
+g \text{ (mean anomaly) } = 6.2400600 + 0.0172019699 n \\
+l \text{ (ecliptic longitude) } = L + 0.03341607 \sin{g} + 0.00034894 \sin{2 g} - 0.0001134 - 0.0000203 \sin{\Omega} \\
+ep \text{ (obliquity of the ecliptic) } = 0.4090928 - 6.2140 \times 10^{-9} n + 0.0000396 \cos{\Omega}
+\end{gather*}
+
+
+The conversion from ecliptic coordinates to celestial coordinates is computed by:
+\begin{gather*}
+ ra \text{ (right ascension) }= \tan^{-1} \left[ \frac{\cos{ep} \sin{l}}{\cos{l}} \right] \\
+\delta \text{ (declination) }= \sin^{-1} [\sin{ep} \sin{l}]
+\end{gather*}
+where $ra$ must be between 0 and 2$\pi$. 
+
+The conversion between celestial coordinates to horizontal coordinates is then computed by the 
+following equations:
+\begin{gather*}
+ gmst = 6.6974243242 + 0.0657098283 n + hour \\
+lmst = \frac{pi}{180} (15 gmst + long) \\
+\omega \text{ (hour angle) }= lmst - ra \\
+\theta_z = \cos^{-1} [ \cos{lat} \cos{\omega} \cos{\delta} + \sin{\delta} \sin{lat}] \\
+\gamma = \tan^{-1} \left[ \frac{ - \sin{\omega}}{\tan{\delta} \cos{lat} - \sin{lat} \cos{\omega}} \right] \\
+Parallax = \frac{EarthMeanRadius}{AstronomicalUnit} \sin{\theta_z} \\
+\theta_z = \theta_z + Parallax
+\end{gather*}
+
+where: $EarthMeanRadius$ = 6371.01 km and $AstronomicalUnit$ = 149597890 km
+ 
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+Manuel Blanco-Muriel, et al., ``Computing the Solar Vector,'' \emph{Solar Energy} 70 (2001): 436-38.
+\cite{Blanco} 
+}
+
+

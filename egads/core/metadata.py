@@ -189,7 +189,7 @@ class Metadata(dict):
         :param string|list conventions:
             Optional - Comma separated string or list of coventions to use for 
             conventions check. Current conventions recognized are ``CF``, 
-            ``RAF``, ``IWGADTS``, ``N6SP``, ``EUFAR``, ``NASA Ames``
+            ``RAF``, ``IWGADTS``, ``EUFAR``, ``NASA Ames``
             
         """
 
@@ -211,8 +211,6 @@ class Metadata(dict):
                 convention_num = RAF_TABLE_COLUMN
             elif 'IWGADTS' in convention:
                 convention_num = IWGADTS_TABLE_COLUMN
-            elif 'N6SP' in convention:
-                convention_num = N6SP_TABLE_COLUMN
             elif 'EUFAR' in convention:
                 convention_num = N6SP_TABLE_COLUMN
             elif 'NASA' in convention:

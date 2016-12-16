@@ -1,0 +1,35 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{surface\_area\_conc\_dmt}
+\algdesc{Surface Area Concentration}
+{ %%%%%% Algorithm name %%%%%%
+surface\_area\_conc\_dmt
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of surface area concentration given size distribution from particle probe.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$c_i$ & Array[time, bins] & Number concentration of hydrometeors in size category $i$ [cm$^{-3}$] \\
+$d_i$ & Vector[bins] & Average diameter of size category $i$ [$\mu$m] \\
+$s_i$ & Array[time, bins] & Shape factor of hydrometeor in size category $i$, to account for asphericity
+}
+{ %%%%%% Outputs %%%%%%
+$S$ & Vector[time] & Surface area concentration [$\mu$m$^2$ cm$^{-3}$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+  S = \pi \sum\limits_{i=1}^m s_i c_i d_i^2
+\end{displaymath}
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+    ``Data Analysis User's Guide Chapter I: Single Particle Light Scattering,`` Droplet Measurement Technologies, 30. \cite{DMT1}
+}
+
+

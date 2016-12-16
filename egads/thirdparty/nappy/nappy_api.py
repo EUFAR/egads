@@ -138,16 +138,9 @@ except:
 
 
 # Import local modules
-#from egads.thirdparty import nappy
-
-import nappy.utils.common_utils  # @UnresolvedImport
-import nappy.utils.compare_na  # @UnresolvedImport
-import nappy.utils.text_parser  # @UnresolvedImport
-
-
-'''from egads.thirdparty.nappy.utils import compare_na
-from egads.thirdparty.nappy.utils import common_utils
-from egads.thirdparty.nappy.utils import text_parser'''
+import nappy.utils.common_utils
+import nappy.utils.compare_na
+import nappy.utils.text_parser
 
 # Bring some utils into the API
 compareNA = nappy.utils.compare_na.compareNA
@@ -159,16 +152,6 @@ getFileNameWithNewExtension = nappy.utils.common_utils.getFileNameWithNewExtensi
 __version__ = nappy.utils.common_utils.getVersion()
 default_delimiter = nappy.utils.common_utils.getDefault("default_delimiter")
 default_float_format = nappy.utils.common_utils.getDefault("default_float_format")
-
-'''compareNA = compare_na.compareNA
-readFFI = common_utils.readFFI
-chooseFFI = common_utils.chooseFFI
-getNAFileClass = common_utils.getNAFileClass
-getFileNameWithNewExtension = common_utils.getFileNameWithNewExtension
-
-__version__ = common_utils.getVersion()
-default_delimiter = common_utils.getDefault("default_delimiter")
-default_float_format = common_utils.getDefault("default_float_format")'''
 
 
 def openNAFile(filename, mode="r", na_dict=None):
@@ -193,7 +176,7 @@ def openNAFile(filename, mode="r", na_dict=None):
         raise Exception("File mode not recognised '" + mode + "'.")
 
 
-'''def convertNAToNC(na_file, nc_file=None, mode="w", variables=None, aux_variables=None,
+def convertNAToNC(na_file, nc_file=None, mode="w", variables=None, aux_variables=None,
                  global_attributes=[("Conventions", "CF-1.0")],
                  time_units=None, time_warning=True,
                  rename_variables={}):
@@ -226,10 +209,10 @@ def openNAFile(filename, mode="r", na_dict=None):
     if nc_file == None:
         nc_file = getFileNameWithNewExtension(na_file, "nc")
     convertor.writeNCFile(nc_file, mode)
-    return nc_file   '''
+    return nc_file
   
 
-'''def convertNAToCSV(na_file, csv_file=None, annotation=False, no_header=False):
+def convertNAToCSV(na_file, csv_file=None, annotation=False, no_header=False):
     """
     Reads in a NASA Ames file and writes it out a new CSV file which is identical to the
     input file except that commas are used as the delimiter. Arguments are:
@@ -251,10 +234,10 @@ def openNAFile(filename, mode="r", na_dict=None):
     fout = openNAFile(csv_file, "w", na_dict=na_dict)
     fout.write(delimiter=",", annotation=annotation)
     fout.close()
-    return True'''
+    return True
 
 
-'''def convertNCToNA(nc_file, na_file=None, var_ids=None, na_items_to_override={},
+def convertNCToNA(nc_file, na_file=None, var_ids=None, na_items_to_override={},
             only_return_file_names=False, exclude_vars=[],
             requested_ffi=None, delimiter=default_delimiter, float_format=default_float_format, 
             size_limit=None, annotation=False, no_header=False,
@@ -431,6 +414,6 @@ def getCDMSVariableFromNA(na_file, var):
     convertor = nappy.nc_interface.na_to_cdms.NADictToCdmsObjects(na_file_obj, variables=[var])
     (cdms_primary_vars, cdms_aux_vars, global_attributes) = convertor.convert()
     # Must now be a primary var
-    return cdms_primary_vars[0]'''
+    return cdms_primary_vars[0]
 
 

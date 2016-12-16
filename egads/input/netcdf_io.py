@@ -1,11 +1,11 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-02-07 17:23#$"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-12-6 15:47#$"
 __version__ = "$Revision:: 125       $"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import netCDF4
 import egads
-#import nappy  # @UnresolvedImport
+import nappy  # @UnresolvedImport
 from egads.input import FileCore
 
 
@@ -13,7 +13,7 @@ class NetCdf(FileCore):
     """
     EGADS class for reading and writing to generic NetCDF files.
 
-    This module is a sub-class of :class:`~.FileCore` and adapts the Python NetCDF4 0.8.2
+    This module is a sub-class of :class:`~.FileCore` and adapts the Python NetCDF4
     library to the EGADS file-access methods.
 
     """
@@ -196,16 +196,12 @@ class NetCdf(FileCore):
         """
 
         if self.f is not None:
-            #try:
-            #    print "test1"
-            #    varout = self.f.variables[varname]
-            #except KeyError:
-                try:
-                    varout = self.f.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value = fillvalue)
-                except KeyError:
-                    varout = self.f.createVariable(varname, ftype, dims, fillvalue)
+            try:
+                varout = self.f.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value = fillvalue)
+            except KeyError:
+                varout = self.f.createVariable(varname, ftype, dims, fillvalue)
 
-                varout[:] = value
+            varout[:] = value
 
 
     def add_dim(self, name, size):
@@ -248,29 +244,15 @@ class NetCdf(FileCore):
         else:
             print 'ERROR: No file open'
 
-    '''def convert_to_nasa_ames(self, na_file=None, var_ids=None, na_items_to_override={},
-                             only_return_file_names=False, exclude_vars=[],
-                             requested_ffi=None, delimiter='    ', float_format='%g',
-                             size_limit=None, annotation=False, no_header=False, temp_file = False):
+    def convert_to_nasa_ames(self, na_file=None, requested_ffi=None, delimiter='    ', float_format='%g',
+                             size_limit=None, annotation=False, no_header=False):
         """
         Convert currently open NetCDF file to one or more NASA Ames files
-        using the Nappy API.
+        using  Nappy.
 
         :param string na_file:
             Optional - Name of output NASA Ames file. If none is provided, name of
             current NetCDF file is used and suffix changed to .na
-        :param list var_ids:
-            List of variables (as ids) to include in the output file.
-        :param dict na_items_to_override:
-            Optional - Dictionary of NASA Ames keyword items with corresponding values
-            to override in output file. NASA Ames keywords are: DATE, RDATE,
-            ANAME, MNAME, ONAME, ORG, SNAME, VNAME
-        :param bool only_return_file_names:
-            Optional - If true, only return list of file names that would be written.
-            Default - False
-        :param list exclude_vars:
-            Optional - List of variables (as ids) to exclude from the output NASA
-            Ames file.
         :param int requested_ffi:
             The NASA Ames File Format Index (FFI) you wish to write to. Options
             are limited depending on the data structures found.
@@ -292,14 +274,38 @@ class NetCdf(FileCore):
 
         """
         
-        if temp_file:
-            filename = temp_file
-        else:
-            filename = self.filename
-        nappy.convertNCToNA(filename, na_file, var_ids, na_items_to_override,
-                            only_return_file_names, exclude_vars, requested_ffi,
-                            delimiter, float_format, size_limit, annotation,
-                            no_header)'''
+        
+        na_dict = {"A":"","AMISS":"","ANAME":"","ASCAL":"","DATE":"","DX":"",
+                     "FFI":"","IVOL":"","LENA":"","LENX":"","MNAME":"","NAUXC":"",
+                     "NAUXV":"","NCOM":"","NIV":"","NLHEAD":"","NNCOML":"",
+                     "NSCOML":"","NV":"","NVOL":"","NVPM":"","NX":"","NXDEF":"",
+                     "ONAME":"","ORG":"","RDATE":"","SCOM":"","SNAME":"","V":"",
+                     "VMISS":"","VNAME":"","VSCAL":"","X":"","XNAME":""}
+        
+        
+        """Conventions = None
+        source = SNAME
+        title = MNAME
+        institution = ONAME&ORG
+        references = None
+        comment = SCOM&NCOM
+        history = RDATE
+        file_format_index = FFI
+        no_of_nasa_ames_header_lines = NLHEAD
+        total_files_in_set = NVOL
+        file_number_in_set = IVOL
+        first_valid_date_of_data = DATE"""
+        
+        
+        
+        
+        if na_file is None:
+            na_file = self.filename
+        
+        self.f_out = nappy.openNAFile(na_file, mode="w", na_dict=na_dict)
+        
+        self.f_out.write()
+        self.f_out.close()
 
 
     '''def convert_to_csv(self, csv_file=None, temp_file = False):
@@ -337,6 +343,8 @@ class NetCdf(FileCore):
             self.perms = perms
         except RuntimeError:
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
+        except IOError:
+            raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
             print "ERROR: Unexpected error"
             raise
@@ -653,7 +661,3 @@ class EgadsNetCdf(NetCdf):
         except Exception:
             print "ERROR: Unexpected error"
             raise
-
-
-
-

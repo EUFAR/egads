@@ -1,0 +1,34 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{sample\_volume\_general\_raf}
+\algdesc{Sample Volume}
+{ %%%%%% Algorithm name %%%%%%
+sample\_volume\_general\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates sample volume for microphysics probes (1D, 2D, FSSP, etc).
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$V_t$ & Vector & True air speed [m/s] \\
+SA & Coeff. & Sample area of probe [m$^2$] \\
+$t_s$ & Coeff. & Sample rate [s] \\
+}
+{ %%%%%% Outputs %%%%%%
+SV & Vector & Sample volume [m$^3$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ SV = V_t t_s SA
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+NCAR-RAF
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin No. 24. \cite{NCAR24}
+}
+
+

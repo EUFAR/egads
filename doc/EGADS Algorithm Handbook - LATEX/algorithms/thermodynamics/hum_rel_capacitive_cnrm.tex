@@ -1,0 +1,42 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{hum\_rel\_capacitive\_cnrm}
+\algdesc{Relative humidity from capacitive probe
+}
+{ %%%%%% Algorithm name %%%%%%
+hum\_rel\_capacitive\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates relative humidity using the measured frequency from a capacitive probe.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$Ucapf$ & Vector & Output frequency of the capacitive probe [Hz]\\ 
+$T_s$ & Vector & Static temperature [K] \\
+$P_s$ & Vector & Static pressure [hPa] \\
+$\Delta P$ & Vector & Dynamic pressure [hPa] \\
+$C_t$ & Coeff. & Temperature correction coefficient [\%\deg C] \\
+$F_{min}$ & Coeff. & Minimal acceptable frequency [Hz] \\
+$C_0$ & Coeff. & 0th degree calibration coefficient \\
+$C_1$ & Coeff. & 1st degree calibration coefficient \\
+$C_2$ & Coeff. & 2nd degree calibration coefficient 
+}
+{ %%%%%% Outputs %%%%%%
+$H_u$ & Vector & Relative humidity [\%]
+}
+{ %%%%%% Formula %%%%%%
+If $Ucapf \leq F_{min}$ then $Ucapf = F_{min}$
+%
+\begin{displaymath}
+H_u = \frac{P_s}{P_s + \Delta P} \left[C_0 + C_1 Ucapf + C_2 Ucapf^2 + C_t (T_s-20)\right] \nonumber
+\end{displaymath}
+with $T_s$ in $^\circ C$.
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+CAM note on humidity instrument measurements. \cite{Bellec}
+}

@@ -1,0 +1,33 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{mean\_diameter\_raf}
+\algdesc{Mean diameter}
+{ %%%%%% Algorithm name %%%%%%
+diameter\_mean\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the arithmetic average of all particle diameters given in a particle size distribution.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$n_i$ & Array[time, bins] & Number of particles in each channel $i$ \\
+$d_i$ & Vector[bins] & Channel $i$ size [$\mu$m]
+}
+{ %%%%%% Outputs %%%%%%
+$\bar{D}$ & Vector[time] & Mean diameter [$\mu$m]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ \bar{D} = \frac{\sum_i n_i d_i}{N_t}
+\end{displaymath}
+where $N_t$ is the total number of particles.
+}
+{ %%%%%% Author %%%%%%
+NCAR-RAF
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin No. 24. \cite{NCAR24}
+}
+

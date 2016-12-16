@@ -1,0 +1,37 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{density\_dry\_air\_cnrm}
+\algdesc{Density of dry air}
+{ %%%%%% Algorithm name %%%%%%
+density\_dry\_air\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates density of dry air given static temperature and pressure.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$P_s$ & Vector & Static pressure [hPa] \\
+$T_s$ & Vector & Static temperature [K or \deg C]
+}
+{ %%%%%% Outputs %%%%%%
+$\rho$ & Vector & Density of dry air [kg/m$^3$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ \rho = \frac{100 P_s}{R_a T_s}
+\end{displaymath}
+%
+with $R_a = 287.05$ J kg$^{-1}$ K$^{-1}$ 
+
+Density of humid air can be calculated using this same algorithm by using virtual temperature instead of static temperature.
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+Equation of state for a perfect gas, Triplet-Roche \cite{Triplet}, page 34.
+}
+
+

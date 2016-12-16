@@ -1,0 +1,49 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 168 $
+\index{sample\_area\_oap\_all\_in\_raf}
+\algdesc{Sample area for imaging probes (All in)}
+{ %%%%%% Algorithm name %%%%%%
+sample\_area\_oap\_all\_in\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of 'all in' sample area size for OAP probes such as the 2DC, 2DP, CIP, etc. This sample area varies by
+number of shadowed diodes. This routine calculates a sample area per bin.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$\lambda$ & Coeff. & Laser wavelength [nm] \\
+$D_{arms}$ & Coeff. & Distance between probe arm tips [mm] \\
+dD & Coeff. & Diode diameter [$\mu$m] \\
+M & Coeff. & Probe magnification factor \\
+N & Coeff. & Number of diodes in array
+}
+{ %%%%%% Outputs %%%%%%
+SA & Vector & Sample area [m$^2$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{eqnarray}
+DOF_i = \frac{6 R_i^2}{\lambda} \\ \nonumber
+R_i = i \frac{dD}{2} \\ \nonumber
+X = {1...N-1} \nonumber
+\end{eqnarray}
+where $DOF$ must be less than $D_{arms}$. The parameter $i$ ranges from 1 to $N-1$, since particles touching either edge are rejected as they are not considered 'all-in'. 
+
+
+\begin{displaymath}
+ESW_i = \frac{dD(N-X_i-1)}{M}
+\end{displaymath}
+A value for $ESW_i$ (effective sample width) is calculated for each $X$.
+
+\begin{displaymath}
+ SA_i = (DOF_i)(ESW_i) 
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+NCAR-RAF
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin No. 24. \cite{NCAR24}
+}
+

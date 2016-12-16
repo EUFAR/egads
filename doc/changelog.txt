@@ -3,14 +3,31 @@ CHANGELOG
 =========
 
 
-December 1 2016, Release version 0.5.5
+December 16 2016, Release version 0.6.0
 =======================================
-  Few fixes have been introduced in the Nappy library. The functions to interface EGADS with Nappy have been rewritten but are still in early stage. Use with caution.
+  FIXED:
+    - few issues have been fixed in the test functions.
+    - few tests to check netcdf functions have been fixed for a problem with opening file.
+    - few issues have been fixed in the Sphinx documentation.
+    
+  ADDED:
+    - a function to test EGADS metadata class has been included.
+    - two functions to test EGADS NASA/Ames support have been included.
+    - tex files for algorithms documentation have been included in EGADS package.
+    
+  MODIFIED:
+    - the function to test the conversion capabilities of EGADS has been deactived for now.
+    - the netcdf function to open nc file has been modified to take into account errors reported by Windows and not only linux.
+    - the documentation for EGADS and algorithms has been updated.
+
+
+December 1 2016, Release version 0.5.9
+======================================
+  Few fixes have been introduced in EGADS to make it compatible with Windows. The functions to interface EGADS with Nappy is old, a bug linked to the new Numpy version has been fixed. The function interfaced with Nappy to read NASA/Ames files has been rewritten. It as been simplified and it is now possible to write NA files. Conversion of NA files to netcdf files, and in the other way, is not possible for now.
   
 
 
 December 1 2015 - 4 January 2016
 ================================
-  First design of the new GUI dedicated to EGADS.
   EGADS version is currently 0.5.8. It appears to have critical issues with Nappy, as this one calls old numpy functions which have been discarded from newer versions.
 

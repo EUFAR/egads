@@ -1,0 +1,43 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{isotime\_to\_seconds}
+\algdesc{Convert ISO 8601 time string to seconds}
+{ %%%%%% Algorithm name %%%%%%
+isotime\_to\_seconds
+}
+{ %%%%%% Algorithm summary %%%%%%
+This algorithm converts a series of ISO 8601 date-time strings to delta time in seconds. It takes
+an optional format string for the conversion and an optional reference time. If no reference time
+is provided, then Jan 1, 1970, 00:00:00 is used as the reference.
+}
+{ %%%%%% Category %%%%%%
+Transforms
+}
+{ %%%%%% Inputs %%%%%%
+$t_{ISO}$ & Vector & ISO 8601 strings \\
+$t_{ISO ref}$ & String, Optional & Reference time [ISO 8601 string] - default is '19700101T000000' \\
+$format$ & String, Optional & ISO 8601 string format - if none provided, alg will attempt to deconstruct time string. \\
+}
+{ %%%%%% Outputs %%%%%%
+$\Delta t$ & Vector & Seconds since reference
+}
+{ %%%%%% Formula %%%%%%
+This algorithm uses the Python dateutil and datetime modules to parse and process
+ISO 8601 date strings into seconds elapsed. The basic steps of the algorithms are:
+\begin{enumerate}
+ \item Convert from ISO 8601 string into datetime tuple. If no format string is used, the Python
+function dateutil.parser.parse is used to deconstruct the string, since it can automatically recognize
+nearly any date string format. If a format string is provided, then datetime.datetime.strptime(string, format) is used to deconstruct the string.
+\item datetime tuple objects are subtracted from the reference time to get a datetime.timedelta object.
+\item Number of seconds and microseconds are calculated from the datetime.timedelta object and stored as
+numeric objects and passed out of the algorithm.
+\end{enumerate}
+
+}
+{ %%%%%% Author %%%%%%
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

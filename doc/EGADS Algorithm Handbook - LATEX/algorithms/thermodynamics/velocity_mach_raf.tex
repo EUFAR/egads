@@ -1,0 +1,33 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{velocity\_mach\_raf}
+\algdesc{Mach number}
+{ %%%%%% Algorithm name %%%%%%
+velocity\_mach\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the mach number based on dynamic and static pressure.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+${\Delta}P$ & Vector & Dynamic pressure [hPa] \\
+$P_s$ & Vector & Static pressure [hPa]
+}
+{ %%%%%% Outputs %%%%%%
+$M$ & Vector & Mach number
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+M = \sqrt{\frac{2}{\gamma - 1}\left[\left(\frac{\Delta{P}}{P_s}+1\right)^{\frac{\gamma - 1}{\gamma}}- 1 \right]}
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+NCAR-EOL
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin \#23 \cite{NCAR23} 
+}
+
+

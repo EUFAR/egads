@@ -1,0 +1,32 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{SR705}
+\algdescgeneral{SR705}
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (SR705 is one index calculated within the overall program)
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Chlorophyll-Index SR705 // Linear regression
+}
+{ %%%%%% Category %%%%%%
+Biophysics - narrow band chlorophyll indices
+}
+{ %%%%%% Inputs %%%%%%
+Multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 705nm and 750nm.\bigskip
+}
+{ %%%%%% Outputs %%%%%%
+Single band with SR705 values
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+SR705 = \frac{R_{750}}{R_{705}}
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+{ %%%%%% References %%%%%% 
+Sims, D.A., Gamon, J.A., 2002, Relationships between leaf pigment content and spectral reflectance across a wide range of species, leaf structures and developmental stages. In: Remote Sensing of Environment, p. 337-354
+}
+
+

@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/157/doc/algorithms/thermodynamics
+END
+temp_virtual_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/temp_virtual_cnrm.tex
+END
+temp_static_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/temp_static_cnrm.tex
+END
+altitude_pressure_raf.tex
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/156/doc/algorithms/thermodynamics/altitude_pressure_raf.tex
+END
+velocity_tas_longitudinal_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/velocity_tas_longitudinal_cnrm.tex
+END
+velocity_tas_raf.tex
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/149/doc/algorithms/thermodynamics/velocity_tas_raf.tex
+END
+velocity_mach_raf.tex
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/velocity_mach_raf.tex
+END
+pressure_angle_incidence_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/149/doc/algorithms/thermodynamics/pressure_angle_incidence_cnrm.tex
+END
+algorithm_template.tex
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/algorithm_template.tex
+END
+wind_vector_3d_raf.tex
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/wind_vector_3d_raf.tex
+END
+hum_rel_capacitive_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/hum_rel_capacitive_cnrm.tex
+END
+temp_potential_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/temp_potential_cnrm.tex
+END
+velocity_tas_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/149/doc/algorithms/thermodynamics/velocity_tas_cnrm.tex
+END
+pressure_dynamic_angle_incidence_vdk.tex
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/149/doc/algorithms/thermodynamics/pressure_dynamic_angle_incidence_vdk.tex
+END
+density_dry_air_cnrm.tex
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/148/doc/algorithms/thermodynamics/density_dry_air_cnrm.tex
+END

@@ -1,0 +1,37 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{derivative\_wrt\_time}
+\algdesc{Time Derivative}
+{ %%%%%% Algorithm name %%%%%%
+derivative\_wrt\_time
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of the first time derivative of a generic parameter. Calculations of time derivatives are centered for all except the first and last values
+in the vector. Returns \texttt{None} value for scalar parameters.
+}
+{ %%%%%% Category %%%%%%
+Mathematics
+}
+{ %%%%%% Inputs %%%%%%
+$x$ & Vector & Parameter to calculate first derivative \\
+$t$ & Vector & Time signal [sec] 
+}
+{ %%%%%% Outputs %%%%%%
+$\dot{x}$ & Vector & First derivative of $x$ [units of $x$ / sec]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+\dot{x_{i}} = \frac{x_{i+1} - x_{i-1}}{t_{i+1} - t_{i-1}}
+\end{displaymath}
+
+
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

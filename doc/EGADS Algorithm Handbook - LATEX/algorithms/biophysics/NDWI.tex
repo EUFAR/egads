@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{NDWI}
+\algdescgeneral{NDWI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (NDWI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Normalized Difference Water Index (NDWI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - water (stress) indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 864nm and 1245nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with NDWI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+NDWI = \frac{R_{864}-R_{1245}}{R_{864}+R_{1245}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Gao, Bo-Cai (1996): NDWI – A Normalized Difference Water Index for Remote Sensingof Vegetation liquid Water from Space. In: Remote Sensing of Environment, 58, p.257-266
+}

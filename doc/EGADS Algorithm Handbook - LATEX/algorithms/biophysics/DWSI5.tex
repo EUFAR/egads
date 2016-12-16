@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{DWSI5}
+\algdescgeneral{DWSI5}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (DWSI5 is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Disease Water Stress Index (DWSI-5)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - water (stress) indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 549nm, 680nm, 803nm and 1659nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with DWSI5 values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+DWSI5 = \frac{R_{803}+R_{549}}{R_{1659}+R_{680}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Apan et al., 2003
+}

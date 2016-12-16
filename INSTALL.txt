@@ -3,25 +3,23 @@ EGADS Installation
 ==================
 
 Information about EGADS and the latest release can be found at:
-!!!! http://eufar-egads.googlecode.com !!!!
+!!!! http://www.eufar.net/software-tools/tool/eufar-general-airborne-data-processing-software-core-da-cedg-osr !!!!
 
-!!!! The latest development snapshot can be checked out from the SVN repository:
-svn checkout http://eufar-egads.googlecode.com/svn/trunk/ !!!!
 
 Prerequisites
 =============
 To use EGADS, the following packages must be installed:
 
- 1. Python 2.5 or newer. Available at http://www.python.org
+ 1. Python 2.7 or newer.
  
- 2. numpy 1.3.0 or newer. Available at http://numpy.scipy.org
+ 2. numpy 1.10.1 or newer.
 
- 3. scipy 0.6.0 or newer. Available at http://www.scipy.org
+ 3. scipy 0.15.0 or newer.
 
- 4. Python netCDF4 libraries 0.8.2. Available at 
-    http://netcdf4-python.googlecode.com
+ 4. Python netCDF4 libraries 1.1.9 or newer
 
- 5. NAPpy 0.9.9 or newer. Available at http://proj.badc.rl.ac.uk/ndg/wiki/nappy
+ 5. python_dateutil 2.4.2 or newer.
+
 
 Installation
 ============
@@ -47,5 +45,4 @@ To test the EGADS installation, run the run_test.py Python script, or from withi
 
   >>> import egads
   >>> egads.test()
-
 

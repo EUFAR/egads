@@ -1,0 +1,75 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 149 $
+\index{pressure\_dynamic\_angle\_incidence\_vdk}
+\algdesc{Dynamic pressure and angle of incidence}
+{ %%%%%% Algorithm name %%%%%%
+pressure\_dynamic\_angle\_incidence\_vdk
+}
+{ %%%%%% Algorithm summary %%%%%%
+This algorithm calculates dynamic pressure and angles of incidence from a 5-hole probe using differences
+in pressure between the ports. The algorithm requires calibration coefficients which are obtained by
+a calibration procedure of the probe at predefined airflow angles. See van den Kroonenberg, 2008 \cite{vandenkroonenberg2008} for
+more details on the calibration procedure.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$\Delta P_{t}$ & Vector & Pressure difference between top port and center port [hPa] \\ 
+$\Delta P_{b}$ & Vector & Pressure difference between bottom port and center port [hPa] \\ 
+$\Delta P_{l}$ & Vector & Pressure difference between left port and center port [hPa] \\ 
+$\Delta P_{r}$ & Vector & Pressure difference between right port and center port [hPa] \\ 
+$\Delta P_{0s}$ & Vector & Pressure difference between center port and static pressure [hPa] \\ 
+$a_{ij}$ & Coeff[11,11] & Angle of attack calibration coefficients \\
+$b_{ij}$ & Coeff[11,11] & Sideslip calibration coefficients \\
+$q_{ij}$ & Coeff[11,11] & Dynamic pressure calibration coefficients \\
+}
+{ %%%%%% Outputs %%%%%%
+$q$ & Vector & Dynamic pressure [hPa] \\
+$\alpha$ & Vector & Angle of attack [deg] \\ 
+$\beta$ & Vector & Sideslip angle [deg] \\
+}
+{ %%%%%% Formula %%%%%%
+Total pressure difference is calculated using pressure differentials from the 5 ports. 
+\begin{align*}
+ \Delta P &= \bigg( \frac{1}{125} [(\Delta P_t + \Delta P_r + \Delta P_b + \Delta P_l)^2 + (-4 \Delta P_t + \Delta P_r + \Delta P_b + \Delta P_l)^2 \\
+  & \qquad {} + (\Delta P_t - 4 \Delta P_r + \Delta P_b + \Delta P_l)^2 + (\Delta P_t + \Delta P_r - 4 \Delta P_b + \Delta P_l)^2 \\ 
+  & \qquad {} + (\Delta P_t + \Delta P_r + \Delta P_b - 4 \Delta P_l)^2] \bigg)^{1/2}  + \frac{1}{4} (\Delta P_t + \Delta P_r + \Delta P_b + \Delta P_l)
+\end{align*}
+
+The dimensionless pressure coefficients $k_\alpha$ and $k_\beta$ are defined using $\Delta P$ and the measured differential pressures.
+
+\begin{gather*}
+k_\alpha = \frac{\Delta P_t - \Delta P_b}{\Delta P} \\
+k_\beta = \frac{\Delta P_r - \Delta P_l}{\Delta P} \\
+\end{gather*}
+
+These are applied to general calibration polynomial form (11th order) from Bohn and Simon, 1975 \cite{bohn1975}, where $m=n=11$. 
+
+\begin{gather*}
+\tilde{\alpha} = \sum \limits_{i=0}^m (k_\alpha)^i \left[\sum \limits_{j=0}^n a_{ij}(k_\beta)^j\right] \\
+\tilde{\beta} = \sum \limits_{i=0}^m (k_\alpha)^i \left[\sum \limits_{j=0}^n b_{ij}(k_\beta)^j\right] \\ 
+k_q = \sum \limits_{i=0}^m (k_\alpha)^i \left[\sum \limits_{j=0}^n q_{ij}(k_\beta)^j\right] \\
+\end{gather*}
+
+Finally, the dynamic pressure, angle of attack and sideslip angle can be calculated using these coefficients.
+
+\begin{gather*}
+q = \Delta P_{0s} + \Delta P k_q \\
+\alpha = \tilde{\alpha} \\
+\beta = \arctan\left(\frac{\tan \tilde{\beta}}{\cos \tilde{\alpha}}\right) \\
+\end{gather*}
+
+
+
+}
+{ %%%%%% Author %%%%%%
+
+}
+{ %%%%%% References %%%%%% 
+
+A.C. van der Kroonenberg, et al., ``Measuring the Wind Vector Using the Autonomous Mini Aerial Vehicle M$^2$AV,'' \emph{J. Atmos. Oceanic Technol.}, 25 (2008): 1969-1982. \cite{vandenkroonenberg2008}
+
+}
+
+

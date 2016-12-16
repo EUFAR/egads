@@ -1,0 +1,42 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 156 $
+\index{altitude\_pressure\_raf}
+\algdesc{Pressure altitude
+}
+{ %%%%%% Algorithm name %%%%%%
+altitude\_pressure\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates pressure altitude given static pressure using US Standard Atmosphere definitions. Sea
+level conditions in the US Standard Atmosphere are defined as having a pressure of 1013.25 hPa and
+a temperature of 15 degC at an altitude of 0m.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$P_s$ & Vector & Static pressure [hPa] \\
+}
+{ %%%%%% Outputs %%%%%%
+$H$ & Vector & Pressure altitude [m]
+}
+{ %%%%%% Formula %%%%%%
+For pressures greater than or equal to 226.3206:
+\begin{displaymath}
+H = \frac{T_0}{L} \left[1-\left(\frac{P_s}{P_0}\right)^{\frac{R_a L}{g}} \right]
+\end{displaymath}
+%
+where the lapse rate $L$ is 0.0065 K/m. For pressures less than 226.3206:
+\begin{displaymath}
+ H = H_1 + \frac{R_a T_1}{g} \ln{\left(\frac{P_1}{P_s}\right)}
+\end{displaymath}
+%
+where $H_1$ is 11000m, $T_1$ is  216.65 K and $P_1$ is 226.3206.
+
+}
+{ %%%%%% Author %%%%%%
+NCAR EOL-RAF
+}
+{ %%%%%% References %%%%%% 
+US Standard Atmosphere 1976 (NASA-TM-X-74335), 241 pages. http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539\_1977009539.pdf
+}

@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{LWVI2}
+\algdescgeneral{LWVI2}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (LWVI2 is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Leaf Water Vegetation Index (LWVI-2)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - water (stress) indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 1094nm and 1205nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with LWVI2 values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+LWVI2 = \frac{R_{1094}-R_{1205}}{R_{1094}+R_{1205}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Galvao, L.S., Formaggio, A.R., Tisot, D.A. (2005): Discriminating of sugarcane varaieties in Southeastern Brazil with EO-1 Hyperion data. In: Remote Sensing of Environment, 94, p.523-534
+}

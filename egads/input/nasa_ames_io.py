@@ -1,18 +1,22 @@
 __author__ = "ohenry"
 __date__ = "$Date:: 2016-11-29 15:38#$"
-__version__ = "$Revision:: 101       $"
+__version__ = "$Revision:: 103       $"
 __all__ = ["NasaAmes"]
 
 
 import egads
-from egads.thirdparty import nappy
+import nappy  # @UnresolvedImport
+import copy
 from egads.input import FileCore
 
 
 class NasaAmes(FileCore):
     """
     EGADS module for interfacing with NASA Ames files. This module adapts the NAPpy 
-    library to the file access methods used in EGADS
+    library to the file access methods used in EGADS. To keep compatibility with
+    Windows, all functions calling CDMS or CDMS2 have been revoked. The user still
+    can use egads.thirdparty.nappy functions to have access to CDMS possibilities
+    under Linux and Unix.
     """
 
     def __init__(self, filename=None, perms='r'):
@@ -37,7 +41,7 @@ class NasaAmes(FileCore):
         the user to read the dictionary in a custom object.
         """
         
-        return self.f.getNADict()
+        return copy.deepcopy(self.f.getNADict())
 
 
     def read_variable(self, varname):
@@ -98,53 +102,58 @@ class NasaAmes(FileCore):
             already present in the dictionary. 
         """
         
-        if isinstance(data, egads.EgadsData):
-            value = data.value
-            name = data.metadata["name"]
-            units = data.metadata["units"]
-            if vartype == "main":
-                scale = data.metadata["scale_factor"]
-                miss = data.metadata["_FillValue"]
-        else:
-            value = data
-            name = attrdict["name"]
-            units = attrdict["units"]
-            if vartype == "main":
-                scale = attrdict["scale_factor"]
-                miss = attrdict["_FillValue"]
-            
-        
         if vartype == "main":
             try:
-                
-                
                 if isinstance(varname, int):
                     varnum = varname
                 else:
                     var_list = self.get_variable_list()
                     varnum = var_list.index(varname)
-                self.f.V[varnum] = value
+                if isinstance(data, egads.EgadsData):
+                    self.f.V[varnum] = data.value.tolist()
+                else:
+                    self.f.V[varnum] = data
             except ValueError:
-                
+                if isinstance(data, egads.EgadsData):
+                    value = data.value.tolist()
+                    name = data.metadata["name"]
+                    units = data.metadata["units"]
+                    scale = data.metadata["scale_factor"]
+                    miss = data.metadata["_FillValue"]
+                else:
+                    value = data
+                    name = attrdict["name"]
+                    units = attrdict["units"]
+                    scale = attrdict["scale_factor"]
+                    miss = attrdict["_FillValue"]
                 self.f.NV += 1
                 self.f.V.append(value)
                 self.f.VNAME.append(name + " (" + units + ")")
                 self.f.VMISS.append(miss)
                 self.f.VSCAL.append(scale)
-                
-                
+
         elif vartype == "independant":
-            try: 
+            try:
                 if isinstance(varname, int):
                     varnum = varname
                 else:
                     var_list = self.get_variable_list(vartype=vartype)
                     varnum = var_list.index(varname)
-                self.f.X[varnum] = data
+                if isinstance(data, egads.EgadsData):
+                    self.f.X[varnum] = data.value.tolist()
+                else:
+                    self.f.X[varnum] = data
             except ValueError:
-                
+                if isinstance(data, egads.EgadsData):
+                    value = data.value.tolist()
+                    name = data.metadata["name"]
+                    units = data.metadata["units"]
+                else:
+                    value = data
+                    name = attrdict["name"]
+                    units = attrdict["units"]
                 self.f.NX += 1
-                self.f.X.append(data)
+                self.f.X.append(value)
                 self.f.XNAME.append(name + " (" + units + ")")
 
 
@@ -211,7 +220,6 @@ class NasaAmes(FileCore):
             else:
                 var_list = self.get_variable_list(vartype=vartype)
                 varnum = var_list.index(varname)
-
             attr_list = []
             if vartype == "main":
                 (variable, units, miss, scale) = self.f.getVariable(varnum)
@@ -327,7 +335,7 @@ class NasaAmes(FileCore):
                 self.na_dict[attr_dict[attrname]][varnum] = attrvalue
     
 
-    def save_na_file(self, filename, na_dict=None):
+    def save_na_file(self, filename, na_dict=None, float_format='%.2f'):
         """
         Save a NASA/Ames dictionary to a file.
 
@@ -336,12 +344,15 @@ class NasaAmes(FileCore):
         :param dict na_dict:
             Optional - The NASA/Ames dictionary to be saved. If no dictionary is entered,
             the dictionary currently opened during the open file process will be saved.
+        :param string float_format:
+            Optional - The format of numbers to be saved. If no string is entered, values are
+            round up to two decimal places.
         """
         
         if not na_dict:
-            na_dict = self.f.getNADict()
+            na_dict = self.f.na_dict
         saved_file = nappy.openNAFile(filename, mode="w", na_dict=na_dict)
-        saved_file.write()
+        saved_file.write(float_format=float_format)
         saved_file.close()
 
 
@@ -383,5 +394,68 @@ class NasaAmes(FileCore):
             raise
 
 
-    
+    def na_format_information(self):
         
+        # MANQUE NIV
+        
+        string = ("The goal of the 'na_format_information' function is to give few information\n"
+                  + "about the file structure. Please see the following link for details:\n"
+                  + "    http://badc.nerc.ac.uk/help/formats/NASA-Ames/\n"
+                  + "\n"
+                  + "A NASA/Ames file is composed of different elements:\n"
+                  + "    NLHEAD  FFI\n"
+                  + "    ONAME\n"
+                  + "    ORG\n"
+                  + "    SNAME\n"
+                  + "    MNAME\n"
+                  + "    IVOL  NVOL\n"
+                  + "    DATE  RDATE\n"
+                  + "    DX\n"
+                  + "    XNAME\n"
+                  + "    NV\n"
+                  + "    VSCAL(1) ... VSCAL(NV)\n"
+                  + "    VMISS(1) ... VMISS(NV)\n"
+                  + "    VNAME(1)\n"
+                  + "    ...\n"
+                  + "    VNAME(NV)\n"
+                  + "    NSCOML\n"
+                  + "    SCOM\n"
+                  + "    NNCOML\n"
+                  + "    NCOM\n"
+                  + "    --- Here start the data ---\n"
+                  + "\n"
+                  + "with NLHEAD: number of lines in the header (above the first line of data\n"
+                  + "     FFI: number of the File Format Index used in the file\n"
+                  + "     ONAME: list of authors in the format Lastname, Firstname separated by\n"
+                  + "        an arbitrary character\n"
+                  + "     ORG: Organisation name (your university, institute or lab). May include\n"
+                  + "        address and phone number\n"
+                  + "     SNAME: Source of data (i.e. instrument, set of instruments, observation\n"
+                  + "        station, platform, model name,...)\n"
+                  + "     MNAME: Name of mission, campaign, programme, project,...\n"
+                  + "     IVOL: Total number of files in the current dataset.\n"
+                  + "     NVOL: Number of this file in your dataset (1 <= IVOL <=  NVOL)\n"
+                  + "     DATE: Date at which the data recorded in this file begin (YYYY MM DD)\n"
+                  + "     RDATE: Date at which the data were last revised (YYYY MM DD)\n"
+                  + "     DX: Independent variable interval identifier\n"
+                  + "     XNAME: Name and unit of the independent variable. E.g.: time (s)\n"
+                  + "     NV: Number of dependent variables\n"
+                  + "     VSCAL: Scaling factors of the NV dependent variables, in the same order\n"
+                  + "        as the dependent variables\n"
+                  + "     VMISS: Missing value identifiers for the dependent variables\n"
+                  + "     VNAME: Names and units of the NV dependent variables. E.g.: V(n) = temperature (K)\n"
+                  + "     NSCOML: Number of Special Comment lines including blank lines (= 0\n"
+                  + "        if no Special Comment is given).\n"
+                  + "     SCOM: Special Comments. Can expand over any number of lines (equal to NSCOML).\n"
+                  + "        If the data are collected at a given site, these should include the \n"
+                  + "        following lines: site name, country, longitude, latitude, height above\n"
+                  + "        sea level\n"
+                  + "     NNCOML: Number of Normal Comment lines including blank lines (= 0 if no\n"
+                  + "        Normal Comment is given)\n"
+                  + "     NCOM: Normal comments. Can expand on any number of lines (equal to NNCOML)\n"
+                  + "        The last line(s) are often used for column headers or to indicate how\n"
+                  + "        the data are displayed (but this is not mandatory). The Normal Comments\n"
+                  + "        may include some Conditions of Use. They should also include a reference\n"
+                  + "        to Gaines and Hipskind, 1998 (see the Instructions worksheet)."
+                  )
+        print string

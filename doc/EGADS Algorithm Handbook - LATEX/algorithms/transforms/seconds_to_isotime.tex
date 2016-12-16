@@ -1,0 +1,40 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{seconds\_to\_isotime}
+\algdesc{Convert elapsed seconds to ISO 8601 time string}
+{ %%%%%% Algorithm name %%%%%%
+seconds\_to\_isotime
+}
+{ %%%%%% Algorithm summary %%%%%%
+Given a vector of elapsed seconds and a reference time, this algorithm calculates a series of ISO
+8601 formatted time strings using the Python datetime module. The format of the returned ISO 8601
+strings can be controlled by the optional $format$ parameter.  The default format is yyyymmddTHHMMss.
+}
+{ %%%%%% Category %%%%%%
+Transforms
+}
+{ %%%%%% Inputs %%%%%%
+$t_{secs}$ & Vector & Elapsed seconds [s] \\
+$t_{ref}$ & String & ISO 8601 reference time \\
+$format$ & String, optional & ISO 8601 format string, default is yyyymmddTHHMMss
+}
+{ %%%%%% Outputs %%%%%%
+$t_{ISO}$ & Vector & ISO 8601 date-time strings \\
+}
+{ %%%%%% Formula %%%%%%
+The ISO 8601 time strings are generated from the inputs using the Python datetime module using these steps for each item in the $t_{secs}$ vector:
+\begin{enumerate}
+ \item Create a datetime object using the input reference time ($t_{ref}$) representing the start time.
+ \item Calculate a timedelta object from the input elapsed seconds parameter.
+ \item Add the timedelta object to the reference datetime object to calculate an absolute time.
+ \item Convert the resulting datetime object to an ISO 8601 string following the given $format$, if any.
+\end{enumerate}
+
+}
+{ %%%%%% Author %%%%%%
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

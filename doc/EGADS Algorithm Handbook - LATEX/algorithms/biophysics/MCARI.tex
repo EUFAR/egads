@@ -1,0 +1,40 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{MCARI}
+\algdescgeneral{MCARI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (MCARI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Modified Chlorophyll absorption in Reflectance Index (MCARI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - narrow band chlorophyll indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 550nm, 670nm and 701nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with MCARI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+MCARI = ((R_{701}-R_{670})-0.2*(R_{701}-R_{550}))*\frac{R_{701}}{R_{670}}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Daughtry, C.S.T., Walthall, C.L., Kim, M.S., Brown de Colstoun, E., McMurtrey, J.E. III (2000): Estimating corn leaf chlorophyll concentration from leaf and canopy reflectance. In: Remote Sensing of Environment, 74, p.229-239.
+}
+
+

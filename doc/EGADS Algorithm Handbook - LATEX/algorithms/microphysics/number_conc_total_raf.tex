@@ -1,0 +1,33 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 168 $
+\index{number\_conc\_total\_raf}
+\algdesc{Total Number Concentration}
+{ %%%%%% Algorithm name %%%%%%
+number\_conc\_total\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of total number concentration for a particle probe.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$n_i$ & Array & Number of particles in each channel $i$ \\
+$SV$ & Array & Sample volume [m$^3$] 
+}
+{ %%%%%% Outputs %%%%%%
+$N_t$ & Vector & Total number concentration [m$^{-3}$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ N_t = \sum_{i} \frac{n_i}{SV_i}
+\end{displaymath}
+
+}
+{ %%%%%% Author %%%%%%
+NCAR-RAF
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin No. 24. \cite{NCAR24}
+}
+

@@ -1,12 +1,10 @@
 """
 Test suite for Metadata classes.
-
 """
-from test import test_gl, test_al
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-02-17 18:01#$"
-__version__ = "$Revision:: 129       $"
 
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-12-6 11:45#$"
+__version__ = "$Revision:: 130       $"
 
 import unittest
 import egads.core.metadata as metadata
@@ -29,6 +27,25 @@ TEST_GLOBAL_METADATA_DICT = {'Conventions':'N6SP',
                              'references':'none',
                              'comment':'this is a test'}
 
+TEST_GLOBAL_METADATA_LITE_DICT = {'Conventions':'N6SP',
+                             'title':'test',
+                             'source':'testfile',
+                             'institution':'EUFAR',
+                             'project':'N6SP',
+                             'date_created':'20110920',
+                             'geospatial_vertical_min':0,
+                             'geospatial_vertical_max':1000,
+                             'time_coverage_start':0,
+                             'time_coverage_end':1,
+                             'history':'for the test file',
+                             'references':'none',
+                             'comment':'this is a test'}
+
+ADD_GLOBAL_METADATA_DICT = {'geospatial_lat_min':0,
+                             'geospatial_lat_max':90,
+                             'geospatial_lon_min':0,
+                             'geospatial_lon_max':90}
+
 TEST_VARIABLE_METADATA_DICT = {'units':'m',
                                '_FillValue':-9999,
                                'long_name':'test variable metadata dict',
@@ -36,6 +53,15 @@ TEST_VARIABLE_METADATA_DICT = {'units':'m',
                                'valid_max':1,
                                'SampledRate':10,
                                'Category':'Other'}
+
+TEST_VARIABLE_METADATA_LITE_DICT = {'units':'m',
+                               '_FillValue':-9999,
+                               'long_name':'test variable metadata dict',
+                               'SampledRate':10,
+                               'Category':'Other'}
+
+ADD_VARIABLE_METADATA_DICT = {'valid_min':0,
+                               'valid_max':1}
 
 TEST_ALGORITHM_METADATA_DICT = {'Inputs':['test'],
                                 'InputUnits':['m'],
@@ -45,6 +71,15 @@ TEST_ALGORITHM_METADATA_DICT = {'Inputs':['test'],
                                 'ProcessorVersion':'1.0',
                                 'DateProcessed':'20110920'}
 
+TEST_ALGORITHM_METADATA_LITE_DICT = {'Inputs':['test'],
+                                'InputUnits':['m'],
+                                'Outputs':['test_out'],
+                                'Processor':'test processor',
+                                'DateProcessed':'20110920'}
+
+ADD_ALGORITHM_METADATA_DICT = {'ProcessorDate':'20110919',
+                                'ProcessorVersion':'1.0'}
+
 
 class MetadataCreationTestCase(unittest.TestCase):
     """ Test creation of metadata instances """
@@ -52,39 +87,36 @@ class MetadataCreationTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
+
     def test_creation_of_metadata_object(self):
         """ Test creation of metadata instance via direct dictionary assignment """
-        file_metadata = metadata.FileMetadata(TEST_GLOBAL_METADATA_DICT)
+        
+        file_metadata = metadata.FileMetadata(TEST_GLOBAL_METADATA_DICT, filename=None)
         alg_metadata = metadata.AlgorithmMetadata(TEST_ALGORITHM_METADATA_DICT)
         variable_metadata = metadata.VariableMetadata(TEST_VARIABLE_METADATA_DICT)
-
         self.assertEqual(file_metadata, TEST_GLOBAL_METADATA_DICT, 'Global metadata not properly assigned to file metadata instance')
         self.assertEqual(alg_metadata, TEST_ALGORITHM_METADATA_DICT, 'Algorithm metadata not properly assigned to algorithm metadata instance')
         self.assertEqual(variable_metadata, TEST_VARIABLE_METADATA_DICT, 'Variable metadata not properly assigned to variable metadata instance')
-
-        self.assertEqual(file_metadata._conventions, TEST_GLOBAL_METADATA_DICT['Conventions'], 'Global metadata conventions object doesnt match')
+        self.assertEqual(file_metadata._conventions[0], TEST_GLOBAL_METADATA_DICT['Conventions'], 'Global metadata conventions object doesnt match')
         self.assertEqual(alg_metadata._conventions, 'EGADS Algorithm', 'Algorithm conventions abject doesnt match')
 
 
     def test_add_items(self):
         """ Test creation of metadata, assigning metadat using add_items method"""
-        file_metadata = metadata.FileMetadata()
-        alg_metadata = metadata.AlgorithmMetadata()
-        variable_metadata = metadata.VariableMetadata()
-
-        file_metadata.add_items(TEST_GLOBAL_METADATA_DICT)
-        alg_metadata.add_items(TEST_ALGORITHM_METADATA_DICT)
-        variable_metadata.add_items(TEST_VARIABLE_METADATA_DICT)
-
+        
+        file_metadata = metadata.FileMetadata(TEST_GLOBAL_METADATA_LITE_DICT, filename=None)
+        alg_metadata = metadata.AlgorithmMetadata(TEST_ALGORITHM_METADATA_LITE_DICT)
+        variable_metadata = metadata.VariableMetadata(TEST_VARIABLE_METADATA_LITE_DICT)
+        file_metadata.add_items(ADD_GLOBAL_METADATA_DICT)
+        alg_metadata.add_items(ADD_ALGORITHM_METADATA_DICT)
+        variable_metadata.add_items(ADD_VARIABLE_METADATA_DICT)
         self.assertEqual(file_metadata, TEST_GLOBAL_METADATA_DICT, 'Global metadata not properly assigned to file metadata instance')
         self.assertEqual(alg_metadata, TEST_ALGORITHM_METADATA_DICT, 'Algorithm metadata not properly assigned to algorithm metadata instance')
         self.assertEqual(variable_metadata, TEST_VARIABLE_METADATA_DICT, 'Variable metadata not properly assigned to variable metadata instance')
 
-        def test_set_conventions(self):
-            pass
 
 
-class MetadataConventionComplianceTestCase(unittest.TestCase):
+'''class MetadataConventionComplianceTestCase(unittest.TestCase):
     """ Test compliance checker functionality in metadata cases. """
 
     def setUp(self):
@@ -170,10 +202,13 @@ class MetadataConventionComplianceTestCase(unittest.TestCase):
 
     def test_incomplete_metadata(self):
         #TODO: Complete test class 
-        pass
+        pass'''
 
+
+def suite():
+    metadata_creation_test_suite = unittest.TestLoader().loadTestsFromTestCase(MetadataCreationTestCase)
+    return unittest.TestSuite([metadata_creation_test_suite])
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

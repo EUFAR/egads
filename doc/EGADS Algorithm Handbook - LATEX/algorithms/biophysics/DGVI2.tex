@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{DGVI2}
+\algdescgeneral{DGVI2}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (DGVI2 is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Derivative-based Green Vegetation Index (DGVI). Surface under curve of second derivative between 626nm and 795nm.
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - red edge parametrisation
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 626nm and 795nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with DGVI2 values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+DGVI2 = \int _{\lambda_1 =626nm}^{\lambda_2 =795nm} \mid \frac{d \rho}{d^2  \lambda }\mid d \lambda
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Elvidge, C.D., Chen, Z.(1995): Comparison of Broad-Band and Narrow-Band Red and Near-Infrared Vegetation indices. In: Remote Sensing of Environment, 54, p.38-48.
+}

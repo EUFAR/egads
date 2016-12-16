@@ -4,7 +4,6 @@ __version__ = "$Revision:: 146       $"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 
-import types
 import weakref
 import datetime
 import re
@@ -12,17 +11,14 @@ import warnings
 import numpy
 import quantities as pq  # @UnresolvedImport
 import metadata
-from functools import wraps
 from collections import defaultdict
 
 
 class EgadsData(pq.Quantity):
     """
-    This class is designed using the EUFAR N6SP data and metadata recommendations.
-    Its purpose is to store related data and metadata and allow them to be
+    This class is designed using the EUFAR Standards & Protocols data and metadata 
+    recommendations. Its purpose is to store related data and metadata and allow them to be
     passed between functions and algorithms in a consistent manner.
-
-
     """
 
     __refs__ = defaultdict(list)
@@ -65,24 +61,20 @@ class EgadsData(pq.Quantity):
 
     def __init__(self, value, units='', variable_metadata=None, dtype='float64', **attrs):
         """
-        
-        **Constructor Variables**
+        Constructor Variables
     
-        :param value: 
+        :param value:
             Scalar or array of values to initialize EgadsData object.
-        :param string units: Optional -
-            String representation of units to be used for current EgadsData instance, e.g.
+        :param string units:
+            Optional - String representation of units to be used for current EgadsData instance, e.g.
             'm/s', 'kg', 'g/cm^3', etc.            
-        :param VariableMetadata variable_metadata: Optional -
-            VariableMetadata dictionary object containing relevant metadata
+        :param VariableMetadata variable_metadata: 
+            Optional - VariableMetadata dictionary object containing relevant metadata
             for the current EgadsData instance.
-        :param **attrs: Optional -
-            Keyword/value pairs of additional metadata which will be added into
+        :param **attrs:
+            Optional - Keyword/value pairs of additional metadata which will be added into
             the existing variable_metadata object.
-
         """
-
-
 
         for key, val in attrs.iteritems():
             self.metadata[key] = val
@@ -251,7 +243,7 @@ class EgadsAlgorithm(object):
         Initializes EgadsAlgorithm instance with None values for all standard
         attributes.
 
-        **Constructor Variables**
+        Constructor Variables
     
         :param bool return_Egads: Optional - 
             Flag used to configure which object type will be returned by the current

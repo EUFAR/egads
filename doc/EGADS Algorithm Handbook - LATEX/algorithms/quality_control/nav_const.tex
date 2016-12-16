@@ -1,0 +1,76 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{nav\_const}
+\algdescgeneral{Additional consistency check \& QA for navigation data (no correction!)}
+%
+{ %%%%%% Algorithm name %%%%%%
+nav\_const
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Tests navigation file (position and attitude) for consistency. The code is based on a HyMap *gps File.
+
+This check can be performed after nav\_chk.pro.
+}
+%
+{ %%%%%% Category %%%%%%
+Quality Control
+}
+%
+{ %%%%%% Inputs %%%%%%
+*.gps file. The *.gps file is a multi-column ASCII file derived by HyVista Corp. proprietary software, which synchronises times and generates an output which is indexed by scan line number. The table below shows the list of parameters. \bigskip
+
+\begin{tabular}{l l p{7cm}}
+Parameters & Example & Description \\ \hline
+Line & 1 & Scan line number \\ 
+UTC Time & 48835.0462/20/5/2004 & Time of day in seconds/day/month/year \\
+VME Time & 929386852.0 & Internal computer tick time in microseconds \\
+IMU Time & 2048825953.1 & Internal IMU time in microseconds \\
+Latitude & 48.03321015 & Decimal degrees (positive = north, negative = south) \\
+Longitude & 11.28140200 & Decimal degrees (positive = east, negative = west) \\
+Altitude & 2970.79892155 & Meters above MSL \\
+Pitch & 0.22235917 & Decimal degrees (positive = nose up) \\
+Roll & 0.54269902 & Decimal degrees (positive = right wing up) \\
+Heading & 0.37774316 & Decimal degrees (positive = N-E-S direction, negative = N-W-S direction) \\
+True Track & 1.00507651 & Decimal degrees (0 to 360) \\
+Ground Speed & 72.90907700 & Meters / second \\
+Sat & 5 & Number of satellites being received \\
+DGPS & 1 & DGPS status: 1 = DGPS being received 0 = no DGPS received 
+\end{tabular}
+}
+%
+{ %%%%%% Outputs %%%%%%
+ if (KEYWORD\_SET(gps\_err\_array)) $\rightarrow$ QC array
+
+otime, lat, lon, alt, pit, rol, heading, track, speed, sat, dgps
+
+Values: 0:OK    1:minor problem    2:major problem
+
+if (KEYWORD\_SET(gps\_data)) $\rightarrow$ gps data as array
+
+otime, lat, lon, alt, pit, rol, heading, track, speed, sat, dgps
+}
+%
+{ %%%%%% Formula %%%%%%
+test \& report the following
+\begin{itemize}
+\item if data range is not plausible
+\item if change between steps $>$ threshold: 
+
+latlon, alt, pit, rol, heading, track, speed
+
+\item uncorrectable errors in:
+
+time, latlon, alt, pit, rol, heading, track, speed, sat, dgps
+\end{itemize}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+EUFAR FP7 - DJ2.2.2 - Quality Layers for VITO, DLR, INTA and PML
+}
+
+

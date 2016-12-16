@@ -1,0 +1,46 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 168 $
+\index{sample\_area\_oap\_center\_in\_raf}
+\algdesc{Sample area for imaging probes (Center In)}
+{ %%%%%% Algorithm name %%%%%%
+sample\_area\_oap\_center\_in\_raf
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of 'center in' sample area size for OAP probes such as the 2DC, 2DP, CIP, etc. This sample area varies by number of shadowed diodes. This routine is intended to calculate a sample area per bin.
+}
+{ %%%%%% Category %%%%%%
+Microphysics
+}
+{ %%%%%% Inputs %%%%%%
+$\lambda$ & Coeff. & Laser wavelength [nm] \\
+$D_{arms}$ & Coeff. & Distance between probe arm tips [mm] \\
+dD & Coeff. & Diode diameter [$\mu$m] \\
+M & Coeff. & Probe magnification factor \\
+N & Coeff. & Number of diodes in array \\
+}
+{ %%%%%% Outputs %%%%%%
+SA & Vector & Sample area [m$^2$]
+}
+{ %%%%%% Formula %%%%%%
+\begin{eqnarray}
+DOF_i = \frac{6 R_i^2}{\lambda} \\ \nonumber
+R_i = X \frac{dD}{2} \\ \nonumber
+X = {1...N} \nonumber
+\end{eqnarray}
+where $DOF$ must be less than $D_{arms}$. The parameter $i$ ranges from 1 to $N$.
+
+\begin{displaymath}
+ESW = \frac{N dD}{M} \nonumber
+\end{displaymath}
+
+\begin{displaymath}
+ SA_i = (DOF_i)(ESW) 
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+NCAR-RAF
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin No. 24. \cite{NCAR24}
+}
+

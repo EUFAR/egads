@@ -1,0 +1,74 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 168 $
+\index{rotate\_solar\_vector\_to\_aircraft\_frame}
+\algdesc{Rotate solar vector to aircraft frame}
+{ %%%%%% Algorithm name %%%%%%
+rotate\_solar\_vector\_to\_aircraft\_frame
+}
+{ %%%%%% Algorithm summary %%%%%%
+Rotates solar vector to aircraft coordinates given roll, pitch and yaw. All rotations are defined
+with a mathematically positive spherical coordinate system. 
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+$\theta_\odot$ & Vector & Solar Zenith [degrees] \\
+$\Phi_\odot$ & Vector & Solar Azimuth [degrees] (mathematic negative, North=0\deg, clockwise)\\
+$\phi_a$ & Vector & Aircraft roll angle [degrees] (mathematic positive, left wing up=positive)\\
+$\theta_a$ & Vector & Aircraft pitch angle [degrees] (mathematic positive, nose down=positive)\\
+$\psi_a$ & Vector & Aircraft yaw angle [degrees] (mathematic negative, North=0\deg, clockwise)
+}
+{ %%%%%% Outputs %%%%%%
+$\theta_{\odot a}$ & Vector & Solar Zenith, AC coordinates [degrees] \\
+$\Phi_{\odot a}$ & Vector & Solar Azimuth, AC coordinates [degrees] (mathematic negative, North=0\deg, clockwise)
+}
+{ %%%%%% Formula %%%%%%
+First, $\Phi_\odot$ and $\psi_a$ must be transformed into mathematially positive coordinate systems by subtracting them from 360. 
+
+Next, the cartesian coordinates are calculated from the solar vector:
+\begin{gather*}
+x = \sin{\theta_\odot} \cos{\Phi_\odot} \\
+y = \sin{\theta_\odot} \sin{\Phi_\odot} \\
+z = \cos{\theta_\odot} \\
+\end{gather*}
+
+Then, the cartesian coordinates are rotated using three rotation matrixes using yaw, pitch and roll:
+\begin{displaymath}
+ \begin{bmatrix}
+  x' \\
+  y' \\
+  z' \\
+ \end{bmatrix} 
+=
+\begin{bmatrix}
+ \cos{\theta_a} \cos{\psi_a} & \cos{\theta_a} \sin{\psi_a} & -\sin{\theta_a} \\
+ \sin{\phi_a} \sin{\theta_a} \cos{\psi_a} - \cos{\phi_a} \sin{\psi_a} & \sin{\phi_a} \sin{\theta_a} \sin{\psi_a} + \cos{\phi_a} \cos{\psi_a} & \sin{\phi_a} \cos{\theta_a} \\
+ \cos{\phi_a} \sin{\theta_a} \cos{\psi_a} + \sin{\phi_a} \sin{\psi_a} & \cos{\phi_a} \sin{\theta_a} \sin{\psi_a} - \sin{\phi_a} \cos{\psi_a} & \cos{\phi_a} \cos{\theta_a}
+\end{bmatrix}
+\begin{bmatrix}
+ x \\
+ y \\ 
+ z \\
+\end{bmatrix}
+\end{displaymath}
+
+Finally, convert back to spherical coordinates:
+\begin{gather*}
+ \theta_{\odot a} = \cos^{-1}{\frac{z'}{\sqrt{x'^2 + y'^2 + z'^2}}} \\
+ \Phi_{\odot a} = \tan^{-1}{\frac{y'}{x'}}
+\end{gather*}
+%
+
+$\Phi_{\odot a}$ must be between 0 and 360 and then converted back to mathematic negative coordinate system (i.e. subtract it from 360).
+
+
+}
+{ %%%%%% Author %%%%%%
+Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

@@ -24,21 +24,23 @@ Intended Audience :: Science/Research
 License :: OSI Approved :: BSD License
 Natural Language :: English
 Programming Language :: Python
+Programming Language :: Python 2
+Programming Language :: Python 2.7
 Topic :: Scientific/Engineering :: Atmospheric Science
 """
 
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.5.8',
+      version='0.6.0',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',
       author_email='bureau@eufar.net',
-      maintainer='Matt Freer',
-      maintainer_email='eufarsp@eufar.net',
+      maintainer='Olivier Henry',
+      maintainer_email='olivier.henry@meteo.fr',
       url='http://www.eufar.net',
-      download_url='http://code.google.com/p/eufar-egads/',
+      download_url='http://www.eufar.net/software-tools/tool/eufar-general-airborne-data-processing-software-core-da-cedg-osr',
       license='New BSD License',
       keywords=['airbornescience', 'netcdf', 'nasa-ames', 'eufar', 'science',
                   'microphysics', 'thermodynamics'],
@@ -54,31 +56,29 @@ setup(name='egads',
                   'egads.algorithms.transforms',
                   'egads.input',
                   'egads.tests',
-		  'egads.third-party.cdms_utils',
-		  'egads.third-party.nappy',
-		  'egads.third-party.nappy.config',
-		  'egads.third-party.nappy.contrib',
-		  'egads.third-party.nappy.na_error',
-		  'egads.third-party.nappy.na_file',
-		  'egads.third-party.nappy.nc_interface',
-		  'egads.third-party.nappy.script',
-		  'egads.third-party.nappy.utils',
-		  'egads.third-party.pml_wq',
-          'egads.third-party.pml_wq.iop_model',
-          'egads.third-party.pml_wq.iop_model',
-          'egads.third-party.pml_wq.iop_model.config',
-          'egads.third-party.pml_wq.iop_model.data',
-          'egads.third-party.pml_wq.test_data',
-          'egads.third-party.quantities',
-		  'egads.third-party.quantities.constants',
-		  'egads.third-party.quantities.tests',
-		  'egads.third-party.quantities.units'],
+		  'egads.thirdparty.nappy',
+		  'egads.thirdparty.nappy.config',
+		  'egads.thirdparty.nappy.contrib',
+		  'egads.thirdparty.nappy.na_error',
+		  'egads.thirdparty.nappy.na_file',
+		  'egads.thirdparty.nappy.nc_interface',
+		  'egads.thirdparty.nappy.script',
+		  'egads.thirdparty.nappy.utils',
+		  'egads.thirdparty.pml_wq',
+          'egads.thirdparty.pml_wq.iop_model',
+          'egads.thirdparty.pml_wq.iop_model',
+          'egads.thirdparty.pml_wq.iop_model.config',
+          'egads.thirdparty.pml_wq.iop_model.data',
+          'egads.thirdparty.pml_wq.test_data',
+          'egads.thirdparty.quantities',
+		  'egads.thirdparty.quantities.constants',
+		  'egads.thirdparty.quantities.tests',
+		  'egads.thirdparty.quantities.units'],
       package_data={
-	      'egads.third-party.nappy': ['*.ini'],
-          'egads.third-party.nappy.config':['*.ini']
+	      'egads.thirdparty.nappy': ['*.ini'],
+          'egads.thirdparty.nappy.config':['*.ini']
 	      },
       classifiers=filter(None, classifiers.split("\n")),
-      requires=['numpy (>=1.3.0)', 'netCDF4 (>=0.8.2)', 'quantities (>=0.10.0)', 'python_dateutil (>=1.5)', 'cdat_lite'],
-      install_requires=['numpy >= 1.3.0', 'netCDF4 >= 0.8.2' , 'quantities >= 0.10.0', 'python_dateutil >= 1.5', 'cdat_lite'],
+      requires=['numpy (>=1.10.1)', 'scipy (>=0.15.0)', 'netCDF4 (>=1.1.9)', 'python_dateutil (>=2.4.2)'],
+      install_requires=['numpy >= 1.10.1', 'scipy >=0.15.0', 'netCDF4 >= 1.1.9', 'python_dateutil >= 2.4.2'],
       )
-

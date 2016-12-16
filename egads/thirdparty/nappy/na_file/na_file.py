@@ -64,7 +64,6 @@ class NAFile(nappy.na_file.na_core.NACore):
         self._open(mode)
         self.mode = mode
         self.na_dict = na_dict
-
         if self.mode == "r":
             self._normalized_X = True
             self.readHeader()

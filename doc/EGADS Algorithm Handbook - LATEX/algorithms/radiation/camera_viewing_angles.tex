@@ -1,0 +1,46 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 152 $
+\index{camera\_viewing\_angles}
+\algdesc{Camera Viewing Angles}
+{ %%%%%% Algorithm name %%%%%%
+camera\_viewing\_angles
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates per-pixel camera viewing angles of a digital camera given its sensor dimension and
+focal length. x--y coordinates are defined as having the left side of the image (x=0) aligned with the flight direction and y=0 to the top of the image.
+}
+{ %%%%%% Category %%%%%%
+Radiation
+}
+{ %%%%%% Inputs %%%%%%
+$n_x$ & Coeff & Number of pixels in x direction \\
+$n_y$ & Coeff & Number of pixels in y direction \\
+$l_x$ & Coeff & Length of the camera sensor in x direction [mm] \\
+$l_y$ & Coeff & Length of the cameras sensor in y direction [mm] \\
+$f$ & Coeff & Focal length of the camera lens [mm] \\
+}
+{ %%%%%% Outputs %%%%%%
+$\theta_c$ & Array[$n_x$,$n_y$] & Camera viewing zenith angle [deg] \\
+$\Phi_c$ & Array[$n_x$,$n_y$] & Camera viewing azimuth angle [deg], mathematic negative system with 0\deg into flight direction, clockwise\\
+}
+{ %%%%%% Formula %%%%%%
+
+For each $i$, $j$  where $0<i<n_x$ and $0<j<n_y$:
+%
+\begin{gather*}
+x = l_x \frac{(i - n_x/2)}{n_x} \\
+y = l_y \frac{(i - n_y/2)}{n_y} \\
+d = \sqrt{x^2 + y^2} \\
+\\
+\theta_c(i,j) = 2 \tan^{-1}{\frac{d}{2 f}} \\
+\Phi_c(i,j) = 2 \pi - \tan^{-1}{\frac{y}{x}}
+\end{gather*}
+}
+{ %%%%%% Author %%%%%%
+Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

@@ -1,6 +1,6 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-01-27 16:41#$"
-__version__ = "$Revision:: 100       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-12-6 15:00#$"
+__version__ = "$Revision:: 101       $"
 
 from egads_core import EgadsData
 from egads_core import EgadsAlgorithm

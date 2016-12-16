@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{CAI}
+\algdescgeneral{CAI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (CAI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Cellulose Absorption Index (CAI)
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - dry vegetation (stress) indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 2000nm, 2100nm and 2200nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with CAI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+CAI = 0.5 * ( R_{2000} + R_{2200} ) - R_{2100}
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Nagler, P.L., Daughtry, C.S.T., Goward, S.N. (2000): Plant Litter and Soil Reflectance. In: Remote Sensing of Environment, 71, P.207-215.
+}

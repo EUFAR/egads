@@ -1,0 +1,34 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{velocity\_tas\_longitudinal\_cnrm}
+\algdesc{Longitudinal true airspeed}
+{ %%%%%% Algorithm name %%%%%%
+velocity\_tas\_longitudinal\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates the true air speed along the longitudinal axis of the aircraft.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$V_t$ & Vector & True air speed [m/s] \\
+$\alpha$ & Vector & Angle of attack [rad] \\
+$\beta$ & Vector & Sideslip angle [rad] 
+}
+{ %%%%%% Outputs %%%%%%
+$V_{tx}$ & Vector & Longitudinal true air speed [m/s]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ V_{tx} = \frac{V_t}{\sqrt{1 + \tan^2 \alpha + \tan^2 \beta}}
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+NCAR-RAF Bulletin \#23 \cite{NCAR23}
+}
+
+

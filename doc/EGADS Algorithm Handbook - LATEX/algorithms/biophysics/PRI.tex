@@ -1,0 +1,38 @@
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 148 $
+\index{PRI}
+\algdescgeneral{PRI}
+%
+{ %%%%%% Algorithm name %%%%%%
+biophys\_indices (PRI is one index calculated within the overall program)
+}
+%
+{ %%%%%% Algorithm summary %%%%%%
+Calculation of Photochemical Reflectance Index (PRI), also Carotenoid/chlorophyll
+}
+%
+{ %%%%%% Category %%%%%%
+Biophysics - narrow band chlorophyll indices
+}
+%
+{ %%%%%% Inputs %%%%%%
+Narrow band multi- or hyperspectral imagery (ENVI standard image data) including channels close to the wavelengths of 529nm and 569nm.\bigskip
+}
+%
+{ %%%%%% Outputs %%%%%%
+Single band with PRI values
+}
+%
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+PRI = \frac{R_{529} -R_{569} } {R_{529} +R_{569} }
+\end{displaymath}
+}
+%
+{ %%%%%% Author %%%%%%
+DLR-DFD
+}
+%
+{ %%%%%% References %%%%%% 
+Sims, D.A., Gamon, J.A. (2002): Relationships between leaf pigment content and spectral reflectance across a wide range of species, leaf structures and developmental stages. In: Remote Sensing of Environment, 81, p.337-354.
+}

@@ -86,6 +86,7 @@ class NAFile1001(nappy.na_file.na_file.NAFile):
         Writes the data section of the file.
         This method can be called directly by the user.
         """
+        
         for m in range(len(self.X)):
 
             var_string = self.format % self.X[m]

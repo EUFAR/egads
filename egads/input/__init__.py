@@ -1,6 +1,6 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2011-08-24 11:48#$"
-__version__ = "$Revision:: 70        $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-12-6 15:46#$"
+__version__ = "$Revision:: 71        $"
 
 
 from input_core import FileCore
@@ -11,5 +11,3 @@ from netcdf_io import EgadsNetCdf
 from text_file_io import EgadsFile
 from text_file_io import EgadsCsv
 from text_file_io import parse_string_array
-
-#from nasa_ames import *
