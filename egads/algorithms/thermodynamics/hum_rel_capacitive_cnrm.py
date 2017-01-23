@@ -1,20 +1,19 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2013-02-17 18:01#$"
-__version__ = "$Revision:: 163       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-01-12 9:35#$"
+__version__ = "$Revision:: 164       $"
 __all__ = ["HumRelCapacitiveCnrm"]
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
-from numpy import multiply, power
 import numpy
+import egads
 
 class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        hum_rel_capacitive_cnrm.py
 
-    VERSION     $Revision: 163 $
+    VERSION     $Revision: 164 $
 
     CATEGORY    Thermodynamics
 
@@ -24,7 +23,7 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
                 of the capacitive probe.
 
     INPUT       Ucapf       vector  Hz      output frequency of capacitive probe
-                T_s         vector  C       static temperature
+                T_s         vector  K       static temperature
                 P_s         vector  hPa     static pressure
                 dP          vector  hPa     dynamic pressure
                 C_t         coeff.  %/C     temperature correction coefficient
@@ -38,7 +37,6 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
     SOURCE      CNRM/GMEI/TRAMM
 
     REFERENCES
-
     """
 
     def __init__(self, return_Egads=True):
@@ -63,23 +61,15 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, Ucapf, T_s, P_s, dP, C_t, Fmin, C_0, C_1, C_2):
-
-        return egads_core.EgadsAlgorithm.run(self, Ucapf, T_s, P_s, dP, C_t,
-                                             Fmin, C_0, C_1, C_2)
+        return egads_core.EgadsAlgorithm.run(self, Ucapf, T_s, P_s, dP, C_t, Fmin, C_0, C_1, C_2)
 
     def _algorithm(self, Ucapf, T_s, P_s, dP, C_t, Fmin, C_0, C_1, C_2):
-
         tempUcapf = numpy.array(Ucapf)
         tempUcapf[tempUcapf < Fmin] = Fmin
         Ucapf = tempUcapf.tolist()
-
-
         temp_factor = 273.15 + 20
-
-
-        H_u = P_s / (P_s + dP) * (C_0 + multiply(C_1, Ucapf) +
-            multiply(C_2, power(Ucapf, 2)) + multiply(C_t, (T_s - temp_factor)))
-
+        H_u = (P_s / (P_s + dP)) * (C_0 + numpy.multiply(C_1, Ucapf) + 
+            numpy.multiply(C_2, numpy.power(Ucapf, 2)) + numpy.multiply(C_t, (T_s - temp_factor)))
         return H_u
+    

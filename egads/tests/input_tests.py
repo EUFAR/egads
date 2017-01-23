@@ -15,7 +15,7 @@ import egads
 import egads.input as input  # @ReservedAssignment
 import netCDF4
 from numpy.random.mtrand import uniform
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal  # @UnresolvedImport
 
 FILE_NAME = tempfile.mktemp('.nc')
 FILE_NAME_ALT = tempfile.mktemp('.nc')
@@ -154,6 +154,7 @@ class NetCdfFileInputTestCase(unittest.TestCase):
 
     def test_bad_attribute(self):
         """ Test handling of bad attribute name"""
+
         data = input.NetCdf(self.file)
         self.assertRaises(KeyError, data.get_attribute_value, 'bad_attr')
         self.assertRaises(KeyError, data.get_attribute_value, 'bad_attr', VAR_NAME)
@@ -436,7 +437,7 @@ class EgadsCsvInputTestCase(unittest.TestCase):
         """ Test reading data from csv file."""
 
         title = self.f.read(1)
-        time, lat, lon, alt = self.f.read(format=self.format)
+        time, lat, lon, alt = self.f.read(out_format=self.format)
         self.f.reset()
         self.f.skip_line()
         data_str = self.f.read()
@@ -482,7 +483,7 @@ class EgadsCsvOutputTestCase(unittest.TestCase):
         """ Test reading data from csv file."""
 
         title = self.f.read(1)
-        time, lat, lon, alt = self.f.read(format=self.format)
+        time, lat, lon, alt = self.f.read(out_format=self.format)
         self.f.reset()
         self.f.skip_line()
         data_str = self.f.read()

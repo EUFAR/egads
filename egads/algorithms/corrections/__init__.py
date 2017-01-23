@@ -2,8 +2,13 @@
 EGADS corrections algorithms. See EGADS Algorithm Documentation for more info.
 """
 
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-07-06 17:42#$"
-__version__ = "$Revision:: 146       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-19 11:41#$"
+__version__ = "$Revision:: 147       $"
 
-from correction_spike_simple_cnrm import *
+import logging
+try:
+    from correction_spike_simple_cnrm import *
+    logging.info('egads [corrections] algorithms have been loaded')
+except Exception:
+    logging.error('an error occured during the loading of a [corrections] algorithm')

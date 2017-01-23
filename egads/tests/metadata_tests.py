@@ -9,7 +9,7 @@ __version__ = "$Revision:: 130       $"
 import unittest
 import egads.core.metadata as metadata
 
-TEST_GLOBAL_METADATA_DICT = {'Conventions':'N6SP',
+TEST_GLOBAL_METADATA_DICT = {'Conventions':'EUFAR',
                              'title':'test',
                              'source':'testfile',
                              'institution':'EUFAR',
@@ -27,7 +27,7 @@ TEST_GLOBAL_METADATA_DICT = {'Conventions':'N6SP',
                              'references':'none',
                              'comment':'this is a test'}
 
-TEST_GLOBAL_METADATA_LITE_DICT = {'Conventions':'N6SP',
+TEST_GLOBAL_METADATA_LITE_DICT = {'Conventions':'EUFAR',
                              'title':'test',
                              'source':'testfile',
                              'institution':'EUFAR',
@@ -65,7 +65,12 @@ ADD_VARIABLE_METADATA_DICT = {'valid_min':0,
 
 TEST_ALGORITHM_METADATA_DICT = {'Inputs':['test'],
                                 'InputUnits':['m'],
+                                'InputTypes':['vector'],
+                                'InputDescription':['Test'],
                                 'Outputs':['test_out'],
+                                'OutputDescription':['Test out'],
+                                'Purpose':'Test',
+                                'Description':'Test',
                                 'Processor':'test processor',
                                 'ProcessorDate':'20110919',
                                 'ProcessorVersion':'1.0',
@@ -73,7 +78,12 @@ TEST_ALGORITHM_METADATA_DICT = {'Inputs':['test'],
 
 TEST_ALGORITHM_METADATA_LITE_DICT = {'Inputs':['test'],
                                 'InputUnits':['m'],
+                                'InputTypes':['vector'],
+                                'InputDescription':['Test'],
                                 'Outputs':['test_out'],
+                                'OutputDescription':['Test out'],
+                                'Purpose':'Test',
+                                'Description':'Test',
                                 'Processor':'test processor',
                                 'DateProcessed':'20110920'}
 
@@ -87,7 +97,6 @@ class MetadataCreationTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
-
     def test_creation_of_metadata_object(self):
         """ Test creation of metadata instance via direct dictionary assignment """
         
@@ -99,7 +108,6 @@ class MetadataCreationTestCase(unittest.TestCase):
         self.assertEqual(variable_metadata, TEST_VARIABLE_METADATA_DICT, 'Variable metadata not properly assigned to variable metadata instance')
         self.assertEqual(file_metadata._conventions[0], TEST_GLOBAL_METADATA_DICT['Conventions'], 'Global metadata conventions object doesnt match')
         self.assertEqual(alg_metadata._conventions, 'EGADS Algorithm', 'Algorithm conventions abject doesnt match')
-
 
     def test_add_items(self):
         """ Test creation of metadata, assigning metadat using add_items method"""
@@ -151,7 +159,7 @@ class MetadataCreationTestCase(unittest.TestCase):
                                      '':'',
                                      '':''
                                      }
-        n6sp_var_metadata_dict = {'':'',
+        eufar_var_metadata_dict = {'':'',
                                   '':'',
                                   '':'',
                                   '':'',

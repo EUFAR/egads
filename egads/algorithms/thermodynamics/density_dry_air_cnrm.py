@@ -7,6 +7,7 @@ import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
+    
     """
     FILE        density_dry_air_cnrm.py
 
@@ -28,7 +29,6 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
     SOURCE      CNRM/GMEI/TRAMM
 
     REFERENCES  Equation of state for a perfect gas, Triplet-Roche, page 34.
-
     """
 
     def __init__(self, return_Egads=True):
@@ -53,17 +53,11 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
-
     def run(self, P_s, T_s):
-
         return egads_core.EgadsAlgorithm.run(self, P_s, T_s)
 
     def _algorithm(self, P_s, T_s):
-
         R_a = 287.05 #J/kg/K
-
         rho = (P_s * 100) / (R_a * T_s)
-
         return rho
 

@@ -30,14 +30,12 @@ class AlgorithmModuleTestCase(unittest.TestCase):
     """ Test features of algorithm module"""
 
     def setUp(self):
-
         self.single_alg = TestAlgorithmSingleIO()
         self.single_alg_no_egads = TestAlgorithmSingleIO(return_Egads=False)
         self.double_alg = TestAlgorithmDualIO()
         self.single_passunits_alg = TestAlgorithmSingleIOPassUnits()
         self.single_set_units_alg = TestAlgorithmSingleIOSetUnits()
         self.dual_set_units_alg = TestAlgorithmDualIOSetUnits()
-
 
     def test_alg_single_input_output(self):
         """ Test sample algorithm with single input and output"""
@@ -48,7 +46,6 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmSingleIO", "Single algorithm processor name does not match")
         self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE, "Single algorithm processed date does not match")
         self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION, "Single algorithm processor version does not match")
-
 
     def test_alg_double_input_output(self):
         """ Test sample algorithm with multiple inputs and outputs."""
@@ -65,14 +62,12 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         self.assertEqual(out2.metadata.parent['ProcessorDate'], DATE, "Double algorithm processed date does not match")
         self.assertEqual(out2.metadata.parent['ProcessorVersion'], VERSION, "Double algorithm processor version does not match")
 
-
     def test_alg_single_no_egads(self):
         """ Test sample algorithm with single input and single non-egads output"""
         
         out1 = self.single_alg_no_egads.run(IN1)
         self.assertEqual(out1, OUT1, "Single algorithm no egads value not equal")
         self.assert_(not isinstance(out1, egads.EgadsData), "Returned value is EgadsData instance")
-
 
     def test_call_alg_directly(self):
         """ Test sample algorithm bypassing run call"""
@@ -81,7 +76,6 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         [out1, out2] = self.double_alg._algorithm(IN1, IN2)
         self.assertEqual(out1, OUT1, "Direct call to double algorithm first parameter not equal")
         self.assertAlmostEqual(out2, OUT2, 2, "Direct call to double algorithm second paramater not equal")
-        
 
     def test_alg_pass_units(self):
         """ Test sample algorithm passing input units"""
@@ -89,7 +83,6 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         out1 = self.single_passunits_alg.run(IN1)
         self.assertEqual(out1, OUT1, "Single algorithm passing units value not equal")
         self.assertEqual(out1.units, 'dimensionless', "Single algorithm passing units output units not equal")
-
 
     def test_alg_pass_other_units(self):
         """ Test sample algorithm auto-conversion"""
@@ -102,7 +95,6 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE, "Single algorithm auto-conversion processed date does not match")
         self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION, "Single algorithm processor auto-conversion version does not match")
 
-
     def test_alg_set_other_units(self):
         """ Test sample algorithm modifying passed input units """
 
@@ -111,7 +103,6 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         self.assertEqual(out1, OUT1, "Single algorithm setting units value not equal")
         self.assertEqual(out1.units, IN_UNITS1 + '/s', "Single algorithm setting units output units not equal, returned {0}".format(out1.units))
         self.assertEqual(out1.metadata['long_name'], 'first derivative of ' + LONG_NAME1, 'Single algorithm setting units output long name not equal, returned {0}'.format(out1.metadata['long_name']))
-
 
     def test_alg_set_dual_other_units(self):
         """ Test sample algorithm modifying dual passed input units"""
@@ -141,10 +132,8 @@ class TestAlgorithmSingleIO(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
-
 
     def _algorithm(self, x):
         result = x * 1e-5
@@ -152,7 +141,6 @@ class TestAlgorithmSingleIO(egads_core.EgadsAlgorithm):
 
 
 class TestAlgorithmDualIO(egads_core.EgadsAlgorithm):
-
 
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
@@ -177,18 +165,16 @@ class TestAlgorithmDualIO(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, x, t):
         return egads_core.EgadsAlgorithm.run(self, x, t)
-
 
     def _algorithm(self, x, t):
         result1 = x * 1e-5
         result2 = result1 / (t / (60 * 60))
         return result1, result2
 
-class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
 
+class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
 
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
@@ -207,10 +193,8 @@ class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
-
 
     def _algorithm(self, x):
         result = x * 1e-5
@@ -218,7 +202,6 @@ class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
 
 
 class TestAlgorithmSingleIOSetUnits(egads_core.EgadsAlgorithm):
-
 
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
@@ -237,10 +220,8 @@ class TestAlgorithmSingleIOSetUnits(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
-
 
     def _algorithm(self, x):
         result = x * 1e-5
@@ -266,10 +247,8 @@ class TestAlgorithmDualIOSetUnits(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, t, x):
         return egads_core.EgadsAlgorithm.run(self, t, x)
-
 
     def _algorithm(self, t, x):
         result = x / t

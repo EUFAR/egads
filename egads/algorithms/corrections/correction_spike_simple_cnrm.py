@@ -57,26 +57,16 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, X, S0):
-
         return egads_core.EgadsAlgorithm.run(self, X, S0)
 
     def _algorithm(self, X, S0):
-
         X_corr = deepcopy(X)
-
         for i, X_i in enumerate(X):
             i_up = i + 1
             i_down = i - 1
-
             if i_up < len(X) and i_down >= 0:
-                if (abs(X_i - X[i_down]) > S0 and
-                        abs(X_i - X[i_up]) > S0 and
+                if (abs(X_i - X[i_down]) > S0 and abs(X_i - X[i_up]) > S0 and
                         ((X_i - X[i_down]) * (X_i - X[i_up])) > 0):
-
                     X_corr[i] = (X[i_up] + X[i_down]) / 2.0
-
-
-
         return X_corr
-
 

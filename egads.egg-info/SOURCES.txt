@@ -1,10 +1,16 @@
 INSTALL.txt
+LICENSE
+PKG-INFO
+README.md
 run_tests.py
 setup.cfg
 setup.py
+doc/EGADS Algorithm Handbook - v0.7.0.pdf
+doc/EGADS Documentation - v0.7.0.pdf
+doc/changelog.txt
 egads/__init__.py
 egads/_version.py
-egads/test_var
+egads/egads.ini
 egads.egg-info/PKG-INFO
 egads.egg-info/SOURCES.txt
 egads.egg-info/dependency_links.txt
@@ -45,6 +51,7 @@ egads/algorithms/thermodynamics/altitude_pressure_raf.py
 egads/algorithms/thermodynamics/density_dry_air_cnrm.py
 egads/algorithms/thermodynamics/hum_rel_capacitive_cnrm.py
 egads/algorithms/thermodynamics/pressure_angle_incidence_cnrm.py
+egads/algorithms/thermodynamics/pressure_dynamic_angle_incidence_vdk.py
 egads/algorithms/thermodynamics/temp_potential_cnrm.py
 egads/algorithms/thermodynamics/temp_static_cnrm.py
 egads/algorithms/thermodynamics/temp_virtual_cnrm.py
@@ -56,6 +63,7 @@ egads/algorithms/thermodynamics/wind_vector_3d_raf.py
 egads/algorithms/transforms/__init__.py
 egads/algorithms/transforms/convert_time_format.py
 egads/algorithms/transforms/interpolation_linear.py
+egads/algorithms/transforms/interpolation_linear_old.py
 egads/algorithms/transforms/isotime_to_elements.py
 egads/algorithms/transforms/isotime_to_seconds.py
 egads/algorithms/transforms/seconds_to_isotime.py
@@ -69,11 +77,15 @@ egads/input/netcdf_io.py
 egads/input/text_file_io.py
 egads/tests/__init__.py
 egads/tests/algorithm_module_tests.py
+egads/tests/corrections_mathematics_transforms_tests.py
 egads/tests/egads_tests.py
 egads/tests/input_tests.py
 egads/tests/metadata_tests.py
+egads/tests/microphysics_tests.py
+egads/tests/radiation_tests.py
 egads/tests/test_all.py
 egads/tests/thermodynamics_tests.py
+egads/thirdparty/__init__.py
 egads/thirdparty/nappy/__init__.py
 egads/thirdparty/nappy/nappy_api.py
 egads/thirdparty/nappy/config/__init__.py

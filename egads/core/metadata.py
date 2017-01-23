@@ -1,7 +1,9 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-06-22 17:19#$"
-__version__ = "$Revision:: 140       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-11 16:05#$"
+__version__ = "$Revision:: 141       $"
 __all__ = ['Metadata', 'FileMetadata', 'VariableMetadata', 'AlgorithmMetadata']
+
+import logging
 
 FILE_ATTR_LIST = ['Conventions',
                   'title',
@@ -53,7 +55,7 @@ ALG_ATTR_LIST = ['Inputs',
                  'DateProcessed']
 
 # Table of metadata elements used to convert between vocabularies.
-# List is [CF, RAF, IWGADTS, N6SP, NASA AMES]
+# List is [CF, RAF, IWGADTS, EUFAR, NASA AMES]
 METADATA_GLOBAL_CONVERT_TABLE = [['title', '', 'title', 'title', ''],
                                  ['references', '', '', 'references', ''],
                                  ['', 'Address', '', '', ''],
@@ -97,7 +99,7 @@ METADATA_GLOBAL_CONVERT_TABLE = [['title', '', 'title', 'title', ''],
                                  ['', 'geopsatial_vertical_units', '', '', '']]
 
 # Table of metadata elements used to convert between vocabularies on a per-variable basis.
-# List is [CF, RAF, IWGADTS, N6SP, NASA AMES]
+# List is [CF, RAF, IWGADTS, EUFAR, NASA AMES]
 METADATA_VARIABLE_CONVERT_TABLE = [['_FillValue', '_FillValue', 'missing_value', '_FillValue', 'AMISS'],
                                    ['valid_min', '', '', 'valid_min', ''],
                                    ['valid_max', '', '', 'valid_max', ''],
@@ -124,34 +126,28 @@ METADATA_VARIABLE_CONVERT_TABLE = [['_FillValue', '_FillValue', 'missing_value',
 CF_TABLE_COLUMN = 0
 RAF_TABLE_COLUMN = 1
 IWGADTS_TABLE_COLUMN = 2
-N6SP_TABLE_COLUMN = 3
+EUFAR_TABLE_COLUMN = 3
 NASA_AMES_TABLE_COLUMN = 4
 
 
 class Metadata(dict):
     """
-    This is a generic class to designed to provide basic metadata storage and handling
+    This is a generic class designed to provide basic metadata storage and handling
     capabilities.
-
-
     """
 
     def __init__(self, metadata_dict={}, conventions=None, metadata_list=None):
         """
         Initialize Metadata instance with given metadata in dict form.
 
-
         :param dict metadata_dict:
             Dictionary object containing metadata names and values.
-
         """
 
+        logging.debug('egads.Metadata.__init__ invoked: dict ' + str(metadata_dict) + ', conventions ' + str(conventions))
         dict.__init__(self, metadata_dict)
-
         self._metadata_list = metadata_list
-
         self._conventions = conventions
-
 
     def add_items(self, metadata_dict):
         """
@@ -160,10 +156,10 @@ class Metadata(dict):
         :param metadata_dict:
             Dictionary object containing metadata names and values.
         """
-
+        
+        logging.debug('egads.Metadata.add_items invoked: dict ' + str(metadata_dict))
         for key, var in metadata_dict.iteritems():
             self[key] = var
-
         return
 
     def set_conventions(self, conventions):
@@ -172,9 +168,9 @@ class Metadata(dict):
 
         :param list conventions:
             List of conventions used in current metadata instance.
-
         """
-
+        
+        logging.debug('egads.Metadata.set_conventions invoked: conventions ' + str(conventions))
         self._conventions = conventions
 
     def parse_dictionary_objs(self):
@@ -190,20 +186,18 @@ class Metadata(dict):
             Optional - Comma separated string or list of coventions to use for 
             conventions check. Current conventions recognized are ``CF``, 
             ``RAF``, ``IWGADTS``, ``EUFAR``, ``NASA Ames``
-            
         """
 
+        logging.debug('egads.Metadata.compliance_check invoked: conventions ' + str(conventions))
         if conventions is None:
             if self.has_key('Conventions'):
                 conventions = self['Conventions']
             else:
-                raise AttributeError  #TODO: specify error message
-
+                logging.error('egads.Metadata.compliance_check invoked: AttributeError, no convention found')
+                raise AttributeError('No convention found. Please specify a convention.')
         if isinstance(conventions, str):
             conventions = conventions.split(',')
-
         convention_num = None
-
         for convention in conventions:
             if 'CF' in convention:
                 convention_num = CF_TABLE_COLUMN
@@ -212,16 +206,15 @@ class Metadata(dict):
             elif 'IWGADTS' in convention:
                 convention_num = IWGADTS_TABLE_COLUMN
             elif 'EUFAR' in convention:
-                convention_num = N6SP_TABLE_COLUMN
+                convention_num = EUFAR_TABLE_COLUMN
             elif 'NASA' in convention:
                 convention_num = NASA_AMES_TABLE_COLUMN
             else:
-                raise AttributeError #TODO: add specific error type and error message
-
+                logging.error('egads.Metadata.compliance_check invoked: AttributeError, unknown convention')
+                raise AttributeError('Unknown convention. Please specify a convention from the EUFAR list.')
             param_missing_list = self._parse_metadata_compliance(convention_num)
-
             return param_missing_list
-
+        
     def _parse_metadata_compliance(self, convention_num):
         """ 
         Private method to parse through a metadata parameter list to determine
@@ -229,31 +222,30 @@ class Metadata(dict):
         
         :param int convention_num:
             Number specifying which convention standard to use in comparison.
-            
         """
+        
+        logging.debug('egads.Metadata._parse_metadata_compliance invoked: convention_num ' + str(convention_num))
         use_table = None
         if isinstance(self, FileMetadata):
             use_table = METADATA_GLOBAL_CONVERT_TABLE
-
         if isinstance(self, VariableMetadata):
             use_table = METADATA_VARIABLE_CONVERT_TABLE
-
         if use_table is None:
-            raise AttributeError #TODO: Add specific error type for wrong class
-
+            logging.error('egads.Metadata._parse_metadata_compliance invoked: AttributeError, metadata couldn''t be parsed')
+            raise AttributeError('A problem occured: the metadata couldn''t be parsed')
         param_missing_list = []
         for parameter in use_table:
             if parameter[convention_num] not in self and parameter[convention_num] is not '':
                 param_missing_list.append(parameter[convention_num])
-
         return param_missing_list
+    
+    logging.info('egads.Metadata has been loaded')
 
 
 class FileMetadata(Metadata):
     """
     This class is designed to provide basic storage and handling capabilities
     for file metadata.
-
     """
 
     def __init__(self, metadata_dict, filename, conventions_keyword='Conventions', conventions=[]):
@@ -272,23 +264,20 @@ class FileMetadata(Metadata):
         :param list conventions: Optional -
             List of metadata conventions used in provided metadata dictionary.
         """
-
-
+        
+        logging.debug('egads.FileMetadata.__init__ invoked: dict ' + str(metadata_dict) + 
+                      ', filename ' + str(filename) + 'conventions_keyword ' + 
+                      str(conventions_keyword) + ', conventions ' + str(conventions))
         if not conventions:
             try:
                 conventions = [s.strip() for s in metadata_dict[conventions_keyword].split(',')]
             except KeyError:
                 conventions = []
-
-        Metadata.__init__(self, metadata_dict, conventions,
-                          metadata_list=FILE_ATTR_LIST)
-
+        Metadata.__init__(self, metadata_dict, conventions, metadata_list=FILE_ATTR_LIST)
         if filename is None:
             self._filename = None
         else:
             self._filename = filename
-
-
         self.update()
 
     def set_filename(self, filename):
@@ -298,12 +287,14 @@ class FileMetadata(Metadata):
         :param string filename:
             Filename of provided metadata.
         """
-
+        
+        logging.debug('egads.FileMetadata.set_filename invoked: filename ' + str(filename))
         self._filename = filename
-
 
     def parse_dictionary_objs(self):
         pass
+
+    logging.info('egads.FileMetadata has been loaded')
 
 
 class VariableMetadata(Metadata):
@@ -328,8 +319,10 @@ class VariableMetadata(Metadata):
             List of metadata conventions used in provided metadata dictionary.
         """
 
+        logging.debug('egads.VariableMetadata.__init__ invoked: dict ' + str(metadata_dict) + 
+                      ', parent_metadata_obj ' + str(parent_metadata_obj) + ', conventions ' + 
+                      str(conventions))
         Metadata.__init__(self, metadata_dict, metadata_list=VAR_ATTR_LIST)
-
         if conventions is None:
             if parent_metadata_obj is None:
                 self._conventions = None
@@ -340,8 +333,6 @@ class VariableMetadata(Metadata):
         else:
             self._conventions = conventions
 
-
-
     def set_parent(self, parent_metadata_obj):
         """
         Sets parent object of VariableMetadata instance.
@@ -351,22 +342,19 @@ class VariableMetadata(Metadata):
             algorithm, etc)
         """
 
+        logging.debug('egads.VariableMetadata.set_parent invoked: parent_metadata_obj ' + str(parent_metadata_obj))
         self.parent = parent_metadata_obj
 
-
     def compliance_check(self, conventions=None):
-        #TODO Add docstring
-
         if conventions is None:
             conventions = self.parent.get("Conventions", None)
-
-
         return super(VariableMetadata, self).compliance_check(conventions)
-
-
 
     def parse_dictionary_objs(self):
         pass
+
+    logging.info('egads.VariableMetadata has been loaded')
+
 
 class AlgorithmMetadata(Metadata):
     """
@@ -384,14 +372,15 @@ class AlgorithmMetadata(Metadata):
             Dictionary object containing variable metadata names and values
         :param list child_varable_metadata: Optional -
             List containing VariableMetadata
-
         """
+        
+        logging.debug('egads.AlgorithmMetadata.__init__ invoked: metadata_dict ' + str(metadata_dict) + 
+                      ', child_variable_metadata' + str(child_variable_metadata))
         if 'ProcessorDate' in metadata_dict:
             replace_dic = {'$':'', '#':'', 'Date::':''}
             processor_date_value = metadata_dict['ProcessorDate']
             for i, j in replace_dic.iteritems():
                 processor_date_value = processor_date_value.replace(i, j)
-
             metadata_dict['ProcessorDate'] = processor_date_value.strip()
 
         if 'ProcessorVersion' in metadata_dict:
@@ -399,21 +388,15 @@ class AlgorithmMetadata(Metadata):
             processor_version_value = metadata_dict['ProcessorVersion']
             for i, j in replace_dic.iteritems():
                 processor_version_value = processor_version_value.replace(i, j)
-
             metadata_dict['ProcessorVersion'] = processor_version_value.strip()
 
         Metadata.__init__(self, metadata_dict, conventions='EGADS Algorithm', metadata_list=ALG_ATTR_LIST)
-
         self.child_metadata = []
-
         if isinstance(child_variable_metadata, list):
             for child in child_variable_metadata:
                 self.assign_children(child)
         elif child_variable_metadata is not None:
             self.assign_children(child_variable_metadata)
-
-
-
 
     def assign_children(self, child):
         """
@@ -426,8 +409,10 @@ class AlgorithmMetadata(Metadata):
             Child metadata object to add to current instance children.
         """
 
-
+        logging.debug('egads.AlgorithmMetadata.assign_children invoked: child ' + str(child))
         self.child_metadata.append(child)
-
         if isinstance(child, VariableMetadata):
             child.set_parent(self)
+
+    logging.info('egads.AlgorithmMetadata has been loaded')
+    

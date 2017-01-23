@@ -1,19 +1,18 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2013-02-17 18:01#$"
-__version__ = "$Revision:: 163       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-12 9:28#$"
+__version__ = "$Revision:: 164       $"
 __all__ = ["AltitudePressureRaf"]
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 import numpy
 
 class AltitudePressureRaf(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        altitude_pressure_raf.py
 
-    VERSION     $Revision: 163 $
+    VERSION     $Revision: 164 $
 
     CATEGORY    Thermodymics
 
@@ -54,35 +53,25 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
-
     def run(self, P_s):
-
         return egads_core.EgadsAlgorithm.run(self, P_s)
 
-
     def _algorithm(self, P_s):
-
         P_0 = 1013.25  # hPa
         T_0 = 288.15  # K
         R_a = 287.0531  # J/kg/K
         g = 9.80665  # m/s2
         L = 0.0065  # K/m
-
         P_1 = 226.3206  # hPa
         T_1 = 216.65  # K
         H_1 = 11000.0  # m
-
         if P_s.size == 1:
             if P_s >= P_1:
-                H = T_0 / L * (1 - (P_s / P_0) ** (R_a * L / g))
+                H = (T_0 / L) * (1 - (P_s / P_0) ** (R_a * L / g))
             else:
-                H = H_1 + R_a * T_1 / g * numpy.log(P_1 / P_s)
-
+                H = H_1 + ((R_a * T_1) / g) * numpy.log(P_1 / P_s)
         else:
             H = numpy.zeros(P_s.size)
-
-            H[P_s >= P_1] = T_0 / L * (1 - (P_s[P_s >= P_1] / P_0) ** (R_a * L / g))
-            H[P_s < P_1] = H_1 + R_a * T_1 / g * numpy.log(P_1 / P_s[P_s < P_1])
-
+            H[P_s >= P_1] = (T_0 / L) * (1 - (P_s[P_s >= P_1] / P_0) ** (R_a * L / g))
+            H[P_s < P_1] = H_1 + ((R_a * T_1) / g) * numpy.log(P_1 / P_s[P_s < P_1])
         return H

@@ -1,10 +1,9 @@
-__author__ = "mfreer"
+__author__ = "mfreer, ohenry"
 __date__ = "$Date:: 2012-02-07 17:23#$"
 __version__ = "$Revision:: 125       $"
 __all__ = ['DiameterEffectiveDmt']
 
 import numpy
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
@@ -30,9 +29,9 @@ class DiameterEffectiveDmt(egads_core.EgadsAlgorithm):
 
     SOURCE      
 
-    REFERENCES  "Data Analysis User's Guide", Droplet Measurement Technologies, 2009,
-                44 pp.
-
+    REFERENCES  "Data Analysis User's Guide, Chapter 1, Section 1.3.2.4", Droplet Measurement 
+                Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/Manuals
+                Guides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf
     """
 
     def __init__(self, return_Egads=True):
@@ -60,17 +59,19 @@ class DiameterEffectiveDmt(egads_core.EgadsAlgorithm):
 
 
     def run(self, n_i, d_i):
-
         return egads_core.EgadsAlgorithm.run(self, n_i, d_i)
 
 
     def _algorithm(self, n_i, d_i):
-
         sum_third_moment = numpy.sum(n_i * d_i ** 3, axis=1) # um^3/cm^3
         sum_second_moment = numpy.sum(n_i * d_i ** 2, axis=1) # um^2/cm^3
-
-        D_e = sum_third_moment / sum_second_moment # um
-
+        
+        """
+        D_e = sum_third_moment / sum_second_moment
+        original code, but a factor 3/4, present in DMT guide, is missing
+        """
+        
+        D_e = (3. * sum_third_moment) / (4. * sum_second_moment) # um
+        
         return D_e
-
 

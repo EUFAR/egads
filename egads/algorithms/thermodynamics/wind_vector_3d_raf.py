@@ -3,15 +3,13 @@ __date__ = "$Date:: 2012-06-22 17:19#$"
 __version__ = "$Revision:: 140       $"
 __all__ = ['WindVector3dRaf']
 
-import numpy
-from numpy import sin, cos, tan
-
+from numpy import sin, cos, tan, sqrt
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class WindVector3dRaf(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        wind_vector_3d_raf.py
 
     VERSION     $Revision: 140 $
@@ -51,9 +49,7 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-
         self.output_metadata = []
-
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'easterly wind velocity',
                                                                'standard_name':'eastward_wind',
@@ -68,9 +64,6 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                                                                'long_name':'upward wind velocity',
                                                                'standard_name':'upward_air_velocity',
                                                                'Category':['Thermodynamic', 'Wind']}))
-
-
-
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['U_a', 'alpha', 'beta',
                                                                     'u_p', 'v_p', 'w_p',
@@ -93,27 +86,19 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, U_a, alpha, beta, u_p, v_p, w_p, phi, theta, psi, theta_dot, psi_dot, L):
-
         return egads_core.EgadsAlgorithm.run(self, U_a, alpha, beta, u_p, v_p, w_p, phi, theta, psi, theta_dot, psi_dot, L)
 
     def _algorithm(self, U_a, alpha, beta, u_p, v_p, w_p, phi, theta, psi, theta_dot, psi_dot, L):
-
-        D = numpy.sqrt(1 + tan(alpha) ** 2 + tan(beta) ** 2)
-
-        u = (-U_a / D * (sin(psi) * cos(theta) +
-                         tan(beta) * (cos(psi) * cos(phi) + sin(psi) * sin(theta) * sin(phi)) +
-                         tan(alpha) * (sin(psi) * sin(theta) * cos(phi) - cos(psi) * sin(phi))) +
-             u_p - L * (theta_dot * sin(theta) * sin(psi) - psi_dot * cos(psi) * cos(theta)))
-
-        v = (-U_a / D * (cos(psi) * cos(theta) -
+        D = sqrt(1 + tan(alpha) ** 2 + tan(beta) ** 2)
+        u = ((-U_a / D) * (sin(psi) * cos(theta) + tan(beta) * (cos(psi) * cos(phi) 
+                         + sin(psi) * sin(theta) * sin(phi)) + tan(alpha) * (sin(psi) * sin(theta) * cos(phi) 
+                         - cos(psi) * sin(phi))) + u_p - L * (theta_dot * sin(theta) * sin(psi) - psi_dot * cos(psi) * cos(theta)))
+        v = ((-U_a / D) * (cos(psi) * cos(theta) -
                          tan(beta) * (sin(psi) * cos(phi) - cos(psi) * sin(theta) * sin(phi)) +
                          tan(alpha) * (cos(psi) * sin(theta) * cos(phi) + sin(psi) * sin(phi))) +
              v_p - L * (psi_dot * sin(psi) * cos(theta) + theta_dot * cos(psi) * sin(theta)))
-
-        w = (-U_a / D * (sin(theta) - tan(beta) * cos(theta) * sin(phi) -
+        w = ((-U_a / D) * (sin(theta) - tan(beta) * cos(theta) * sin(phi) -
                          tan(alpha) * cos(theta) * cos(phi)) +
              w_p + L * theta_dot * cos(theta))
-
         return u, v, w
-
 

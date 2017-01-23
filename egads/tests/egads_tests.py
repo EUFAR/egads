@@ -12,7 +12,7 @@ __version__ = "$Revision:: 101       $"
 import unittest
 import egads
 import numpy
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal  # @UnresolvedImport
 
 UNITS1 = 'm'
 UNITS2 = 's'
@@ -25,13 +25,11 @@ class EgadsDataScalarTestCase(unittest.TestCase):
         self.value1 = 1.0
         self.value2 = 5
 
-
     def test_egads_scalar_assignment(self):
         """ Test initialization of EgadsData instance with vector input """
         
         egadstest = egads.EgadsData(self.value1)
         assert_array_equal(self.value1, egadstest.value, 'Scalar assignment not equal')
-
 
     def test_egads_to_egads_calcs(self):
         """ Test scalar operations between multiple egads parameters """
@@ -44,7 +42,6 @@ class EgadsDataScalarTestCase(unittest.TestCase):
         self.assertEqual(self.value1 / self.value2, egadstest1 / egadstest2, 'Egads to Egads scalar division not equal')
         self.assertEqual(self.value1 ** self.value2, egadstest1 ** egadstest2, 'Egads to Egads scalar power not equal')
 
-
     def test_egads_to_other_calcs(self):
         """ Test scalar operations between egads class and other scalar"""
         
@@ -54,7 +51,6 @@ class EgadsDataScalarTestCase(unittest.TestCase):
         self.assertEqual(self.value1 * self.value2, egadstest1 * self.value2, 'Egads to other scalar multiplication not equal')
         self.assertEqual(self.value1 / self.value2, egadstest1 / self.value2, 'Egads to other scalar division not equal')
         self.assertEqual(self.value1 ** self.value2, egadstest1 ** self.value2, 'Egads to other scalar power not equal')
-
 
     def test_other_to_egads_calcs(self):
         """ Test scalar operations between other scalar and egads class"""
@@ -75,13 +71,11 @@ class EgadsDataVectorTestCase(unittest.TestCase):
         self.value2 = numpy.array([2, 2, 2, 2, 2])
         self.scalar = 5
 
-
     def test_egads_vector_assignment(self):
         """ Test initialization of EgadsData instance with vector input """
         
         egadstest = egads.EgadsData(self.value1)
         assert_array_equal(self.value1, egadstest.value, 'Vector assignment not equal')
-
 
     def test_egads_to_egads_calcs(self):
         """ Test vector operations between multiple egads parameters """
@@ -99,7 +93,6 @@ class EgadsDataVectorTestCase(unittest.TestCase):
         assert_array_equal(self.value1 / self.value2, divide.value, 'Egads to Egads vector division not equal')
         assert_array_equal(self.value1 ** self.value2, power.value, 'Egads to Egads vector power not equal')
 
-
     def test_egads_to_other_calcs(self):
         """ Test vector operations between egads class and other vector"""
         
@@ -114,7 +107,6 @@ class EgadsDataVectorTestCase(unittest.TestCase):
         assert_array_equal(self.value1 * self.value2, multiply.value, 'Egads to Egads vector multiplication not equal')
         assert_array_equal(self.value1 / self.value2, divide.value, 'Egads to Egads vector division not equal')
         assert_array_equal(self.value1 ** self.value2, power.value, 'Egads to Egads vector power not equal')
-
 
     def test_other_to_egads_calcs(self):
         """ Test vector operations between other vector and egads class"""
@@ -138,29 +130,16 @@ class EgadsValueAssignmentTestCase(unittest.TestCase):
     def setUp(self):
         self.value1 = egads.EgadsData([1, 2, 3], units='m')
 
-
     def test_self_assignment(self):
         """ Testing assignment of EgadsData class to self """
 
         value2 = self.value1.copy()
-
         self.assertEqual(self.value1.units, value2.units, 'Units do not match after assignment')
         assert_array_equal(self.value1.value, value2.value, 'Values do not match after assignment')
-
-        #value2.value[1] = 100
-        #value2.units = 's'
-
         value2 = value2.rescale('km')
-
         self.assertEqual(self.value1.units, 'm', ['Original units have changed to', self.value1.units])
         assert_array_equal(self.value1.value, numpy.array([1, 2, 3]), 'Original array has changed')
-
         self.value1 = self.value1.rescale('cm')
-
-
-        #self.value1.units = 'cm'
-        #self.value1.value[1] = 200
-
         self.assertEqual(value2.units, 'km', 'New units have changed')
         assert_array_equal(value2.value, numpy.array([.001, .002, .003]), 'New array has changed')
 
@@ -168,33 +147,23 @@ class EgadsValueAssignmentTestCase(unittest.TestCase):
         """ Testing copy of EgadsData using call to self """
 
         value2 = egads.EgadsData(self.value1)
-
         self.assertEqual(self.value1.units, value2.units, 'Units do not match after assignment')
         assert_array_equal(self.value1.value, value2.value, 'Values do not match after assignment')
-
         value2 = value2.rescale('km')
-        #value2.value[1] = 100
-        #value2.units = 's'
-
         self.assertEqual(self.value1.units, 'm', ['Original units have changed to', self.value1.units])
         assert_array_equal(self.value1.value, numpy.array([1, 2, 3]), 'Original array has changed')
-
         self.value1 = self.value1.rescale('cm')
-        #self.value1.units = 'cm'
-        #self.value1.value[1] = 200
-
         self.assertEqual(value2.units, 'km', 'New units have changed')
         assert_array_equal(value2.value, numpy.array([.001, .002, .003]), 'New array has changed')
 
 
-
 def suite():
-    #egads_scalar_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsDataScalarTestCase)
+    egads_scalar_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsDataScalarTestCase)
     egads_vector_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsDataVectorTestCase)
-    #egads_assignment_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsValueAssignmentTestCase)
+    egads_assignment_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsValueAssignmentTestCase)
     
-    return unittest.TestSuite([egads_vector_suite])
-    #return unittest.TestSuite([egads_scalar_suite, egads_vector_suite, egads_assignment_suite])
+    return unittest.TestSuite([egads_scalar_suite, egads_vector_suite, egads_assignment_suite])
+
 
 if __name__ == '__main__':
     unittest.TextTestRunner(verbosity=5).run(suite())

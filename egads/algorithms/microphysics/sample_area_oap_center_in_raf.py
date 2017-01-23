@@ -8,8 +8,8 @@ import egads.core.metadata as egads_metadata
 import numpy
 
 class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        sample_area_oap_all_in_raf.py
 
     VERSION     $Revision: 163 $
@@ -58,29 +58,19 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
-
-
     def run(self, Lambda, D_arms, dD, M, N):
-
         return egads_core.EgadsAlgorithm.run(self, Lambda, D_arms, dD, M, N)
 
     def _algorithm(self, Lambda, D_arms, dD, M, N):
-
-
         SA = numpy.array([])
         Lambda_mm = Lambda * 1e-6  # convert wavelength to mm
         dD_mm = dD * 1e-3  # convert diameter to mm
-
         ESW = N * dD_mm / M
-
         for i in range(N):
             X = i + 1
             R = X * dD_mm / 2.0
             DOF = 6 * R ** 2 / (Lambda_mm)
             if DOF > D_arms:
                 DOF = D_arms
-
             SA = numpy.append(SA, DOF * ESW * 1e-6)  # convert mm2 to m2
-
         return SA

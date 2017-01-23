@@ -5,7 +5,6 @@ __author__ = "mfreer"
 __date__ = "$Date:: 2012-07-06 17:42#$"
 __version__ = "$Revision:: 146       $"
 
-
 def convert_time_format(fmt):
     FMT_DICT = {'yyyy':'%Y',
                 'yy':'%y',
@@ -18,8 +17,6 @@ def convert_time_format(fmt):
                 'SS':'%S'}
 
     fmt = str(fmt)
-
     for key, val in FMT_DICT.iteritems():
         fmt = fmt.replace(key, val)
-
     return fmt

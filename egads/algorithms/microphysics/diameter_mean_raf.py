@@ -4,15 +4,12 @@ __version__ = "$Revision:: 125       $"
 __all__ = ['DiameterMeanRaf']
 
 import numpy
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class DiameterMeanRaf(egads_core.EgadsAlgorithm):
+    
     """
-    This file calculates mean diameter given an array of particle counts and
-    a vector of their corresponding sizes.
-
     FILE        diameter_mean_raf.py
 
     VERSION     $Revision: 125 $
@@ -33,7 +30,6 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
     SOURCE      NCAR-RAF
 
     REFERENCES  NCAR-RAF Bulletin No. 24
-
     """
 
     def __init__(self, return_Egads=True):
@@ -61,11 +57,8 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
 
 
     def run(self, n_i, d_i):
-
         return egads_core.EgadsAlgorithm.run(self, n_i, d_i)
 
     def _algorithm(self, n_i, d_i):
-
         D_bar = numpy.sum(n_i * d_i, axis=1) / numpy.sum(n_i, axis=1)
-
         return D_bar

@@ -4,13 +4,12 @@ __version__ = "$Revision:: 163       $"
 __all__ = ['SampleVolumeGeneralRaf']
 
 import numpy
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        sample_volume_general_raf.py
 
     VERSION     $Revision: 163 $
@@ -31,7 +30,6 @@ class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
     SOURCE      NCAR-RAF
 
     REFERENCES  NCAR-RAF Bulletin No. 24
-
     """
 
     def __init__(self, return_Egads=True):
@@ -56,23 +54,16 @@ class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
-
     def run(self, V_t, SA, t_s):
-
         return egads_core.EgadsAlgorithm.run(self, V_t, SA, t_s)
 
-
     def _algorithm(self, V_t, SA, t_s):
-
         SA = numpy.array(SA)
-
         if SA.ndim == 0:
             SV = V_t * SA * t_s
         else:
             SV = numpy.zeros([len(V_t), len(SA)])
-
             for i, SA_bin in enumerate(SA):
                 SV[:, i] = V_t * SA_bin * t_s
-
         return SV
+    

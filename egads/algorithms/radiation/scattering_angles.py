@@ -5,10 +5,10 @@ __all__ = ['ScatteringAngles']
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 import numpy
 
 class ScatteringAngles(egads_core.EgadsAlgorithm):
+    
     """
     FILE        scattering_angles.py
 
@@ -19,7 +19,8 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
     PURPOSE     Calculates the scattering angle for each pixel on an image given the camera
                 viewing angle and solar vector.
 
-    DESCRIPTION ...
+    DESCRIPTION Calculates the scattering angle for each pixel on an image given the camera
+                viewing angle and solar vector.
 
     INPUT       n_x        coeff            _        number of pixels in x dimension
                 n_y        coeff            _        number of pixels in y dimension
@@ -33,7 +34,6 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
     SOURCE      Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)
 
     REFERENCES
-
     """
 
     def __init__(self, return_Egads=True):
@@ -58,31 +58,20 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, n_x, n_y, theta_c, phi_c, theta_sun, phi_sun):
-
         return egads_core.EgadsAlgorithm.run(self, n_x, n_y, theta_c, phi_c, theta_sun, phi_sun)
 
-
     def _algorithm(self, n_x, n_y, theta_c, phi_c, theta_sun, phi_sun):
-
         sin = numpy.sin
         cos = numpy.cos
-
         rad2deg = 180 / numpy.pi
-
         deg2rad = numpy.pi / 180.0
-
         theta_sun_r = theta_sun * deg2rad
         phi_sun_r = phi_sun * deg2rad
         theta_c_r = theta_c * deg2rad
         phi_c_r = phi_c * deg2rad
-
         theta_scat_r = numpy.arccos(-sin(theta_sun_r) * cos(phi_sun_r) * sin(theta_c_r) * cos(phi_c_r)
                                   - sin(theta_sun_r) * sin(phi_sun_r) * sin(theta_c_r) * cos(phi_c_r)
                                   + cos(theta_sun_r) * cos(theta_c_r))
-
         theta_scat = theta_scat_r * rad2deg
-
-
         return theta_scat
-
 

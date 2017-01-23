@@ -1,27 +1,27 @@
-__author__ = "ohenry"
-__date__ = "$Date:: 2016-01-09 09:19#$"
-__version__ = "$Revision:: 1       $"
-__all__ = ['InterpolationLinear']
+__author__ = "mfreer,ohenry"
+__date__ = "$Date:: 2016-01-04 09:39#$"
+__version__ = "$Revision:: 152       $"
+__all__ = ['InterpolationLinearOld']
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 import numpy as np
 
-class InterpolationLinear(egads_core.EgadsAlgorithm):
+class InterpolationLinearOld(egads_core.EgadsAlgorithm):
     
     """
-    FILE        interpolation_linear.py
+    FILE        interpolation_linear_old.py
 
-    VERSION     $Revision: 1 $
+    VERSION     $Revision: 152 $
 
     CATEGORY    Transforms
 
     PURPOSE     Calculate linear interpolation of a variable.
 
     DESCRIPTION Calculates the one-dimensional piecewise linear interpolation 
-                of a variable between two coordinate systems. The algorithm won't compute an
-                interpolated value if its not nan and if its coordinate is available in the new
-                coordinate vector/matrix.
+                of a variable between two coordinate systems. The algorithm will
+                calculate an interpolated value at each coordinate even if it exists 
+                in the new coordinate vector.
 
     INPUT       x            vector            _    x-coordinates of the data points (must be 
                                                     increasing and must be the same size as f)
@@ -29,10 +29,14 @@ class InterpolationLinear(egads_core.EgadsAlgorithm):
                                                     where data are missing, must be the same size
                                                     as x)
                 x_interp     vector            _    new set of coordinates to use in interpolation
-                f_left       coeff, optional   _    value to return for x_interp < x[0].
+                f_left       coeff, optional   _    value to return for x_interp < x[0], nan can be 
+                                                    used if nans are present at the beginning of f 
+                                                    and the user wants to keep them.
                                                     default is f[0], if nan are present at the beginning
                                                     of f, the algorithm will keep them.
-                f_right      coeff, optional   _    value to return when x_interp > x[-1].
+                f_right      coeff, optional   _    value to return when x_interp > x[-1], nan can be 
+                                                    used if nans are present at the end of f and the 
+                                                    user wants to keep them.
                                                     default is f[-1], if nan are present at the end
                                                     of f, the algorithm will keep them.
                                                     
@@ -91,26 +95,22 @@ class InterpolationLinear(egads_core.EgadsAlgorithm):
             elif x_val > x[-1]:
                 f_interp.append(f_right)
             else:
-                index = np.where(x == x_val)[0]
-                if not index:
-                    try:
-                        lower_x = x[x < x_val][-1]
-                    except IndexError:
-                        lower_x = x_val
-                    try:
-                        lower_f = f[x < x_val][-1]
-                    except IndexError:
-                        lower_f = f[0][0]
-                    try:
-                        upper_x = x[x > x_val][0]
-                    except IndexError:
-                        upper_x = x_val
-                    try:
-                        upper_f = f[x > x_val][0]
-                    except IndexError:
-                        upper_f = f[-1][0]
-                    f_interp.append(lower_f + (x_val - lower_x) * (upper_f - lower_f) / (upper_x - lower_x))
-                else:
-                    f_interp.append(f[index[0]])
+                try:
+                    lower_x = x[x < x_val][-1]
+                except IndexError:
+                    lower_x = x_val
+                try:
+                    lower_f = f[x < x_val][-1]
+                except IndexError:
+                    lower_f = f[0][0]
+                try:
+                    upper_x = x[x > x_val][0]
+                except IndexError:
+                    upper_x = x_val
+                try:
+                    upper_f = f[x > x_val][0]
+                except IndexError:
+                    upper_f = f[-1][0]
+                f_interp.append(lower_f + (x_val - lower_x) * (upper_f - lower_f) / (upper_x - lower_x))
         return f_interp
 

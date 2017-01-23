@@ -4,15 +4,12 @@ __version__ = "$Revision:: 125       $"
 __all__ = ['NumberConcTotalDmt']
 
 import numpy
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 
 class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
 
     """
-
     FILE        number_conc_total_dmt.py
 
     VERSION     $Revision: 125 $
@@ -32,14 +29,13 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
 
     SOURCE      sources
 
-    REFERENCES  "Data Analysis User's Guide", Droplet Measurement Technologies, 2009,
-                44 pp.
-
+    REFERENCES  "Data Analysis User's Guide, Chapter 1, Section 1.3.2", Droplet Measurement 
+                Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/Manuals
+                Guides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf
     """
 
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
-
 
         self.output_metadata = egads_metadata.VariableMetadata({'units':'cm^-3',
                                                                'long_name':'total number concentration',
@@ -60,15 +56,10 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, c_i):
-
         return egads_core.EgadsAlgorithm.run(self, c_i)
 
     def _algorithm(self, c_i):
-
         N = numpy.sum(c_i, axis=1)
-
         return N
-
 

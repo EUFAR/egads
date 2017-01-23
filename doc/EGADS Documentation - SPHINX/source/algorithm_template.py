@@ -27,9 +27,9 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
     DESCRIPTION ...
 
-    INPUT       inputs      units   description
+    INPUT       inputs      var_type    units   description
 
-    OUTPUT      outputs     units   description
+    OUTPUT      outputs     var_type    units   description
 
     SOURCE      sources
 
@@ -57,8 +57,8 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
         # 3 cont. Complete metadata with parameters specific to algorithm, 
         #    including a list of inputs, a corresponding list of units, and 
-        #    the list of outputs. InputTypes can be chose in the list: scalar, 
-        #    vector, array
+        #    the list of outputs. InputTypes are linked to the different 
+        #    var_type written in the docstring 
         
         self.metadata = egads_metadata.AlgorithmMetadata({
             'Inputs':['input'],

@@ -3,10 +3,8 @@ __date__ = "$Date:: 2013-02-17 18:01#$"
 __version__ = "$Revision:: 163       $"
 __all__ = ['LimitAngleRange']
 
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 import numpy
 
 class LimitAngleRange(egads_core.EgadsAlgorithm):
@@ -56,15 +54,11 @@ class LimitAngleRange(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, angle):
-
         return egads_core.EgadsAlgorithm.run(self, angle)
 
     def _algorithm(self, angle):
-
         angle_div = angle / 360.0
-
         angle_fraction = abs(angle_div - numpy.int0(angle_div))
-
         if angle.size == 1:
             if angle >= 0:
                 angle_limited = 360 * angle_fraction
@@ -72,12 +66,7 @@ class LimitAngleRange(egads_core.EgadsAlgorithm):
                 angle_limited = 360 - 360 * angle_fraction
         else:
             angle_limited = numpy.zeros(angle.size)
-
             angle_limited[angle >= 0] = 360 * angle_fraction[angle >= 0]
             angle_limited[angle < 0] = 360 - 360 * angle_fraction[angle < 0]
-
         return angle_limited
-
-
-
 

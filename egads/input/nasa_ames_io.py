@@ -1,13 +1,20 @@
 __author__ = "ohenry"
 __date__ = "$Date:: 2016-11-29 15:38#$"
-__version__ = "$Revision:: 103       $"
+__version__ = "$Revision:: 104       $"
 __all__ = ["NasaAmes"]
 
-
+import logging
 import egads
-import nappy  # @UnresolvedImport
 import copy
 from egads.input import FileCore
+try:
+    import nappy
+    if 'egads' not in nappy.__path__[0]:
+        logging.warning('EGADS has imported an already installed version of Quantities. If issues occure,'
+                        + ' please check the version number of Quantities.')
+except ImportError:
+    logging.warning('EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
+                 + ' or the presence of Quantities in third-party software directory.')
 
 
 class NasaAmes(FileCore):
@@ -31,9 +38,9 @@ class NasaAmes(FileCore):
             and ``r`` for read. ``r`` is the default value.
         """
         
+        logging.debug('egads.input.NasaAmes.get_filename invoked: filename ' + str(filename) + ', perms' + str(perms))
         self.file_metadata = None
         FileCore.__init__(self, filename, perms)
-
 
     def read_na_dict(self):
         """
@@ -41,8 +48,8 @@ class NasaAmes(FileCore):
         the user to read the dictionary in a custom object.
         """
         
+        logging.debug('egads.input.NasaAmes.read_na_dict invoked')
         return copy.deepcopy(self.f.getNADict())
-
 
     def read_variable(self, varname):
         """
@@ -54,6 +61,7 @@ class NasaAmes(FileCore):
             open file.
         """
         
+        logging.debug('egads.input.NasaAmes.read_variable invoked: varname ' + str(varname))
         var_type = "main"
         try:
             if isinstance(varname, int):
@@ -62,7 +70,9 @@ class NasaAmes(FileCore):
                 var_list = self.get_variable_list()
                 varnum = var_list.index(varname)
             variable, units, miss, scale = self.f.getVariable(varnum)
+            logging.debug('.................................................... main')
         except ValueError:
+            logging.debug('.................................................... independant')
             var_type = "independant"
             if isinstance(varname, int):
                 varnum = varname
@@ -80,8 +90,8 @@ class NasaAmes(FileCore):
                                                                   self.file_metadata)
         na_data = self.f.getVariableValues(varnum, var_type)
         data = egads.EgadsData(na_data, variable_metadata)
+        logging.debug('egads.input.NasaAmes.read_variable invoked: varname ' + str(varname) + ' -> data read OK')
         return data
-
 
     def write_variable(self, data, vartype="main", varname=None, attrdict=None):
         """
@@ -102,6 +112,9 @@ class NasaAmes(FileCore):
             already present in the dictionary. 
         """
         
+        logging.debug('egads.input.NasaAmes.write_variable invoked: data_type ' + str(type(data)) + 
+                      ', vartype ' + str(vartype) + ', varname ' + str(varname) + ', attrdict ' + 
+                      str(attrdict))
         if vartype == "main":
             try:
                 if isinstance(varname, int):
@@ -155,7 +168,7 @@ class NasaAmes(FileCore):
                 self.f.NX += 1
                 self.f.X.append(value)
                 self.f.XNAME.append(name + " (" + units + ")")
-
+        logging.debug('egads.input.NasaAmes.write_variable invoked -> data write OK')
 
     def get_variable_list(self, vartype="main"):
         """ 
@@ -166,7 +179,8 @@ class NasaAmes(FileCore):
             Options are ``independant`` for independant variables, ``main`` for main variables
             and ``auxiliary`` for auxiliary variables.
         """
-
+        
+        logging.debug('egads.input.NasaAmes.get_variable_list invoked: vartype ' + str(vartype))
         if vartype == "main":
             var_list = self.f.getVariables()
         elif vartype == "independant":
@@ -176,8 +190,8 @@ class NasaAmes(FileCore):
         varname = []
         for var in var_list:
             varname.append(var[0])
+        logging.debug('................................................varname ' + str(varname))
         return varname
-    
     
     def get_dimension_list(self, vartype="main"):
         """
@@ -189,6 +203,7 @@ class NasaAmes(FileCore):
             and ``auxiliary`` for auxiliary variables.
         """
         
+        logging.debug('egads.input.NasaAmes.get_dimension_list invoked: vartype ' + str(vartype))
         dim_list = []
         if vartype == "main":
             var_list = self.f.getVariables()
@@ -197,8 +212,8 @@ class NasaAmes(FileCore):
         for var in var_list:
             varnum = var_list.index(var)
             dim_list.append(len(self.f.getVariableValues(varnum, vartype)))
+        logging.debug('................................................dim_list ' + str(dim_list))
         return dim_list
-    
     
     def get_attribute_list(self, varname=None, vartype="main"):
         """
@@ -214,6 +229,7 @@ class NasaAmes(FileCore):
             of the main variable .
         """
 
+        logging.debug('egads.input.NasaAmes.get_attribute_list invoked: varname ' + str(varname) + ', vartype ' + str(vartype))
         if varname is not None:
             if isinstance(varname, int):
                 varnum = varname
@@ -248,10 +264,12 @@ class NasaAmes(FileCore):
                     attr_list.append("_FillValue")
                 if scale is not None:
                     attr_list.append("scale_factor")
+            logging.debug('................................................attr_list ' + str(attr_list))
             return attr_list
         else:
+            logging.debug('................................................self.na_dict.keys() ' + 
+                          str(self.na_dict.keys()))
             return self.na_dict.keys()
-        
         
     def get_attribute_value(self, attrname, varname=None, vartype="main"):
         """
@@ -269,7 +287,11 @@ class NasaAmes(FileCore):
             attribute of the main variable .
         """
         
+        logging.debug('egads.input.NasaAmes.get_attribute_value invoked: attrname ' + str(attrname) + 
+                      ', varname ' + str(varname) + ', vartype ' + str(vartype))
         if varname is None:
+            logging.debug('................................................self.na_dict[attrname] ' + 
+                          str(self.na_dict[attrname]))
             return self.na_dict[attrname]
         else:
             if isinstance(varname, int):
@@ -290,8 +312,9 @@ class NasaAmes(FileCore):
                        'units':self.f.getAuxVariable(varnum)[1],
                        '_FillValue':self.f.getAuxVariable(varnum)[2],
                        'scale_factor':self.f.getAuxVariable(varnum)[3]}
+            logging.debug('................................................vardict[attrname] ' + 
+                          str(vardict[attrname]))
             return vardict[attrname]
-        
     
     def write_attribute_value(self, attrname, attrvalue, varname = None, vartype = "main"):
         """
@@ -311,6 +334,8 @@ class NasaAmes(FileCore):
             of the main variable .
         """
         
+        logging.debug('egads.input.NasaAmes.write_attribute_value invoked: attrname ' + str(attrname) + 
+                      ', attrvalue ' + str(attrvalue) + ', varname ' + str(varname) + ', vartype ' + str(vartype))
         if varname is None:
             self.na_dict[attrname] = attrvalue
         else:
@@ -333,9 +358,9 @@ class NasaAmes(FileCore):
                     self.na_dict["VNAME"][varnum] = attrvalue + " (" + units + ")"
             else:
                 self.na_dict[attr_dict[attrname]][varnum] = attrvalue
-    
+        logging.debug('egads.input.NasaAmes.write_attribute_value invoked -> attribute write OK')
 
-    def save_na_file(self, filename, na_dict=None, float_format='%.2f'):
+    def save_na_file(self, filename=None, na_dict=None, float_format='%.2f'):
         """
         Save a NASA/Ames dictionary to a file.
 
@@ -349,12 +374,13 @@ class NasaAmes(FileCore):
             round up to two decimal places.
         """
         
+        logging.debug('egads.input.NasaAmes.save_na_file invoked: filename ' + str(filename) + 
+                      ', float_format ' + str(float_format))
         if not na_dict:
             na_dict = self.f.na_dict
         saved_file = nappy.openNAFile(filename, mode="w", na_dict=na_dict)
         saved_file.write(float_format=float_format)
         saved_file.close()
-
 
     def _open_file(self, filename, perms):
         """
@@ -367,6 +393,8 @@ class NasaAmes(FileCore):
             ``a`` and ``r+`` for append, and ``r`` for read.
         """
         
+        logging.debug('egads.input.NasaAmes.open_file invoked: filename ' + str(filename) + 
+                      ', perms ' + str(perms))
         self.close()
         try:
             self.f = nappy.openNAFile(filename, mode=perms)
@@ -387,17 +415,18 @@ class NasaAmes(FileCore):
             self.file_metadata = egads.core.metadata.FileMetadata(attr_dict, self.filename,
                                                                   conventions="NASAAmes")
         except RuntimeError:
-            print "ERROR: File %s doesn't exist" % (filename)
-            raise RuntimeError
+            logging.error('egads.input.NasaAmes.open_file invoked: RuntimeError, File '+
+                           str(filename) + ' doesn''t exist')
+            raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
+        except IOError:
+            logging.error('egads.input.NasaAmes.open_file invoked: IOError, File '+
+                           str(filename) + ' doesn''t exist')
+            raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
-            print "ERROR: Unexpected error"
-            raise
-
+            logging.error('egads.input.NasaAmes.open_file invoked: Exception, Unexpected error')
+            raise Exception("ERROR: Unexpected error")
 
     def na_format_information(self):
-        
-        # MANQUE NIV
-        
         string = ("The goal of the 'na_format_information' function is to give few information\n"
                   + "about the file structure. Please see the following link for details:\n"
                   + "    http://badc.nerc.ac.uk/help/formats/NASA-Ames/\n"
@@ -411,6 +440,7 @@ class NasaAmes(FileCore):
                   + "    IVOL  NVOL\n"
                   + "    DATE  RDATE\n"
                   + "    DX\n"
+                  + "    NIV (not written in NASA/Ames file)\n"
                   + "    XNAME\n"
                   + "    NV\n"
                   + "    VSCAL(1) ... VSCAL(NV)\n"
@@ -438,6 +468,7 @@ class NasaAmes(FileCore):
                   + "     DATE: Date at which the data recorded in this file begin (YYYY MM DD)\n"
                   + "     RDATE: Date at which the data were last revised (YYYY MM DD)\n"
                   + "     DX: Independent variable interval identifier\n"
+                  + "     NIV: Number of independent variables\n"
                   + "     XNAME: Name and unit of the independent variable. E.g.: time (s)\n"
                   + "     NV: Number of dependent variables\n"
                   + "     VSCAL: Scaling factors of the NV dependent variables, in the same order\n"
@@ -459,3 +490,7 @@ class NasaAmes(FileCore):
                   + "        to Gaines and Hipskind, 1998 (see the Instructions worksheet)."
                   )
         print string
+        
+    logging.info('egads.input.NasaAmes has been loaded')
+        
+        

@@ -17,11 +17,11 @@ $c_i$ & Array[time, bins] & Number concentration of hydrometeors in size categor
 $d_i$ & Vector[bins] & Average diameter in size category $i$ [$\mu$m]
 }
 { %%%%%% Outputs %%%%%%
-$R_e$ & Vector[time] & Effective diameter [$\mu$m]
+$D_e$ & Vector[time] & Effective diameter [$\mu$m]
 }
 { %%%%%% Formula %%%%%%
 \begin{displaymath}
- D_e = \frac{\sum\limits_{i=1}^m c_i d_i^3}{\sum\limits_{i=1}^{m} c_i d_i^2}
+ D_e = \frac{3 \sum\limits_{i=1}^m c_i d_i^3}{4 \sum\limits_{i=1}^{m} c_i d_i^2}
 \end{displaymath}
 }
 { %%%%%% Author %%%%%%

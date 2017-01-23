@@ -1,14 +1,12 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-02-10 17:51#$"
-__version__ = "$Revision:: 126       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2016-01-10 10:01#$"
+__version__ = "$Revision:: 1267       $"
 __all__ = ['ExtinctionCoeffDmt']
 
 import numpy
-
 import egads
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 
 class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
 
@@ -21,7 +19,7 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
 
     PURPOSE     Calculates extinction coefficient based on a particle size distribution
 
-    DESCRIPTION 
+    DESCRIPTION Calculates extinction coefficient based on a particle size distribution
 
     INPUT       n_i    array[time,bins]        cm-3    number concentration of 
                                                        hydrometeors in size category i
@@ -32,20 +30,19 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
 
     SOURCE      
 
-    REFERENCES  "Data Analysis User's Guide", Droplet Measurement Technologies, 2009,
-                44 pp.
+    REFERENCES  "Data Analysis User's Guide, Chapter 1, Section 1.3.2.2", Droplet Measurement 
+                Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/Manuals
+                Guides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf
 
     """
 
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-
         self.output_metadata = egads_metadata.VariableMetadata({'units':'km^-1',
                                                                'long_name':'extinction coefficient',
                                                                'standard_name':'',
                                                                'Category':['Microphysics']})
-
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 'Q_e'],
                                                           'InputUnits':['cm^-3', 'um', ''],
@@ -61,18 +58,12 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, n_i, d_i, Q_e=2):
-
         return egads_core.EgadsAlgorithm.run(self, n_i, d_i, Q_e)
 
 
     def _algorithm(self, n_i, d_i, Q_e):
-
-        B_e = egads.units.pi / 4.0 * numpy.sum(Q_e * n_i * d_i ** 2, axis=1) # um^2/cm^3
-
+        B_e = numpy.pi / 4.0 * numpy.sum(Q_e * n_i * d_i ** 2, axis=1) # um^2/cm^3 @UndefinedVariable
         B_e = B_e * 0.001 # 1/km
-
         return B_e
-
 

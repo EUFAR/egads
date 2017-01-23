@@ -31,8 +31,24 @@ from the command line. To install to a user-specified location, type ``python se
 
 
 Testing
-********
-To test EGADS after it is installed, run the run_tests.py Python script, or from Pythno, run the following commands:
+*******
+To test EGADS after it is installed, run the run_tests.py Python script, or from Python, run the following commands:
 
    >>> import egads
    >>> egads.test()
+
+
+Log
+***
+A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/EGADS x.x.x/egads' directory and the logging level has been set to INFO. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
+
+   >>> import egads
+   >>> config_dict = {'level': 'INFO', 'path': '/path/to/log/directory/'}
+   >>> egads.set_log_options(config_dict)
+   >>> exit()
+   
+New logging options will be loaded at the next import of EGADS. Logging levels are the standard Python ones (``DEBUG``, ``INFO``, ``WARNING``, ``CRITICAL``, ``ERROR``). It is also possible to change dynamically the logging level in a script:
+
+   >>> egads.change_log_level('DEBUG')
+
+That possibility is not permanent and will last until the script run is over.

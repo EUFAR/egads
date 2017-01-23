@@ -55,25 +55,17 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, x, t):
-
         return egads_core.EgadsAlgorithm.run(self, x, t)
 
     def _algorithm(self, x, t):
-
         x_dot = []
-
-        for i, x_elem in enumerate(x):
+        for i, _ in enumerate(x):
             i_up = i + 1
             i_down = i - 1
-
             if i_down < 0:
                 i_down = 0
             if i_up >= len(x):
                 i_up = len(x) - 1
-
             x_dot.append((x[i_up] - x[i_down]) / (t[i_up] - t[i_down]))
-
-
         return x_dot
-
 

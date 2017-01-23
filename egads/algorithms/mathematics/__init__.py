@@ -2,9 +2,14 @@
 EGADS mathematics algorithms. See EGADS Algorithm Documentation for more info.
 """
 
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-08-24 08:41#$"
-__version__ = "$Revision:: 153       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-19 11:44#$"
+__version__ = "$Revision:: 154       $"
 
-from derivative_wrt_time import *
-from limit_angle_range import *
+import logging
+try:
+    from derivative_wrt_time import *
+    from limit_angle_range import *
+    logging.info('egads [mathematics] algorithms have been loaded')
+except Exception:
+    logging.error('an error occured during the loading of a [mathematics] algorithm')

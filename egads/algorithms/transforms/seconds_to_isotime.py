@@ -5,15 +5,13 @@ __all__ = ['SecondsToIsotime']
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-
 import datetime
 import dateutil.parser
-
 from convert_time_format import convert_time_format
 
 class SecondsToIsotime(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        seconds_to_isotime.py
 
     VERSION     $Revision: 150 $
@@ -64,28 +62,20 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
         self.format_default = 'yyyymmddTHHMMss'
 
     def run(self, t_secs, t_ref, fmt=None):
-
         return egads_core.EgadsAlgorithm.run(self, t_secs, t_ref, fmt)
 
 
     def _algorithm(self, t_secs, t_ref, fmt):
-
         if fmt:
             fmt = str(fmt)
         else:
             fmt = self.format_default
-
         fmt = convert_time_format(fmt)
-
         t_ISO = []
         datetime_ref = dateutil.parser.parse(str(t_ref))
-
         for time in t_secs:
             time_delta = datetime.timedelta(0, float(time))
             merge_time = datetime_ref + time_delta
             t_ISO.append(merge_time.strftime(fmt))
-
-
         return t_ISO
-
 

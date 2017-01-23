@@ -3,6 +3,35 @@ CHANGELOG
 =========
 
 
+January 23 2017, Release version 0.7.0
+======================================
+  FIXED:
+    - an issue with the LinearInterpolation algorithm has been fixed. 
+    - an issue (missing factor) has been fixed in the algorithm to compute an effective diameter of a size distribution (Microphysics algorithms).
+    - the get_description attribute of EgadsData class wasn't working properly (KeyError), it has been fixed.
+    - the validating function for units was crashing if the unit for time was 'xxxx since xxxxx' or composed of multiple words. It has been fixed
+    - fixed few small issues in EgadsCsv class.
+    - fixed few typographical errors in EGADS and algorithms documentations.
+    
+  ADDED:
+    - test functions to test Corrections, Mathematics and Transforms algorithms have been added.
+    - test functions to test Microphysics algorithms have been added.
+    - test functions to test Radiations algorithms have been added.
+    - an algorithm (available in the algorithm handbook) to compute dynamic pressure, angle of attack and sideslip has been added in EGADS. It must be reviewed.
+    - a new algorithm has been created based on the old LinearInterpolation algorithm. The old algorithm is still available for compatibility reasons.
+    - a logging system has been added to monitor the stability of EGADS.
+    - a function has been added to change dynamically the logging level.
+    - error messages has been added to the Metadata class during convention check.
+    - error messages has been added when a user try to open a text or csv file.
+    - a config file (egads.ini) has been introduced for logging options and future needs.
+    - a function has been introduced to update logging options.
+    
+  MODIFIED:
+    - the computation of delta_T has been added in the Solar Vector Calculation algorithm (solar_vector_reda.py).
+    - the documentation of algorithms has been updated.
+    - the documentation of EGADS has been updated.
+
+
 December 16 2016, Release version 0.6.0
 =======================================
   FIXED:

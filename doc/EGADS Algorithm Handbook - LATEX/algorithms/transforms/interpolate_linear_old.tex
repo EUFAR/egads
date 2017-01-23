@@ -1,13 +1,13 @@
-%% $Date: 2017-01-17 15:19:00#$
-%% $Revision: 1 $
+%% $Date: 2012-07-06 17:42:54#$
+%% $Revision: 149 $
 \index{interpolate\_linear}
-\algdesc{Linear Interpolation}
+\algdesc{Linear Interpolation (old)}
 { %%%%%% Algorithm name %%%%%%
-interpolate\_linear
+interpolate\_linear\_old
 }
 { %%%%%% Algorithm summary %%%%%%
-This algorithm linearly interpolates a variable piecewise from one coordinate system to another. 
-It is mostly used to fill gaps.
+This algorithm linearly interpolates a variable piecewise from one coordinate system to another. All values 
+are interpolated, even if they exist in the new coordinate system.
 }
 {%%%%%% Category %%%%%%%
 Transforms
@@ -31,14 +31,7 @@ corresponding values $f_a$ and $f_b$. Then $f_{interp}$ is calculated piecewise 
 \end{displaymath}
 
 Values where $x_{interp}$ is less than $x_0$ are replaced with $f_{left}$, if provided, or $f_0$.
-Likewise, $f_{right}$ if given, or $f_n$ are substituted where $x_{interp}$ is greater than $x_n$. \\
-\\
-\underline{Important:} in the current version of the algorithm, the corresponding  $i^{th}$ value is interpolated only if:
-
-\begin{itemize}
-  \item $x_{interp}[i]$ doesn't exist in $x$
-  \item $f(x) = NaN$ if $x_{interp}[i]$ exists in $x$
-\end{itemize}
+Likewise, $f_{right}$ if given, or $f_n$ are substituted where $x_{interp}$ is greater than $x_n$. 
 
 }
 { %%%%%% Author %%%%%%

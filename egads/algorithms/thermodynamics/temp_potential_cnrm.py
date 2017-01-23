@@ -7,30 +7,29 @@ import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class TempPotentialCnrm(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        temp_potential_cnrm.py
 
     VERSION     $Revision: 100 $
 
     CATEGORY    Thermodynamics
 
-    PURPOSE     Calculates potential temperature
+    PURPOSE     Calculates potential temperature.
 
     DESCRIPTION Calculates potential temperature given static temperature, pressure,
                 and the ratio of gas constant and specific heat of air.
 
-    INPUT       T_s     vector  K or C  static temperature
-                P_s     vector  hPa     static pressure
-                Racpa   coeff.          gas constant of air divided by
-                                        specific heat of air at constant pressure
+    INPUT       T_s     vector  K or C          static temperature
+                P_s     vector  hPa             static pressure
+                Racpa   coeff.                  gas constant of air divided by
+                                                specific heat of air at constant pressure
 
     OUTPUT      theta   vector  same as T_s     potential temperature
 
     SOURCE      CNRM/GMEI/TRAMM
 
     REFERENCES  Triplet-Roche.
-
     """
 
     def __init__(self, return_Egads=True):
@@ -56,12 +55,9 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
                                                           self.output_metadata)
 
     def run(self, T_s, P_s, Racpa):
-
         return egads_core.EgadsAlgorithm.run(self, T_s, P_s, Racpa)
 
     def _algorithm(self, T_s, P_s, Racpa):
-
-        theta = T_s * (1000.0 / P_s) ** (Racpa)
-
+        theta = T_s * (1000.0 / P_s) ** Racpa
         return theta
 

@@ -4,13 +4,12 @@ __version__ = "$Revision:: 125       $"
 __all__ = ['NumberConcTotalRaf']
 
 import numpy
-
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        number_conc_total_raf.py
 
     VERSION     $Revision: 125 $
@@ -30,7 +29,6 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
     SOURCE      NCAR-RAF
 
     REFERENCES  NCAR-RAF Bulletin No. 24
-
     """
 
     def __init__(self, return_Egads=True):
@@ -55,15 +53,10 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-
     def run(self, n_i, SV):
-
         return egads_core.EgadsAlgorithm.run(self, n_i, SV)
 
     def _algorithm(self, n_i, SV):
-
-
         N_t = numpy.sum(n_i / SV, axis=1)
-
         return N_t
 

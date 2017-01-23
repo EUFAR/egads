@@ -9,10 +9,12 @@ import egads.core.metadata as egads_metadata
 #
 # 1. Change class name to algorithm name (same as filename) but 
 #    following MixedCase conventions. 
-#
+
 class AlgorithmTemplate(egads_core.EgadsAlgorithm):
+    
 # 2. Edit docstring to reflect algorithm description and input/output 
 #    parameters used
+
     """
     This file provides a template for creation of EGADS algorithms.
 
@@ -46,6 +48,7 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
         #            self.output_metadata.append(egads_metadata.VariableMetadata(...)
         #            self.output_metadata.append(egads_metadata.VariableMetadata(...)
         #            ...
+        
         self.output_metadata = egads_metadata.VariableMetadata({'units':'%',
                                                                'long_name':'template',
                                                                'standard_name':'',
@@ -53,7 +56,9 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
         # 3 cont. Complete metadata with parameters specific to algorithm, including
         #         a list of inputs, a corresponding list of units, and the list of 
-        #         outputs.
+        #         outputs. InputTypes are linked to the different var_type written in
+        #         the docstring
+        
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[''],
                                                           'InputUnits':[''],
                                                           'InputTypes':[''],
@@ -70,16 +75,16 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
     # 4. Replace the 'inputs' parameter in the three instances below with the list
     #    of input parameters to be used in the algorithm.
+    
     def run(self, inputs):
 
         return egads_core.EgadsAlgorithm.run(self, inputs)
 
     # 5. Implement algorithm in this section.
+    
     def _algorithm(self, inputs):
 
         ## Do processing here:
 
-
         return result
-
 

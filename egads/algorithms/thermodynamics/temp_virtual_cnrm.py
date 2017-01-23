@@ -7,8 +7,8 @@ import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
 class TempVirtualCnrm(egads_core.EgadsAlgorithm):
+    
     """
-
     FILE        temp_virtual_cnrm.py
 
     VERSION     $Revision: 59 $
@@ -19,15 +19,14 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
 
     DESCRIPTION Calculates virtual temperature given static pressure and mixing ratio.
 
-    INPUT       T_s     vector      K or C      static temperature
-                r       vector      g/kg        water vapor mixing ratio
+    INPUT       T_s     vector      K or C           static temperature
+                r       vector      g/kg             water vapor mixing ratio
 
-    OUTPUT      T_v     vector      same units as T_s   virtual temperature
+    OUTPUT      T_v     vector      K or C           virtual temperature
 
     SOURCE      CNRM/GMEI/TRAMM
 
     REFERENCES  Triplet-Roche, page 56.
-
     """
     
     def __init__(self, return_Egads=True):
@@ -54,16 +53,10 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
 
 
     def run(self, T_s, r):
-
         return egads_core.EgadsAlgorithm.run(self, T_s, r)
 
-
-
     def _algorithm(self, T_s, r):
-
         RvRa = 1.608
-
         T_v = T_s * (1 + RvRa * r) / (1 + r)
-
         return T_v
 
