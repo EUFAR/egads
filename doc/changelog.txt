@@ -3,6 +3,12 @@ CHANGELOG
 =========
 
 
+January 24 2017, Release version 0.7.1
+======================================
+The IOP Model and Algorithms package provided by the Plymouth Marine Laboratory was a part of the EGADS package. But it has never been integrated in EGADS. Since it needs few libraries and is not compatible with windows, it has been removed from EGADS package and it is now available through its own webpage on the EUFAR website (http://www.eufar.net/software-tools/tool/pml-inherent-optical-property-model-l-edimlolpo) and on GitHub(https://github.com/eufarn7sp/pml-wq).
+EUFAR team will review the possibility to integrate deeply the IOP model and algorithms in EGADS.
+
+
 January 23 2017, Release version 0.7.0
 ======================================
   FIXED:

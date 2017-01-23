@@ -24,15 +24,13 @@ Intended Audience :: Science/Research
 License :: OSI Approved :: BSD License
 Natural Language :: English
 Programming Language :: Python
-Programming Language :: Python 2
-Programming Language :: Python 2.7
 Topic :: Scientific/Engineering :: Atmospheric Science
 """
 
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.7.0',
+      version='0.7.1',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',
@@ -64,12 +62,6 @@ setup(name='egads',
 		  'egads.thirdparty.nappy.nc_interface',
 		  'egads.thirdparty.nappy.script',
 		  'egads.thirdparty.nappy.utils',
-		  'egads.thirdparty.pml_wq',
-          'egads.thirdparty.pml_wq.iop_model',
-          'egads.thirdparty.pml_wq.iop_model',
-          'egads.thirdparty.pml_wq.iop_model.config',
-          'egads.thirdparty.pml_wq.iop_model.data',
-          'egads.thirdparty.pml_wq.test_data',
           'egads.thirdparty.quantities',
 		  'egads.thirdparty.quantities.constants',
 		  'egads.thirdparty.quantities.tests',
