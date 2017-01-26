@@ -1,0 +1,36 @@
+%% $Date: 2012-02-17 18:01:08 +0100 (Fri, 17 Feb 2012) $
+%% $Revision: 129 $
+\index{temp\_static\_cnrm}
+\algdesc{Static Temperature}
+{ %%%%%% Algorithm name %%%%%%
+temp\_static\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculates static temperature of the air from total temperature.  
+This method applies to probe types such as the Rosemount.
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$T_t$ &	Vector & Measured total temperature [K] \\
+${\Delta}P$ & Vector & Dynamic pressure [hPa] \\
+$P_s$ & Vector & Static pressure [hPa] \\
+$r_f$ & Coeff. & Probe recovery coefficient \\ 
+$R_a/c_{pa}$ & Coeff. & Gas constant of air divided by specific heat of air 
+at constant pressure
+}
+{ %%%%%% Outputs %%%%%%
+$T_s$ & Vector & Static temperature [K]
+}
+{ %%%%%% Formula %%%%%%
+\begin{displaymath}
+ T_s = \frac{T_t}{1+r_f \left(\left(1+\frac{\Delta P}{P_s}\right)^{R_a/c_{pa}}
+ -1\right)} \nonumber
+\end{displaymath}
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%%
+}

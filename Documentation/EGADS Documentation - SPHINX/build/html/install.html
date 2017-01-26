@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &#8212; EGADS 0.7.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.7.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>The latest version of EGADS can be obtained from <a class="reference external" href="https://github.com/eufarn7sp/egads">https://github.com/eufarn7sp/egads</a></p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Use of EGADS requires the following packages:</p>
+<ul class="simple">
+<li>Python 2.7.10 or newer. Available at <a class="reference external" href="http://www.python.org/">http://www.python.org/</a></li>
+<li>numpy 1.10.1 or newer. Available at <a class="reference external" href="http://numpy.scipy.org/">http://numpy.scipy.org/</a></li>
+<li>scipy 0.15.0 or newer. Available at <a class="reference external" href="http://www.scipy.org/">http://www.scipy.org/</a></li>
+<li>Python netCDF4 libraries 1.1.9. Available at <a class="reference external" href="https://pypi.python.org/pypi/netCDF4">https://pypi.python.org/pypi/netCDF4</a></li>
+</ul>
+</div>
+<div class="section" id="optional-packages">
+<h2>Optional Packages<a class="headerlink" href="#optional-packages" title="Permalink to this headline">¶</a></h2>
+<p>The following are useful when using or compiling EGADS:</p>
+<ul class="simple">
+<li>IPython - An optional package which simplifies Python command line usage (<a class="reference external" href="http://ipython.scipy.org">http://ipython.scipy.org</a>). IPython is an enhanced interactive Python shell which supports tab-completion, debugging, command history, etc.</li>
+<li>setuptools - An optional package which allows easier installation of Python packages (<a class="reference external" href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a>). It gives access to the <code class="docutils literal"><span class="pre">easy_install</span></code> command which allows packages to be downloaded and installed in one step from the command line.</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must
+be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory
+containing the file <code class="docutils literal"><span class="pre">setup.py</span></code>, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>
+from the command line. To install to a user-specified location, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--prefix=$MYDIR</span></code>.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>To test EGADS after it is installed, run the run_tests.py Python script, or from Python, run the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">egads</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="log">
+<h2>Log<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h2>
+<p>A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the &#8216;Python local site-packages/EGADS x.x.x/egads&#8217; directory and the logging level has been set to INFO. Both options can be changed through EGADS using the <code class="docutils literal"><span class="pre">egads.set_log_options()</span></code> function, by passing a dictionary of option keys and values:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/log/directory/&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">egads</span><span class="o">.</span><span class="n">set_log_options</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>New logging options will be loaded at the next import of EGADS. Logging levels are the standard Python ones (<code class="docutils literal"><span class="pre">DEBUG</span></code>, <code class="docutils literal"><span class="pre">INFO</span></code>, <code class="docutils literal"><span class="pre">WARNING</span></code>, <code class="docutils literal"><span class="pre">CRITICAL</span></code>, <code class="docutils literal"><span class="pre">ERROR</span></code>). It is also possible to change dynamically the logging level in a script:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">egads</span><span class="o">.</span><span class="n">change_log_level</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That possibility is not permanent and will last until the script run is over.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/eufar_new_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#optional-packages">Optional Packages</a></li>
+<li><a class="reference internal" href="#id1">Installation</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#log">Log</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">Tutorial</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/install.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, EUFAR.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.
+    </div>
+  </body>
+</html>
