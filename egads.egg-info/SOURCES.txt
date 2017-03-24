@@ -5,6 +5,107 @@ README.md
 run_tests.py
 setup.cfg
 setup.py
+Documentation/EGADS Algorithm Handbook - LATEX
+Documentation/EGADS Algorithm Handbook - v0.8.0.pdf
+Documentation/EGADS Documentation - v0.8.0.pdf
+Documentation/changelog.txt
+Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
+Documentation/EGADS Algorithm Handbook - LATEX/example.py
+Documentation/EGADS Algorithm Handbook - LATEX/fancyvrb.cfg
+Documentation/EGADS Algorithm Handbook - LATEX/pagesetup.cfg
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/algorithm_template.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/CAI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/CSI2.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/DGVI1.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/DGVI2.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/DWSI5.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/GI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/LCI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/LWVI1.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/LWVI2.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/MCARI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/NDLI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/NDNI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/NDVI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/NDWI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/NDWI_MIR.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/PRI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/REIP.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/RVI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/SR705.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/SWIRLI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/SWIRSI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/SWIRVI.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/clay_1.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/iron_1.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/biophysics/mND705.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/corrections/correction_spike_simple_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/mathematics/derivative_wrt_time.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/algorithm_template.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/diameter_effective_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/diameter_mean_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/diameter_median_volume_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/extinction_coeff_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/mass_conc_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/number_conc_total_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/number_conc_total_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/sample_area_oap_all_in_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/sample_area_oap_center_in_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/sample_area_scattering_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/sample_volume_general_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/microphysics/surface_area_conc_dmt.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/quality_control/nav_chk.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/quality_control/nav_const.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/camera_viewing_angles.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/planck_emission.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/rotate_solar_vector_to_aircraft_frame.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/scattering_angles.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/solar_vector_blanco.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/solar_vector_reda.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/temp_blackbody.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/algorithm_template.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/altitude_pressure_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/density_dry_air_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/hum_rel_capacitive_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/pressure_angle_incidence_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/pressure_dynamic_angle_incidence_vdk.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/temp_potential_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/temp_static_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/temp_virtual_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocity_mach_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocity_tas_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocity_tas_longitudinal_cnrm.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocity_tas_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/wind_vector_3d_raf.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate_linear.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate_linear_old.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_elements.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_seconds.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/seconds_to_isotime.tex
+Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.tex
+Documentation/EGADS Algorithm Handbook - LATEX/cover/eufar_a_sm.png
+doc/Makefile
+doc/source
+doc/source/alg_development.rst
+doc/source/conf.py
+doc/source/egadsapi.rst
+doc/source/index.rst
+doc/source/install.rst
+doc/source/intro.rst
+doc/source/tutorial.rst
+doc/source/_static/layout.html
+doc/source/example_files/algorithm_template.py
+doc/source/example_files/example.py
+doc/source/example_files/init_template.py
+doc/source/example_files/main_csv_file.csv
+doc/source/example_files/main_raw_file.dat
+doc/source/example_files/na_example_file.na
+doc/source/example_files/na_example_script.py
+doc/source/example_files/ncdump_example_file.txt
+doc/source/example_files/temp_static_cnrm.tex
+doc/source/images/eufar_a_sm.pdf
+doc/source/images/eufar_new_logo.png
+doc/source/images/eufar_new_logo_white_bkgrd.png
 egads/__init__.py
 egads/_version.py
 egads/egads.ini
