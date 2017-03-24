@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tutorial &#8212; EGADS 0.7.0 documentation</title>
+    <title>Tutorial &#8212; EGADS 0.8.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.7.0',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -150,6 +150,15 @@ with a units property, this will then be used to define the EgadsData units:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">x</span><span class="o">.</span><span class="n">units</span>
 <span class="go">m</span>
 </pre></div>
+</div>
+<p>The EgadsData is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations
+like addition, substraction, slicing, and many more. For each of those operations, a new EgadsData class is
+created with all their attributes.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">With mathematical operands, as metadata define an EgadsData before an operation, and may not reflect the new
+EgadsData, it has been decided to not keep the metadata attribute. It&#8217;s the responsability of the user to
+add a new <a class="reference internal" href="egadsapi.html#egads.core.metadata.VariableMetadata" title="egads.core.metadata.VariableMetadata"><code class="xref py py-class docutils literal"><span class="pre">VariableMetadata</span></code></a> instance or a dictionary to the new EgadsData object.</p>
 </div>
 </div>
 <div class="section" id="metadata">
@@ -301,14 +310,82 @@ will return <em>n</em> characters from the open file.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="id1">
+<h3>Tutorial<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Here is a basic ASCII file, created by EGADS:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># The current file has been created with EGADS</span>
+<span class="c1"># Institution: My Institution</span>
+<span class="c1"># Author(s): John Doe</span>
+<span class="n">time</span>    <span class="n">sea</span> <span class="n">level</span>    <span class="n">corr</span> <span class="n">sea</span> <span class="n">level</span>
+<span class="mf">1.0</span>    <span class="mf">5.0</span>    <span class="mf">1.0</span>
+<span class="mf">2.0</span>    <span class="mf">2.0</span>    <span class="mf">3.0</span>
+<span class="mf">3.0</span>    <span class="o">-</span><span class="mf">2.0</span>    <span class="o">-</span><span class="mf">1.0</span>
+<span class="mf">4.0</span>    <span class="mf">0.5</span>    <span class="mf">2.5</span>
+<span class="mf">5.0</span>    <span class="mf">4.0</span>    <span class="mf">6.0</span>
+</pre></div>
+</div>
+<p>This file has been created with the following commands:</p>
+<ul>
+<li><p class="first">import EGADS module:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create two main variables, following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data1</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">4.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;corr sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create an independant variable, still by following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;seconds since 19700101T00:00:00&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create a new EgadsFile instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">EgadsFile</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">use the following function to open a new file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;main_raw_file.dat&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">prepare the headers if necessary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">headers</span> <span class="o">=</span> <span class="s1">&#39;# The current file has been created with EGADS</span><span class="se">\n</span><span class="s1"># Institution: My Institution</span><span class="se">\n</span><span class="s1"># Author(s): John Doe</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">headers</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;long_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="n">data1</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;long_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="n">data2</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;long_name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;&#39;My institution&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">prepare an object to receive all data:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+<span class="go">    ... data += str(time.value[i]) + &#39;    &#39; + str(data1.value[i]) + &#39;    &#39; + str(data2.value[i]) + &#39;\n&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">write the headers and data into the file</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and do not forget to close the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="working-with-csv-files">
 <h2>Working with CSV files<a class="headerlink" href="#working-with-csv-files" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="egadsapi.html#egads.input.text_file_io.EgadsCsv" title="egads.input.text_file_io.EgadsCsv"><code class="xref py py-class docutils literal"><span class="pre">egads.input.text_file_io.EgadsCsv</span></code></a> is designed to easily input or output data in CSV format.
 Data input using <a class="reference internal" href="egadsapi.html#egads.input.text_file_io.EgadsCsv" title="egads.input.text_file_io.EgadsCsv"><code class="xref py py-class docutils literal"><span class="pre">EgadsCsv</span></code></a> is separated into a list of arrays, which each column a separate
 array in the list.</p>
-<div class="section" id="id1">
-<h3>Opening<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Opening<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>To open a text file the <a class="reference internal" href="egadsapi.html#egads.input.text_file_io.EgadsCsv" title="egads.input.text_file_io.EgadsCsv"><code class="xref py py-class docutils literal"><span class="pre">EgadsCsv</span></code></a> class, use the
 <code class="docutils literal"><span class="pre">open(pathname,</span> <span class="pre">permissions,</span> <span class="pre">delimiter,</span> <span class="pre">quotechar)</span></code> method:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
@@ -328,8 +405,8 @@ fields in the CSV file to be read; the default value is <code class="docutils li
 one-character string specifying the character used to quote fields containing special characters
 in the CSV file to to be read; the default value is <code class="docutils literal"><span class="pre">&quot;</span></code>.</p>
 </div>
-<div class="section" id="id2">
-<h3>File Manipulation<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>File Manipulation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>The following methods are available to control the current position in the file and display more
 information about the file.</p>
 <ul class="simple">
@@ -339,8 +416,8 @@ information about the file.</p>
 <li><code class="docutils literal"><span class="pre">f.reset()</span></code> &#8211; Resets position to beginning of file.</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>Reading Data<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Reading Data<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>Reading data is done using the <code class="docutils literal"><span class="pre">read(lines,</span> <span class="pre">format)</span></code> method on a file that has been opened with <code class="docutils literal"><span class="pre">r</span></code> or <code class="docutils literal"><span class="pre">r+</span></code> permissions:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">EgadsCsv</span><span class="p">()</span>
@@ -367,8 +444,8 @@ their proper types. Options are:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h3>Writing Data<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Writing Data<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>To write data to a file, use the <code class="docutils literal"><span class="pre">write(data)</span></code> method on a file that has been opened with
 &#8216;w&#8217;, &#8216;a&#8217; or &#8216;r+&#8217; permissions:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
@@ -378,20 +455,82 @@ their proper types. Options are:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">titles</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where the <code class="docutils literal"><span class="pre">data</span></code> parameter is a list of values. This list will be output to the CSV, with each
-value separated by the delimiter specified when the file was opened (default is &#8216;,&#8217;).</p>
+<p>where the <code class="docutils literal"><span class="pre">titles</span></code> parameter is a list of strings. This list will be output to the CSV, with each
+strings separated by the delimiter specified when the file was opened (default is &#8216;,&#8217;).</p>
 <p>To write multiple lines out to a file, <code class="docutils literal"><span class="pre">writerows(data)</span></code> is used:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;FGBTM&#39;</span><span class="p">,</span><span class="s1">&#39;20050105T143523&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">25</span><span class="p">],[</span><span class="s1">&#39;FGBTM&#39;</span><span class="p">,</span><span class="s1">&#39;20050105T143524&#39;</span><span class="p">,</span><span class="mf">1.6</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mf">25.6</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h3>Closing<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Closing<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>To close a file, simply call the <code class="docutils literal"><span class="pre">close()</span></code> method:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="id7">
+<h3>Tutorial<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>Here is a basic CSV file, created by EGADS:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">time</span><span class="p">,</span><span class="n">sea</span> <span class="n">level</span><span class="p">,</span><span class="n">corrected</span> <span class="n">sea</span> <span class="n">level</span>
+<span class="mf">1.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">1.0</span>
+<span class="mf">2.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span>
+<span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span>
+<span class="mf">4.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">2.5</span>
+<span class="mf">5.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">6.0</span>
+</pre></div>
+</div>
+<p>This file has been created with the following commands:</p>
+<ul>
+<li><p class="first">import EGADS module:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create two main variables, following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data1</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">4.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;corr sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create an independant variable, still by following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;seconds since 19700101T00:00:00&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create a new EgadsFile instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">EgadsCsv</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">use the following function to open a new file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;main_csv_file.csv&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">prepare the headers if necessary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="s1">&#39;corrected sea level&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">prepare an object to receive all data:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">time</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data1</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data2</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">write the headers and data into the file</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and do not forget to close the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="working-with-netcdf-files">
@@ -400,8 +539,8 @@ value separated by the delimiter specified when the file was opened (default is 
 allows simple read/write operations to NetCDF files. The other, <code class="xref py py-class docutils literal"><span class="pre">egads.input.netcdf.EgadsNetCdf</span></code>,
 is designed to interface with NetCDF files conforming to the EUFAR Standards &amp; Protocols data and metadata regulations.
 This class directly reads or writes NetCDF data using instances of the <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a> class.</p>
-<div class="section" id="id6">
-<h3>Opening<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>Opening<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>To open a NetCDF file, simply create a <a class="reference internal" href="egadsapi.html#egads.input.netcdf_io.NetCdf" title="egads.input.netcdf_io.NetCdf"><code class="xref py py-class docutils literal"><span class="pre">NetCdf()</span></code></a> instance and then use the <code class="docutils literal"><span class="pre">open(pathname,</span> <span class="pre">permissions)</span></code> command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">NetCdf</span><span class="p">()</span>
@@ -419,15 +558,17 @@ This class directly reads or writes NetCDF data using instances of the <a class=
 <div class="section" id="getting-info">
 <h3>Getting info<a class="headerlink" href="#getting-info" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">f.get_dimension_list(var_name)</span></code> &#8211; returns a list of all dimensions and their sizes ; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns a list of all dimensions and their sizes attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
-<li><code class="docutils literal"><span class="pre">f.get_attribute_list(var_name)</span></code> &#8211; returns a list of all top-level attributes ; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns a list of all attributes attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_dimension_list()</span></code> &#8211; returns a list of all dimensions and their sizes</li>
+<li><code class="docutils literal"><span class="pre">f.get_dimension_list(var_name)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns a list of all dimensions and their sizes attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_list()</span></code> &#8211; returns a list of all top-level attributes</li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_list(var_name)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns a list of all attributes attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
 <li><code class="docutils literal"><span class="pre">f.get_variable_list()</span></code> &#8211; returns list of all variables</li>
 <li><code class="docutils literal"><span class="pre">f.get_filename()</span></code> &#8211; returns filename for currently opened file</li>
 <li><code class="docutils literal"><span class="pre">f.get_perms()</span></code> &#8211; returns the current permissions on the file that is open</li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>Reading data<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Reading data<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>To read data from a file, use the <code class="docutils literal"><span class="pre">read_variable()</span></code> function:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read_variable</span><span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">input_range</span><span class="p">)</span>
 </pre></div>
@@ -438,12 +579,13 @@ of min/max values.</p>
 will be returned. IF using the <code class="docutils literal"><span class="pre">egads.input.EgadsNetCdf()</span></code> class, an instance of the
 <code class="docutils literal"><span class="pre">EgadsData()</span></code> class will be returned containing the values and attributes of <code class="docutils literal"><span class="pre">var_name</span></code>.</p>
 </div>
-<div class="section" id="id8">
-<h3>Writing data<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Writing data<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>The following describe how to add dimensions or attributes to a file.</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">f.add_dim(dim_name,</span> <span class="pre">dim_size)</span></code> &#8211; add dimension to file</li>
-<li><code class="docutils literal"><span class="pre">f.add_attribute(attr_name,</span> <span class="pre">attr_value,</span> <span class="pre">var_name)</span></code> &#8211; add attribute to file ; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function add attribute to <code class="docutils literal"><span class="pre">var_name</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.add_attribute(attr_name,</span> <span class="pre">attr_value)</span></code> &#8211; add attribute to file</li>
+<li><code class="docutils literal"><span class="pre">f.add_attribute(attr_name,</span> <span class="pre">attr_value,</span> <span class="pre">var_name)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function add attribute to <code class="docutils literal"><span class="pre">var_name</span></code></li>
 </ul>
 <p>Data can be output to variables using the <code class="docutils literal"><span class="pre">write_variable()</span></code> function as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
@@ -458,19 +600,117 @@ must be scalar or array. Otherwise, if using <a class="reference internal" href=
 of <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a> must be passed into <code class="docutils literal"><span class="pre">write_variable</span></code>. In this case, any attributes
 that are contained within the <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a> instance are applied to the NetCDF variable as well.</p>
 </div>
+<div class="section" id="conversion-from-netcdf-to-nasa-ames-file-format">
+<h3>Conversion from NetCDF to NASA/Ames file format<a class="headerlink" href="#conversion-from-netcdf-to-nasa-ames-file-format" title="Permalink to this headline">¶</a></h3>
+<p>The conversion is only possible on opened NetCDF files. If modifications have been made and haven&#8217;t been saved, the conversion won&#8217;t take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. <code class="docutils literal"><span class="pre">data</span></code> is function of <code class="docutils literal"><span class="pre">time</span></code>, <code class="docutils literal"><span class="pre">longitude</span></code> and <code class="docutils literal"><span class="pre">latitude</span></code>), the file won&#8217;t be converted and the function will raise an exception. On the contrary, if multiple independant variables (or dimensions) exist, and if each variable depend on only one independant variable (e.g. <code class="docutils literal"><span class="pre">data</span></code> is only function of <code class="docutils literal"><span class="pre">time</span></code>), the file will be converted and the function will generate one file per independant variable. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NASA/Ames instance and a NASA/Ames dictionary, by populating the dictionary and by saving the file.</p>
+<p>To convert a NetCDF file, simply use:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">f.convert_to_nasa_ames()</span></code> &#8211; convert the currently opened NetCDF file to NASA/Ames file format</li>
+<li><code class="docutils literal"><span class="pre">f.convert_to_nasa_ames(na_file,</span> <span class="pre">requested_ffi,</span> <span class="pre">float_format,</span> <span class="pre">delimiter,</span> <span class="pre">annotation,</span> <span class="pre">no_header)</span></code> &#8211; <code class="docutils literal"><span class="pre">na_file</span></code>, <code class="docutils literal"><span class="pre">requested_ffi</span></code>, <code class="docutils literal"><span class="pre">float_format</span></code>, <code class="docutils literal"><span class="pre">delimiter</span></code>, <code class="docutils literal"><span class="pre">annotation</span></code> and <code class="docutils literal"><span class="pre">no_header</span></code> are optional parameters ; <code class="docutils literal"><span class="pre">na_file</span></code> is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; <code class="docutils literal"><span class="pre">requested_ffi</span></code> is not used actually, but will be functional in a next version of EGADS ; <code class="docutils literal"><span class="pre">float_format</span></code> is the formatting string used for formatting floats when writing to output file, by default <code class="docutils literal"><span class="pre">%g</span></code> ; <code class="docutils literal"><span class="pre">delimiter</span></code> is a character or a sequence of character for use between data items in the data file, by default &#8216;    &#8216; (four spaces) ; if <code class="docutils literal"><span class="pre">annotation</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>, write the output file with an additional left-hand column describing the contents of each header line, by default <code class="docutils literal"><span class="pre">False</span></code> ; if <code class="docutils literal"><span class="pre">no_header</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>, then only the data blocks are written to file, by default <code class="docutils literal"><span class="pre">False</span></code></li>
+</ul>
+<p>To convert a NetCDF file to NASA/Ames CSV format, simply use:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">f.convert_to_csv()</span></code> &#8211; convert the currently opened NetCDF file to NASA/Ames CSV format</li>
+<li><code class="docutils literal"><span class="pre">f.convert_to_csv(csv_file,</span> <span class="pre">float_format,</span> <span class="pre">annotation,</span> <span class="pre">no_header)</span></code> &#8211; <code class="docutils literal"><span class="pre">csv_file</span></code>, <code class="docutils literal"><span class="pre">float_format</span></code>, <code class="docutils literal"><span class="pre">annotation</span></code> and <code class="docutils literal"><span class="pre">no_header</span></code> are optional parameters ; <code class="docutils literal"><span class="pre">csv_file</span></code> is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; <code class="docutils literal"><span class="pre">float_format</span></code> is the formatting string used for formatting floats when writing to output file, by default <code class="docutils literal"><span class="pre">%g</span></code> ; if <code class="docutils literal"><span class="pre">annotation</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>, write the output file with an additional left-hand column describing the contents of each header line, by default <code class="docutils literal"><span class="pre">False</span></code> ; if <code class="docutils literal"><span class="pre">no_header</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>, then only the data blocks are written to file, by default <code class="docutils literal"><span class="pre">False</span></code></li>
+</ul>
+</div>
 <div class="section" id="other-operations">
 <h3>Other operations<a class="headerlink" href="#other-operations" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name,</span> <span class="pre">var_name)</span></code> &#8211; returns the value of a global attribute ; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns the value of an attribute attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name)</span></code> &#8211; returns the value of a global attribute</li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name,</span> <span class="pre">var_name)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns the value of an attribute attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
 <li><code class="docutils literal"><span class="pre">f.change_variable_name(var_name,</span> <span class="pre">new_name)</span></code> &#8211; change the variable name in currently opened NetCDF file</li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>Closing<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Closing<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>To close a file, simply use the <code class="docutils literal"><span class="pre">close()</span></code> method:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="id12">
+<h3>Tutorial<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>Here is a NetCDF file, created by EGADS, and viewed by the command <code class="docutils literal"><span class="pre">ncdump</span> <span class="pre">-h</span> <span class="pre">....</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">=&gt;</span> <span class="n">ncdump</span> <span class="o">-</span><span class="n">h</span> <span class="n">main_netcdf_file</span><span class="o">.</span><span class="n">nc</span> 
+    <span class="n">netcdf</span> <span class="n">main_netcdf_file</span> <span class="p">{</span>
+    <span class="n">dimensions</span><span class="p">:</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">;</span>
+    <span class="n">variables</span><span class="p">:</span>
+        <span class="n">double</span> <span class="n">time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="p">;</span>
+            <span class="n">time</span><span class="p">:</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;seconds since 19700101T00:00:00&quot;</span> <span class="p">;</span>
+            <span class="n">time</span><span class="p">:</span><span class="n">long_name</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span> <span class="p">;</span>
+        <span class="n">double</span> <span class="n">sea_level</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">_FillValue</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;TEST&quot;</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">add_offset</span> <span class="o">=</span> <span class="mf">0.</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">long_name</span> <span class="o">=</span> <span class="s2">&quot;sea level&quot;</span> <span class="p">;</span>
+            <span class="n">sea_level</span><span class="p">:</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;mm&quot;</span> <span class="p">;</span>
+        <span class="n">double</span> <span class="n">corrected_sea_level</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="p">;</span>
+            <span class="n">corrected_sea_level</span><span class="p">:</span><span class="n">_FillValue</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9999.</span> <span class="p">;</span>
+            <span class="n">corrected_sea_level</span><span class="p">:</span><span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;mm&quot;</span> <span class="p">;</span>
+            <span class="n">corrected_sea_level</span><span class="p">:</span><span class="n">add_offset</span> <span class="o">=</span> <span class="mf">0.</span> <span class="p">;</span>
+            <span class="n">corrected_sea_level</span><span class="p">:</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="p">;</span>
+            <span class="n">corrected_sea_level</span><span class="p">:</span><span class="n">long_name</span> <span class="o">=</span> <span class="s2">&quot;corr sea level&quot;</span> <span class="p">;</span>
+
+    <span class="o">//</span> <span class="k">global</span> <span class="n">attributes</span><span class="p">:</span>
+            <span class="p">:</span><span class="n">Conventions</span> <span class="o">=</span> <span class="s2">&quot;CF-1.0&quot;</span> <span class="p">;</span>
+            <span class="p">:</span><span class="n">history</span> <span class="o">=</span> <span class="s2">&quot;the netcdf file has been created by EGADS&quot;</span> <span class="p">;</span>
+            <span class="p">:</span><span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;no comments on the netcdf file&quot;</span> <span class="p">;</span>
+            <span class="p">:</span><span class="n">institution</span> <span class="o">=</span> <span class="s2">&quot;My institution&quot;</span> <span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>This file has been created with the following commands:</p>
+<ul>
+<li><p class="first">import EGADS module:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create two main variables, following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data1</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">4.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;corr sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">add_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create an independant variable, still by following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;seconds since 19700101T00:00:00&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create a new EgadsNetCdf instance with a file name:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">EgadsNetCdf</span><span class="p">(</span><span class="s1">&#39;main_netcdf_file.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">add the global attributes to the NetCDF file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="s1">&#39;Conventions&#39;</span><span class="p">,</span> <span class="s1">&#39;CF-1.0&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="s1">&#39;history&#39;</span><span class="p">,</span> <span class="s1">&#39;the netcdf file has been created by EGADS&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="s1">&#39;comments&#39;</span><span class="p">,</span> <span class="s1">&#39;no comments on the netcdf file&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">add_attribute</span><span class="p">(</span><span class="s1">&#39;institution&#39;</span><span class="p">,</span> <span class="s1">&#39;My institution&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">add the dimension(s) of your variable(s), here it is <code class="docutils literal"><span class="pre">time</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">add_dim</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">write the variable(s), it is a good practice to write at the first place the independant variable <code class="docutils literal"><span class="pre">time</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,),</span> <span class="s1">&#39;double&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="s1">&#39;sea_level&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,),</span> <span class="s1">&#39;double&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="s1">&#39;corrected_sea_level&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,),</span> <span class="s1">&#39;double&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and do not forget to close the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="working-with-nasa-ames-files">
@@ -478,8 +718,8 @@ that are contained within the <a class="reference internal" href="egadsapi.html#
 <p>To work with NASA Ames files, EGADS incorporates the NAPpy library developed by Ag Stephens of BADC. Information about NAPpy can be found at <a class="reference external" href="http://proj.badc.rl.ac.uk/cows/wiki/CowsSupport/Nappy">http://proj.badc.rl.ac.uk/cows/wiki/CowsSupport/Nappy</a></p>
 <p>In EGADS, the NAPpy API has been adapted to match the other EGADS file access methods. Thus, from EGADS, NASA Ames files can be accessed via the
 <a class="reference internal" href="egadsapi.html#egads.input.nasa_ames_io.NasaAmes" title="egads.input.nasa_ames_io.NasaAmes"><code class="xref py py-class docutils literal"><span class="pre">egads.input.nasa_ames_io.NasaAmes</span></code></a> class. Actually, only the FFI 1001 has been interfaced with EGADS.</p>
-<div class="section" id="id10">
-<h3>Opening<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>Opening<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>To open a NASA Ames file, simply create a <a class="reference internal" href="egadsapi.html#egads.input.nasa_ames_io.NasaAmes" title="egads.input.nasa_ames_io.NasaAmes"><code class="xref py py-class docutils literal"><span class="pre">NasaAmes()</span></code></a> instance and then use the <code class="docutils literal"><span class="pre">open(pathname,</span> <span class="pre">permissions)</span></code> command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">NasaAmes</span><span class="p">()</span>
@@ -495,33 +735,38 @@ that are contained within the <a class="reference internal" href="egadsapi.html#
 </ul>
 <p>Once a file has been opened, a dictionary of NASA/Ames format elements is loaded into memory. That dictionary will be used to overwrite the file or to save to a new file.</p>
 </div>
-<div class="section" id="id11">
-<h3>Getting info<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Getting info<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">f.get_attribute_list(var_name)</span></code> &#8211; returns a list of all top-level attributes ; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns list of all attributes attached to <code class="docutils literal"><span class="pre">var_name</span></code></li>
-<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name,</span> <span class="pre">var_name,</span> <span class="pre">var_type)</span></code> &#8211; returns the value of a global attribute named <code class="docutils literal"><span class="pre">attr_name</span></code> ; <code class="docutils literal"><span class="pre">var_name</span></code> and <code class="docutils literal"><span class="pre">var_type</span></code> are optional, if <code class="docutils literal"><span class="pre">var_name</span></code> is provided, returns the value of an attribute named <code class="docutils literal"><span class="pre">attr_name</span></code> attached to a variable named <code class="docutils literal"><span class="pre">var_name</span></code> ; if <code class="docutils literal"><span class="pre">var_type</span></code> is provided, the function will search in the variable type <code class="docutils literal"><span class="pre">var_type</span></code> by default</li>
-<li><code class="docutils literal"><span class="pre">f.get_dimension_list(var_type)</span></code> &#8211; returns a list of all variable dimensions ; <code class="docutils literal"><span class="pre">var_type</span></code> is optional, if provided, the function returns a list of all variable dimensions based on the <code class="docutils literal"><span class="pre">var_type</span></code> by default</li>
-<li><code class="docutils literal"><span class="pre">f.get_variable_list()</span></code> &#8211; returns list of all variables</li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_list()</span></code> &#8211; returns a list of all top-level attributes</li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_list(var_name,</span> <span class="pre">var_type,</span> <span class="pre">na_dict)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> is optional and if provided, the function returns list of all attributes attached to <code class="docutils literal"><span class="pre">var_name</span></code> ; if <code class="docutils literal"><span class="pre">var_type</span></code> is provided the function will search in the variable type <code class="docutils literal"><span class="pre">var_type</span></code> by default ; <code class="docutils literal"><span class="pre">na_dict</span></code> is optional if provided, will return a list of all top-level attributes, or all <code class="docutils literal"><span class="pre">var_name</span></code> attributes, in the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name)</span></code> &#8211; returns the value of a global attribute named <code class="docutils literal"><span class="pre">attr_name</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_attribute_value(attr_name,</span> <span class="pre">var_name,</span> <span class="pre">var_type,</span> <span class="pre">na_dict)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code>, <code class="docutils literal"><span class="pre">var_type</span></code> and <code class="docutils literal"><span class="pre">na_dict</span></code> are optional ; if <code class="docutils literal"><span class="pre">var_name</span></code> is provided, returns the value of an attribute named <code class="docutils literal"><span class="pre">attr_name</span></code> attached to a variable named <code class="docutils literal"><span class="pre">var_name</span></code> ; if <code class="docutils literal"><span class="pre">var_type</span></code> is provided, the function will search in the variable type <code class="docutils literal"><span class="pre">var_type</span></code> by default ; if <code class="docutils literal"><span class="pre">na_dict</span></code> is provided, returns the attribute value from the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.get_dimension_list()</span></code> &#8211; returns a list of all variable dimensions</li>
+<li><code class="docutils literal"><span class="pre">f.get_dimension_list(na_dict,</span> <span class="pre">var_type)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_type</span></code> is optional, if provided, the function returns a list of all variable dimensions based on the <code class="docutils literal"><span class="pre">var_type</span></code> by default ; <code class="docutils literal"><span class="pre">na_dict</span></code> is optional and will returns the dimension list from the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code> ;</li>
+<li><code class="docutils literal"><span class="pre">f.get_variable_list()</span></code> &#8211; returns list of all variables ;</li>
+<li><code class="docutils literal"><span class="pre">f.get_variable_list(na_dict)</span></code> &#8211; <code class="docutils literal"><span class="pre">na_dict</span></code> is optional and if provided, will return a list of all variables in the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code></li>
 <li><code class="docutils literal"><span class="pre">f.get_filename()</span></code> &#8211; returns filename for currently opened file</li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h3>Reading data<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Reading data<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>To read data from a file, use the <code class="docutils literal"><span class="pre">read_variable()</span></code> function:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read_variable</span><span class="p">(</span><span class="n">var_name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">var_name</span></code> is the name of the variable to read in. The data will be read in to an instance of the <code class="docutils literal"><span class="pre">EgadsData()</span></code> class, containing
-the values and attributes of <code class="docutils literal"><span class="pre">var_name</span></code>.</p>
+<p>where <code class="docutils literal"><span class="pre">var_name</span></code> is the name of the variable to read in. The data will be read in to an instance of the <code class="docutils literal"><span class="pre">EgadsData()</span></code> class, containing the values and attributes of <code class="docutils literal"><span class="pre">var_name</span></code>.</p>
 </div>
-<div class="section" id="id13">
-<h3>Writing data<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>Writing data<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p>To write data to the current file or to a new file, the user must save a dictionary of NASA/Ames elements. Few functions are
 available to help him to prepare the dictionary:</p>
 <ul class="simple">
+<li><code class="docutils literal"><span class="pre">f.create_na_dict</span></code> &#8211; create a new dictionary populated with standard NASA/Ames keys.</li>
 <li><code class="docutils literal"><span class="pre">f.write_attribute_value(attr_name,</span> <span class="pre">attr_value)</span></code> &#8211; write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary</li>
-<li><code class="docutils literal"><span class="pre">f.write_attribute_value(attr_name,</span> <span class="pre">attr_value,</span> <span class="pre">var_name,</span> <span class="pre">var_type)</span></code> &#8211; write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary ; <code class="docutils literal"><span class="pre">var_name</span></code> and <code class="docutils literal"><span class="pre">var_type</span></code> are optional, if provided, write or replace a specific attribute linked to the variable <code class="docutils literal"><span class="pre">var_name</span></code> (<code class="docutils literal"><span class="pre">var_type</span></code> is by default equal to &#8216;main&#8217;) in the currently opened dictionary</li>
-<li><code class="docutils literal"><span class="pre">f.write_variable(data,</span> <span class="pre">var_type,</span> <span class="pre">var_name,</span> <span class="pre">attr_dict)</span></code> - write or replace a variable, <code class="docutils literal"><span class="pre">data</span></code> (a scalar, an array, or an <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a>) in the currently opened dictionary ; <code class="docutils literal"><span class="pre">var_type</span></code>, <code class="docutils literal"><span class="pre">var_name</span></code> and <code class="docutils literal"><span class="pre">attr_dict</span></code> are optional ; if <code class="docutils literal"><span class="pre">var_type</span></code> is provided (by defaut <code class="docutils literal"><span class="pre">var_type</span></code> = &#8216;main&#8217;), <code class="docutils literal"><span class="pre">var_type</span></code> is the default type of data attached to <code class="docutils literal"><span class="pre">data</span></code> ; if <code class="docutils literal"><span class="pre">var_name</span></code> is provided, the function will search of its presence in the dictionary, if it is found, <code class="docutils literal"><span class="pre">data</span></code> will replace the old variable, if not <code class="docutils literal"><span class="pre">data</span></code> is considered as a new variable with the name <code class="docutils literal"><span class="pre">var_name</span></code> and attributes in <code class="docutils literal"><span class="pre">attr_dict</span></code> (mandatory only if <code class="docutils literal"><span class="pre">data</span></code> is a new variable or is not an <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a>)</li>
+<li><code class="docutils literal"><span class="pre">f.write_attribute_value(attr_name,</span> <span class="pre">attr_value,</span> <span class="pre">var_name,</span> <span class="pre">var_type,</span> <span class="pre">na_dict)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_name</span></code> and <code class="docutils literal"><span class="pre">var_type</span></code> are optional, if provided, write or replace a specific attribute linked to the variable <code class="docutils literal"><span class="pre">var_name</span></code> (<code class="docutils literal"><span class="pre">var_type</span></code> is by default equal to &#8216;main&#8217;) in the currently opened dictionary ; ccepted attributes for a variable are &#8216;name&#8217;, &#8216;units&#8217;, &#8216;_FillValue&#8217; and &#8216;scale_factor&#8217;, other attributes will be refused and should be passed as &#8216;special comments&#8217; ; <code class="docutils literal"><span class="pre">na_dict</span></code> is optional and if provided the function will write the attribute in the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code></li>
+<li><code class="docutils literal"><span class="pre">f.write_variable(data,</span> <span class="pre">var_name)</span></code> &#8211; write or replace a variable ; the function will search if <code class="docutils literal"><span class="pre">data</span></code> is already in the dictionary by comparing <code class="docutils literal"><span class="pre">varname</span></code> with other variable names in the dictionary, if it is found, <code class="docutils literal"><span class="pre">data</span></code> will replace the old variable, if not <code class="docutils literal"><span class="pre">data</span></code> is considered as a new variable ; <code class="docutils literal"><span class="pre">data</span></code> can be an <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a> or a vector/matrix.</li>
+<li><code class="docutils literal"><span class="pre">f.write_variable(data,</span> <span class="pre">var_name,</span> <span class="pre">var_type,</span> <span class="pre">attr_dict,</span> <span class="pre">na_dict)</span></code> &#8211; <code class="docutils literal"><span class="pre">var_type</span></code>, <code class="docutils literal"><span class="pre">attr_dict</span></code> and <code class="docutils literal"><span class="pre">na_dict</span></code> are optional ; <code class="docutils literal"><span class="pre">attr_dict</span></code> (a dictionary of standard NASA/ames variable attributes: &#8216;name&#8217;, &#8216;units&#8217;, &#8216;_FillValue&#8217; and &#8216;scale_factor&#8217;) must be provided if <code class="docutils literal"><span class="pre">data</span></code> is not an <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a> (in that case, variable attributes are retrieve from the <a class="reference internal" href="egadsapi.html#egads.core.egads_core.EgadsData" title="egads.core.egads_core.EgadsData"><code class="xref py py-class docutils literal"><span class="pre">EgadsData</span></code></a>.metadata dictionary) ; if <code class="docutils literal"><span class="pre">na_dict</span></code> is provided, the function saves the variable in the NASA/Ames dictionary <code class="docutils literal"><span class="pre">na_dict</span></code></li>
 </ul>
 </div>
 <div class="section" id="saving-a-file">
@@ -532,25 +777,131 @@ available to help him to prepare the dictionary:</p>
 </div>
 <p>where <code class="docutils literal"><span class="pre">file_name</span></code> is the name of the new file or the name of the current file, <code class="docutils literal"><span class="pre">na_dict</span></code> the name of the dictionary to be saved (optional, if not provided, the current dictionary will be used), and <code class="docutils literal"><span class="pre">float_format</span></code> the format of the floating numbers in the file (by deffault, two decimal places).</p>
 </div>
-<div class="section" id="id14">
-<h3>Other operations<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="conversion-from-nasa-ames-file-format-to-netcdf">
+<h3>Conversion from NASA/Ames file format to NetCDF<a class="headerlink" href="#conversion-from-nasa-ames-file-format-to-netcdf" title="Permalink to this headline">¶</a></h3>
+<p>When a NASA/Ames file is opened, all metadata and data are read and stored in memory in a dedicated dictionary. The conversion will convert that dictionary to generate a NetCDF file. If modifications are made to the dictionary, the conversion will take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. <code class="docutils literal"><span class="pre">data</span></code> is function of <code class="docutils literal"><span class="pre">time</span></code>, <code class="docutils literal"><span class="pre">longitude</span></code> and <code class="docutils literal"><span class="pre">latitude</span></code>), the file won&#8217;t be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NetCDF instance and by populating the NetCDF files with NASA/Ames data and metadata.</p>
+<p>To convert a NASA/Ames file, simply use:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">f.convert_to_netcdf()</span></code> &#8211; convert the currently opened NASA/Ames file to NetCDF format.</li>
+<li><code class="docutils literal"><span class="pre">f.convert_to_netcdf(nc_file)</span></code> &#8211; <code class="docutils literal"><span class="pre">nc_file</span></code> is an optional parameter ; <code class="docutils literal"><span class="pre">na_file</span></code> is the name of the output file once it has been converted, by default the name of the NASA/Ames file will be used with the extension .nc</li>
+</ul>
+</div>
+<div class="section" id="id17">
+<h3>Other operations<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">f.read_na_dict()</span></code> &#8211; returns a deep copy of the current opened file dictionary</li>
 <li><code class="docutils literal"><span class="pre">f.na_format_information()</span></code> &#8211; returns a text explaining the structure of a NASA/Ames file to help the user to modify or to create his own dictionary</li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h3>Closing<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>Closing<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>To close a file, simply use the <code class="docutils literal"><span class="pre">close()</span></code> method:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="id19">
+<h3>Tutorial<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>Here is a NASA/Ames file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">23</span>    <span class="mi">1001</span>
+<span class="n">John</span> <span class="n">Doe</span>
+<span class="n">An</span> <span class="n">institution</span>
+<span class="n">tide</span> <span class="n">gauge</span>
+<span class="n">ATESTPROJECT</span>
+<span class="mi">1</span>    <span class="mi">1</span>
+<span class="mi">2017</span> <span class="mi">1</span> <span class="mi">30</span>    <span class="mi">2017</span> <span class="mi">1</span> <span class="mi">30</span>
+<span class="mf">0.0</span>
+<span class="n">time</span> <span class="p">(</span><span class="n">seconds</span> <span class="n">since</span> <span class="mi">19700101</span><span class="n">T00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="mi">1</span>    <span class="mi">1</span>
+<span class="o">-</span><span class="mi">9999</span>    <span class="o">-</span><span class="mi">9999</span>
+<span class="n">sea</span> <span class="n">level</span> <span class="p">(</span><span class="n">mm</span><span class="p">)</span>
+<span class="n">corr</span> <span class="n">sea</span> <span class="n">level</span> <span class="p">(</span><span class="n">mm</span><span class="p">)</span>
+<span class="mi">3</span>
+<span class="o">========</span><span class="n">SPECIAL</span> <span class="n">COMMENTS</span><span class="o">===========</span>
+<span class="n">this</span> <span class="n">file</span> <span class="n">has</span> <span class="n">been</span> <span class="n">created</span> <span class="k">with</span> <span class="n">egads</span>
+<span class="o">=========</span><span class="n">END</span><span class="o">=========</span>
+<span class="mi">4</span>
+<span class="o">========</span><span class="n">NORMAL</span> <span class="n">COMMENTS</span><span class="o">===========</span>
+<span class="n">headers</span><span class="p">:</span>
+<span class="n">time</span>    <span class="n">sea</span> <span class="n">level</span>   <span class="n">corrected</span> <span class="n">sea</span> <span class="n">level</span>
+<span class="o">=========</span><span class="n">END</span><span class="o">=========</span>
+<span class="mf">1.00</span>    <span class="mf">5.00</span>    <span class="mf">1.00</span>
+<span class="mf">2.00</span>    <span class="mf">2.00</span>    <span class="mf">3.00</span>
+<span class="mf">3.00</span>    <span class="o">-</span><span class="mf">2.00</span>    <span class="o">-</span><span class="mf">1.00</span>
+<span class="mf">4.00</span>    <span class="mf">0.50</span>    <span class="mf">2.50</span>
+<span class="mf">5.00</span>    <span class="mf">4.00</span>    <span class="mf">6.00</span>
+</pre></div>
+</div>
+<p>This file has been created with the following commands:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>import EGADS module:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">egads</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">create two main variables, following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data1</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">4.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data2</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;mm&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;corr sea level&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">_FillValue</span><span class="o">=-</span><span class="mi">9999</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create an independant variable, still by following the official EGADS convention:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">EgadsData</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;seconds since 19700101T00:00:00&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">create a new NASA/Ames empty instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">egads</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">NasaAmes</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">initialize a new NASA/Ames dictionary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">na_dict</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">create_na_dict</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">prepare the normal and special comments if needed, in a list, one cell for each line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">scom</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;========SPECIAL COMMENTS===========&#39;</span><span class="p">,</span><span class="s1">&#39;this file has been created with egads&#39;</span><span class="p">,</span><span class="s1">&#39;=========END=========&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ncom</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;========NORMAL COMMENTS===========&#39;</span><span class="p">,</span><span class="s1">&#39;headers:&#39;</span><span class="p">,</span><span class="s1">&#39;time    sea level   corrected sea level&#39;</span><span class="p">,</span><span class="s1">&#39;=========END=========&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">populate the main NASA/Ames attributes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;ONAME&#39;</span><span class="p">,</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># ONAME is the name of the author(s)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;ORG&#39;</span><span class="p">,</span> <span class="s1">&#39;An institution&#39;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># ORG is tne name of the organization responsible for the data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;SNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;tide gauge&#39;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># SNAME is the source of data (instrument, observation, platform, ...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;MNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;ATESTPROJECT&#39;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># MNAME is the name of the mission, campaign, programme, project dedicated to data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;DATE&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># DATE is the date at which the data recorded in this file begin (YYYY MM DD)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;NIV&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># NIV is the number of independent variables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;NSCOML&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># NSCOML is the number of special comments lines or the number of elements in the SCOM list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;NNCOML&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># NNCOML is the number of special comments lines or the number of elements in the NCOM list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;SCOM&#39;</span><span class="p">,</span> <span class="n">scom</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># SCOM is the special comments attribute</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_attribute_value</span><span class="p">(</span><span class="s1">&#39;NCOM&#39;</span><span class="p">,</span> <span class="n">ncom</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span> <span class="c1"># NCOM is the normal comments attribute</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">write each variable in the dictionary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;independant&quot;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="s1">&#39;sea level&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">write_variable</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="s1">&#39;corrected sea level&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="n">na_dict</span> <span class="o">=</span> <span class="n">na_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">and finally, save the dictionary to a NASA/Ames file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">save_na_file</span><span class="p">(</span><span class="s1">&#39;na_example_file.na&#39;</span><span class="p">,</span> <span class="n">na_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="converting-between-file-formats">
 <h2>Converting between file formats<a class="headerlink" href="#converting-between-file-formats" title="Permalink to this headline">¶</a></h2>
-<p>Since the first version of EGADS, the direct conversion was possible with the NAPpy library with the help of CDMS. As CDMS is not compatible with windows, that possibility has been dropped for now. Actually it&#8217;s possible to convert a netcdf file to a NASA/Ames file, and vice versa, but the user has to do the job himself. For example, if a user open a netcdf file and wants to save the file in NASA/Ames format, he has to create an empty NASA/Ames instance, populate the dictionary and save the dictionary to a NASA/Ames file. In the same way, from a NASA/Ames file, he has to create a netcdf instance, read the dictionary, add all attributes and variables to the netcdf instance and save the netcdf file.
-Functions to convert directly an opened file into another format will be introduced as quickly as possible to help the user for simple and fast convertion. Complex conversions still need the intervention of the user by moving the data from an instance to another.</p>
+<p>Since the first version of EGADS, the direct conversion was possible with the NAPpy library with the help of CDMS. As CDMS is not compatible with windows, that possibility has been dropped. However, two functions have been introduced to allow a conversion from NetCDF to NASA/Ames format, and from NASA/Ames format to NetCDF. Please read the section about NetCDF and NASA/Ames file handling to learn how to convert between those formats.</p>
 </div>
 <div class="section" id="working-with-algorithms">
 <h2>Working with algorithms<a class="headerlink" href="#working-with-algorithms" title="Permalink to this headline">¶</a></h2>
@@ -691,11 +1042,11 @@ proper depth. As long as the document is consistent, the number of spaces used d
 </div>
 <div class="section" id="using-the-gui">
 <h2>Using the GUI<a class="headerlink" href="#using-the-gui" title="Permalink to this headline">¶</a></h2>
-<p>Since September 2016, a Graphical User Interface is available at <a class="reference external" href="https://github.com/eufarn7sp/egads-gui">https://github.com/eufarn7sp/egads-gui</a>. It gives the user the possibility to explore data, apply algorithms, display and plot data. Still in beta state, the user will have the possibility to create algorithms from the GUI, and to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, once placed in the EGADS GUI directory:</p>
+<p>Since September 2016, a Graphical User Interface is available at <a class="reference external" href="https://github.com/eufarn7sp/egads-gui">https://github.com/eufarn7sp/egads-gui</a>. It gives the user the possibility to explore data, apply algorithms, display and plot data. Still in beta state, the user will have the possibility to create algorithms from the GUI, and to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, if EGADS is installed, and once in the EGADS GUI directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">egads_gui</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p>It will be available soon as a regular python package or as a stand alone, a version of EGADS CORE.</p>
+<p>It will be available soon as a regular python package and as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).</p>
 </div>
 </div>
 
@@ -706,7 +1057,7 @@ proper depth. As long as the document is consistent, the number of spaces used d
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/eufar_new_logo.png" alt="Logo"/>
+              <img class="logo" src="_static/eufar_new_logo_white_bkgrd.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -727,33 +1078,39 @@ proper depth. As long as the document is consistent, the number of spaces used d
 <li><a class="reference internal" href="#reading-data">Reading Data</a></li>
 <li><a class="reference internal" href="#writing-data">Writing Data</a></li>
 <li><a class="reference internal" href="#closing">Closing</a></li>
+<li><a class="reference internal" href="#id1">Tutorial</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#working-with-csv-files">Working with CSV files</a><ul>
-<li><a class="reference internal" href="#id1">Opening</a></li>
-<li><a class="reference internal" href="#id2">File Manipulation</a></li>
-<li><a class="reference internal" href="#id3">Reading Data</a></li>
-<li><a class="reference internal" href="#id4">Writing Data</a></li>
-<li><a class="reference internal" href="#id5">Closing</a></li>
+<li><a class="reference internal" href="#id2">Opening</a></li>
+<li><a class="reference internal" href="#id3">File Manipulation</a></li>
+<li><a class="reference internal" href="#id4">Reading Data</a></li>
+<li><a class="reference internal" href="#id5">Writing Data</a></li>
+<li><a class="reference internal" href="#id6">Closing</a></li>
+<li><a class="reference internal" href="#id7">Tutorial</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#working-with-netcdf-files">Working with NetCDF files</a><ul>
-<li><a class="reference internal" href="#id6">Opening</a></li>
+<li><a class="reference internal" href="#id8">Opening</a></li>
 <li><a class="reference internal" href="#getting-info">Getting info</a></li>
-<li><a class="reference internal" href="#id7">Reading data</a></li>
-<li><a class="reference internal" href="#id8">Writing data</a></li>
+<li><a class="reference internal" href="#id9">Reading data</a></li>
+<li><a class="reference internal" href="#id10">Writing data</a></li>
+<li><a class="reference internal" href="#conversion-from-netcdf-to-nasa-ames-file-format">Conversion from NetCDF to NASA/Ames file format</a></li>
 <li><a class="reference internal" href="#other-operations">Other operations</a></li>
-<li><a class="reference internal" href="#id9">Closing</a></li>
+<li><a class="reference internal" href="#id11">Closing</a></li>
+<li><a class="reference internal" href="#id12">Tutorial</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#working-with-nasa-ames-files">Working with NASA Ames files</a><ul>
-<li><a class="reference internal" href="#id10">Opening</a></li>
-<li><a class="reference internal" href="#id11">Getting info</a></li>
-<li><a class="reference internal" href="#id12">Reading data</a></li>
-<li><a class="reference internal" href="#id13">Writing data</a></li>
+<li><a class="reference internal" href="#id13">Opening</a></li>
+<li><a class="reference internal" href="#id14">Getting info</a></li>
+<li><a class="reference internal" href="#id15">Reading data</a></li>
+<li><a class="reference internal" href="#id16">Writing data</a></li>
 <li><a class="reference internal" href="#saving-a-file">Saving a file</a></li>
-<li><a class="reference internal" href="#id14">Other operations</a></li>
-<li><a class="reference internal" href="#id15">Closing</a></li>
+<li><a class="reference internal" href="#conversion-from-nasa-ames-file-format-to-netcdf">Conversion from NASA/Ames file format to NetCDF</a></li>
+<li><a class="reference internal" href="#id17">Other operations</a></li>
+<li><a class="reference internal" href="#id18">Closing</a></li>
+<li><a class="reference internal" href="#id19">Tutorial</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#converting-between-file-formats">Converting between file formats</a></li>
@@ -816,7 +1173,7 @@ proper depth. As long as the document is consistent, the number of spaces used d
         <li class="right" >
           <a href="install.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

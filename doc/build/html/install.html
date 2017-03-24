@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &#8212; EGADS 0.7.0 documentation</title>
+    <title>Installation &#8212; EGADS 0.8.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.7.0',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,10 +61,11 @@
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>Use of EGADS requires the following packages:</p>
 <ul class="simple">
-<li>Python 2.7.10 or newer. Available at <a class="reference external" href="http://www.python.org/">http://www.python.org/</a></li>
+<li>Python 2.7.10 or newer. Available at <a class="reference external" href="https://www.python.org/">https://www.python.org/</a></li>
 <li>numpy 1.10.1 or newer. Available at <a class="reference external" href="http://numpy.scipy.org/">http://numpy.scipy.org/</a></li>
 <li>scipy 0.15.0 or newer. Available at <a class="reference external" href="http://www.scipy.org/">http://www.scipy.org/</a></li>
 <li>Python netCDF4 libraries 1.1.9. Available at <a class="reference external" href="https://pypi.python.org/pypi/netCDF4">https://pypi.python.org/pypi/netCDF4</a></li>
+<li>python_dateutil 2.4.2 or newer. Available at <a class="reference external" href="https://pypi.python.org/pypi/python-dateutil">https://pypi.python.org/pypi/python-dateutil</a></li>
 </ul>
 </div>
 <div class="section" id="optional-packages">
@@ -77,10 +78,7 @@
 </div>
 <div class="section" id="id1">
 <h2>Installation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must
-be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory
-containing the file <code class="docutils literal"><span class="pre">setup.py</span></code>, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>
-from the command line. To install to a user-specified location, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--prefix=$MYDIR</span></code>.</p>
+<p>Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file <code class="docutils literal"><span class="pre">setup.py</span></code>, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> from the command line. To install to a user-specified location, type <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--prefix=$MYDIR</span></code>. On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system.</p>
 </div>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
@@ -99,6 +97,11 @@ from the command line. To install to a user-specified location, type <code class
 <span class="gp">&gt;&gt;&gt; </span><span class="n">exit</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Actual options to control the logging system are for now:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">level</span></code>: the logging level (<code class="docutils literal"><span class="pre">DEBUG</span></code>, <code class="docutils literal"><span class="pre">INFO</span></code>, <code class="docutils literal"><span class="pre">WARNING</span></code>, <code class="docutils literal"><span class="pre">CRITICAL</span></code>, <code class="docutils literal"><span class="pre">ERROR</span></code>).</li>
+<li><code class="docutils literal"><span class="pre">path</span></code>: the path of the file containing all logs.</li>
+</ul>
 <p>New logging options will be loaded at the next import of EGADS. Logging levels are the standard Python ones (<code class="docutils literal"><span class="pre">DEBUG</span></code>, <code class="docutils literal"><span class="pre">INFO</span></code>, <code class="docutils literal"><span class="pre">WARNING</span></code>, <code class="docutils literal"><span class="pre">CRITICAL</span></code>, <code class="docutils literal"><span class="pre">ERROR</span></code>). It is also possible to change dynamically the logging level in a script:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">egads</span><span class="o">.</span><span class="n">change_log_level</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">)</span>
 </pre></div>
@@ -114,7 +117,7 @@ from the command line. To install to a user-specified location, type <code class
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/eufar_new_logo.png" alt="Logo"/>
+              <img class="logo" src="_static/eufar_new_logo_white_bkgrd.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -170,7 +173,7 @@ from the command line. To install to a user-specified location, type <code class
         <li class="right" >
           <a href="intro.html" title="Introduction"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

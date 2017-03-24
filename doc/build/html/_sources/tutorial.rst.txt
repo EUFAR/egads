@@ -50,6 +50,9 @@ To have a list of file in a directory, use the following function:
 
    >>> egads.input.get_file_list('path/to/all/netcdf/files/*.nc')
 
+.. raw:: latex
+
+    \newpage
 
 The :class:`~.EgadsData` class
 *******************************
@@ -98,6 +101,15 @@ with a units property, this will then be used to define the EgadsData units:
    >>> x = egads.EgadsData([1,2,3], x_metadata)
    >>> print x.units
    m
+   
+The EgadsData is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations 
+like addition, substraction, slicing, and many more. For each of those operations, a new EgadsData class is 
+created with all their attributes. 
+
+.. NOTE::
+  With mathematical operands, as metadata define an EgadsData before an operation, and may not reflect the new 
+  EgadsData, it has been decided to not keep the metadata attribute. It's the responsability of the user to 
+  add a new :class:`~.VariableMetadata` instance or a dictionary to the new EgadsData object.
 
 
 Metadata
@@ -181,9 +193,9 @@ But, non-compatible types cannot be added. They can, however, be multiplied or d
    Thus, in the Egads implementation, while most variables will automatically be converted to the correct
    units when using algorithms, an Error will be raised if a temperature is provided in incorrect units.
 
-.. Metadata in EGADS
-.. ******************
+.. raw:: latex
 
+    \newpage
 
 Working with raw text files
 ********************************
@@ -260,6 +272,60 @@ To close a file, simply call the ``close()`` method:
 
    >>> f.close()
 
+Tutorial
+---------
+
+Here is a basic ASCII file, created by EGADS:
+    
+.. literalinclude:: example_files/main_raw_file.dat
+
+This file has been created with the following commands:
+
+* import EGADS module:
+
+    >>> import egads
+    
+* create two main variables, following the official EGADS convention:
+
+    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', name='sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', name='corr sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    
+* create an independant variable, still by following the official EGADS convention:
+
+    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', name='time')
+    
+* create a new EgadsFile instance:
+
+    >>> f = egads.input.EgadsFile()
+
+* use the following function to open a new file:
+
+    >>> f.open('main_raw_file.dat', 'w')
+    
+* prepare the headers if necessary:
+
+    >>> headers = '# The current file has been created with EGADS\n# Institution: My Institution\n# Author(s): John Doe\n'
+    >>> headers += time.metadata["long_name"] + '    ' + data1.metadata["long_name"] + '    ' + data2.metadata["long_name"] + '\n''My institution')
+
+* prepare an object to receive all data:
+
+    >>> data = ''
+    >>> for i, _ in enumerate(time.value):
+        ... data += str(time.value[i]) + '    ' + str(data1.value[i]) + '    ' + str(data2.value[i]) + '\n'
+    
+* write the headers and data into the file
+
+    >>> f.write(headers)
+    >>> f.write(data)
+    
+* and do not forget to close the file:
+
+    >>> f.close()
+   
+.. raw:: latex
+
+    \newpage
+   
 Working with CSV files
 ***********************
 
@@ -343,8 +409,8 @@ To write data to a file, use the ``write(data)`` method on a file that has been 
    >>> titles = ['Aircraft ID','Timestamp','Value1','Value2','Value3']
    >>> f.write(titles) 
 
-where the ``data`` parameter is a list of values. This list will be output to the CSV, with each
-value separated by the delimiter specified when the file was opened (default is ',').
+where the ``titles`` parameter is a list of strings. This list will be output to the CSV, with each
+strings separated by the delimiter specified when the file was opened (default is ',').
 
 To write multiple lines out to a file, ``writerows(data)`` is used:
 
@@ -357,8 +423,62 @@ Closing
 To close a file, simply call the ``close()`` method:
 
    >>> f.close()
+   
+Tutorial
+---------
 
+Here is a basic CSV file, created by EGADS:
+    
+.. literalinclude:: example_files/main_csv_file.csv
 
+This file has been created with the following commands:
+
+* import EGADS module:
+
+    >>> import egads
+    
+* create two main variables, following the official EGADS convention:
+
+    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', name='sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', name='corr sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    
+* create an independant variable, still by following the official EGADS convention:
+
+    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', name='time')
+    
+* create a new EgadsFile instance:
+
+    >>> f = egads.input.EgadsCsv()
+
+* use the following function to open a new file:
+
+    >>> f.open('main_csv_file.csv','w',',','"')
+    
+* prepare the headers if necessary:
+
+    >>> headers = ['time', 'sea level', 'corrected sea level']
+
+* prepare an object to receive all data:
+
+    >>> data = [time.value, data1.value, data2.value]
+    
+* write the headers and data into the file
+
+    >>> f.write(headers)
+    >>> f.write(data)
+    
+* and do not forget to close the file:
+
+    >>> f.close()
+   
+.. raw:: latex
+
+    \newpage
+
+.. raw:: latex
+
+    \newpage
+   
 Working with NetCDF files
 **************************
 
@@ -386,8 +506,10 @@ Valid values for permissions are:
 Getting info
 -------------
 
-* ``f.get_dimension_list(var_name)`` -- returns a list of all dimensions and their sizes ; ``var_name`` is optional and if provided, the function returns a list of all dimensions and their sizes attached to ``var_name``
-* ``f.get_attribute_list(var_name)`` -- returns a list of all top-level attributes ; ``var_name`` is optional and if provided, the function returns a list of all attributes attached to ``var_name``
+* ``f.get_dimension_list()`` -- returns a list of all dimensions and their sizes
+* ``f.get_dimension_list(var_name)`` -- ``var_name`` is optional and if provided, the function returns a list of all dimensions and their sizes attached to ``var_name``
+* ``f.get_attribute_list()`` -- returns a list of all top-level attributes
+* ``f.get_attribute_list(var_name)`` -- ``var_name`` is optional and if provided, the function returns a list of all attributes attached to ``var_name``
 * ``f.get_variable_list()`` -- returns list of all variables
 * ``f.get_filename()`` -- returns filename for currently opened file
 * ``f.get_perms()`` -- returns the current permissions on the file that is open
@@ -412,7 +534,8 @@ Writing data
 The following describe how to add dimensions or attributes to a file.
 
 * ``f.add_dim(dim_name, dim_size)`` -- add dimension to file
-* ``f.add_attribute(attr_name, attr_value, var_name)`` -- add attribute to file ; ``var_name`` is optional and if provided, the function add attribute to ``var_name``
+* ``f.add_attribute(attr_name, attr_value)`` -- add attribute to file
+* ``f.add_attribute(attr_name, attr_value, var_name)`` -- ``var_name`` is optional and if provided, the function add attribute to ``var_name``
 
 Data can be output to variables using the ``write_variable()`` function as follows:
 
@@ -428,10 +551,26 @@ must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance
 of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes 
 that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well.
     
+Conversion from NetCDF to NASA/Ames file format
+------------------------------------------------
+
+The conversion is only possible on opened NetCDF files. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. On the contrary, if multiple independant variables (or dimensions) exist, and if each variable depend on only one independant variable (e.g. ``data`` is only function of ``time``), the file will be converted and the function will generate one file per independant variable. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NASA/Ames instance and a NASA/Ames dictionary, by populating the dictionary and by saving the file.
+
+To convert a NetCDF file, simply use:
+
+* ``f.convert_to_nasa_ames()`` -- convert the currently opened NetCDF file to NASA/Ames file format
+* ``f.convert_to_nasa_ames(na_file, requested_ffi, float_format, delimiter, annotation, no_header)`` -- ``na_file``, ``requested_ffi``, ``float_format``, ``delimiter``, ``annotation`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``requested_ffi`` is not used actually, but will be functional in a next version of EGADS ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``annotation`` is set to ``True``, write the output file with an additional left-hand column describing the contents of each header line, by default ``False`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+
+To convert a NetCDF file to NASA/Ames CSV format, simply use:
+
+* ``f.convert_to_csv()`` -- convert the currently opened NetCDF file to NASA/Ames CSV format
+* ``f.convert_to_csv(csv_file, float_format, annotation, no_header)`` -- ``csv_file``, ``float_format``, ``annotation`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; if ``annotation`` is set to ``True``, write the output file with an additional left-hand column describing the contents of each header line, by default ``False`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+    
 Other operations
 -----------------
 
-* ``f.get_attribute_value(attr_name, var_name)`` -- returns the value of a global attribute ; ``var_name`` is optional and if provided, the function returns the value of an attribute attached to ``var_name``
+* ``f.get_attribute_value(attr_name)`` -- returns the value of a global attribute
+* ``f.get_attribute_value(attr_name, var_name)`` -- ``var_name`` is optional and if provided, the function returns the value of an attribute attached to ``var_name``
 * ``f.change_variable_name(var_name, new_name)`` -- change the variable name in currently opened NetCDF file
 
 Closing
@@ -440,7 +579,57 @@ Closing
 To close a file, simply use the ``close()`` method:
 
     >>> f.close()
+    
+Tutorial
+---------
 
+Here is a NetCDF file, created by EGADS, and viewed by the command ``ncdump -h ....``:
+    
+.. literalinclude:: example_files/ncdump_example_file.txt
+
+This file has been created with the following commands:
+
+* import EGADS module:
+
+    >>> import egads
+    
+* create two main variables, following the official EGADS convention:
+
+    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', name='sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', name='corr sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    
+* create an independant variable, still by following the official EGADS convention:
+
+    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', name='time')
+    
+* create a new EgadsNetCdf instance with a file name:
+
+    >>> f = egads.input.EgadsNetCdf('main_netcdf_file.nc', 'w')
+    
+* add the global attributes to the NetCDF file:
+
+    >>> f.add_attribute('Conventions', 'CF-1.0')
+    >>> f.add_attribute('history', 'the netcdf file has been created by EGADS')
+    >>> f.add_attribute('comments', 'no comments on the netcdf file')
+    >>> f.add_attribute('institution', 'My institution')
+
+* add the dimension(s) of your variable(s), here it is ``time``:
+
+    >>> f.add_dim('time', len(time))
+    
+* write the variable(s), it is a good practice to write at the first place the independant variable ``time``:
+
+    >>> f.write_variable(time, 'time', ('time',), 'double')
+    >>> f.write_variable(data1, 'sea_level', ('time',), 'double')
+    >>> f.write_variable(data2, 'corrected_sea_level', ('time',), 'double')
+    
+* and do not forget to close the file:
+
+    >>> f.close()
+
+.. raw:: latex
+
+    \newpage
 
 Working with NASA Ames files
 *****************************
@@ -471,10 +660,14 @@ Once a file has been opened, a dictionary of NASA/Ames format elements is loaded
 Getting info
 ------------
 
-* ``f.get_attribute_list(var_name)`` -- returns a list of all top-level attributes ; ``var_name`` is optional and if provided, the function returns list of all attributes attached to ``var_name``
-* ``f.get_attribute_value(attr_name, var_name, var_type)`` -- returns the value of a global attribute named ``attr_name`` ; ``var_name`` and ``var_type`` are optional, if ``var_name`` is provided, returns the value of an attribute named ``attr_name`` attached to a variable named ``var_name`` ; if ``var_type`` is provided, the function will search in the variable type ``var_type`` by default
-* ``f.get_dimension_list(var_type)`` -- returns a list of all variable dimensions ; ``var_type`` is optional, if provided, the function returns a list of all variable dimensions based on the ``var_type`` by default
-* ``f.get_variable_list()`` -- returns list of all variables
+* ``f.get_attribute_list()`` -- returns a list of all top-level attributes
+* ``f.get_attribute_list(var_name, var_type, na_dict)`` -- ``var_name`` is optional and if provided, the function returns list of all attributes attached to ``var_name`` ; if ``var_type`` is provided the function will search in the variable type ``var_type`` by default ; ``na_dict`` is optional if provided, will return a list of all top-level attributes, or all ``var_name`` attributes, in the NASA/Ames dictionary ``na_dict``
+* ``f.get_attribute_value(attr_name)`` -- returns the value of a global attribute named ``attr_name`` 
+* ``f.get_attribute_value(attr_name, var_name, var_type, na_dict)`` -- ``var_name``, ``var_type`` and ``na_dict`` are optional ; if ``var_name`` is provided, returns the value of an attribute named ``attr_name`` attached to a variable named ``var_name`` ; if ``var_type`` is provided, the function will search in the variable type ``var_type`` by default ; if ``na_dict`` is provided, returns the attribute value from the NASA/Ames dictionary ``na_dict``
+* ``f.get_dimension_list()`` -- returns a list of all variable dimensions
+* ``f.get_dimension_list(na_dict, var_type)`` -- ``var_type`` is optional, if provided, the function returns a list of all variable dimensions based on the ``var_type`` by default ; ``na_dict`` is optional and will returns the dimension list from the NASA/Ames dictionary ``na_dict`` ; 
+* ``f.get_variable_list()`` -- returns list of all variables ;
+* ``f.get_variable_list(na_dict)`` -- ``na_dict`` is optional and if provided, will return a list of all variables in the NASA/Ames dictionary ``na_dict``
 * ``f.get_filename()`` -- returns filename for currently opened file
 
 Reading data
@@ -484,8 +677,7 @@ To read data from a file, use the ``read_variable()`` function:
 
     >>> data = f.read_variable(var_name)
 
-where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the ``EgadsData()`` class, containing 
-the values and attributes of ``var_name``.
+where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the ``EgadsData()`` class, containing the values and attributes of ``var_name``.
 
 Writing data
 -------------
@@ -493,9 +685,11 @@ Writing data
 To write data to the current file or to a new file, the user must save a dictionary of NASA/Ames elements. Few functions are 
 available to help him to prepare the dictionary:
 
+* ``f.create_na_dict`` -- create a new dictionary populated with standard NASA/Ames keys.
 * ``f.write_attribute_value(attr_name, attr_value)`` -- write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary
-* ``f.write_attribute_value(attr_name, attr_value, var_name, var_type)`` -- write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary ; ``var_name`` and ``var_type`` are optional, if provided, write or replace a specific attribute linked to the variable ``var_name`` (``var_type`` is by default equal to 'main') in the currently opened dictionary
-* ``f.write_variable(data, var_type, var_name, attr_dict)`` - write or replace a variable, ``data`` (a scalar, an array, or an :class:`~.EgadsData`) in the currently opened dictionary ; ``var_type``, ``var_name`` and ``attr_dict`` are optional ; if ``var_type`` is provided (by defaut ``var_type`` = 'main'), ``var_type`` is the default type of data attached to ``data`` ; if ``var_name`` is provided, the function will search of its presence in the dictionary, if it is found, ``data`` will replace the old variable, if not ``data`` is considered as a new variable with the name ``var_name`` and attributes in ``attr_dict`` (mandatory only if ``data`` is a new variable or is not an :class:`~.EgadsData`)
+* ``f.write_attribute_value(attr_name, attr_value, var_name, var_type, na_dict)`` -- ``var_name`` and ``var_type`` are optional, if provided, write or replace a specific attribute linked to the variable ``var_name`` (``var_type`` is by default equal to 'main') in the currently opened dictionary ; ccepted attributes for a variable are 'name', 'units', '_FillValue' and 'scale_factor', other attributes will be refused and should be passed as 'special comments' ; ``na_dict`` is optional and if provided the function will write the attribute in the NASA/Ames dictionary ``na_dict``
+* ``f.write_variable(data, var_name)`` -- write or replace a variable ; the function will search if ``data`` is already in the dictionary by comparing ``varname`` with other variable names in the dictionary, if it is found, ``data`` will replace the old variable, if not ``data`` is considered as a new variable ; ``data`` can be an :class:`~.EgadsData` or a vector/matrix.
+* ``f.write_variable(data, var_name, var_type, attr_dict, na_dict)`` -- ``var_type``, ``attr_dict`` and ``na_dict`` are optional ; ``attr_dict`` (a dictionary of standard NASA/ames variable attributes: 'name', 'units', '_FillValue' and 'scale_factor') must be provided if ``data`` is not an :class:`~.EgadsData` (in that case, variable attributes are retrieve from the :class:`~.EgadsData`.metadata dictionary) ; if ``na_dict`` is provided, the function saves the variable in the NASA/Ames dictionary ``na_dict``
 
 Saving a file
 --------------
@@ -506,6 +700,15 @@ Once a dictionary is ready, use the ``save_na_file()`` function to save the file
 
 where ``file_name`` is the name of the new file or the name of the current file, ``na_dict`` the name of the dictionary to be saved (optional, if not provided, the current dictionary will be used), and ``float_format`` the format of the floating numbers in the file (by deffault, two decimal places).
 
+Conversion from NASA/Ames file format to NetCDF
+------------------------------------------------
+
+When a NASA/Ames file is opened, all metadata and data are read and stored in memory in a dedicated dictionary. The conversion will convert that dictionary to generate a NetCDF file. If modifications are made to the dictionary, the conversion will take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NetCDF instance and by populating the NetCDF files with NASA/Ames data and metadata.
+
+To convert a NASA/Ames file, simply use:
+
+* ``f.convert_to_netcdf()`` -- convert the currently opened NASA/Ames file to NetCDF format.
+* ``f.convert_to_netcdf(nc_file)`` -- ``nc_file`` is an optional parameter ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NASA/Ames file will be used with the extension .nc
 
 Other operations
 -----------------
@@ -520,13 +723,74 @@ To close a file, simply use the ``close()`` method:
 
     >>> f.close()
 
+Tutorial
+---------
 
+Here is a NASA/Ames file:
+    
+.. literalinclude:: example_files/na_example_file.na
+
+This file has been created with the following commands:
+
+
+* import EGADS module:
+    >>> import egads
+    
+* create two main variables, following the official EGADS convention:
+
+    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', name='sea level', scale_factor=1, _FillValue=-9999)
+    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', name='corr sea level', scale_factor=1, _FillValue=-9999)
+    
+* create an independant variable, still by following the official EGADS convention:
+
+    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', name='time')
+    
+* create a new NASA/Ames empty instance:
+
+    >>> f = egads.input.NasaAmes()
+    
+* initialize a new NASA/Ames dictionary:
+
+    >>> na_dict = f.create_na_dict()
+
+* prepare the normal and special comments if needed, in a list, one cell for each line:
+
+    >>> scom = ['========SPECIAL COMMENTS===========','this file has been created with egads','=========END=========']
+    >>> ncom = ['========NORMAL COMMENTS===========','headers:','time    sea level   corrected sea level','=========END=========']
+    
+* populate the main NASA/Ames attributes:
+
+    >>> f.write_attribute_value('ONAME', 'John Doe', na_dict = na_dict) # ONAME is the name of the author(s)
+    >>> f.write_attribute_value('ORG', 'An institution', na_dict = na_dict) # ORG is tne name of the organization responsible for the data
+    >>> f.write_attribute_value('SNAME', 'tide gauge', na_dict = na_dict) # SNAME is the source of data (instrument, observation, platform, ...)
+    >>> f.write_attribute_value('MNAME', 'ATESTPROJECT', na_dict = na_dict) # MNAME is the name of the mission, campaign, programme, project dedicated to data
+    >>> f.write_attribute_value('DATE', [2017, 1, 30], na_dict = na_dict) # DATE is the date at which the data recorded in this file begin (YYYY MM DD)
+    >>> f.write_attribute_value('NIV', 1, na_dict = na_dict) # NIV is the number of independent variables
+    >>> f.write_attribute_value('NSCOML', 3, na_dict = na_dict) # NSCOML is the number of special comments lines or the number of elements in the SCOM list
+    >>> f.write_attribute_value('NNCOML', 4, na_dict = na_dict) # NNCOML is the number of special comments lines or the number of elements in the NCOM list
+    >>> f.write_attribute_value('SCOM', scom, na_dict = na_dict) # SCOM is the special comments attribute
+    >>> f.write_attribute_value('NCOM', ncom, na_dict = na_dict) # NCOM is the normal comments attribute
+    
+* write each variable in the dictionary:
+
+    >>> f.write_variable(time, 'time', vartype="independant", na_dict = na_dict)
+    >>> f.write_variable(data1, 'sea level', vartype="main", na_dict = na_dict)
+    >>> f.write_variable(data2, 'corrected sea level', vartype="main", na_dict = na_dict)
+
+    
+* and finally, save the dictionary to a NASA/Ames file:
+
+    >>> f.save_na_file('na_example_file.na', na_dict)
+
+    
 Converting between file formats
 ********************************
 
-Since the first version of EGADS, the direct conversion was possible with the NAPpy library with the help of CDMS. As CDMS is not compatible with windows, that possibility has been dropped for now. Actually it's possible to convert a netcdf file to a NASA/Ames file, and vice versa, but the user has to do the job himself. For example, if a user open a netcdf file and wants to save the file in NASA/Ames format, he has to create an empty NASA/Ames instance, populate the dictionary and save the dictionary to a NASA/Ames file. In the same way, from a NASA/Ames file, he has to create a netcdf instance, read the dictionary, add all attributes and variables to the netcdf instance and save the netcdf file.
-Functions to convert directly an opened file into another format will be introduced as quickly as possible to help the user for simple and fast convertion. Complex conversions still need the intervention of the user by moving the data from an instance to another.
+Since the first version of EGADS, the direct conversion was possible with the NAPpy library with the help of CDMS. As CDMS is not compatible with windows, that possibility has been dropped. However, two functions have been introduced to allow a conversion from NetCDF to NASA/Ames format, and from NASA/Ames format to NetCDF. Please read the section about NetCDF and NASA/Ames file handling to learn how to convert between those formats.
 
+.. raw:: latex
+
+    \newpage
 
 Working with algorithms
 ************************
@@ -614,7 +878,10 @@ the algorithm, but return a standard data type (scalar or array of doubles), set
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=false).
         run(T_s, P_s, dP, cpa, Racpa)
 
+.. raw:: latex
 
+    \newpage
+        
 Scripting
 **********
 
@@ -622,7 +889,7 @@ The recommended method for using EGADS is to create script files, which are extr
 repetitive tasks. This can be done using a text editor of your choice. The example script belows 
 shows the calculation of density for all NetCDF files in a directory.
 
-.. literalinclude:: example.py
+.. literalinclude:: example_files/example.py
 
 Scripting Hints
 ----------------
@@ -655,14 +922,15 @@ proper depth. As long as the document is consistent, the number of spaces used d
 	    print i
 	print x
 
-.. Assignment by reference
-.. ^^^^^^^^^^^^^^^^^^^^^^^^
+.. raw:: latex
 
+    \newpage
+	
 Using the GUI
 **************
 
-Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply algorithms, display and plot data. Still in beta state, the user will have the possibility to create algorithms from the GUI, and to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, once placed in the EGADS GUI directory:
+Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply algorithms, display and plot data. Still in beta state, the user will have the possibility to create algorithms from the GUI, and to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, if EGADS is installed, and once in the EGADS GUI directory:
 
     >>> python egads_gui.py
 
-It will be available soon as a regular python package or as a stand alone, a version of EGADS CORE.
+It will be available soon as a regular python package and as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).

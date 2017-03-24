@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>EGADS API &#8212; EGADS 0.7.0 documentation</title>
+    <title>EGADS API &#8212; EGADS 0.8.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.7.0',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="alg_development.html" title="Algorithm Development"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -152,6 +152,12 @@ scalar will be returned.</td>
 <dt id="egads.core.egads_core.EgadsAlgorithm.now">
 <code class="descname">now</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#egads.core.egads_core.EgadsAlgorithm.now" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate and return current date/time in ISO 8601 format.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="egads.core.egads_core.EgadsAlgorithm.processor">
+<code class="descname">processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#egads.core.egads_core.EgadsAlgorithm.processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate the algorithm used to produce the output variable</p>
 </dd></dl>
 
 <dl class="method">
@@ -488,8 +494,30 @@ and <code class="docutils literal"><span class="pre">r</span></code> for read. <
 </tbody>
 </table>
 <dl class="method">
+<dt id="egads.input.nasa_ames_io.NasaAmes.convert_to_netcdf">
+<code class="descname">convert_to_netcdf</code><span class="sig-paren">(</span><em>nc_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.convert_to_netcdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a NASA/Ames dictionary to a NetCDF file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nc_file</strong> (<em>string</em>) &#8211; Optional - String name of the netcdf file to be written. If no filename is passed, 
+the function will used the name of the actually opened NASA/Ames file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="egads.input.nasa_ames_io.NasaAmes.create_na_dict">
+<code class="descname">create_na_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.create_na_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a typical NASA/Ames dictionary. It is intended to be saved in a new file. The user
+will have to populate the dictionary with other functions.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.get_attribute_list">
-<code class="descname">get_attribute_list</code><span class="sig-paren">(</span><em>varname=None</em>, <em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_attribute_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_attribute_list</code><span class="sig-paren">(</span><em>varname=None</em>, <em>vartype='main'</em>, <em>na_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_attribute_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of attributes found in current NASA Ames file either globally or
 attached to a given variable, depending on the type</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -502,6 +530,9 @@ variable name is provided, the function returns global attributes.</li>
 <li><strong>vartype</strong> (<em>string|</em>) &#8211; Optional - type of variable to get list of attributes from. If no variable 
 type is provided with the variable name, the function returns an attribute
 of the main variable .</li>
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary in which to get the attribute list. By default, 
+na_dict = None and the attribute list is retrieved from the currently opened NASA/Ames 
+file . Only mandatory if creating a new file or creating a new dictionary.</li>
 </ul>
 </td>
 </tr>
@@ -511,20 +542,23 @@ of the main variable .</li>
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.get_attribute_value">
-<code class="descname">get_attribute_value</code><span class="sig-paren">(</span><em>attrname</em>, <em>varname=None</em>, <em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_attribute_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_attribute_value</code><span class="sig-paren">(</span><em>attrname</em>, <em>varname=None</em>, <em>vartype='main'</em>, <em>na_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_attribute_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value of an attribute found in current NASA Ames file either globally 
-or attached to a given variable, depending on the type</p>
+or attached to a given variable (only name, units, _FillValue and scale_factor), depending on the type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>attrname</strong> (<em>string|</em>) &#8211; String name of attribute to write in currently open file.</li>
+<li><strong>attrname</strong> (<em>string</em>) &#8211; String name of attribute to write in currently open file.</li>
 <li><strong>varname</strong> (<em>string|int</em>) &#8211; Optional - Name or number of variable to get list of attributes from. If no
 variable name is provided, the function returns global attributes.</li>
-<li><strong>vartype</strong> (<em>string|</em>) &#8211; Optional - type of variable to get list of attributes from. If no
+<li><strong>vartype</strong> (<em>string</em>) &#8211; Optional - type of variable to get list of attributes from. If no
 variable type is provided with the variable name, the function returns an 
-attribute of the main variable .</li>
+attribute of the main variable.</li>
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary in which to get the attribute value. By default, 
+na_dict = None and the attribute value is retrieved from the currently opened NASA/Ames 
+file . Only mandatory if creating a new file or creating a new dictionary.</li>
 </ul>
 </td>
 </tr>
@@ -534,15 +568,21 @@ attribute of the main variable .</li>
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.get_dimension_list">
-<code class="descname">get_dimension_list</code><span class="sig-paren">(</span><em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_dimension_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns list of all dimensions in NASA Ames file.</p>
+<code class="descname">get_dimension_list</code><span class="sig-paren">(</span><em>vartype='main'</em>, <em>na_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_dimension_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all dimensions linked to their variables in NASA Ames dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vartype</strong> (<em>string</em>) &#8211; Optional - the type of data to read
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vartype</strong> (<em>string</em>) &#8211; Optional - the type of data to read
 Options are <code class="docutils literal"><span class="pre">independant</span></code> for independant variables, <code class="docutils literal"><span class="pre">main</span></code> for main variables
-and <code class="docutils literal"><span class="pre">auxiliary</span></code> for auxiliary variables.</td>
+and <code class="docutils literal"><span class="pre">auxiliary</span></code> for auxiliary variables.</li>
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary in which to get the dimension list. By default, 
+na_dict = None and the dimension list is retrieved from the currently opened NASA/Ames 
+file . Only mandatory if creating a new file or creating a new dictionary.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -550,15 +590,21 @@ and <code class="docutils literal"><span class="pre">auxiliary</span></code> for
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.get_variable_list">
-<code class="descname">get_variable_list</code><span class="sig-paren">(</span><em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_variable_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_variable_list</code><span class="sig-paren">(</span><em>na_dict=None</em>, <em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.get_variable_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of all variables in NASA Ames file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vartype</strong> (<em>string</em>) &#8211; Optional - the type of data to read
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary in which to get the variable list. By default, 
+na_dict = None and the variable list is retrieved from the currently opened NASA/Ames 
+file . Only mandatory if creating a new file or creating a new dictionary.</li>
+<li><strong>vartype</strong> (<em>string</em>) &#8211; Optional - the type of data to read
 Options are <code class="docutils literal"><span class="pre">independant</span></code> for independant variables, <code class="docutils literal"><span class="pre">main</span></code> for main variables
-and <code class="docutils literal"><span class="pre">auxiliary</span></code> for auxiliary variables.</td>
+and <code class="docutils literal"><span class="pre">auxiliary</span></code> for auxiliary variables.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -589,18 +635,24 @@ open file.</td>
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.save_na_file">
-<code class="descname">save_na_file</code><span class="sig-paren">(</span><em>filename=None</em>, <em>na_dict=None</em>, <em>float_format='%.2f'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.save_na_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save_na_file</code><span class="sig-paren">(</span><em>filename=None</em>, <em>na_dict=None</em>, <em>float_format='%.g'</em>, <em>delimiter=None</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.save_na_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a NASA/Ames dictionary to a file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<em>string</em>) &#8211; String name of the file to be writed.</li>
+<li><strong>filename</strong> (<em>string</em>) &#8211; String name of the file to be written.</li>
 <li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary to be saved. If no dictionary is entered,
 the dictionary currently opened during the open file process will be saved.</li>
 <li><strong>float_format</strong> (<em>string</em>) &#8211; Optional - The format of numbers to be saved. If no string is entered, values are
 round up to two decimal places.</li>
+<li><strong>delimiter</strong> (<em>string</em>) &#8211; Optional - A character or multiple characters to separate data. By default &#8216;    &#8216; (four
+spaces) is used</li>
+<li><strong>annotation</strong> (<em>boolean</em>) &#8211; Optional - If annotation is True then add annotation column to left of file. Default - 
+False.</li>
+<li><strong>no_header</strong> (<em>boolean</em>) &#8211; Optional - If no_header is True then suppress writing the header and only write the 
+data section. Default - False.</li>
 </ul>
 </td>
 </tr>
@@ -610,9 +662,10 @@ round up to two decimal places.</li>
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.write_attribute_value">
-<code class="descname">write_attribute_value</code><span class="sig-paren">(</span><em>attrname</em>, <em>attrvalue</em>, <em>varname=None</em>, <em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.write_attribute_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_attribute_value</code><span class="sig-paren">(</span><em>attrname</em>, <em>attrvalue</em>, <em>na_dict=None</em>, <em>varname=None</em>, <em>vartype='main'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.write_attribute_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the value of an attribute in current NASA Ames file either globally or
-attached to a given variable, depending on the type</p>
+attached to a given variable (only name, units, _FillValue and scale_factor), 
+depending on the type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -620,6 +673,9 @@ attached to a given variable, depending on the type</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrname</strong> (<em>string|</em>) &#8211; String name of attribute to write in currently open file.</li>
 <li><strong>attrvalue</strong> (<em>string|int|float</em>) &#8211; Value of attribute to write in currently open file.</li>
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - dictionary in which the attribute will be added. By default, na_dict = None 
+and the attribute value is added to the currently opened dictionary. Only mandatory 
+if creating a new file or creating a new dictionary.</li>
 <li><strong>varname</strong> (<em>string|int</em>) &#8211; Optional - Name or number of variable to get list of attributes from. If no
 variable name is provided, the function returns global attributes.</li>
 <li><strong>vartype</strong> (<em>string|</em>) &#8211; Optional - type of variable to get list of attributes from. If no variable type     
@@ -634,7 +690,7 @@ of the main variable .</li>
 
 <dl class="method">
 <dt id="egads.input.nasa_ames_io.NasaAmes.write_variable">
-<code class="descname">write_variable</code><span class="sig-paren">(</span><em>data</em>, <em>vartype='main'</em>, <em>varname=None</em>, <em>attrdict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.write_variable" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_variable</code><span class="sig-paren">(</span><em>data</em>, <em>varname=None</em>, <em>vartype='main'</em>, <em>attrdict=None</em>, <em>na_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.nasa_ames_io.NasaAmes.write_variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write or update a variable in the NASA/Ames dictionary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -643,13 +699,16 @@ of the main variable .</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>data</strong> (<em>list|egadsData</em>) &#8211; Data to be written in the NASA/Ames dictionary. data can be a list of value or an 
 EgadsData instance.</li>
+<li><strong>var_name</strong> (<em>string|int</em>) &#8211; The name or the sequential number of the variable to be written in the 
+dictionary.</li>
 <li><strong>vartype</strong> (<em>string</em>) &#8211; The type of data to read, by default <code class="docutils literal"><span class="pre">main</span></code>. Options are <code class="docutils literal"><span class="pre">independant</span></code> for 
 independant variables, <code class="docutils literal"><span class="pre">main</span></code> for main variables. <code class="docutils literal"><span class="pre">main</span></code> is the default value.</li>
-<li><strong>var_name</strong> (<em>string|int</em>) &#8211; Optional - The name or the sequential number of the variable to be written in the 
-dictionary. Only mandatory if data is not an EgadsData Instance.</li>
 <li><strong>attrdict</strong> (<em>dict</em>) &#8211; Optional - Dictionary of variable attribute linked to the variable to be written in 
 the dictionary. Mandatory only if data is not an EgadsData instance and is not 
 already present in the dictionary.</li>
+<li><strong>na_dict</strong> (<em>dict</em>) &#8211; Optional - The NASA/Ames dictionary in which the variable will be added. By default, 
+na_dict = None and the variable is added to the currently opened dictionary. Only 
+mandatory if creating a new file or creating a new dictionary.</li>
 </ul>
 </td>
 </tr>
@@ -741,10 +800,35 @@ variable in the NetCDF file.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="egads.input.netcdf_io.NetCdf.convert_to_csv">
+<code class="descname">convert_to_csv</code><span class="sig-paren">(</span><em>csv_file=None</em>, <em>float_format='%g'</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.NetCdf.convert_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts currently open NetCDF file to CSV file using Nappy API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>csv_file</strong> (<em>string</em>) &#8211; Optional - Name of output CSV file. If none is provided, name of current
+NetCDF is used and suffix changed to .csv</li>
+<li><strong>float_format</strong> (<em>string</em>) &#8211; Optional - The formatting string used for formatting floats when writing
+to output file. Default - %g</li>
+<li><strong>annotation</strong> (<em>bool</em>) &#8211; Optional - If set to true, write the output file with an additional left-hand
+column describing the contents of each header line. Default - False.</li>
+<li><strong>no_header</strong> (<em>bool</em>) &#8211; Optional - If set to true, then only the data blocks are written to file.
+Default - False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="egads.input.netcdf_io.NetCdf.convert_to_nasa_ames">
-<code class="descname">convert_to_nasa_ames</code><span class="sig-paren">(</span><em>na_file=None</em>, <em>requested_ffi=1001</em>, <em>delimiter='    '</em>, <em>float_format='%g'</em>, <em>size_limit=None</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.NetCdf.convert_to_nasa_ames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">convert_to_nasa_ames</code><span class="sig-paren">(</span><em>na_file=None</em>, <em>requested_ffi=1001</em>, <em>float_format='%g'</em>, <em>delimiter=None</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.NetCdf.convert_to_nasa_ames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert currently open NetCDF file to one or more NASA Ames files
-using  Nappy.</p>
+using  Nappy. For now can only process NetCdf files to NASA/Ames FFI 1001 : 
+only time as an independant variable.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -758,7 +842,8 @@ are limited depending on the data structures found.</li>
 file. Default - Tab.</li>
 <li><strong>float_format</strong> (<em>string</em>) &#8211; Optional - The formatting string used for formatting floats when writing
 to output file. Default - %g</li>
-<li><strong>size_limit</strong> (<em>int</em>) &#8211; Optional - If format FFI is 1001 then chop files into size_limit rows of data.</li>
+<li><strong>delimiter</strong> &#8211; Optional - The delimiter desired for use between data items in the data
+file. Default - &#8216;    &#8216; (four spaces).</li>
 <li><strong>annotation</strong> (<em>bool</em>) &#8211; Optional - If set to true, write the output file with an additional left-hand
 column describing the contents of each header line. Default - False.</li>
 <li><strong>no_header</strong> (<em>bool</em>) &#8211; Optional - If set to true, then only the data blocks are written to file.
@@ -924,6 +1009,60 @@ for read. <code class="docutils literal"><span class="pre">r</span></code> is th
 </tbody>
 </table>
 <dl class="method">
+<dt id="egads.input.netcdf_io.EgadsNetCdf.convert_to_csv">
+<code class="descname">convert_to_csv</code><span class="sig-paren">(</span><em>csv_file=None</em>, <em>float_format='%g'</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.EgadsNetCdf.convert_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts currently open NetCDF file to CSV file using Nappy API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>csv_file</strong> (<em>string</em>) &#8211; Optional - Name of output CSV file. If none is provided, name of current
+NetCDF is used and suffix changed to .csv</li>
+<li><strong>float_format</strong> (<em>string</em>) &#8211; Optional - The formatting string used for formatting floats when writing
+to output file. Default - %g</li>
+<li><strong>annotation</strong> (<em>bool</em>) &#8211; Optional - If set to true, write the output file with an additional left-hand
+column describing the contents of each header line. Default - False.</li>
+<li><strong>no_header</strong> (<em>bool</em>) &#8211; Optional - If set to true, then only the data blocks are written to file.
+Default - False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="egads.input.netcdf_io.EgadsNetCdf.convert_to_nasa_ames">
+<code class="descname">convert_to_nasa_ames</code><span class="sig-paren">(</span><em>na_file=None</em>, <em>requested_ffi=1001</em>, <em>float_format='%g'</em>, <em>delimiter=None</em>, <em>annotation=False</em>, <em>no_header=False</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.EgadsNetCdf.convert_to_nasa_ames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert currently open EGADS NetCDF file to one or more NASA Ames files
+using  Nappy. For now can only process NetCdf files to NASA/Ames FFI 1001 : 
+variables can only be dependant to one independant variable at a time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>na_file</strong> (<em>string</em>) &#8211; Optional - Name of output NASA Ames file. If none is provided, name of
+current NetCDF file is used and suffix changed to .na</li>
+<li><strong>requested_ffi</strong> (<em>int</em>) &#8211; The NASA Ames File Format Index (FFI) you wish to write to. Options
+are limited depending on the data structures found.</li>
+<li><strong>float_format</strong> (<em>string</em>) &#8211; Optional - The formatting string used for formatting floats when writing
+to output file. Default - %g</li>
+<li><strong>delimiter</strong> (<em>string</em>) &#8211; Optional - The delimiter desired for use between data items in the data
+file. Default - &#8216;    &#8216; (four spaces).</li>
+<li><strong>annotation</strong> (<em>bool</em>) &#8211; Optional - If set to true, write the output file with an additional left-hand
+column describing the contents of each header line. Default - False.</li>
+<li><strong>no_header</strong> (<em>bool</em>) &#8211; Optional - If set to true, then only the data blocks are written to file.
+Default - False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="egads.input.netcdf_io.EgadsNetCdf.read_variable">
 <code class="descname">read_variable</code><span class="sig-paren">(</span><em>varname</em>, <em>input_range=None</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.EgadsNetCdf.read_variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a variable from currently opened NetCDF file and maps the NetCDF
@@ -945,7 +1084,7 @@ attributies to an <code class="xref py py-class docutils literal"><span class="p
 <dl class="method">
 <dt id="egads.input.netcdf_io.EgadsNetCdf.write_variable">
 <code class="descname">write_variable</code><span class="sig-paren">(</span><em>data</em>, <em>varname=None</em>, <em>dims=None</em>, <em>ftype='double'</em><span class="sig-paren">)</span><a class="headerlink" href="#egads.input.netcdf_io.EgadsNetCdf.write_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes/creates varible in currently opened NetCDF file.</p>
+<dd><p>Writes/creates variable in currently opened NetCDF file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1236,7 +1375,7 @@ read in to their proper types. Options are &#8216;i&#8217; for int, &#8216;f&#82
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/eufar_new_logo.png" alt="Logo"/>
+              <img class="logo" src="_static/eufar_new_logo_white_bkgrd.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -1284,7 +1423,7 @@ read in to their proper types. Options are &#8216;i&#8217; for int, &#8216;f&#82
         <li class="right" >
           <a href="alg_development.html" title="Algorithm Development"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

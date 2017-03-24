@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "$Date:: 2017-01-20 10:00#$"
-__version__ = "$Revision:: 152       $"
+__version__ = "$Revision:: 153       $"
 __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
@@ -69,7 +69,6 @@ class EgadsFile(FileCore):
             logging.error('egads.input.EgadsFile._open_file invoked: Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
 
-
     def display_file(self):
         """
         Prints contents of file out to standard output.
@@ -111,7 +110,7 @@ class EgadsFile(FileCore):
         self.pos = self.f.tell()
         logging.debug('...................................................................self.pos ' + str(self.pos))
 
-    def write(self, data):  #TODO: make write method more robust
+    def write(self, data):
         """
         Writes data to a file. Data must be in the form of a string, with line
         ends signified by ``\\n``.
@@ -155,7 +154,6 @@ class EgadsFile(FileCore):
 
         filedata = self.f.readline()
         self.pos = self.f.tell()
-
         return filedata
 
     def reset(self):

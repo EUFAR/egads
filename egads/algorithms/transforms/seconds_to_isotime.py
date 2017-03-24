@@ -1,6 +1,6 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2012-07-12 17:27#$"
-__version__ = "$Revision:: 150       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-24 15:27#$"
+__version__ = "$Revision:: 151       $"
 __all__ = ['SecondsToIsotime']
 
 import egads.core.egads_core as egads_core
@@ -14,7 +14,7 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
     """
     FILE        seconds_to_isotime.py
 
-    VERSION     $Revision: 150 $
+    VERSION     $Revision: 151 $
 
     CATEGORY    Transforms
 
@@ -25,11 +25,11 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
                 ISO 8601 string formats can be controlled by the optional format string, 
                 default is yyyymmddTHHMMss.
 
-    INPUT       t_secs    vector    seconds     elapsed seconds
-                t_ref     string                ISO 8601 reference time
-                format    string, optional      ISO 8601 format string, default is yyyymmddTHHMMss 
+    INPUT       t_secs    vector            seconds     elapsed seconds
+                t_ref     string, optional              ISO 8601 reference time, default is 19700101T000000
+                format    string, optional              ISO 8601 format string, default is yyyymmddTHHMMss 
 
-    OUTPUT      t_ISO     vector                ISO 8601 date-time strings
+    OUTPUT      t_ISO     vector                        ISO 8601 date-time strings
 
     SOURCE      
 
@@ -46,7 +46,7 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
                                                                'Category':['']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['t_secs', 't_ref', 'format'],
-                                                          'InputUnits':['s', '', ''],
+                                                          'InputUnits':['s', None, None],
                                                           'InputTypes':['vector','string','string_optional'],
                                                           'InputDescription':['Elapsed seconds','ISO 8601 reference time','ISO 8601 format string, default is yyyymmddTHHMMss '],
                                                           'Outputs':['t_ISO'],
@@ -59,9 +59,10 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
+        self.default_ref_time = '19700101T000000'
         self.format_default = 'yyyymmddTHHMMss'
 
-    def run(self, t_secs, t_ref, fmt=None):
+    def run(self, t_secs, t_ref=None, fmt=None):
         return egads_core.EgadsAlgorithm.run(self, t_secs, t_ref, fmt)
 
 
@@ -72,7 +73,10 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
             fmt = self.format_default
         fmt = convert_time_format(fmt)
         t_ISO = []
-        datetime_ref = dateutil.parser.parse(str(t_ref))
+        if t_ref:
+            datetime_ref = dateutil.parser.parse(str(t_ref))
+        else:
+            datetime_ref = dateutil.parser.parse(str(self.default_ref_time))
         for time in t_secs:
             time_delta = datetime.timedelta(0, float(time))
             merge_time = datetime_ref + time_delta

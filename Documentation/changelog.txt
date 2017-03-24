@@ -3,10 +3,51 @@ CHANGELOG
 =========
 
 
+March 24 2017, Release version 0.8.0
+=======================================
+  FIXED:
+    - if a user wants to rescale an EgadsData object (unit 1 to unit 2), the metadata attribute disappears. It has been fixed and metadata are passed to the new EgadsData object, with the necessary modifications.
+    - if a user wants to slice an EgadsData object, the metadata attribute disappears. It has been fixed.
+    - the EgadsNetCdf class was searching in the EgadsData object for metadata attributes to save a variable in a NetCDF file. In the EgadsNetCdf and NetCdf classes, once a NetCDF file is open, all metadata are stored in only one attribute, a dictionary, '.metadata'. That attribute wasn't taking into acount and that leads to a crash of the EgadsNetCdf class when trying to write a variable. It has been fixed, and EgadsNetCdf class now uses the '.metadata' dictionary to retrieve metadata.
+    - the logging system wasn't logging Nappy and Quantities imports properly.
+    - fixed an error in the NasaAmes class when trying to get a list of all variables in a new NA dictionary.
+    - fixed an error in the NasaAmes.get_attribute_value function when a na_dict dictionary is passed.
+    - fixed an error which increased the size of NVOL in the EgadsNetCdf convert_to_nasa_ames function.
+    - if a variable passed to an algorithm has a category as a metadata, the category is deleted and replaced by the algorithm even if the algorithm category is empty. It has been fixed.
+    - fixed an error with Category handling when an EgadsData instance doesn't have a category in metadata.
+    
+  ADDED:
+    - the package Quantities doesn't take into account units of the form 'time since epoch'. A dirty way to keep that information has been added to EGADS.
+    - a "doc" directory has been added for the EGADS SPHINX documentation to help the creation of online documentation.
+    - a function to create a new dictionary has been added to the NASA Ames I/O class.
+    - a tutorial dedicated to the NASA/Ames I/O routines has been added in the documentation.
+    - a tutorial dedicated to the NetCdf I/O routines has been added in the documentation.
+    - a tutorial dedicated to the EgadsFile I/O routines has been added in the documentation.
+    - a tutorial dedicated to the EgadsCsv I/O routines has been added in the documentation.    
+    - a function to convert a NetCDF file to a NASA/Ames file has been introduced (FFI 1001).
+    - a function to convert a NetCDF file to a NASA/Ames CSV file has been introduced (FFI 1001).
+    - a function to convert a NASA/Ames file (FFI 1001) to a NetCDF file has been introduced.
+    - a function in the test process has been added to test the EgadsNetCdf class.
+    - a function in the test process has been added to test the EgadsNetCdf convert_to_nasa_ames function.
+    - a function in the test process has been added to test the NetCdf convert_to_nasa_ames function.
+    - a function in the test process has been added to test the EgadsNetCdf convert_to_csv function.
+    - a function in the test process has been added to test the NetCdf convert_to_csv function.
+    - a function in the test process has been added to test the NasaAmes convert_to_netcdf function.
+    - the name of the algorithm has been added to the metadata of the processed variable.
+    - if multiple white spaces exist in metadata between signs, only one white space is kept.
+    
+  MODIFIED:
+    - the documentation of EGADS has been updated.
+    - the documentation of EGADS algorithms has been updated.
+    - all the documentation has been moved to the "Documentation" directory.
+    - moved all templates in a dedicated directory.
+    - the functions to write data in a NASA Ames dictionary has been modified to include exceptions on metadata.
+
+
 January 24 2017, Release version 0.7.1
 ======================================
-The IOP Model and Algorithms package provided by the Plymouth Marine Laboratory was a part of the EGADS package. But it has never been integrated in EGADS. Since it needs few libraries and is not compatible with windows, it has been removed from EGADS package and it is now available through its own webpage on the EUFAR website (http://www.eufar.net/software-tools/tool/pml-inherent-optical-property-model-l-edimlolpo) and on GitHub(https://github.com/eufarn7sp/pml-wq).
-EUFAR team will review the possibility to integrate deeply the IOP model and algorithms in EGADS.
+The IOP Model and Algorithms package provided by the Plymouth Marine Laboratory was a part of the EGADS package. But it has never been integrated in EGADS. Since it needs few libraries and is not compatible with windows, it has been removed from EGADS package and it is now available through its own webpage on the EUFAR website (http://www.eufar.net/software-tools/tool/pml-inherent-optical-property-model-l-edimlolpo) and on GitHub (https://github.com/eufarn7sp/pml-wq).
+EUFAR team will review the possibility to integrate the IOP model and algorithms in EGADS or to propose it as a standard Python package.
 
 
 January 23 2017, Release version 0.7.0
@@ -61,8 +102,6 @@ December 1 2016, Release version 0.5.9
   Few fixes have been introduced in EGADS to make it compatible with Windows. The functions to interface EGADS with Nappy is old, a bug linked to the new Numpy version has been fixed. The function interfaced with Nappy to read NASA/Ames files has been rewritten. It as been simplified and it is now possible to write NA files. Conversion of NA files to netcdf files, and in the other way, is not possible for now.
   
 
-
 December 1 2015 - 4 January 2016
 ================================
   EGADS version is currently 0.5.8. It appears to have critical issues with Nappy, as this one calls old numpy functions which have been discarded from newer versions.
-

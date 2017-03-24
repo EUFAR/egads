@@ -82,6 +82,7 @@ class NCToNA(nappy.nc_interface.cdms_to_na.CDMSToNA):
         self.nc_file = nc_file
 
         # Now need to read CDMS file so parent class methods are compatible
+        
         (cdms_variables, global_attributes) = self._readCDMSFile(var_ids, exclude_vars)
         nappy.nc_interface.cdms_to_na.CDMSToNA.__init__(self, cdms_variables, global_attributes=global_attributes, 
                                                         na_items_to_override=na_items_to_override, 

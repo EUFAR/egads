@@ -74,7 +74,7 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
                                                                'Category':['']}))
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['date_time'],
-                                                          'InputUnits':[''],
+                                                          'InputUnits':[None],
                                                           'InputTypes':['vector'],
                                                           'InputDescription':['ISO date-time string'],
                                                           'Outputs':['year', 'month', 'day', 'hour', 'minute', 'second'],

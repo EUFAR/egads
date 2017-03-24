@@ -42,8 +42,8 @@ class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['V_t', 'SA', 't_s'],
                                                           'InputUnits':['m/s', 'm^2', 's'],
-                                                          'InputTypes':['vector','vector','coeff'],
-                                                          'InputDescription':['True air speed','Probe sample area','Probe sample rate'],
+                                                          'InputTypes':['vector', 'vector', 'coeff'],
+                                                          'InputDescription':['True air speed', 'Probe sample area', 'Probe sample rate'],
                                                           'Outputs':['SV'],
                                                           'OutputDescription':['Sample volume'],
                                                           'Purpose':'Calculate sample volume for microphysics probes',

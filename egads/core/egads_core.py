@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "$Date:: 2012-07-06 17:42#$"
-__version__ = "$Revision:: 146       $"
+__version__ = "$Revision:: 148       $"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
@@ -32,6 +32,13 @@ class EgadsData(pq.Quantity):
             units = variable_metadata.get('units', '')
             if not units:
                 units = variable_metadata.get('Units', '')
+        
+        # quantities can't handle the CF time unit 'time since epoch'
+        # to allow a proper operation of EGADS, a new attribute has been added,
+        # transparent to the user, if the epoch is needed.
+        true_units = None
+        if ' since ' in units or 'after' in units:
+            true_units = units
         units = _validate_units(units)
         if isinstance(value, pq.Quantity):
             ret = pq.Quantity.__new__(cls, value, value.units, dtype=dtype)
@@ -44,9 +51,11 @@ class EgadsData(pq.Quantity):
             ret.metadata = variable_metadata
         else:
             ret.metadata = metadata.VariableMetadata(variable_metadata)
-        ret.metadata['units'] = units
+        if true_units:
+            ret.metadata['units'] = true_units
+        else:
+            ret.metadata['units'] = units
         return ret
-
 
     def __init__(self, value, units='', variable_metadata=None, dtype='float64', **attrs):
         """
@@ -64,7 +73,6 @@ class EgadsData(pq.Quantity):
             Optional - Keyword/value pairs of additional metadata which will be added into
             the existing variable_metadata object.
         """
-        
         
         try:
             logging.debug('egads.EgadsData.__init__ invoked: value [' + str(value[0]) + ' ... ' + 
@@ -97,6 +105,20 @@ class EgadsData(pq.Quantity):
     @units.setter
     def units(self, units):
         pq.Quantity.units.fset(self, units)
+
+    def __getitem__(self, other):
+        metadata = None
+        try:
+            metadata = self.metadata.copy()
+        except AttributeError:
+            pass
+        out = super(EgadsData, self).__getitem__(other).view(EgadsData)
+        if metadata:
+            out.metadata = metadata
+        return out
+
+    def __getslice__(self, i, j):
+        return self.__getitem__(slice(i, j))
 
     def __repr__(self):
         try:
@@ -155,7 +177,24 @@ class EgadsData(pq.Quantity):
         
         logging.debug('egads.EgadsData.rescale invoked: units %s to %s', self.units, units)
         units = _validate_units(units)
-        return super(EgadsData, self).rescale(units).view(EgadsData)
+        metadata = None
+        try:
+            metadata = self.metadata.copy()
+        except AttributeError:
+            pass
+        out = super(EgadsData, self).rescale(units).view(EgadsData)
+        if metadata:
+            out.metadata = metadata
+        try:
+            long_units = max(getattr(pq, out.units)._aliases, key=len)
+            if ' since ' in out.metadata['units']:
+                true_units = str(long_units) + out.metadata['units'][out.metadata['units'].index(' since '):]
+                out.metadata['units'] = true_units
+            else:
+                out.metadata['units'] = long_units
+        except (AttributeError, KeyError, ValueError):
+            pass
+        return out
 
     def print_description(self):
         """
@@ -165,7 +204,6 @@ class EgadsData(pq.Quantity):
         logging.debug('egads.EgadsData.print_description invoked: ' +  self._get_description())
         outstr = self._get_description()
         print outstr
-
 
     def get_units(self):
         """
@@ -270,26 +308,36 @@ class EgadsAlgorithm(object):
         
         logging.debug('egads.EgadsAlgorithm.run invoked: name ' + self.name + ', args ')
         for i in args:
-            logging.debug('.........................................' + str(i))
-
+            logging.debug('.........................................' + str(i))   
         if not isinstance(self.output_metadata, list):
             output_metadata = self.output_metadata
             self.output_metadata = []
             self.output_metadata.append(output_metadata)
         for metadata in self.output_metadata:
             for key, value in metadata.iteritems():
-                    try:
-                        match = re.compile('input[0-9]+').search(value)
-                        while match:
-                            input_seq = metadata.get(key)[match.start():match.end()]
-                            input_index = int(input_seq.strip('input'))
-                            if isinstance(args[input_index], EgadsData):
-                                metadata[key] = metadata[key].replace(input_seq, args[input_index].metadata.get(key, ''))
-                            else:
-                                metadata[key] = metadata[key].replace(input_seq, '')
-                            match = re.compile('input[0-9]+').search(metadata[key ])
-                    except TypeError:
-                        match = None
+                try:
+                    match = re.compile('input[0-9]+').search(value)
+                    while match:
+                        input_seq = metadata.get(key)[match.start():match.end()]
+                        input_index = int(input_seq.strip('input'))
+                        
+                        if isinstance(args[input_index], EgadsData):
+                            metadata[key] = metadata[key].replace(input_seq, args[input_index].metadata.get(key, ''))
+                        else:
+                            metadata[key] = metadata[key].replace(input_seq, '')
+                        match = re.compile('input[0-9]+').search(metadata[key])
+                except TypeError:
+                    match = None
+                try:
+                    if key == 'Category':
+                        if value == ['']:
+                            out_category = []
+                            for arg in args:
+                                if isinstance(arg, EgadsData):
+                                    out_category.append(arg.metadata[key])
+                            metadata[key] = out_category
+                except KeyError:
+                    pass
         output = self._call_algorithm(*args)
         if len(self.metadata['Outputs']) > 1:
             result = []
@@ -358,6 +406,7 @@ class EgadsAlgorithm(object):
                 out_arg.append(numpy.array(arg))
         result = self._algorithm(*out_arg)
         self.time_stamp()
+        self.processor()
         return result
 
     def _algorithm(self):
@@ -391,6 +440,14 @@ class EgadsAlgorithm(object):
         
         logging.debug('egads.EgadsAlgorithm.now invoked: time_stamp ' + datetime.datetime.isoformat(datetime.datetime.today()))
         return datetime.datetime.isoformat(datetime.datetime.today())
+    
+    def processor(self):
+        """
+        Indicate the algorithm used to produce the output variable
+        """
+        logging.debug('egads.EgadsAlgorithm.processor invoked.')
+        for output in self.output_metadata:
+                output['Processor'] = self.metadata['Processor']
 
     def _populate_data_object(self, value, metadata):
         """
@@ -422,7 +479,6 @@ def _validate_units(units):
 
     logging.debug('egads.core._validate_units invoked: units ' + str(units))
     
-    
     # few patches have been introduced for compatibility"
     if "degree_" in units or "decimal degree" in units:
         units = "degree"
@@ -430,6 +486,8 @@ def _validate_units(units):
         units = ""
     if " since " in units:
         units = units[:units.index(" since ")]
+    if " after " in units:
+        units = units[:units.index(" after ")]
     if " / " in units:
         units = units[:units.index(" / ")] + "/" + units[units.index(" / ")+3:]
     if isinstance(units, str) or isinstance(units, unicode):

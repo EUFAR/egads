@@ -1,0 +1,28 @@
+=> ncdump -h main_netcdf_file.nc 
+    netcdf main_netcdf_file {
+    dimensions:
+        time = 5 ;
+    variables:
+        double time(time) ;
+            time:units = "seconds since 19700101T00:00:00" ;
+            time:long_name = "time" ;
+        double sea_level(time) ;
+            sea_level:_FillValue = -9999. ;
+            sea_level:category = "TEST" ;
+            sea_level:scale_factor = 1. ;
+            sea_level:add_offset = 0. ;
+            sea_level:long_name = "sea level" ;
+            sea_level:units = "mm" ;
+        double corrected_sea_level(time) ;
+            corrected_sea_level:_FillValue = -9999. ;
+            corrected_sea_level:units = "mm" ;
+            corrected_sea_level:add_offset = 0. ;
+            corrected_sea_level:scale_factor = 1. ;
+            corrected_sea_level:long_name = "corr sea level" ;
+
+    // global attributes:
+            :Conventions = "CF-1.0" ;
+            :history = "the netcdf file has been created by EGADS" ;
+            :comments = "no comments on the netcdf file" ;
+            :institution = "My institution" ;
+    }

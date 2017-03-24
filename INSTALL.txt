@@ -37,6 +37,8 @@ For information on other install options the --help option can be used:
 
   python setup.py install --help
 
+On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system.
+
 
 Testing
 =======

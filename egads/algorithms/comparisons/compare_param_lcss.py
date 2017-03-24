@@ -43,7 +43,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
         self.output_metadata = egads_metadata.VariableMetadata({'units':'',
-                                                               'long_name':'maximum commen subsequence length',
+                                                               'long_name':'maximum common subsequence length',
                                                                'standard_name':'',
                                                                'Category':['']})
 

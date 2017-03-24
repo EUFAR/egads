@@ -1,6 +1,6 @@
 Version:
 
-EGADS 0.7.1
+EGADS 0.8.0
 
 Project Overview:
 
@@ -14,7 +14,7 @@ EGADS is under development by EUFAR (European Facility for Airborne Research), a
 
 More Information:
 
-An overview of how the toolbox is installed and used can be found at the EGADS Documentation HTTP/PDF. Information on the specific algorithms can be found in the Algorithm Documentation.
+An overview of how the toolbox is installed and used can be found at the EGADS Documentation (Read the docs: https://egads.readthedocs.io/en/latest/ ; PDF file: Documentation directory). Information on the specific algorithms can be found in the Algorithm Documentation (PDF file: Documentation directory).
 
 Features:
 
@@ -26,5 +26,5 @@ Features:
    - I/O routines for common file formats:
       - NetCDF
       - NASA Ames
-      - CSV (to be updated)
-      - ASCII (to be updated)
+      - CSV
+      - ASCII

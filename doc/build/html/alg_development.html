@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Algorithm Development &#8212; EGADS 0.7.0 documentation</title>
+    <title>Algorithm Development &#8212; EGADS 0.8.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.7.0',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="tutorial.html" title="Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -66,7 +66,7 @@ necessary to create these files, and how to incorporate them into the broader pa
 <div class="section" id="python-module-creation">
 <h2>Python module creation<a class="headerlink" href="#python-module-creation" title="Permalink to this headline">¶</a></h2>
 <p>To guide creation of Python modules containing algorithms in EGADS, an algorithm template has been included
-in the distribution. It can be found in ./egads/algorithms/algorithm_template.py and is shown below:</p>
+in the distribution. It can be found in ./egads/algorithms/file_templates/algorithm_template.py and is shown below:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;mfreer, ohenry&quot;</span>
 <span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;$Date:: 2016-12-14 15:04#$&quot;</span>
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;$Revision:: 101       $&quot;</span>
@@ -163,27 +163,34 @@ in the distribution. It can be found in ./egads/algorithms/algorithm_template.py
 <p>The best practice before starting an algorithm is to copy this file and name it following the EGADS algorithm
 file naming conventions, which is all lowercase with words separated by underscores. As an example, the file
 name for an algorithm calculating the wet bulb temperature contributed by DLR would be called
-&#8216;temperature_wet_bulb_dlr.py&#8217;.</p>
+<code class="docutils literal"><span class="pre">temperature_wet_bulb_dlr.py</span></code>.</p>
 <p>Within the file itself, there are several elements in this template that will need to be modified before this
 can be usable as an EGADS algorithm:</p>
 <ol class="arabic">
-<li><p class="first">Class name
-The class name is currently &#8216;AlgorithmTemplate&#8217;, but this must be changed to the actual name of the
+<li><dl class="first docutils">
+<dt>Class name</dt>
+<dd><p class="first last">The class name is currently &#8216;AlgorithmTemplate&#8217;, but this must be changed to the actual name of the
 algorithm. The conventions here are the same name as the filename (see above), but using MixedCase. So,
 following the example above, the class name would be TemperatureWetBulbDlr</p>
+</dd>
+</dl>
 </li>
-<li><p class="first">Algorithm docstring
-The docstring is everything following the three quote marks just after the class definition. This
+<li><dl class="first docutils">
+<dt>Algorithm docstring</dt>
+<dd><p class="first last">The docstring is everything following the three quote marks just after the class definition. This
 section describes several essential aspects of the algorithm for easy reference directly from Python.
 Each field following the word in ALLCAPS should be changed to reflect the properties of the algorithm
 (with the exception of VERSION, which will be changed automatically by Subversion when the file is
 committed to the server).</p>
+</dd>
+</dl>
 </li>
-<li><p class="first">Algorithm and output metadata
-In the __init__ method of the module, two important parameters are defined. The first is the
+<li><dl class="first docutils">
+<dt>Algorithm and output metadata</dt>
+<dd><p class="first">In the <code class="docutils literal"><span class="pre">__init__</span></code> method of the module, two important parameters are defined. The first is the
 &#8216;output_metadata&#8217;, which defines the metadata elements that will be assigned to the variable
 output by the algorithm. A few recommended elements are included, but a broader list of variable
-metadata parameters can be found in the NetCDF standards document on the EUFAR website (<a class="reference external" href="http://www.eufar.net/documents/4412">http://www.eufar.net/documents/4412</a>, Annexe III).
+metadata parameters can be found in the NetCDF standards document on the EUFAR website (<a class="reference external" href="http://www.eufar.net/documents/6140">http://www.eufar.net/documents/6140</a>, Annexe III).
 In the case that there are multiple parameters output by the algorithm, the output_metadata parameter
 can be defined as a list VariableMetadata instances.</p>
 <p>Next, the &#8216;metadata&#8217; parameter defines metadata concerning the algorithm itself. These information
@@ -192,6 +199,34 @@ description, purpose, date and version of the algorithm; date processed; and a r
 parameters. Of these parameters, only the names, types, descriptions and units of the inputs, names and
 descriptions of the outputs and description and purpose of the algorithm need to be altered. The other
 parameters (name, date and version of the processor; date processed) are populated automatically.</p>
+<dl class="last docutils">
+<dt>self.output_metadata:</dt>
+<dd><ul class="first last simple">
+<li>units: units of the output.</li>
+<li>long_name: the name describing the output.</li>
+<li>standard_name: a short name for the output.</li>
+<li>Category: Name(s) of probe category - comma separated list (cf. EUFAR document <a class="reference external" href="http://www.eufar.net/documents/6140">http://www.eufar.net/documents/6140</a> for an example of possible categories).</li>
+</ul>
+</dd>
+<dt>self.metadata:</dt>
+<dd><ul class="first last simple">
+<li>Inputs: representation of each input in the documentation and in the code (ex: P_a for altitude pressure).</li>
+<li>InputUnits: a list of all input units, one unit per input, &#8216;&#8217; for dimensionless input and &#8216;None&#8217; for the input parameter from which the output is to be derived.</li>
+<li>InputTypes: the type of the input (array, vector, coeff, ...) linked to the <code class="docutils literal"><span class="pre">var_type</span></code> string in the algorithm template ; the string <code class="docutils literal"><span class="pre">_optional</span></code> can be added to inform that the input is optional (used in the EGADS GUI).</li>
+<li>InputDescription: short description of each input.</li>
+<li>Outputs: representation of each output.</li>
+<li>OutputDescription: short description of each output.</li>
+<li>Purpose: the goal of the algorithm</li>
+<li>Description: a description of the algorithm</li>
+<li>Processor: self.name</li>
+<li>ProcessorDate: <code class="docutils literal"><span class="pre">__date__</span></code></li>
+<li>ProcessorVersion: <code class="docutils literal"><span class="pre">__version__</span></code></li>
+<li>DateProcessed: self.now()</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </li>
 </ol>
 <div class="admonition note">
@@ -200,32 +235,69 @@ parameters (name, date and version of the processor; date processed) are populat
 transform, derivative, etc), there is a specific methodology to tell EGADS how to set the output units.
 To do this, set the appropriate &#8216;units&#8217; parameter of output_metadata to &#8216;inputn&#8217; where <em>n</em> is the
 number of the input parameter from which to get units (starting at 0). The units on the input parameter
-from which the output is to be derived should be set to &#8216;None&#8217;.</p>
+from which the output is to be derived should be set to &#8216;None&#8217;.
+For algorithms in which the input units are dimensionless (a factor, a quantity, a coefficient), the units on the input parameter
+should be set to &#8216;&#8217;.</p>
 </div>
-<ol class="arabic simple" start="4">
-<li>Definition of parameters
-In both the run and _algorithm methods, the local names intended for inputs need to be included. There
-are three locations where the same list must be added (marked in bold):<ul>
+<ol class="arabic" start="4">
+<li><dl class="first docutils">
+<dt>Definition of parameters</dt>
+<dd><p class="first">In both the run and _algorithm methods, the local names intended for inputs need to be included. There
+are three locations where the same list must be added (marked in bold):</p>
+<ul class="last simple">
 <li>def run(self, <strong>inputs</strong>)</li>
 <li>return egads_core.EgadsAlgorithm.run(self, <strong>inputs</strong>)</li>
 <li>def _algorithm(self, <strong>inputs</strong>)</li>
 </ul>
+</dd>
+</dl>
 </li>
-<li>Implementation of algorithm
-The algorithm itself gets written in the _algorithm method and uses variables passed in by the user.
+<li><dl class="first docutils">
+<dt>Implementation of algorithm</dt>
+<dd><p class="first last">The algorithm itself gets written in the _algorithm method and uses variables passed in by the user.
 The variables which arrive here are simply scalar or arrays, and if the source is an instance of
 EgadsData, the variables will be converted to the units you specified in the InputUnits of the
-algorithm metadata.</li>
+algorithm metadata.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Integration of the algorithm in EGADS</dt>
+<dd><p class="first">Once the algorithm file is ready, the user has to move it in the appropriate directory in the ./egads/algorithms/
+directory. Once it has been done, the <code class="docutils literal"><span class="pre">__init__.py</span></code> file has to be modified to declare the new algorithm. The
+following line can be added to the <code class="docutils literal"><span class="pre">__init__.py</span></code> file: <code class="docutils literal"><span class="pre">from</span> <span class="pre">the_name_of_the_file</span> <span class="pre">import</span> <span class="pre">\*</span></code>.</p>
+<p>If the algorithm requires a new directory, the user has to create it, move the file inside and create a
+<code class="docutils literal"><span class="pre">__init__.py</span></code> file to declare the new directory and the algoritm to EGADS. A template can be found in
+./egads/algorithms/file_templates/init_template.py and is shown below:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">EGADS new algorithms. See EGADS Algorithm Documentation for more info.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;ohenry&quot;</span>
+<span class="n">__date__</span> <span class="o">=</span> <span class="s2">&quot;$Date:: 2017-01-27 10:52#$&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;$Revision:: 1      $&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">the_name_of_my_new_algorithm_file</span> <span class="k">import</span> <span class="o">*</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;egads [corrections] algorithms have been loaded&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;an error occured during the loading of a [corrections] algorithm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
 </ol>
 </div>
 <div class="section" id="documentation-creation">
 <h2>Documentation creation<a class="headerlink" href="#documentation-creation" title="Permalink to this headline">¶</a></h2>
 <p>Within the EGADS structure, each algorithm has accompanying documentation in the EGADS Algorithm Handbook.
 These descriptions are contained in LaTeX files, organized in a structure similar to the toolbox itself,
-with one algorithm per file. These files can be found in the doc/EGADS Algorithm Handbook directory on
-GitHub repository: <a class="reference external" href="https://github.com/eufarn7sp/egads/tree/master/doc">https://github.com/eufarn7sp/egads/tree/master/doc</a>.</p>
+with one algorithm per file. These files can be found in the Documentation/EGADS Algorithm Handbook directory
+in the EGADS package downloaded from GitHub repository: <a class="reference external" href="https://github.com/eufarn7sp/egads">https://github.com/eufarn7sp/egads</a>.</p>
 <p>A template is provided to guide creation of the documentation files. This can be found at
-doc/EGADS Algorithm Handbook/algorithms/algorithm_template.tex. The template is divided into 8 sections, enclosed
+Documentation/EGADS Algorithm Handbook/algorithms/algorithm_template.tex. The template is divided into 8 sections, enclosed
 in curly braces. These sections are explained below:</p>
 <ul class="simple">
 <li><dl class="first docutils">
@@ -280,7 +352,7 @@ need to be filled in. The value of the <code class="docutils literal"><span clas
 The <code class="docutils literal"><span class="pre">algdesc</span></code> field should be the full English name of the algorithm.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Any &#8220;_&#8221; character in plain text in LaTeX needs to be offset by a &#8220;&#8221;. Thus if the algorithm
+<p class="last">Any &#8220;_&#8221; character in plain text in LaTeX needs to be offset by a &#8220;\&#8221;. Thus if the algorithm
 name is <code class="docutils literal"><span class="pre">temp_static_cnrm</span></code>, in LaTex, it should be input as <code class="docutils literal"><span class="pre">temp\_static\_cnrm</span></code>.</p>
 </div>
 <div class="section" id="example">
@@ -335,7 +407,7 @@ CNRM/GMEI/TRAMM
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/eufar_new_logo.png" alt="Logo"/>
+              <img class="logo" src="_static/eufar_new_logo_white_bkgrd.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -392,7 +464,7 @@ CNRM/GMEI/TRAMM
         <li class="right" >
           <a href="tutorial.html" title="Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.7.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EGADS 0.8.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

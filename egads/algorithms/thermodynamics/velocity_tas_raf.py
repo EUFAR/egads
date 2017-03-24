@@ -44,7 +44,7 @@ class VelocityTasRaf(egads_core.EgadsAlgorithm):
                                                                'Category':['Aircraft State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_r', 'M', 'e'],
-                                                          'InputUnits':['K', '', ''],
+                                                          'InputUnits':['K', None, None],
                                                           'InputTypes':['vector','vector','coeff'],
                                                           'InputDescription':['Measured temperature','Mach number','Thermometer recovery factor'],
                                                           'Outputs':['V_t'],

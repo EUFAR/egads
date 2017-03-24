@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.7.1',
+      version='0.8.0',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',

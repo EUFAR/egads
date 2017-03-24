@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "$Date:: 2016-12-16 10:33#$"
-__revision__ = "$Revision:: 135       $"
+__revision__ = "$Revision:: 137       $"
 __version__ = "unknown"
 
 from _version import __version__
@@ -53,8 +53,12 @@ try:
     if 'egads' not in quantities.__path__[0]:
         logging.warning('EGADS has imported an already installed version of Quantities. If issues occure,'
                         + ' please check the version number of Quantities.')
+        print ('EGADS has imported an already installed version of Quantities. If issues occure,'
+               + ' please check the version number of Quantities.')
 except ImportError:
     logging.warning('EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
+                 + ' or the presence of Quantities in third-party software directory.')
+    raise ImportError('EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
                  + ' or the presence of Quantities in third-party software directory.')
 
 quantities.UnitQuantity('microgram', quantities.gram/1e6, symbol='ug', aliases=['micrograms'])
@@ -67,7 +71,7 @@ def set_log_options(log_options=None):
     if log_options:
         for key, value in log_options.iteritems():
             config_dict.set("LOG", key, value)
-        with open(os.path.join(path, 'egads.ini'), 'w') as configfile:    # save
+        with open(os.path.join(path, 'egads.ini'), 'w') as configfile:
             config_dict.write(configfile)
 
 logging.info('EGADS ' + __version__ + ' is ready ...')

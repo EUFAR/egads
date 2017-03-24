@@ -103,7 +103,7 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         self.assertEqual(out1, OUT1, "Single algorithm setting units value not equal")
         self.assertEqual(out1.units, IN_UNITS1 + '/s', "Single algorithm setting units output units not equal, returned {0}".format(out1.units))
         self.assertEqual(out1.metadata['long_name'], 'first derivative of ' + LONG_NAME1, 'Single algorithm setting units output long name not equal, returned {0}'.format(out1.metadata['long_name']))
-
+    
     def test_alg_set_dual_other_units(self):
         """ Test sample algorithm modifying dual passed input units"""
 
@@ -246,6 +246,8 @@ class TestAlgorithmDualIOSetUnits(egads_core.EgadsAlgorithm):
                                                           'ProcessorVersion':__version__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
+        
+    
 
     def run(self, t, x):
         return egads_core.EgadsAlgorithm.run(self, t, x)

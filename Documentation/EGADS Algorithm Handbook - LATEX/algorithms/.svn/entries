@@ -1,86 +1,0 @@
-10
-
-dir
-179
-http://eufar-egads.googlecode.com/svn/doc/algorithms
-http://eufar-egads.googlecode.com/svn
-
-
-
-2013-03-28T02:28:04.617387Z
-176
-mfreer
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-cbf497e5-c030-9fc0-07e0-f9ff49ac8e82
-
-corrections
-dir
-
-radiation
-dir
-
-biophysics
-dir
-
-microphysics
-dir
-
-transforms
-dir
-
-mathematics
-dir
-
-algorithm_template.tex
-file
-
-
-
-
-2016-03-16T21:09:22.648579Z
-ea0d6995e7b262a6966c14dc15a70a7f
-2012-07-10T09:56:22.290955Z
-148
-mfreer@gmail.com
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-455
-
-thermodynamics
-dir
-
-quality_control
-dir
-

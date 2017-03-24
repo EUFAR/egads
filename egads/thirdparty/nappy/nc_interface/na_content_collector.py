@@ -155,6 +155,7 @@ class NAContentCollector(nappy.na_file.na_core.NACore):
                 highest_rank = rank
                 best_var = var
                 best_var_index = count - 1
+                
 
         # If all are zero ranked variables or no vars identified/found then we cannot write any to NASA Ames and return ([], [])
         if len(self.rank_zero_vars) == len(self.vars) or best_var is None: 

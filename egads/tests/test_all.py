@@ -15,9 +15,9 @@ import radiation_tests
 def test():
     logging.info('egads tests are starting ...')
     suite = unittest.TestSuite()
-    suite.addTest(input_tests.suite())
     suite.addTest(egads_tests.suite())
     suite.addTest(metadata_tests.suite())
+    suite.addTest(input_tests.suite())
     suite.addTest(algorithm_module_tests.suite())
     suite.addTest(thermodynamics_tests.suite())
     suite.addTest(corrections_mathematics_transforms_tests.suite())

@@ -40,8 +40,8 @@ class PlanckEmission(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T', 'Lambda'],
                                                           'InputUnits':['K', 'nm'],
-                                                          'InputTypes':['vector','coeff'],
-                                                          'InputDescription':['Temperature','Wavelength'],
+                                                          'InputTypes':['vector', 'coeff'],
+                                                          'InputDescription':['Temperature', 'Wavelength'],
                                                           'Outputs':['rad'],
                                                           'OutputDescription':['Black body radiance'],
                                                           'Purpose':'Calculates the radiance of a surface at a given wavelength given its temperature',

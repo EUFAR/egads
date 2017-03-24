@@ -57,6 +57,7 @@ class CDMSToNA:
         """
         Sets up instance variables.      
         """
+        
         self.cdms_variables = cdms_variables
         self.global_attributes = global_attributes
         self.na_items_to_override = na_items_to_override
@@ -121,7 +122,8 @@ class CDMSToNA:
             # Append to list if more variables were captured
             if collector.found_na == True:  
                 na_dict_list.append((collector.na_dict, collector.var_ids))
-
+        
+        
         self.na_dict_list = na_dict_list
         
         self.converted = True

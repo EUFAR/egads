@@ -5,9 +5,6 @@ README.md
 run_tests.py
 setup.cfg
 setup.py
-doc/EGADS Algorithm Handbook - v0.7.1.pdf
-doc/EGADS Documentation - v0.7.1.pdf
-doc/changelog.txt
 egads/__init__.py
 egads/_version.py
 egads/egads.ini
@@ -17,7 +14,6 @@ egads.egg-info/dependency_links.txt
 egads.egg-info/requires.txt
 egads.egg-info/top_level.txt
 egads/algorithms/__init__.py
-egads/algorithms/algorithm_template.py
 egads/algorithms/comparisons/__init__.py
 egads/algorithms/comparisons/compare_param_lcss.py
 egads/algorithms/corrections/__init__.py

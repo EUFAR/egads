@@ -1,10 +1,9 @@
-__author__ = "mfreer"
-__date__ = "$Date:: 2013-02-17 18:01#$"
-__version__ = "$Revision:: 163       $"
+__author__ = "mfreer, ohenry"
+__date__ = "$Date:: 2017-01-26 13:07#$"
+__version__ = "$Revision:: 164       $"
 __all__ = ['MassConcDmt']
 
 import numpy
-import egads
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 
@@ -14,7 +13,7 @@ class MassConcDmt(egads_core.EgadsAlgorithm):
     """
     FILE        mass_conc_dmt.py
 
-    VERSION     $Revision: 163 $
+    VERSION     $Revision: 164 $
 
     CATEGORY    Microphysics
 
@@ -73,8 +72,8 @@ class MassConcDmt(egads_core.EgadsAlgorithm):
     def _algorithm(self, c_i, d_i, s_i, rho_i):
         d_i = d_i * 1.0e-4  # convert from um to cm
         if c_i.ndim <= 1:
-            M = (numpy.pi / 6.0) * numpy.sum(s_i * rho_i * c_i * d_i ** 3)  # @UndefinedVariable
+            M = (numpy.pi / 6.0) * numpy.sum(s_i * rho_i * c_i * d_i ** 3)
         else:
-            M = (numpy.pi / 6.0) * numpy.sum(s_i * rho_i * c_i * d_i ** 3, axis=1)  # @UndefinedVariable
+            M = (numpy.pi / 6.0) * numpy.sum(s_i * rho_i * c_i * d_i ** 3, axis=1)
         return M
 

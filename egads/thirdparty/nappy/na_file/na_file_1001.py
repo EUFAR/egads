@@ -73,7 +73,7 @@ class NAFile1001(nappy.na_file.na_file.NAFile):
         for n in range(self.NV):
             self.V[n].append(v[count])
             count = count + 1
-        return rtlines    
+        return rtlines
 
     def _readData2(self, datalines, ivar_count):
         """
@@ -92,6 +92,7 @@ class NAFile1001(nappy.na_file.na_file.NAFile):
             var_string = self.format % self.X[m]
 
             for n in range(self.NV):
+                
                 var_string = var_string + (self.format % self.V[n][m])
 
             self.file.write(wrapLine("Data", self.annotation, self.delimiter, "%s\n" % var_string.rstrip(" ,")))
