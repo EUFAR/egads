@@ -14,5 +14,3 @@ Welcome to EGADS's documentation!
    tutorial
    alg_development
    egadsapi
-
-

@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-02-07 17:23#$"
-__version__ = "$Revision:: 125       $"
+__date__ = "2012-02-07 17:23"
+__version__ = "125"
 __all__ = ['SampleAreaScatteringRaf']
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class SampleAreaScatteringRaf(egads_core.EgadsAlgorithm):
     """
     FILE        sample_area_scattering_raf.py
 
-    VERSION     $Revision: 125 $
+    VERSION     125
 
     CATEGORY    Microphysics
 

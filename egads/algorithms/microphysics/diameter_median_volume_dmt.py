@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2013-03-27 20:26#$"
-__version__ = "$Revision:: 174       $"
+__date__ = "2013-03-27 20:26"
+__version__ = "174"
 __all__ = ['DiameterMedianVolumeDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
     """
     FILE        diameter_median_volume_dmt.py
 
-    VERSION     $Revision: 174 $
+    VERSION     174
 
     CATEGORY    Microphysics
 

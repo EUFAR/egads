@@ -2,9 +2,24 @@
 CHANGELOG
 =========
 
+June 14 2017, Release version 0.8.1
+====================================
+  To allow the creation of new algorithms from the EGADS GUI, new folders have been introduced and pre-loaded.
+  
+  FIXED:
+    - an issue with a folder has been fixed in the setup.py.
+    - fixed an issue in the netcdf i/o function when setting an attribute.
+    
+  ADDED:
+    - in the netcdf i/o function, the 'missing_value' attribute has been added if the '_FillValue' attribute is missing.
+    - in the netcdf i/o function, the 'delete_attribute' function has been added to remove an attribute from a file or a variable.
+    
+  MODIFIED:
+    - the documentation has been updated.
+
 
 March 24 2017, Release version 0.8.0
-=======================================
+====================================
   FIXED:
     - if a user wants to rescale an EgadsData object (unit 1 to unit 2), the metadata attribute disappears. It has been fixed and metadata are passed to the new EgadsData object, with the necessary modifications.
     - if a user wants to slice an EgadsData object, the metadata attribute disappears. It has been fixed.

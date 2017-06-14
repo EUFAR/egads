@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-24 15:27#$"
-__version__ = "$Revision:: 151       $"
+__date__ = "2017-01-24 15:27"
+__version__ = "151"
 __all__ = ['SecondsToIsotime']
 
 import egads.core.egads_core as egads_core
@@ -14,7 +14,7 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
     """
     FILE        seconds_to_isotime.py
 
-    VERSION     $Revision: 151 $
+    VERSION     151
 
     CATEGORY    Transforms
 

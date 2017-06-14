@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2011-05-27 14:27#$"
-__version__ = "$Revision:: 59        $"
+__date__ = "2011-05-27 14:27"
+__version__ = "59"
 __all__ = ["TempVirtualCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -35,7 +35,7 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'K',
                                                                'long_name':'virtual temperature',
                                                                'standard_name':'virtual_temperature',
-                                                               'Category':['Thermodynamic','Atmos State']})
+                                                               'Category':['Thermodynamics','Atmos State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'r'],
                                                           'InputUnits':['K','g/kg'],

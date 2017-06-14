@@ -9,7 +9,7 @@ Core Classes
 	:members:
 	:show-inheritance:
 
-
+	
 Metadata Classes
 *****************
 
@@ -17,14 +17,17 @@ Metadata Classes
 	:members:
 	:show-inheritance:
 
+	
 File Classes
 *************
 
 .. automodule:: egads.input.input_core
 	:members:
+	:show-inheritance:
 
 .. automodule:: egads.input.nasa_ames_io
 	:members:
+	:show-inheritance:
 
 .. automodule:: egads.input.netcdf_io
 	:members:
@@ -33,7 +36,3 @@ File Classes
 .. automodule:: egads.input.text_file_io
 	:members:
 	:show-inheritance:
-
-
-
-

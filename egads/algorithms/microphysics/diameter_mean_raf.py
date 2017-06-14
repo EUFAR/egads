@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-02-07 17:23#$"
-__version__ = "$Revision:: 125       $"
+__date__ = "2012-02-07 17:23"
+__version__ = "125"
 __all__ = ['DiameterMeanRaf']
 
 import numpy
@@ -12,7 +12,7 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
     """
     FILE        diameter_mean_raf.py
 
-    VERSION     $Revision: 125 $
+    VERSION     125
 
     CATEGORY    Microphysics
 

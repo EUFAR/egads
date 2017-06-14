@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-01-11 9:31#$"
-__version__ = "$Revision:: 120       $"
+__date__ = "2016-01-11 9:31"
+__version__ = "120"
 __all__ = ['RotateSolarVectorToAircraftFrame']
 
 import egads.core.egads_core as egads_core
@@ -13,7 +13,7 @@ class RotateSolarVectorToAircraftFrame(egads_core.EgadsAlgorithm):
     """
     FILE        rotate_solar_vector_to_aircraft_frame.py
 
-    VERSION     $Revision: 120 $
+    VERSION     120
 
     CATEGORY    Radiation
 

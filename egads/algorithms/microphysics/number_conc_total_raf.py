@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-02-07 17:23#$"
-__version__ = "$Revision:: 125       $"
+__date__ = "2012-02-07 17:23"
+__version__ = "125"
 __all__ = ['NumberConcTotalRaf']
 
 import numpy
@@ -12,7 +12,7 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
     """
     FILE        number_conc_total_raf.py
 
-    VERSION     $Revision: 125 $
+    VERSION     125
 
     CATEGORY    Microphysics
 

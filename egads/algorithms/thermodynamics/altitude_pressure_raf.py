@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-12 9:28#$"
-__version__ = "$Revision:: 164       $"
+__date__ = "2017-01-12 9:28"
+__version__ = "164"
 __all__ = ["AltitudePressureRaf"]
 
 import egads.core.egads_core as egads_core
@@ -12,9 +12,9 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
     """
     FILE        altitude_pressure_raf.py
 
-    VERSION     $Revision: 164 $
+    VERSION     164
 
-    CATEGORY    Thermodymics
+    CATEGORY    Thermodynamics
 
     PURPOSE     Calculate pressure altitude
 
@@ -36,8 +36,8 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
 
         self.output_metadata = egads_metadata.VariableMetadata({'units':'m',
                                                                'long_name':'pressure altitude',
-                                                               'standard_name':'',
-                                                               'Category':['Thermodynamic', 'Aircraft State']})
+                                                               'standard_name':'pressure altitude',
+                                                               'Category':['Thermodynamics', 'Aircraft State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['P_s'],
                                                           'InputUnits':['hPa'],

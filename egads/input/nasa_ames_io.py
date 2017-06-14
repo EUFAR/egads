@@ -1,6 +1,6 @@
 __author__ = "ohenry"
-__date__ = "$Date:: 2016-11-29 15:38#$"
-__version__ = "$Revision:: 119       $"
+__date__ = "2016-11-29 15:38"
+__version__ = "1.5"
 __all__ = ["NasaAmes"]
 
 import logging

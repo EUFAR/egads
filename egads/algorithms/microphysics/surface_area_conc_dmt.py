@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-01-10 11:58#$"
-__version__ = "$Revision:: 126       $"
+__date__ = "2016-01-10 11:58"
+__version__ = "126"
 __all__ = ['SurfaceAreaConcDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
     """
     FILE        surface_area_conc_dmt.py
 
-    VERSION     $Revision: 126 $
+    VERSION     126
 
     CATEGORY    Microphysics
 
@@ -44,7 +44,7 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'um^2/cm^3',
                                                                'long_name':'surface area concentration',
                                                                'standard_name':'',
-                                                               'Category':['microphysics']})
+                                                               'Category':['Microphysics']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 's_i'],
                                                           'InputUnits':['cm^-3', 'um', ''],

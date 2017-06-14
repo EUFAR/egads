@@ -1,19 +1,18 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-01-12 9:35#$"
-__version__ = "$Revision:: 164       $"
+__date__ = "2016-01-12 9:35"
+__version__ = "165"
 __all__ = ["HumRelCapacitiveCnrm"]
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 import numpy
-import egads
 
 class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
     
     """
     FILE        hum_rel_capacitive_cnrm.py
 
-    VERSION     $Revision: 164 $
+    VERSION     165
 
     CATEGORY    Thermodynamics
 
@@ -45,7 +44,7 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'',
                                                                'long_name':'relative humidity',
                                                                'standard_name':'relative_humidity',
-                                                               'Category':['Thermodynamic', 'Atmos State']})
+                                                               'Category':['Thermodynamics', 'Atmos State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['Ucapf', 'T_s', 'P_s', 'dP', 'C_t', 'Fmin', 'C_0', 'C_1', 'C_2'],
                                                           'InputUnits':['Hz', 'K', 'hPa', 'hPa', '%/degC', 'Hz', '', '', ''],

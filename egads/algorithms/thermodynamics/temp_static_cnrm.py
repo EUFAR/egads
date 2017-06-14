@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-17 11:44#$"
-__version__ = "$Revision:: 61        $"
+__date__ = "2017-01-17 11:44"
+__version__ = "61"
 __all__ = ["TempStaticCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class TempStaticCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        temp_static_cnrm.py
 
-    VERSION     $Revision: 61 $
+    VERSION     61
 
     CATEGORY    Thermodynamic
 
@@ -39,7 +39,7 @@ class TempStaticCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'K',
                                                                'long_name':'static temperature',
                                                                'standard_name':'air_temperature',
-                                                               'Category':['Thermodynamic','Atmos State']})
+                                                               'Category':['Thermodynamics','Atmos State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_t', 'dP', 'P_s', 'r_f', 'Racpa'],
                                                           'InputUnits':['K','hPa','hPa','', ''],

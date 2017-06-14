@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-06-22 17:19#$"
-__version__ = "$Revision:: 140       $"
+__date__ = "2012-06-22 17:19"
+__version__ = "140"
 __all__ = ['WindVector3dRaf']
 
 from numpy import sin, cos, tan, sqrt
@@ -12,7 +12,7 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
     """
     FILE        wind_vector_3d_raf.py
 
-    VERSION     $Revision: 140 $
+    VERSION     140
 
     CATEGORY    Thermodynamics
 
@@ -53,17 +53,17 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'easterly wind velocity',
                                                                'standard_name':'eastward_wind',
-                                                               'Category':['Thermodynamic', 'Wind']}))
+                                                               'Category':['Thermodynamics', 'Wind']}))
 
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'northerly wind velocity',
                                                                'standard_name':'northward_wind',
-                                                               'Category':['Thermodynamic', 'Wind']}))
+                                                               'Category':['Thermodynamics', 'Wind']}))
 
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'upward wind velocity',
                                                                'standard_name':'upward_air_velocity',
-                                                               'Category':['Thermodynamic', 'Wind']}))
+                                                               'Category':['Thermodynamics', 'Wind']}))
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['U_a', 'alpha', 'beta',
                                                                     'u_p', 'v_p', 'w_p',

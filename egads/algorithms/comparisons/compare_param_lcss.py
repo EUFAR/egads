@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2013-02-17 18:01#$"
-__version__ = "$Revision:: 163       $"
+__date__ = "2013-02-17 18:01"
+__version__ = "163"
 __all__ = ['CompareParamLcss']
 
 import egads.core.egads_core as egads_core
@@ -13,7 +13,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
     
     FILE        compare_param_lcss.py
 
-    VERSION     $Revision: 163 $
+    VERSION     163
 
     CATEGORY    Comparisons
 

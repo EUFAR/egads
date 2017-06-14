@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-01-27 16:41#$"
-__version__ = "$Revision:: 100       $"
+__date__ = "2012-01-27 16:41"
+__version__ = "100"
 __all__ = ["TempPotentialCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        temp_potential_cnrm.py
 
-    VERSION     $Revision: 100 $
+    VERSION     100
 
     CATEGORY    Thermodynamics
 
@@ -38,7 +38,7 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'K',
                                                                'long_name':'potential temperature',
                                                                'standard_name':'air_potential_temperature',
-                                                               'Category':['Thermodynamic', 'Atmos State']})
+                                                               'Category':['Thermodynamics', 'Atmos State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'P_s', 'Racpa'],
                                                           'InputUnits':['K', 'hPa', ''],

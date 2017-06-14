@@ -28,6 +28,8 @@ to use it, it must be installed to a location on the Python path. To install
 EGADS (assuming priviledged user rights), run the following command from the egads directory:
 
   python setup.py install
+or
+  pip install egads
 
 To install as an unpriviledged user, or to install to a directory of your choosing, the following command can be used:
 
@@ -38,6 +40,12 @@ For information on other install options the --help option can be used:
   python setup.py install --help
 
 On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system.
+
+If EGADS requirements in term of dependecies are full filled and if the user wants to avoid their installation, the use of the following option is encouraged:
+
+  python setup.py install --no-dep
+or
+  pip install egads --no-dep
 
 
 Testing

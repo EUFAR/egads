@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-07-06 17:42#$"
-__version__ = "$Revision:: 146       $"
+__date__ = "2012-07-06 17:42"
+__version__ = "146"
 __all__ = ['IsotimeToElements']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
     """
     FILE        isotime_to_elements.py
 
-    VERSION     $Revision: 146 $
+    VERSION     146
 
     CATEGORY    Transforms
 

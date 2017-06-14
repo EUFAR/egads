@@ -61,7 +61,7 @@ At the core of the EGADS package is a data class intended to handle data and ass
 in a consistent way between files, algorithms and within the framework. This ensures that important
 metadata is not lost when combining data form various sources in EGADS.
 
-Additionally, by subclassing the Quantities and Numpy packages, EgadsData 
+Additionally, by subclassing the Quantities and Numpy packages, :class:`~.EgadsData` 
 incorporates unit comprehension to reduce unit-conversion errors during calculation, and
 supports broad array manipulation capabilities. This section describes how to employ
 the :class:`~.EgadsData` class in the EGADS program scope.
@@ -70,22 +70,22 @@ the :class:`~.EgadsData` class in the EGADS program scope.
 Creating :class:`~.EgadsData` instances
 ----------------------------------------
 
-The EgadsData class takes four basic arguments:
+The :class:`~.EgadsData` class takes four basic arguments:
 
 * value
-   Value to assign to EgadsData instance. Can be scalar, array, or other EgadsData instance.
+   Value to assign to :class:`~.EgadsData` instance. Can be scalar, array, or other :class:`~.EgadsData` instance.
 
 * units
-   Units to assign to EgadsData instance. Should be string representation of units, and can be
+   Units to assign to :class:`~.EgadsData` instance. Should be string representation of units, and can be
    a compound units type such as 'g/kg', 'm/s^2', 'feet/second', etc.
 
 * variable metadata
    An instance of the :class:`~.VariableMetadata` type or dictionary, containing keywords and 
-   values of any metadata to be associated with this EgadsData instance.
+   values of any metadata to be associated with this :class:`~.EgadsData` instance.
 
 * other attributes
    Any other attributes added to the class are automatically stored in the :class:`~.VariableMetadata`
-   instance associated with the EgadsData instance.
+   instance associated with the :class:`~.EgadsData` instance.
 
 The following are examples of creating :class:`~.EgadsData` instances:
 
@@ -94,28 +94,24 @@ The following are examples of creating :class:`~.EgadsData` instances:
    >>> b = egads.EgadsData(a, 'km', b_metadata)
    >>> c = egads.EgadsData(28, 'degC', long_name="current temperature")
 
-If, during the call to EgadsData, no units are provided, but a variable metadata instance is provided
-with a units property, this will then be used to define the EgadsData units:
+If, during the call to :class:`~.EgadsData`, no units are provided, but a variable metadata instance is provided
+with a units property, this will then be used to define the :class:`~.EgadsData` units:
 
    >>> x_metadata = egads.core.metadata.VariableMetadata({'units':'m', 'long_name':'Test Variable'})
    >>> x = egads.EgadsData([1,2,3], x_metadata)
    >>> print x.units
    m
    
-The EgadsData is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations 
-like addition, substraction, slicing, and many more. For each of those operations, a new EgadsData class is 
-created with all their attributes. 
+The :class:`~.EgadsData` is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations like addition, substraction, slicing, and many more. For each of those operations, a new :class:`~.EgadsData` class is created with all their attributes. 
 
 .. NOTE::
-  With mathematical operands, as metadata define an EgadsData before an operation, and may not reflect the new 
-  EgadsData, it has been decided to not keep the metadata attribute. It's the responsability of the user to 
-  add a new :class:`~.VariableMetadata` instance or a dictionary to the new EgadsData object.
+  With mathematical operands, as metadata define an :class:`~.EgadsData` before an operation, and may not reflect the new :class:`~.EgadsData`, it has been decided to not keep the metadata attribute. It's the responsability of the user to add a new :class:`~.VariableMetadata` instance or a dictionary to the new :class:`~.EgadsData` object. It is not true if a user wants to slice an :class:`~.EgadsData`. In that case, metadata are automatically attributed to the new :class:`~.EgadsData`
 
 
 Metadata
 ---------
 
-The metadata object used by EgadsData is an instance 
+The metadata object used by :class:`~.EgadsData` is an instance 
 of :class:`~.VariableMetadata`, a dictionary object containing 
 methods to recognize, convert and validate known metadata types. It can reference
 parent metadata objects, such as those from an algorithm or data file, to enable 
@@ -123,7 +119,7 @@ users to track the source of a particular variable.
 
 When reading in data from a supported file type (NetCDF, NASA Ames), or doing calculations with
 an EGADS algorithm, EGADS will automatically populate the associated metadata and assign it 
-to the output variable. However, when creating an EgadsData instance manually, the metadata
+to the output variable. However, when creating an :class:`~.EgadsData` instance manually, the metadata
 must be user-defined.
 
 As mentioned, :class:`~.VariableMetadata` is a dictionary object, thus all metadata 
@@ -139,7 +135,7 @@ passed with the variable metadata to give a context to these metadata.
 
    >>> var_metadata = egads.core.metadata.VariableMetadata(var_metadata_dict, conventions='CF-1.0')
 
-If a particular VariableMetadata object comes from a file or algorithm, the class attempts to assign the 
+If a particular :class:`~.VariableMetadata` object comes from a file or algorithm, the class attempts to assign the 
 ``conventions`` automatically. While reading from a file, for example, the class attempts to 
 discover the conventions used based on the "Conventions" keyword, if present.
 
@@ -152,12 +148,12 @@ when using :class:`~.EgadsData`. This section will outline the basics of unit co
 more detailed tutorial of the unit comprehension capabilities can be found at 
 http://packages.python.org/quantities/
 
-In general, units are assigned to EgadsData instances when they are being created. 
+In general, units are assigned to :class:`~.EgadsData` instances when they are being created. 
 
    >>> a = egads.EgadsData([1,2,3], 'm')
    >>> b = egads.EgadsData([4,5,6], 'meters/second')
 
-Once a unit type has been assigned to an EgadsData instance, it will remain that 
+Once a unit type has been assigned to an :class:`~.EgadsData` instance, it will remain that 
 class of unit and can only be converted between other types of that same unit. The ``rescale``
 method can be used to convert between similar units, but will give an error if an attempt is made
 to convert to non-compatible units.
@@ -169,7 +165,7 @@ to convert to non-compatible units.
    >>> a_grams = a.rescale('g')
    ValueError: Unable to convert between units of "m" and "g"
 
-Likewise, arithmetic operations between EgadsData instances are handled using the unit comprehension
+Likewise, arithmetic operations between :class:`~.EgadsData` instances are handled using the unit comprehension
 provided by Quantities, and behave . For example adding units of a similar type is permitted:
 
    >>> a = egads.EgadsData(10, 'm')
@@ -187,7 +183,7 @@ But, non-compatible types cannot be added. They can, however, be multiplied or d
    ['EgadsData', array(10), 'm/s']
 
 .. NOTE::
-   Quantities and therefore EgadsData does not support conversions between coordinate systems
+   Quantities and therefore :class:`~.EgadsData` does not support conversions between coordinate systems
    that require a point of reference, such as temperature. In Quantities, temperatures are assumed
    to be temperature differences, e.g. a dT of 20 degC is equal to a dT of 20 degK and vice versa.
    Thus, in the Egads implementation, while most variables will automatically be converted to the correct
@@ -525,8 +521,8 @@ where ``var_name`` is the name of the variable to read in, and ``input_range`` (
 of min/max values.
 
 If using the ``egads.input.NetCdf()`` class, an array of values contained in ``var_name`` 
-will be returned. IF using the ``egads.input.EgadsNetCdf()`` class, an instance of the 
-``EgadsData()`` class will be returned containing the values and attributes of ``var_name``.
+will be returned. If using the ``egads.input.EgadsNetCdf()`` class, an instance of the 
+:class:`~.EgadsData` class will be returned containing the values and attributes of ``var_name``.
 
 Writing data
 ------------
@@ -579,6 +575,10 @@ Closing
 To close a file, simply use the ``close()`` method:
 
     >>> f.close()
+
+.. NOTE::
+   The EGADS :class:`~.NetCdf` and :class:`~.EgadsNetCdf` use the official NetCDF I/O routines, therefore, as described in the NetCDF documentation, it is not possible to remove a variable or more, and to modify the values of a variable. As attributes, global and those linked to a variable, are more dynamic, it is possible to remove, rename, or replace them.
+    
     
 Tutorial
 ---------
@@ -677,7 +677,7 @@ To read data from a file, use the ``read_variable()`` function:
 
     >>> data = f.read_variable(var_name)
 
-where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the ``EgadsData()`` class, containing the values and attributes of ``var_name``.
+where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the :class:`~.EgadsData` class, containing the values and attributes of ``var_name``.
 
 Writing data
 -------------
@@ -857,11 +857,11 @@ Within Python, usage information on each algorithm can be found using the ``help
 Calling algorithms
 -------------------
 
-Algorithms in EGADS generally accept and return arguments of ``EgadsData`` type, unless
+Algorithms in EGADS generally accept and return arguments of :class:`~.EgadsData` type, unless
 otherwise noted. This has the advantages of constant typing between algorithms, and allows
 metadata to be passed along the whole processing chain. Units on parameters being passed in are also
 checked for consistency, reducing errors in calculations. However, algorithms will accept any normal
-data type, as well. They can also return non-``EgadsData`` instances, if desired. 
+data type, as well. They can also return non-:class:`~.EgadsData` instances, if desired. 
 
 To call an algorithm, simply pass in the 
 required arguments, in the order they are described in the algorithm help function. An algorithm call, 
@@ -872,7 +872,7 @@ following:
         cpa, Racpa)	
 
 where the arguments ``T_s``, ``P_s``, ``dP``, etc are all assumed to be previously defined in the 
-program scope. In this instance, the algorithm returns an ``EgadsData`` instance to ``V_p``. To run
+program scope. In this instance, the algorithm returns an :class:`~.EgadsData` instance to ``V_p``. To run
 the algorithm, but return a standard data type (scalar or array of doubles), set the ``return_Egads`` flag to ``false``.
 
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=false).

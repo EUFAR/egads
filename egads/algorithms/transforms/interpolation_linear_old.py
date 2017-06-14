@@ -1,6 +1,6 @@
 __author__ = "mfreer,ohenry"
-__date__ = "$Date:: 2016-01-04 09:39#$"
-__version__ = "$Revision:: 152       $"
+__date__ = "2016-01-04 09:39"
+__version__ = "152"
 __all__ = ['InterpolationLinearOld']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class InterpolationLinearOld(egads_core.EgadsAlgorithm):
     """
     FILE        interpolation_linear_old.py
 
-    VERSION     $Revision: 152 $
+    VERSION     152
 
     CATEGORY    Transforms
 

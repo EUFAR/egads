@@ -2,8 +2,8 @@
 Utility to convert time format into format recognized by dateutil.
 """
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-07-06 17:42#$"
-__version__ = "$Revision:: 146       $"
+__date__ = "2012-07-06 17:42"
+__version__ = "146"
 
 def convert_time_format(fmt):
     FMT_DICT = {'yyyy':'%Y',

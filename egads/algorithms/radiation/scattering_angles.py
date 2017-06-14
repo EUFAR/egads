@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-08-24 08:41#$"
-__version__ = "$Revision:: 153       $"
+__date__ = "2012-08-24 08:41"
+__version__ = "153"
 __all__ = ['ScatteringAngles']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
     """
     FILE        scattering_angles.py
 
-    VERSION     $Revision: 153 $
+    VERSION     153
 
     CATEGORY    Radiation
 

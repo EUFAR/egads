@@ -6,10 +6,11 @@ run_tests.py
 setup.cfg
 setup.py
 Documentation/EGADS Algorithm Handbook - LATEX
-Documentation/EGADS Algorithm Handbook - v0.8.0.pdf
-Documentation/EGADS Documentation - v0.8.0.pdf
+Documentation/EGADS Algorithm Handbook - v0.8.1.pdf
+Documentation/EGADS Documentation - v0.8.1.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
+Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.toc
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
 Documentation/EGADS Algorithm Handbook - LATEX/fancyvrb.cfg
 Documentation/EGADS Algorithm Handbook - LATEX/pagesetup.cfg
@@ -164,6 +165,16 @@ egads/algorithms/transforms/interpolation_linear_old.py
 egads/algorithms/transforms/isotime_to_elements.py
 egads/algorithms/transforms/isotime_to_seconds.py
 egads/algorithms/transforms/seconds_to_isotime.py
+egads/algorithms/user/__init__.py
+egads/algorithms/user/comparisons/__init__.py
+egads/algorithms/user/corrections/__init__.py
+egads/algorithms/user/mathematics/__init__.py
+egads/algorithms/user/microphysics/__init__.py
+egads/algorithms/user/radiation/__init__.py
+egads/algorithms/user/test/__init__.py
+egads/algorithms/user/test/a_simple_computation.py
+egads/algorithms/user/thermodynamics/__init__.py
+egads/algorithms/user/transforms/__init__.py
 egads/core/__init__.py
 egads/core/egads_core.py
 egads/core/metadata.py

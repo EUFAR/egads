@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-11 11:12#$"
-__version__ = "$Revision:: 164       $"
+__date__ = "2017-01-11 11:12"
+__version__ = "164"
 __all__ = ['SolarVectorBlanco']
 
 import numpy
@@ -14,7 +14,7 @@ class SolarVectorBlanco(egads_core.EgadsAlgorithm):
     """
     FILE        solar_vector_blanco.py
 
-    VERSION     $Revision: 164 $
+    VERSION     164
 
     CATEGORY    Radiation
 

@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-01-12 13:15#$"
-__version__ = "$Revision:: 164       $"
+__date__ = "2016-01-12 13:15"
+__version__ = "164"
 __all__ = ["PressureAngleIncidenceCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -48,24 +48,24 @@ class PressureAngleIncidenceCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'hPa',
                                                                'long_name':'static pressure',
                                                                'standard_name':'air_pressure',
-                                                               'Category':['Thermodynamic', 'Atmos State']}))
+                                                               'Category':['Thermodynamics', 'Atmos State']}))
 
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'hPa',
                                                                'long_name':'dynamic pressure',
                                                                'standard_name':'',
-                                                               'Category':['Thermodynamic', 'Atmos State']}))
+                                                               'Category':['Thermodynamics', 'Atmos State']}))
 
 
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'rad',
                                                                'long_name':'angle of attack',
                                                                'standard_name':'',
-                                                               'Category':['Thermodynamic', 'Aircraft State']}))
+                                                               'Category':['Thermodynamics', 'Aircraft State']}))
 
 
         self.output_metadata.append(egads_metadata.VariableMetadata({'units':'rad',
                                                                'long_name':'sideslip angle',
                                                                'standard_name':'',
-                                                               'Category':['Thermodynamic', 'Aircraft State']}))
+                                                               'Category':['Thermodynamics', 'Aircraft State']}))
 
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['P_sr', 'deltaP_r', 'deltaP_h', 'deltaP_v', 'C_alpha', 'C_beta', 'C_errstat'],

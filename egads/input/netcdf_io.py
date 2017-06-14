@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-6 15:47#$"
-__version__ = "$Revision:: 133       $"
+__date__ = "2016-12-6 15:47"
+__version__ = "1.9"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -74,9 +74,10 @@ class NetCdf(FileCore):
         """
         
         logging.debug('egads.input.get_attribute_value invocked: attrname ' + str(attrname) + ', varname ' + str(varname))
+        
         attrs = self._get_attribute_list(varname)
         logging.debug('................................................attrs[attrname] ' + 
-                          str(attrs[attrname]))
+                              str(attrs[attrname]))
         return attrs[attrname]
 
     def get_dimension_list(self, varname=None):
@@ -235,7 +236,30 @@ class NetCdf(FileCore):
         else:
             logging.error('egads.input.change_variable_name invocked: AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads.input.NetCdf.add_attribute invoked: attrname ' + str(attrname) + ' -> dim add OK')
+        logging.debug('egads.input.NetCdf.add_attribute invoked: attrname ' + str(attrname) + ' -> attribute add OK')
+        
+    def delete_attribute(self, attrname, varname=None):
+        """
+        Deletes attribute to currently open file. If varname is included, attribute
+        is removed from specified variable, otherwise it is removed from global file
+        attributes.
+
+        :param string attrname:
+            Attribute name.
+        :param string varname:
+            Optional - If varname is provided, attribute removed from specified
+            variable in the NetCDF file.
+        """
+        
+        if self.f is not None:
+            if varname is not None:
+                delattr(self.f.variables[varname], attrname)
+            else:
+                delattr(self.f, attrname)
+        else:
+            logging.error('egads.input.delete_attribute invocked: AttributeError, no file open')
+            raise AttributeError('No file open')
+    
 
     def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', 
                              delimiter=None, annotation=False, no_header=False):
@@ -303,7 +327,7 @@ class NetCdf(FileCore):
         variables = []
         for var in var_list:
             if var not in var_dims.keys():
-                dims = self.get_dimension_list(var)
+                dims = self.get_dimension_list(vars)
                 if len(dims) > 1:
                     raise Exception('the actual convert_to_nasa_ames cant process data of multiple '
                                 + 'dimensions, FFI is set to 1001')
@@ -531,16 +555,14 @@ class NetCdf(FileCore):
         logging.debug('egads.input.NetCdf._get_attribute_list invoked: var ' + str(var))
         if self.f is not None:
             if var is not None:
-                varin = self.f.variables[var]
-                logging.debug('................................................attr_list ' + str(varin.__dict__))
                 attr_dict = {}
+                varin = self.f.variables[var]
                 for key, value in varin.__dict__.iteritems():
                     if isinstance(value, basestring):
                         value = " ".join(value.split())
                     attr_dict[key] = value
                 return attr_dict
             else:
-                logging.debug('................................................attr_list ' + str(self.f.__dict__))
                 attr_dict = {}
                 for key, value in self.f.__dict__.iteritems():
                     if isinstance(value, basestring):
@@ -562,7 +584,6 @@ class NetCdf(FileCore):
         dimdict = {}
         if self.f is not None:
             file_dims = self.f.dimensions
-            
             if var:
                 varin = self.f.variables[var]
                 dims = varin.dimensions
@@ -627,7 +648,7 @@ class EgadsNetCdf(NetCdf):
             Name of NetCDF variable to read in.
 
         :param vector input_range:
-            Optional - Range of values in each dimension to input. :TODO: add example
+            Optional - Range of values in each dimension to input.
         """
         
         logging.debug('egads.input.EgadsNetCdf.read_variable invoked: varname ' + str(varname) + 
@@ -683,13 +704,19 @@ class EgadsNetCdf(NetCdf):
                 try:
                     fillvalue = data.metadata['_FillValue']
                 except KeyError:
-                    fillvalue = None
+                    try:
+                        fillvalue = data.metadata['missing_value']
+                    except KeyError:
+                        fillvalue = None
                 varout = self.f.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
             varout[:] = data.value
             for key, val in data.metadata.iteritems():
-                if key is not '_FillValue':
+                if key != '_FillValue':
                     if val:
-                        setattr(varout, key, val)
+                        try:
+                            setattr(varout, str(key), str(val))
+                        except ValueError:
+                            setattr(varout, str(key), float(val))
         logging.debug('egads.input.EgadsNetCdf.write_variable invoked: varname ' + str(varname) + ' -> data write OK')
         
     def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', 

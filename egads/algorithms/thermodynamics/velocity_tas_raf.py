@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-02-07 17:23#$"
-__version__ = "$Revision:: 125       $"
+__date__ = "2012-02-07 17:23"
+__version__ = "125"
 __all__ = ['VelocityTasRaf']
 
 from numpy import sqrt
@@ -12,7 +12,7 @@ class VelocityTasRaf(egads_core.EgadsAlgorithm):
     """
     FILE        velocity_tas_raf.py
 
-    VERSION     $Revision: 125 $
+    VERSION     125
 
     CATEGORY    Thermodynamics
 
@@ -41,7 +41,7 @@ class VelocityTasRaf(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'true air speed',
                                                                'standard_name':'platform_speed_wrt_air',
-                                                               'Category':['Aircraft State']})
+                                                               'Category':['Thermodynamics', 'Aircraft State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_r', 'M', 'e'],
                                                           'InputUnits':['K', None, None],

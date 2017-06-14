@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-06-22 17:19#$"
-__version__ = "$Revision:: 140       $"
+__date__ = "2012-06-22 17:19"
+__version__ = "140"
 __all__ = ['CorrectionSpikeSimpleCnrm']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        correction_spike_simple_cnrm.py
 
-    VERSION     $Revision: 140 $
+    VERSION     140
 
     CATEGORY    Corrections
 

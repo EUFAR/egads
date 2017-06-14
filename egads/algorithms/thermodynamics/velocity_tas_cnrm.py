@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-17 13:29#$"
-__version__ = "$Revision:: 101       $"
+__date__ = "2017-01-17 13:29"
+__version__ = "101"
 __all__ = ["VelocityTasCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        velocity_tas_cnrm.py
 
-    VERSION     $Revision: 101 $
+    VERSION     101
 
     CATEGORY    Thermodynamics
 
@@ -42,7 +42,7 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'m/s',
                                                                'long_name':'True Air Speed',
                                                                'standard_name':'platform_speed_wrt_air',
-                                                               'Category':['Thermodynamic', 'Aircraft State']})
+                                                               'Category':['Thermodynamics', 'Aircraft State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['T_s', 'P_s', 'dP', 'cpa', 'Racpa'],
                                                           'InputUnits':['K', 'hPa', 'hPa', 'J/K/kg', ''],

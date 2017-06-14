@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-26 13:07#$"
-__version__ = "$Revision:: 164       $"
+__date__ = "2017-01-26 13:07"
+__version__ = "164"
 __all__ = ['MassConcDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class MassConcDmt(egads_core.EgadsAlgorithm):
     """
     FILE        mass_conc_dmt.py
 
-    VERSION     $Revision: 164 $
+    VERSION     164
 
     CATEGORY    Microphysics
 

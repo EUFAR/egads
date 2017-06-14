@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-01-27 16:41#$"
-__version__ = "$Revision:: 100       $"
+__date__ = "2012-01-27 16:41"
+__version__ = "100"
 __all__ = ["DensityDryAirCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        density_dry_air_cnrm.py
 
-    VERSION     $Revision: 100 $
+    VERSION     100
 
     CATEGORY    Thermodynamics
 
@@ -37,7 +37,7 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
         self.output_metadata = egads_metadata.VariableMetadata({'units':'kg/m^3',
                                                                'long_name':'density',
                                                                'standard_name':'air_density',
-                                                               'Category':['Thermodynamic', 'Atmos State']})
+                                                               'Category':['Thermodynamics', 'Atmos State']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['P_s', 'T_s'],
                                                           'InputUnits':['hPa', 'K'],

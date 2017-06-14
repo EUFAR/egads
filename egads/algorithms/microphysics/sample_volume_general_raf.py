@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2013-02-17 18:01#$"
-__version__ = "$Revision:: 163       $"
+__date__ = "2013-02-17 18:01"
+__version__ = "163"
 __all__ = ['SampleVolumeGeneralRaf']
 
 import numpy
@@ -12,7 +12,7 @@ class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
     """
     FILE        sample_volume_general_raf.py
 
-    VERSION     $Revision: 163 $
+    VERSION     163
 
     CATEGORY    Microphysics
 
