@@ -1,6 +1,6 @@
 Version:
 
-EGADS 0.8.1
+EGADS 0.8.2
 
 Project Overview:
 

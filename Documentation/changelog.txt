@@ -2,8 +2,20 @@
 CHANGELOG
 =========
 
+
+June 15 2017, Release version 0.8.2
+===================================
+  FIXED:
+    - fixed an issue related to attributes in the netcdf i/o function when writing a variable.
+    - a build in function was injected in a function of the netcdf i/o routine. It has been fixed.
+    
+  ADDED:
+    - the platforms have been added in the setu.py
+
+
+
 June 14 2017, Release version 0.8.1
-====================================
+===================================
   To allow the creation of new algorithms from the EGADS GUI, new folders have been introduced and pre-loaded.
   
   FIXED:

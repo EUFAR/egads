@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.8.1',
+      version='0.8.2',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',
@@ -42,6 +42,7 @@ setup(name='egads',
       license='New BSD License',
       keywords=['airbornescience', 'netcdf', 'nasa-ames', 'eufar', 'science',
                   'microphysics', 'thermodynamics'],
+      platforms=['Windows', 'Linux', 'MacOS'],
       packages=['egads',
           'egads.core',
           'egads.algorithms',

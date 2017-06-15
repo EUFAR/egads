@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: egads
-Version: 0.8.1
+Version: 0.8.2
 Summary: EGADS: EUFAR General Airborne Data-processing Software
 Home-page: http://www.eufar.net
 Author: Olivier Henry
@@ -15,7 +15,9 @@ Description: EGADS (EUFAR General Airborne Data-processing Software) is a Python
         well-established in the scientific community.
         
 Keywords: airbornescience,netcdf,nasa-ames,eufar,science,microphysics,thermodynamics
-Platform: UNKNOWN
+Platform: Windows
+Platform: Linux
+Platform: MacOS
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
