@@ -9,6 +9,7 @@ June 14 2017, Release version 0.8.1
   FIXED:
     - an issue with a folder has been fixed in the setup.py.
     - fixed an issue in the netcdf i/o function when setting an attribute.
+    - fixed an issue related to attributes in the netdf i/o function when writing a variable.
     
   ADDED:
     - in the netcdf i/o function, the 'missing_value' attribute has been added if the '_FillValue' attribute is missing.

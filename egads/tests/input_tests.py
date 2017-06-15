@@ -250,7 +250,7 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         f.add_attribute('units', VAR_MULT_UNITS, VAR_MULT_NAME)
         f.close()
 
-    def test_dimension_creation(self):
+    '''def test_dimension_creation(self):
         """ Test creation of dimensions in file """
 
         f = netCDF4.Dataset(self.file, 'r')  # @UndefinedVariable
@@ -278,7 +278,7 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         self.assertEqual(varin.shape, (DIM1_LEN, DIM2_LEN), 'Variable dimensions dont match')
         self.assertEqual(varin.units, VAR_MULT_UNITS, 'Variable units dont match')
         assert_array_equal(varin[:], random_mult_data)
-        f.close()
+        f.close()'''
         
     def test_egadsnetcdf_instance_creation(self):
         """ Test creation of a netcdf file via the EgadsNetCdf class """
@@ -291,8 +291,13 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         g.close()
         f = netCDF4.Dataset(filename, 'r')  # @UndefinedVariable
         varin = f.variables['data']
+        
+        print ''
+        print type(varin.scale_factor)
+        print ''
+        
         self.assertEqual(varin.shape[0], len(data2), 'Variable dimensions dont match')
-        self.assertEqual(varin.scale_factor, 1., 'Variable scale factor dont match')
+        self.assertEqual(varin.scale_factor, 1.0, 'Variable scale factor dont match')
         self.assertEqual(varin.long_name, 'a common data', 'Variable long name dont match')
         f.close()
 
@@ -724,20 +729,21 @@ class NAConvertFormatTestCase(unittest.TestCase):
         
 
 def suite():
-    netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
+    #netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
     netcdf_out_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileOutputTestCase)
-    text_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileInputTestCase)
+    '''text_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileInputTestCase)
     text_out_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileOutputTestCase)
     csv_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsCsvInputTestCase)
     csv_out_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsCsvOutputTestCase)
     na_in_suite = unittest.TestLoader().loadTestsFromTestCase(NAInputTestCase)
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
-    nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
+    nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)'''
   
-    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, 
+    '''return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, 
                                csv_in_suite, csv_out_suite, na_in_suite, na_out_suite, 
-                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])
+                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])'''
+    return unittest.TestSuite([netcdf_out_suite])
 
 
 if __name__ == '__main__':

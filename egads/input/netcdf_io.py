@@ -713,10 +713,7 @@ class EgadsNetCdf(NetCdf):
             for key, val in data.metadata.iteritems():
                 if key != '_FillValue':
                     if val:
-                        try:
-                            setattr(varout, str(key), str(val))
-                        except ValueError:
-                            setattr(varout, str(key), float(val))
+                        setattr(varout, str(key), val)
         logging.debug('egads.input.EgadsNetCdf.write_variable invoked: varname ' + str(varname) + ' -> data write OK')
         
     def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', 

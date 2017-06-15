@@ -1,0 +1,37 @@
+2017-06-15 10:36:15,188 : INFO : *****************************************
+2017-06-15 10:36:15,188 : INFO : EGADS 0.8.1 is starting ...
+2017-06-15 10:36:15,188 : INFO : *****************************************
+2017-06-15 10:36:15,335 : INFO : egads.Metadata has been loaded
+2017-06-15 10:36:15,335 : INFO : egads.FileMetadata has been loaded
+2017-06-15 10:36:15,335 : INFO : egads.VariableMetadata has been loaded
+2017-06-15 10:36:15,335 : INFO : egads.AlgorithmMetadata has been loaded
+2017-06-15 10:36:15,336 : INFO : egads.EgadsData has been loaded
+2017-06-15 10:36:15,336 : INFO : egads.EgadsAlgorithm has been loaded
+2017-06-15 10:36:15,336 : INFO : quantities has been imported
+2017-06-15 10:36:15,336 : WARNING : EGADS has imported an already installed version of Quantities. If issues occure, please check the version number of Quantities.
+2017-06-15 10:36:15,336 : INFO : egads [comparisons] algorithms have been loaded
+2017-06-15 10:36:15,336 : INFO : egads [corrections] algorithms have been loaded
+2017-06-15 10:36:15,336 : INFO : egads [mathematics] algorithms have been loaded
+2017-06-15 10:36:15,338 : INFO : egads [microphysics] algorithms have been loaded
+2017-06-15 10:36:15,338 : INFO : egads [thermodynamics] algorithms have been loaded
+2017-06-15 10:36:15,343 : INFO : egads [transforms] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [radiation] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [user/comparisons] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [user/corrections] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [user/mathematics] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [user/microphysics] algorithms have been loaded
+2017-06-15 10:36:15,344 : INFO : egads [user/thermodynamics] algorithms have been loaded
+2017-06-15 10:36:15,345 : INFO : egads [user/transforms] algorithms have been loaded
+2017-06-15 10:36:15,345 : INFO : egads [user/radiation] algorithms have been loaded
+2017-06-15 10:36:15,345 : INFO : egads [user/comparisons] algorithms have been loaded
+2017-06-15 10:36:15,345 : INFO : egads.input.FileCore has been loaded
+2017-06-15 10:36:15,349 : INFO : egads.input.NasaAmes has been loaded
+2017-06-15 10:36:15,354 : INFO : egads.input.NetCdf has been loaded
+2017-06-15 10:36:15,354 : INFO : egads.input.EgadsNetCdf has been loaded
+2017-06-15 10:36:15,355 : INFO : egads.input.EgadsFile has been loaded
+2017-06-15 10:36:15,355 : INFO : egads.input.EgadsCsv has been loaded
+2017-06-15 10:36:15,358 : INFO : quantities has been imported
+2017-06-15 10:36:15,358 : WARNING : EGADS has imported an already installed version of Quantities. If issues occure, please check the version number of Quantities.
+2017-06-15 10:36:15,359 : INFO : EGADS 0.8.1 is ready ...
+2017-06-15 10:36:15,359 : INFO : egads tests are starting ...
+2017-06-15 10:36:15,364 : INFO : egads tests are finished.
