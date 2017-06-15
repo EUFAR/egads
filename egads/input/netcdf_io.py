@@ -327,7 +327,7 @@ class NetCdf(FileCore):
         variables = []
         for var in var_list:
             if var not in var_dims.keys():
-                dims = self.get_dimension_list(vars)
+                dims = self.get_dimension_list(var)
                 if len(dims) > 1:
                     raise Exception('the actual convert_to_nasa_ames cant process data of multiple '
                                 + 'dimensions, FFI is set to 1001')

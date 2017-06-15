@@ -113,7 +113,7 @@ class NetCdfFileInputTestCase(unittest.TestCase):
     
     def setUp(self):
         self.file = FILE_NAME
-        f = netCDF4.Dataset(self.file, 'w')  # @UndefinedVariable
+        f = netCDF4.Dataset(self.file, 'w')
         f.attribute = GLOBAL_ATTRIBUTE
         f.Conventions = CONVENTIONS
         f.title = TITLE
@@ -289,13 +289,8 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         g.write_variable(data2, 'time', ('time',), 'double')
         g.write_variable(data1, 'data', ('time',), 'double')
         g.close()
-        f = netCDF4.Dataset(filename, 'r')  # @UndefinedVariable
+        f = netCDF4.Dataset(filename, 'r')
         varin = f.variables['data']
-        
-        print ''
-        print type(varin.scale_factor)
-        print ''
-        
         self.assertEqual(varin.shape[0], len(data2), 'Variable dimensions dont match')
         self.assertEqual(varin.scale_factor, 1.0, 'Variable scale factor dont match')
         self.assertEqual(varin.long_name, 'a common data', 'Variable long name dont match')
@@ -729,21 +724,20 @@ class NAConvertFormatTestCase(unittest.TestCase):
         
 
 def suite():
-    #netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
+    netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
     netcdf_out_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileOutputTestCase)
-    '''text_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileInputTestCase)
+    text_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileInputTestCase)
     text_out_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileOutputTestCase)
     csv_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsCsvInputTestCase)
     csv_out_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsCsvOutputTestCase)
     na_in_suite = unittest.TestLoader().loadTestsFromTestCase(NAInputTestCase)
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
-    nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)'''
+    nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
   
-    '''return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, 
+    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, 
                                csv_in_suite, csv_out_suite, na_in_suite, na_out_suite, 
-                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])'''
-    return unittest.TestSuite([netcdf_out_suite])
+                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])
 
 
 if __name__ == '__main__':
