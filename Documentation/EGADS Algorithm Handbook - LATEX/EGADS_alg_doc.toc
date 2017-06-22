@@ -1,0 +1,53 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {part}{I\hspace {1em}General Algorithms}{2}{part.1}
+\contentsline {chapter}{\numberline {2}Mathematics}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Time Derivative}{4}{section.2.1}
+\contentsline {chapter}{\numberline {3}Corrections}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}Simple correction of spikes}{6}{section.3.1}
+\contentsline {chapter}{\numberline {4}Transforms}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}Linear Interpolation}{8}{section.4.1}
+\contentsline {section}{\numberline {4.2}Linear Interpolation (old)}{9}{section.4.2}
+\contentsline {section}{\numberline {4.3}Convert ISO 8601 time to date/time elements}{10}{section.4.3}
+\contentsline {section}{\numberline {4.4}Convert ISO 8601 time string to seconds}{11}{section.4.4}
+\contentsline {section}{\numberline {4.5}Convert elapsed seconds to ISO 8601 time string}{12}{section.4.5}
+\contentsline {part}{II\hspace {1em}Atmospheric Algorithms}{13}{part.2}
+\contentsline {chapter}{\numberline {5}Thermodynamics}{14}{chapter.5}
+\contentsline {section}{\numberline {5.1}Pressure altitude }{15}{section.5.1}
+\contentsline {section}{\numberline {5.2}Density of dry air}{16}{section.5.2}
+\contentsline {section}{\numberline {5.3}Relative humidity from capacitive probe }{17}{section.5.3}
+\contentsline {section}{\numberline {5.4}Pressure and angle of incidence (CNRM)}{18}{section.5.4}
+\contentsline {section}{\numberline {5.5}Dynamic pressure and angle of incidence}{19}{section.5.5}
+\contentsline {section}{\numberline {5.6}Potential Temperature}{21}{section.5.6}
+\contentsline {section}{\numberline {5.7}Static Temperature}{22}{section.5.7}
+\contentsline {section}{\numberline {5.8}Virtual Temperature}{23}{section.5.8}
+\contentsline {section}{\numberline {5.9}Mach number}{24}{section.5.9}
+\contentsline {section}{\numberline {5.10}True air speed (CNRM)}{25}{section.5.10}
+\contentsline {section}{\numberline {5.11}True air speed (RAF)}{26}{section.5.11}
+\contentsline {section}{\numberline {5.12}Longitudinal true airspeed}{27}{section.5.12}
+\contentsline {section}{\numberline {5.13}3D Wind Vectors}{28}{section.5.13}
+\contentsline {chapter}{\numberline {6}Microphysics}{29}{chapter.6}
+\contentsline {section}{\numberline {6.1}Effective diameter}{30}{section.6.1}
+\contentsline {section}{\numberline {6.2}Mean diameter}{31}{section.6.2}
+\contentsline {section}{\numberline {6.3}Median Volume Diameter}{32}{section.6.3}
+\contentsline {section}{\numberline {6.4}Extinction Coefficient}{33}{section.6.4}
+\contentsline {section}{\numberline {6.5}Mass Concentration}{34}{section.6.5}
+\contentsline {section}{\numberline {6.6}Total Number Concentration (DMT)}{35}{section.6.6}
+\contentsline {section}{\numberline {6.7}Total Number Concentration}{36}{section.6.7}
+\contentsline {section}{\numberline {6.8}Sample area for imaging probes (All in)}{37}{section.6.8}
+\contentsline {section}{\numberline {6.9}Sample area for imaging probes (Center In)}{38}{section.6.9}
+\contentsline {section}{\numberline {6.10}Sample area for scattering probes}{39}{section.6.10}
+\contentsline {section}{\numberline {6.11}Sample Volume}{40}{section.6.11}
+\contentsline {section}{\numberline {6.12}Surface Area Concentration}{41}{section.6.12}
+\contentsline {chapter}{\numberline {7}Radiation}{42}{chapter.7}
+\contentsline {section}{\numberline {7.1}Camera Viewing Angles}{43}{section.7.1}
+\contentsline {section}{\numberline {7.2}Planck Emission}{44}{section.7.2}
+\contentsline {section}{\numberline {7.3}Rotate solar vector to aircraft frame}{45}{section.7.3}
+\contentsline {section}{\numberline {7.4}Scattering Angles}{47}{section.7.4}
+\contentsline {section}{\numberline {7.5}Solar Vector Calculation (Blanco)}{48}{section.7.5}
+\contentsline {section}{\numberline {7.6}Solar Vector Calculation (Reda-Andreas)}{50}{section.7.6}
+\contentsline {section}{\numberline {7.7}Blackbody Temperature}{56}{section.7.7}
+\contentsline {chapter}{\numberline {8}Quality Control}{57}{chapter.8}
+\contentsline {section}{\numberline {8.1}Check navigation data for inconsistencies}{58}{section.8.1}
+\contentsline {section}{\numberline {8.2}Additional consistency check \& QA for navigation data (no correction!)}{60}{section.8.2}
+\contentsline {chapter}{Index}{62}{section.8.2}
+\contentsline {chapter}{Bibliography and references}{62}{section.8.2}

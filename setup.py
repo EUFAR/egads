@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.8.2',
+      version='0.8.3',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',
@@ -60,7 +60,6 @@ setup(name='egads',
           'egads.algorithms.user.microphysics',
           'egads.algorithms.user.radiation',
           'egads.algorithms.user.thermodynamics',
-          'egads.algorithms.user.test',
           'egads.algorithms.user.transforms',
           'egads.input',
           'egads.tests',

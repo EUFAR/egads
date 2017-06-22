@@ -3,6 +3,14 @@ CHANGELOG
 =========
 
 
+
+June 22 2017, Release version 0.8.3
+===================================
+  FIXED:
+    - the test directory added by the developer was still in egads with few test algorithms. They have been removed.
+    - the function to list all algorithms in egads directory was showing an issue: all folders were added twice.
+
+
 June 15 2017, Release version 0.8.2
 ===================================
   FIXED:
@@ -10,8 +18,7 @@ June 15 2017, Release version 0.8.2
     - a build in function was injected in a function of the netcdf i/o routine. It has been fixed.
     
   ADDED:
-    - the platforms have been added in the setu.py
-
+    - the platforms have been added in the setup.py
 
 
 June 14 2017, Release version 0.8.1

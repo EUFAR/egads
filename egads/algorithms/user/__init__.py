@@ -13,4 +13,3 @@ import egads.algorithms.user.microphysics
 import egads.algorithms.user.thermodynamics
 import egads.algorithms.user.transforms
 import egads.algorithms.user.radiation
-import egads.algorithms.user.test

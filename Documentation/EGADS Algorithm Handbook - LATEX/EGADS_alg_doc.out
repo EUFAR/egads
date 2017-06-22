@@ -1,0 +1,53 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [-1][-]{part.1}{I General Algorithms}{}% 2
+\BOOKMARK [0][-]{chapter.2}{Mathematics}{part.1}% 3
+\BOOKMARK [1][-]{section.2.1}{Time Derivative}{chapter.2}% 4
+\BOOKMARK [0][-]{chapter.3}{Corrections}{part.1}% 5
+\BOOKMARK [1][-]{section.3.1}{Simple correction of spikes}{chapter.3}% 6
+\BOOKMARK [0][-]{chapter.4}{Transforms}{part.1}% 7
+\BOOKMARK [1][-]{section.4.1}{Linear Interpolation}{chapter.4}% 8
+\BOOKMARK [1][-]{section.4.2}{Linear Interpolation \(old\)}{chapter.4}% 9
+\BOOKMARK [1][-]{section.4.3}{Convert ISO 8601 time to date/time elements}{chapter.4}% 10
+\BOOKMARK [1][-]{section.4.4}{Convert ISO 8601 time string to seconds}{chapter.4}% 11
+\BOOKMARK [1][-]{section.4.5}{Convert elapsed seconds to ISO 8601 time string}{chapter.4}% 12
+\BOOKMARK [-1][-]{part.2}{II Atmospheric Algorithms}{}% 13
+\BOOKMARK [0][-]{chapter.5}{Thermodynamics}{part.2}% 14
+\BOOKMARK [1][-]{section.5.1}{Pressure altitude }{chapter.5}% 15
+\BOOKMARK [1][-]{section.5.2}{Density of dry air}{chapter.5}% 16
+\BOOKMARK [1][-]{section.5.3}{Relative humidity from capacitive probe }{chapter.5}% 17
+\BOOKMARK [1][-]{section.5.4}{Pressure and angle of incidence \(CNRM\)}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.5}{Dynamic pressure and angle of incidence}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.6}{Potential Temperature}{chapter.5}% 20
+\BOOKMARK [1][-]{section.5.7}{Static Temperature}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.8}{Virtual Temperature}{chapter.5}% 22
+\BOOKMARK [1][-]{section.5.9}{Mach number}{chapter.5}% 23
+\BOOKMARK [1][-]{section.5.10}{True air speed \(CNRM\)}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.11}{True air speed \(RAF\)}{chapter.5}% 25
+\BOOKMARK [1][-]{section.5.12}{Longitudinal true airspeed}{chapter.5}% 26
+\BOOKMARK [1][-]{section.5.13}{3D Wind Vectors}{chapter.5}% 27
+\BOOKMARK [0][-]{chapter.6}{Microphysics}{part.2}% 28
+\BOOKMARK [1][-]{section.6.1}{Effective diameter}{chapter.6}% 29
+\BOOKMARK [1][-]{section.6.2}{Mean diameter}{chapter.6}% 30
+\BOOKMARK [1][-]{section.6.3}{Median Volume Diameter}{chapter.6}% 31
+\BOOKMARK [1][-]{section.6.4}{Extinction Coefficient}{chapter.6}% 32
+\BOOKMARK [1][-]{section.6.5}{Mass Concentration}{chapter.6}% 33
+\BOOKMARK [1][-]{section.6.6}{Total Number Concentration \(DMT\)}{chapter.6}% 34
+\BOOKMARK [1][-]{section.6.7}{Total Number Concentration}{chapter.6}% 35
+\BOOKMARK [1][-]{section.6.8}{Sample area for imaging probes \(All in\)}{chapter.6}% 36
+\BOOKMARK [1][-]{section.6.9}{Sample area for imaging probes \(Center In\)}{chapter.6}% 37
+\BOOKMARK [1][-]{section.6.10}{Sample area for scattering probes}{chapter.6}% 38
+\BOOKMARK [1][-]{section.6.11}{Sample Volume}{chapter.6}% 39
+\BOOKMARK [1][-]{section.6.12}{Surface Area Concentration}{chapter.6}% 40
+\BOOKMARK [0][-]{chapter.7}{Radiation}{part.2}% 41
+\BOOKMARK [1][-]{section.7.1}{Camera Viewing Angles}{chapter.7}% 42
+\BOOKMARK [1][-]{section.7.2}{Planck Emission}{chapter.7}% 43
+\BOOKMARK [1][-]{section.7.3}{Rotate solar vector to aircraft frame}{chapter.7}% 44
+\BOOKMARK [1][-]{section.7.4}{Scattering Angles}{chapter.7}% 45
+\BOOKMARK [1][-]{section.7.5}{Solar Vector Calculation \(Blanco\)}{chapter.7}% 46
+\BOOKMARK [1][-]{section.7.6}{Solar Vector Calculation \(Reda-Andreas\)}{chapter.7}% 47
+\BOOKMARK [1][-]{section.7.7}{Blackbody Temperature}{chapter.7}% 48
+\BOOKMARK [0][-]{chapter.8}{Quality Control}{part.2}% 49
+\BOOKMARK [1][-]{section.8.1}{Check navigation data for inconsistencies}{chapter.8}% 50
+\BOOKMARK [1][-]{section.8.2}{Additional consistency check \046 QA for navigation data \(no correction!\)}{chapter.8}% 51
+\BOOKMARK [0][-]{section.8.2}{Index}{part.2}% 52
+\BOOKMARK [0][-]{section.8.2}{Bibliography and references}{part.2}% 53
