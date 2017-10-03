@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-11 11:12"
-__version__ = "164"
+__version__ = "1.4"
 __all__ = ['SolarVectorBlanco']
 
 import numpy
@@ -14,7 +14,7 @@ class SolarVectorBlanco(egads_core.EgadsAlgorithm):
     """
     FILE        solar_vector_blanco.py
 
-    VERSION     164
+    VERSION     1.4
 
     CATEGORY    Radiation
 
@@ -74,6 +74,9 @@ class SolarVectorBlanco(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Right ascension','Declination','Solar zenith','Solar azimuth'],
                                                           'Purpose':'Calculation of solar vector based on current time, latitude and longitude',
                                                           'Description':'Calculation of solar vector using the Blanco-Muriel et al. algorithm. This algorithm is optimized for the period between 1999 and 2005, however it has been shown to compute the solar vector with an error of less than 0.5 minutes of arc out to 2015',
+                                                          'Category':'Radiation',
+                                                          'Source':'',
+                                                          'References':'Manuel Blanco-Muriel, et al., "Computing the Solar Vector," Solar Energy, 70 (2001): 436-38.',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

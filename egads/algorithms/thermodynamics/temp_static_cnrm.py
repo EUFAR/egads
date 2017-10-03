@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-17 11:44"
-__version__ = "61"
+__version__ = "1.0"
 __all__ = ["TempStaticCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class TempStaticCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        temp_static_cnrm.py
 
-    VERSION     61
+    VERSION     1.0
 
     CATEGORY    Thermodynamic
 
@@ -49,6 +49,9 @@ class TempStaticCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Static temperature'],
                                                           'Purpose':'Calculate static temperature',
                                                           'Description':'Calculates static temperature of the air based on total temperature and dynamic pressure',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

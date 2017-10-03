@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-01-10 10:01"
-__version__ = "128"
+__version__ = "1.2"
 __all__ = ['ExtinctionCoeffDmt']
 
 import numpy
@@ -12,7 +12,7 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
     """
     FILE        extinction_coeff_dmt.py
 
-    VERSION     128
+    VERSION     1.2
 
     CATEGORY    Microphysics
 
@@ -45,24 +45,31 @@ class ExtinctionCoeffDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 'Q_e'],
                                                           'InputUnits':['cm^-3', 'um', ''],
-                                                          'InputTypes':['array','vector','vector_optional'],
-                                                          'InputDescription':['Number concentration of hydrometeors in size category i','Average diameter of size category i','Extinction efficiency; default is 2'],
+                                                          'InputTypes':['array[time,bins]','vector[bins]','vector[bins]_optional'],
+                                                          'InputDescription':['Number concentration of hydrometeors in size category i',
+                                                                              'Average diameter of size category i',
+                                                                              'Extinction efficiency; default is 2'],
                                                           'Outputs':['B_e'],
+                                                          'OutputUnits':['km^-1'],
+                                                          'OutputTypes':['vector[time]'],
                                                           'OutputDescription':['Extinction coefficient'],
                                                           'Purpose':'Calculates extinction coefficient based on a particle size distribution',
-                                                          'Description':'No description',
+                                                          'Description':'Calculates extinction coefficient based on a particle size distribution',
+                                                          'Category':'Microphysics',
+                                                          'Source':'',
+                                                          'References':"Data Analysis User's Guide, Chapter 1, Section 1.3.2.2, Droplet Measurement Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/ManualsGuides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
     def run(self, n_i, d_i, Q_e=2):
         return egads_core.EgadsAlgorithm.run(self, n_i, d_i, Q_e)
 
-
     def _algorithm(self, n_i, d_i, Q_e):
-        B_e = numpy.pi / 4.0 * numpy.sum(Q_e * n_i * d_i ** 2, axis=1) # um^2/cm^3 @UndefinedVariable
-        B_e = B_e * 0.001 # 1/km
+        B_e = numpy.pi / 4.0 * numpy.sum(Q_e * n_i * d_i ** 2, axis=1)
+        B_e = B_e * 0.001
         return B_e
 

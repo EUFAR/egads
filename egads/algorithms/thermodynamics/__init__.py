@@ -3,11 +3,12 @@ EGADS thermodynamics algorithms. See EGADS Algorithm Documentation for more info
 """
 
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-19 11:13#$"
-__version__ = "$Revision:: 160       $"
+__date__ = "2017-01-19 11:13"
+__version__ = "1.2"
 
 import logging
 try:
+    from altitude_pressure_incremental_cnrm import *
     from altitude_pressure_raf import *
     from density_dry_air_cnrm import *
     from hum_rel_capacitive_cnrm import *

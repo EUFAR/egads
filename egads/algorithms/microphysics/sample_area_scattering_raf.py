@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-02-07 17:23"
-__version__ = "125"
+__version__ = "1.1"
 __all__ = ['SampleAreaScatteringRaf']
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class SampleAreaScatteringRaf(egads_core.EgadsAlgorithm):
     """
     FILE        sample_area_scattering_raf.py
 
-    VERSION     125
+    VERSION     1.1
 
     CATEGORY    Microphysics
 
@@ -48,6 +48,9 @@ class SampleAreaScatteringRaf(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Sample area'],
                                                           'Purpose':'Calculation of sampling area for scattering probes',
                                                           'Description':'Calculation of sampling area for scattering probes such as the FSSP, CAS, CIP, etc., given depth of field and beam diameter',
+                                                          'Category':'Microphysics',
+                                                          'Source':'NCAR-RAF',
+                                                          'References':'NCAR-RAF Bulletin No. 24',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

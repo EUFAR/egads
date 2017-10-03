@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2017-01-12 11:26"
-__version__ = "95"
+__version__ = "0.9"
 __all__ = ["PressureAngleIncidenceVdk"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
     """
     FILE        pressure_dynamic_angle_incidence_vdk.py
 
-    VERSION     95
+    VERSION     0.9
 
     CATEGORY    Thermodynamic
 
@@ -85,6 +85,9 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
                                                                         + ' coefficients which are obtained by a calibration procedure of the probe'
                                                                         + ' at predefined airflow angles. See van den Kroonenberg, 2008, for more '
                                                                         + ' details on the calibration procedure.',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'',
+                                                          'References':'A.C. van der Kroonenberg et al, "Measuring the wind vector using the autonomous mini aerial vehicle M^2AV", J. Atmos. Oceanic Technol., 25 (2008), pp. 1969-1982.',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

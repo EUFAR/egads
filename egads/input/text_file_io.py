@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-20 10:00#$"
-__version__ = "$Revision:: 153       $"
+__date__ = "2017-01-20 10:00"
+__version__ = "1.2"
 __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
@@ -87,7 +87,6 @@ class EgadsFile(FileCore):
         
         logging.debug('egads.input.EgadsFile.get_position invoked')
         self.pos = self.f.tell()
-        logging.debug('..........................................self.pos ' + str(self.pos))
         return self.pos
 
     def seek(self, location, from_where=None):
@@ -108,7 +107,6 @@ class EgadsFile(FileCore):
         from_val = from_switch.get(from_where, lambda: 0)()
         self.f.seek(location, from_val)
         self.pos = self.f.tell()
-        logging.debug('...................................................................self.pos ' + str(self.pos))
 
     def write(self, data):
         """
@@ -151,7 +149,8 @@ class EgadsFile(FileCore):
         """
         Reads single line of data from file.
         """
-
+        
+        logging.debug('egads.input.EgadsFile.read_line invoked')
         filedata = self.f.readline()
         self.pos = self.f.tell()
         return filedata
@@ -160,7 +159,8 @@ class EgadsFile(FileCore):
         """
         Returns to beginning of file
         """
-
+        
+        logging.debug('egads.input.EgadsFile.reset invoked')
         self.f.seek(0)
         self.pos = self.f.tell()
 

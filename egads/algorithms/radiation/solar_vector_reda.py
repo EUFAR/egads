@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-11 11:16"
-__version__ = "180"
+__version__ = "1.5"
 __all__ = ['SolarVectorReda']
 
 import numpy
@@ -16,7 +16,7 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
     """
     FILE        solar_vector_reda.py
 
-    VERSION     180
+    VERSION     1.5
 
     CATEGORY    Radiation
 
@@ -69,6 +69,9 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Solar zenith angle','Solar azimuth angle'],
                                                           'Purpose':'Calculates the solar vector based on current date/time, elevation, latitude and longitude',
                                                           'Description':'Calculates the solar vector based on current date/time, elevation, latitude and longitude. Takes additional optional arguments of pressure and temperature to correct for atmospheric refraction effects. The zenith and azimuth angle calculated by this algorithm have uncertainties equal to +/- 0.0003 degrees in the period from year -2000 to 6000',
+                                                          'Category':'Radiation',
+                                                          'Source':'',
+                                                          'References':'Reda and Andreas, "Solar Position Algorithm for Solar Radiation Applications," National Renewable Energy Laboratory, Revised 2008,accessed February 14, 2012, http://www.nrel.gov/docs/fy08osti/34302.pdf',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

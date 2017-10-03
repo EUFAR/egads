@@ -1,12 +1,13 @@
 __author__ = "mfreer"
 __date__ = "2012-07-06 17:42"
-__version__ = "146"
+__version__ = "1.3"
 __all__ = ['IsotimeToSeconds']
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 import dateutil.parser
 import datetime
+import numpy
 from convert_time_format import convert_time_format
 
 class IsotimeToSeconds(egads_core.EgadsAlgorithm):
@@ -14,7 +15,7 @@ class IsotimeToSeconds(egads_core.EgadsAlgorithm):
     """
     FILE        isotime_to_seconds.py
 
-    VERSION     146
+    VERSION     1.3
 
     CATEGORY    Transforms
 
@@ -56,6 +57,9 @@ class IsotimeToSeconds(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Seconds since reference'],
                                                           'Purpose':'Calculates seconds elapsed from a series of ISO 8601 date/time strings',
                                                           'Description':'Calculates seconds elapsed from a series of ISO 8601 date/time strings using the Python dateutil and datetime modules',
+                                                          'Category':'Transforms',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

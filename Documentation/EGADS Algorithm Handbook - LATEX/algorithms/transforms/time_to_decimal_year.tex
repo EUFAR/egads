@@ -1,0 +1,37 @@
+%% $Date: 2017-10-03 10:05#$
+%% $Revision: 100 $
+\index{time\_to\_decimal\_year}
+\algdesc{Converts a time or a time vector to decimal year.}
+{ %%%%%% Algorithm name %%%%%%
+time\_to\_decimal\_year
+}
+{ %%%%%% Algorithm summary %%%%%%
+Given a vector of time ($ms$/$s$/$mm$/$h$/$d$/$m$) and an optional reference year, this algorithm converts the data to a format in decimal year. Ex: 1995.0125
+}
+{ %%%%%% Category %%%%%%
+Transforms
+}
+{ %%%%%% Inputs %%%%%%
+$t$ & Vector & Time [s] \\
+$t_{ref}$ & String, optional & Time reference, default is 19500101T000000 \\
+}
+{ %%%%%% Outputs %%%%%%
+$t_{y}$ & Vector & Time in decimal year [year] \\
+}
+{ %%%%%% Formula %%%%%%
+The decimal year vector $t_y$ is generated from the inputs using the Python datetime module using these steps for each item in the $t$ vector:
+\begin{enumerate}
+ \item Regardless of the time format (second, minute, hour, day, month, ...), $t$ is converted to year automatically by the instance EgadsData.
+ \item The user time reference, $t_{ref}$, if provided by the user, is converted to seconds using the algorithm ISOtimeToSeconds, based on the reference 1950-01-01 at 00h00mm00s. $t_{ref}$ can be positive if the user time reference is after 1950-01-01, or negative if the user time reference is before 1950-01-01.
+ \item The time reference is then rescaled to year.
+ \item The final $t_y$ vector is computed by adding $t_{ref}$ + 1950 to $t$.
+\end{enumerate}
+
+}
+{ %%%%%% Author %%%%%%
+}
+{ %%%%%% References %%%%%% 
+
+}
+
+

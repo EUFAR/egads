@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-14 15:04#$"
-__version__ = "$Revision:: 101       $"
+__date__ = "2016-12-14 15:04"
+__version__ = "1.0"
 __all__ = ['']
 
 import egads.core.egads_core as egads_core
@@ -19,7 +19,7 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
     FILE        algorithm_template.py
 
-    VERSION     $Revision: 101 $
+    VERSION     1.0
 
     CATEGORY    None
 
@@ -33,7 +33,7 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
 
     SOURCE      sources
 
-    REFERENCES
+    REFERENCES  references
 
     """
 
@@ -69,6 +69,9 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
             'OutputDescription':['A description for an output'],
             'Purpose':'Template for EGADS algorithm files',
             'Description':'...',
+            'Category':'None',
+            'Source':'sources',
+            'Reference':'references',
             'Processor':self.name,
             'ProcessorDate':__date__,
             'ProcessorVersion':__version__,

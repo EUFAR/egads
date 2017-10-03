@@ -1,7 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-16 10:33#$"
-__revision__ = "$Revision:: 137       $"
-__version__ = "unknown"
+__date__ = "2016-12-16 10:33"
+__version__ = "1.7"
 
 from _version import __version__
 import logging
@@ -27,14 +26,17 @@ logging.basicConfig(filename = log_filename,
                     filemode = 'w',
                     format = '%(asctime)s : %(levelname)s : %(message)s')
 formatter = logging.Formatter('%(levelname)s : %(message)s')
-'''console = logging.StreamHandler()
+console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
-logging.getLogger('').addHandler(console)'''
+logging.getLogger('').addHandler(console)
 
 logging.info('*****************************************')
 logging.info('EGADS ' + __version__ + ' is starting ...')
 logging.info('*****************************************')
+logging.debug('egads - operating system: ' + str(sys.platform))
+python_version = str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + '.' + str(sys.version_info[2])
+logging.debug('egads - python version: ' + python_version)
 
 ver = 'python%d.%d' % sys.version_info[:2]
 thirdparty = os.path.join(path, 'thirdparty')
@@ -48,15 +50,15 @@ from core.egads_core import *
 from tests.test_all import test
 
 try:
-    import quantities  # @UnresolvedImport
-    logging.info('quantities has been imported')
+    import quantities
+    logging.info('egads.__init__: quantities has been imported')
     if 'egads' not in quantities.__path__[0]:
-        logging.warning('EGADS has imported an already installed version of Quantities. If issues occure,'
+        logging.warning('egads.__init__: EGADS has imported an already installed version of Quantities. If issues occure,'
                         + ' please check the version number of Quantities.')
         print ('EGADS has imported an already installed version of Quantities. If issues occure,'
                + ' please check the version number of Quantities.')
 except ImportError:
-    logging.warning('EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
+    logging.warning('egads.__init__: EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
                  + ' or the presence of Quantities in third-party software directory.')
     raise ImportError('EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
                  + ' or the presence of Quantities in third-party software directory.')

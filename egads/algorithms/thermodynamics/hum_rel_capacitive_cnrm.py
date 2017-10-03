@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-01-12 9:35"
-__version__ = "165"
+__version__ = "1.2"
 __all__ = ["HumRelCapacitiveCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        hum_rel_capacitive_cnrm.py
 
-    VERSION     165
+    VERSION     1.2
 
     CATEGORY    Thermodynamics
 
@@ -54,6 +54,9 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Relative humidity'],
                                                           'Purpose':'Calculate relative humidity from capacitive probe',
                                                           'Description':'Calculates relative humidity of the air based on the frequency of the capacitive probe',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "163"
+__version__ = "1.3"
 __all__ = ['LimitAngleRange']
 
 import egads.core.egads_core as egads_core
@@ -12,18 +12,18 @@ class LimitAngleRange(egads_core.EgadsAlgorithm):
 
     FILE        limit_angle_range.py
 
-    VERSION     163
+    VERSION     1.3
 
     CATEGORY    Mathematics
 
-    PURPOSE     This function calculates the corresponding angle between 0 and 360 degrees given
+    PURPOSE     Function to calculate the corresponding angle.
+
+    DESCRIPTION This function calculates the corresponding angle between 0 and 360 degrees given
                 an angle of any size.
 
-    DESCRIPTION 
+    INPUT       angle            vector    degree    angle to limit to between 0 and 360 degrees
 
-    INPUT       angle            vector    degrees    angle to limit to between 0 and 360 degrees
-
-    OUTPUT      angle_limited    vector    degrees    resulting angles
+    OUTPUT      angle_limited    vector    degree    resulting angles
 
     SOURCE      
 
@@ -34,22 +34,28 @@ class LimitAngleRange(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-        self.output_metadata = egads_metadata.VariableMetadata({'units':'deg',
+        self.output_metadata = egads_metadata.VariableMetadata({'units':'degree',
                                                                'long_name':'',
                                                                'standard_name':'',
                                                                'Category':['']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['angle'],
-                                                          'InputUnits':['deg'],
+                                                          'InputUnits':['degree'],
                                                           'InputTypes':['vector'],
                                                           'InputDescription':['Angle to limit to between 0 and 360 degrees'],
                                                           'Outputs':['angle_limited'],
+                                                          'OutputUnits':['degree'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Resulting angles'],
                                                           'Purpose':'This function calculates the corresponding angle between 0 and 360 degrees given an angle of any size',
                                                           'Description':'No description',
+                                                          'Category':'Mathematics',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

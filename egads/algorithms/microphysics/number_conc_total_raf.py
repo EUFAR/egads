@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-02-07 17:23"
-__version__ = "125"
+__version__ = "1.2"
 __all__ = ['NumberConcTotalRaf']
 
 import numpy
@@ -12,7 +12,7 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
     """
     FILE        number_conc_total_raf.py
 
-    VERSION     125
+    VERSION     1.2
 
     CATEGORY    Microphysics
 
@@ -41,15 +41,21 @@ class NumberConcTotalRaf(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'SV'],
                                                           'InputUnits':['', 'm^3'],
-                                                          'InputTypes':['array','array'],
+                                                          'InputTypes':['array[time, bins]','array[time, bins]'],
                                                           'InputDescription':['Particle counts in each bin over time','Sample volume for each bin over time'],
                                                           'Outputs':['N_t'],
+                                                          'OutputUnits':[''],
+                                                          'OutputTypes':[''],
                                                           'OutputDescription':['Total number concentration'],
                                                           'Purpose':'Calculates total number concentration for a particle probe',
                                                           'Description':'Calculates total number concentration for a generic particle probe given counts for each bin and probe sample volume',
+                                                          'Category':'',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

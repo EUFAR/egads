@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-24 15:27"
-__version__ = "151"
+__version__ = "1.2"
 __all__ = ['SecondsToIsotime']
 
 import egads.core.egads_core as egads_core
@@ -14,7 +14,7 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
     """
     FILE        seconds_to_isotime.py
 
-    VERSION     151
+    VERSION     1.2
 
     CATEGORY    Transforms
 
@@ -25,13 +25,13 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
                 ISO 8601 string formats can be controlled by the optional format string, 
                 default is yyyymmddTHHMMss.
 
-    INPUT       t_secs    vector            seconds     elapsed seconds
-                t_ref     string, optional              ISO 8601 reference time, default is 19700101T000000
-                format    string, optional              ISO 8601 format string, default is yyyymmddTHHMMss 
+    INPUT       t_secs    vector            s     elapsed seconds
+                t_ref     string, optional        ISO 8601 reference time, default is 19700101T000000
+                format    string, optional        ISO 8601 format string, default is yyyymmddTHHMMss 
 
-    OUTPUT      t_ISO     vector                        ISO 8601 date-time strings
+    OUTPUT      t_ISO     vector                  ISO 8601 date-time strings
 
-    SOURCE      
+    SOURCE
 
     REFERENCES
 
@@ -53,6 +53,9 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['ISO 8601 date-time strings'],
                                                           'Purpose':'Converts an elapsed seconds parameter into ISO 8601 formatted time string',
                                                           'Description':'Given a vector of seconds elapsed and a reference time, this algorithm calculates  a series of ISO 8601 strings using the Python datetime module. ISO 8601 string formats can be controlled by the optional format string, default is yyyymmddTHHMMss',
+                                                          'Category':'Transforms',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

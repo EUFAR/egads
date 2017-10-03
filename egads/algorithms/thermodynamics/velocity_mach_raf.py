@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-02-07 17:23"
-__version__ = "125"
+__version__ = "1.0"
 __all__ = ['VelocityMachRaf']
 
 import numpy
@@ -13,7 +13,7 @@ class VelocityMachRaf(egads_core.EgadsAlgorithm):
     """
     FILE        velocity_mach_raf.py
 
-    VERSION     125
+    VERSION     1.0
 
     CATEGORY    Thermodynamics
 
@@ -47,6 +47,9 @@ class VelocityMachRaf(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Mach number'],
                                                           'Purpose':'Calculates mach number based on dynamic and static pressure',
                                                           'Description':'No description',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'NCAR-EOL',
+                                                          'References':'NCAR-RAF Bulletin #23',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
@@ -60,4 +63,3 @@ class VelocityMachRaf(egads_core.EgadsAlgorithm):
         gamma = 1.4
         M = numpy.sqrt(2.0 / (gamma - 1.0) * ((dP / Ps + 1.0) ** ((gamma - 1) / gamma) - 1))
         return M
-

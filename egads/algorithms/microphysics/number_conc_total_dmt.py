@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-02-07 17:23"
-__version__ = "125"
+__version__ = "1.2"
 __all__ = ['NumberConcTotalDmt']
 
 import numpy
@@ -12,7 +12,7 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
     """
     FILE        number_conc_total_dmt.py
 
-    VERSION     125
+    VERSION     1.2
 
     CATEGORY    Microphysics
 
@@ -44,15 +44,21 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['c_i'],
                                                           'InputUnits':['cm^-3'],
-                                                          'InputTypes':['array'],
+                                                          'InputTypes':['array[time, bins]'],
                                                           'InputDescription':['Number concentration of hydrometeors in size category i'],
                                                           'Outputs':['N'],
+                                                          'OutputUnits':['cm^-3'],
+                                                          'OutputTypes':['vector[time]'],
                                                           'OutputDescription':['Total number concentration'],
                                                           'Purpose':'Calculation of total number concentration given distribution of particle counts from a particle sampling probe',
                                                           'Description':'alculation of total number concentration given distribution of particle counts from a particle sampling probe',
+                                                          'Category':'Microphysics',
+                                                          'Source':'',
+                                                          'References':"Data Analysis User's Guide, Chapter 1, Section 1.3.2, Droplet Measurement Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/ManualsGuides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

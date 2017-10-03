@@ -41,7 +41,7 @@ For information on other install options the --help option can be used:
 
 On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system.
 
-If EGADS requirements in term of dependecies are full filled and if the user wants to avoid their installation, the use of the following option is encouraged:
+If EGADS requirements in term of dependecies are full filled and/or if the user wants to avoid their installation, the use of the following option is encouraged:
 
   python setup.py install --no-dep
 or
@@ -55,4 +55,3 @@ To test the EGADS installation, run the run_test.py Python script, or from withi
 
   >>> import egads
   >>> egads.test()
-

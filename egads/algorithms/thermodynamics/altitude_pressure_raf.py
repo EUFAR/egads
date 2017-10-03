@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-12 9:28"
-__version__ = "164"
+__version__ = "1.2"
 __all__ = ["AltitudePressureRaf"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
     """
     FILE        altitude_pressure_raf.py
 
-    VERSION     164
+    VERSION     1.2
 
     CATEGORY    Thermodynamics
 
@@ -47,6 +47,9 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Pressure altitude'],
                                                           'Purpose':'Calculate pressure altitude',
                                                           'Description':'Calculate pressure altitude using static pressure and the US Standard Atmosphere definitions',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'NCAR EOL-RAF',
+                                                          'References':'US Standard Atmosphere 1976 (NASA-TM-X-74335), 241 pages. http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539_1977009539.pdf',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

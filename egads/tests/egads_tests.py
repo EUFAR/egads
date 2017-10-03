@@ -6,8 +6,8 @@ NetCDF library (based on NetCDF4).
 """
 
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-6 11:19#$"
-__version__ = "$Revision:: 101       $"
+__date__ = "2016-12-6 11:19"
+__version__ = "1.1"
 
 import unittest
 import egads

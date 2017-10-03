@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-01-10 11:58"
-__version__ = "126"
+__version__ = "1.1"
 __all__ = ['SurfaceAreaConcDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
     """
     FILE        surface_area_conc_dmt.py
 
-    VERSION     126
+    VERSION     1.1
 
     CATEGORY    Microphysics
 
@@ -56,6 +56,9 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Surface area concentration'],
                                                           'Purpose':'Calculates surface area concentration given size distribution from particle probe',
                                                           'Description':'Calculates surface area concentration (2nd moment) given size distribution from particle probe',
+                                                          'Category':'Microphysics',
+                                                          'Source':'',
+                                                          'References':"Data Analysis User's Guide, Chapter 1, Section 1.3.2, Droplet Measurement Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/ManualsGuides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

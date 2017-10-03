@@ -31,7 +31,7 @@ Within the file itself, there are one rule to respect and several elements in th
 4. Algorithm and output metadata
     In the ``__init__`` method of the module, two important parameters are defined. The first is the 'output_metadata', which defines the metadata elements that will be assigned to the variable output by the algorithm. A few recommended elements are included, but a broader list of variable metadata parameters can be found in the NetCDF standards document on the EUFAR website (http://www.eufar.net/documents/6140, Annexe III). In the case that there are multiple parameters output by the algorithm, the output_metadata parameter can be defined as a list VariableMetadata instances.
    
-    Next, the 'metadata' parameter defines metadata concerning the algorithm itself. These information include the names, types, descriptions and units of inputs; names and descriptions of outputs; name, description, purpose, date and version of the algorithm; date processed; and a reference to the output parameters. Of these parameters, only the names, types, descriptions and units of the inputs, names and descriptions of the outputs and description and purpose of the algorithm need to be altered. The other parameters (name, date and version of the processor, date processed) are populated automatically.
+    Next, the 'metadata' parameter defines metadata concerning the algorithm itself. These information include the names, types, descriptions and units of inputs; names and descriptions of outputs; name, description, purpose, category, source, reference, date and version of the algorithm; date processed; and a reference to the output parameters. Of these parameters, only the names, types, descriptions and units of the inputs, names and descriptions of the outputs and category, source, reference, description and purpose of the algorithm need to be altered. The other parameters (name, date and version of the processor, date processed) are populated automatically.
 
     self.output_metadata:
         * units: units of the output.
@@ -44,10 +44,13 @@ Within the file itself, there are one rule to respect and several elements in th
         * InputUnits: a list of all input units, one unit per input, '' for dimensionless input and 'None' for the input parameter from which the output is to be derived.
         * InputTypes: the type of the input (array, vector, coeff, ...) linked to the ``var_type`` string in the algorithm template ; the string ``_optional`` can be added to inform that the input is optional (used in the EGADS GUI).
         * InputDescription: short description of each input.
-        * Outputs: representation of each output.
+        * Outputs: representation of each output (ex: P_a for altitude pressure).
         * OutputDescription: short description of each output.
         * Purpose: the goal of the algorithm
         * Description: a description of the algorithm
+        * Category: the category of the algorithm (ex: Transforms, Thermodynamis, ...)
+        * Source : the source of the algorithm (ex: CNRM)
+        * Reference : the reference of the algorithm (ex: Doe et al, My wonderful algorithm, Journal of Algorithms, 11, pp 21-22, 2017).
         * Processor: self.name
         * ProcessorDate: ``__date__``
         * ProcessorVersion: ``__version__``
@@ -68,9 +71,9 @@ Within the file itself, there are one rule to respect and several elements in th
     The algorithm itself gets written in the _algorithm method and uses variables passed in by the user. The variables which arrive here are simply scalar or arrays, and if the source is an instance of EgadsData, the variables will be converted to the units you specified in the InputUnits of the algorithm metadata.
    
 7. Integration of the algorithm in EGADS
-    Once the algorithm file is ready, the user has to move it in the appropriate directory in the ./egads/algorithms/user directory. Once it has been done, the ``__init__.py`` file has to be modified to declare the new algorithm. The following line can be added to the ``__init__.py`` file: ``from the_name_of_the_file import \*``.
+    Once the algorithm file is ready, the user has to move it in the appropriate directory in the ``./egads/algorithms/user`` directory. Once it has been done, the ``__init__.py`` file has to be modified to declare the new algorithm. The following line can be added to the ``__init__.py`` file: ``from the_name_of_the_file import \*``.
     
-    If the algorithm requires a new directory, the user has to create it, move the file inside and create a ``__init__.py`` file to declare the new directory and the algoritm to EGADS. A template can be found in ./egads/algorithms/file_templates/init_template.py and is shown below:
+    If the algorithm requires a new directory, the user has to create it, move the file inside and create a ``__init__.py`` file to declare the new directory and the algoritm to EGADS. A template can be found in ``./egads/algorithms/file_templates/init_template.py`` and is shown below:
     
     .. literalinclude:: example_files/init_template.py
 

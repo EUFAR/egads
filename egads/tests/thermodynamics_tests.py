@@ -3,8 +3,8 @@ Test suite to verify complete functioning of all Thermodynamics algorithms.
 """
 
 __author__ = "mfreer, henry"
-__date__ = "$Date:: 2016-12-6 11:30#$"
-__version__ = "$Revision:: 163       $"
+__date__ = "2016-12-6 11:30"
+__version__ = "1.5"
 __all__ = ['ThermodynamicsTestCase']
 
 import numpy
@@ -14,6 +14,10 @@ from egads.algorithms import thermodynamics
 
 class  ThermodynamicsTestCase(unittest.TestCase):
     def setUp(self):
+        
+        self.time = egads.EgadsData(value=[51414,51415,51416],
+                                    units = 's',
+                                    long_name = 'time since 2011/02/01')
         
         self.Ucapf = egads.EgadsData(value=[10],
                                      units='Hz',
@@ -27,7 +31,6 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                    units='J/kg/K',
                                    long_name='specific heat of air at constant pressure')
 
-
         self.V_t = egads.EgadsData(value=200,
                                    units='m/s',
                                    long_name='true air speed')
@@ -35,11 +38,19 @@ class  ThermodynamicsTestCase(unittest.TestCase):
         self.P_s = egads.EgadsData(value=[920],
                                    units='hPa',
                                    long_name='static pressure')
-
+        
+        self.P_si = egads.EgadsData(value=[975.51,974.82,974.46],
+                                   units='hPa',
+                                   long_name='static pressure')
+        
         self.T_t = egads.EgadsData(value=345,
                                    units='K',
                                    long_name='total temperature')
-
+        
+        self.T_ti = egads.EgadsData(value=[23.87,23.84,23.31],
+                                   units='degC',
+                                   long_name='total temperature')
+        
         self.dP = egads.EgadsData(value=[177.31],
                                   units='hPa',
                                   long_name='dynamic pressure')
@@ -146,12 +157,21 @@ class  ThermodynamicsTestCase(unittest.TestCase):
         self.coeff_test = 1
         self.coeff2_test = [1, 1]
         self.coeff4_test = [1, 1, 1, 1]
+        
 
     def test_altitude_pressure_cnrm(self):
+        alt_res = [369.56, 375.71, 378.91]
+        alt_p = thermodynamics.AltitudePressureIncrementalCnrm().run(self.P_si, self.T_ti, self.time, 369.56)
+        for i, _ in enumerate(alt_res):
+            self.assertAlmostEqual(alt_p.value[i], alt_res[i], 1, 'Altitudes dont match')
+        alt_p = thermodynamics.AltitudePressureIncrementalCnrm().run(self.array_test, self.array_test, range(0,10,1), 369.56)
+        self.assertEqual(alt_p.shape, self.array_shape, 'Altitude array shapes dont match')
+
+    def test_altitude_pressure_raf(self):
         alt_p = thermodynamics.AltitudePressureRaf().run(self.P_s)
         self.assertAlmostEqual(alt_p.value, 806.8736, 3, 'Altitudes dont match')
         alt_p = thermodynamics.AltitudePressureRaf().run(self.array_test)
-        self.assertEqual(alt_p.shape, self.array_shape, 'Altitude pressure array shapes dont match')
+        self.assertEqual(alt_p.shape, self.array_shape, 'Altitude array shapes dont match')
 
     def test_density_dry_air_cnrm(self):
         rho = thermodynamics.DensityDryAirCnrm().run(self.P_s, self.T_s)

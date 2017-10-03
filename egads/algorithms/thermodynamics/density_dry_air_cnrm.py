@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-01-27 16:41"
-__version__ = "100"
+__version__ = "10.0"
 __all__ = ["DensityDryAirCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        density_dry_air_cnrm.py
 
-    VERSION     100
+    VERSION     1.0
 
     CATEGORY    Thermodynamics
 
@@ -47,6 +47,9 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Density'],
                                                           'Purpose':'Calculates density of dry air',
                                                           'Description':'Calculates density of dry air given static temperature and pressure. If virtual temperature is used instead of static, this algorithm calculates density of humid air',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'Equation of state for a perfect gas, Triplet-Roche, page 34.',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

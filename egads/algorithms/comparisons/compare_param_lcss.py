@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "163"
+__version__ = "1.5"
 __all__ = ['CompareParamLcss']
 
 import egads.core.egads_core as egads_core
@@ -13,7 +13,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
     
     FILE        compare_param_lcss.py
 
-    VERSION     163
+    VERSION     1.5
 
     CATEGORY    Comparisons
 
@@ -50,14 +50,22 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['R','S','epsilon'],
                                                           'InputUnits':[None, None, None],
                                                           'InputTypes':['vector','vector','coeff'],
-                                                          'InputDescription':['First timeseries to compare','Second timeseries for comparison','Matching criteria'],
+                                                          'InputDescription':['First timeseries to compare',
+                                                                              'Second timeseries for comparison',
+                                                                              'Matching criteria'],
                                                           'Outputs':['max'],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['coeff'],
                                                           'OutputDescription':['Maximum common subsequence length'],
                                                           'Purpose':'This algorithm computes a similarity factor between two timeseries using the Longest Common Subsequence (LCSS) method',
                                                           'Description':'This algorithm uses the Morse-Patel method to evaluate the Longest Common Subsequence for two timeseries. The timeseries compared can be multi-dimensional. The returned value represents the longest common subsequence length, i.e. the number of corresponding points',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':"Morse, M. and J. M. Patel, 2007: An Efficient and Accurate Method for Evaluating Time Series Similarity. SIGMOD'07, June 11-14 2007, Beijing, China.",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

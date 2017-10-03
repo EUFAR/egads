@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-01-12 13:15"
-__version__ = "164"
+__version__ = "1.3"
 __all__ = ["PressureAngleIncidenceCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class PressureAngleIncidenceCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        pressure_angle_incidence_cnrm.py
 
-    VERSION     $Revision: 164 $
+    VERSION     1.3
 
     CATEGORY    Thermodynamic
 
@@ -76,6 +76,9 @@ class PressureAngleIncidenceCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Static pressure','Static error corrected dynamic pressure','Angle of attack','Sideslip angle'],
                                                           'Purpose':'Calculate static pressure, error-corrected dynamic pressure, angle of attack and sideslip',
                                                           'Description':'Calculates static pressure and dynamic pressure by correction of static error. Angle of attack and sideslip are calculated from the horizontal and vertical differential pressures',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

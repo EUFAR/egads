@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-03-27 20:26"
-__version__ = "174"
+__version__ = "1.6"
 __all__ = ['DiameterMedianVolumeDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
     """
     FILE        diameter_median_volume_dmt.py
 
-    VERSION     174
+    VERSION     1.6
 
     CATEGORY    Microphysics
 
@@ -23,15 +23,15 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                 The median volume diameter is the size of droplet below which
                 50% of the total water volume resides.
 
-    INPUT       n_i    array[time,bins]        cm-3   number concentration of
-                                                      hydrometeors in bin i
-                d_i    vector[bins]            um     average diameter of bin i
-                s_i    array[time, bins], optional    shape factor of hydrometeor in size
-                                                      category i to account for asphericity
-                rho_i  vector[bins], optional  g cm-3 density of hydrometeor in bin i
-                                                      default is 1.0 g/cm^3
+    INPUT       n_i    array[time,bins]            cm-3   number concentration of
+                                                          hydrometeors in bin i
+                d_i    vector[bins]                um     average diameter of bin i
+                s_i    array[time, bins], optional _      shape factor of hydrometeor in size
+                                                          category i to account for asphericity
+                rho_i  vector[bins], optional      g cm-3 density of hydrometeor in bin i
+                                                          default is 1.0 g/cm^3
 
-    OUTPUT      D_mvd  vector[time]            um     median volume diameter
+    OUTPUT      D_mvd  vector[time]                um     median volume diameter
 
     SOURCE
 
@@ -50,15 +50,27 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 's_i', 'rho_i'],
                                                           'InputUnits':['cm^-3', 'um', '', 'g/cm^3'],
-                                                          'InputTypes':['array','vector','array_optional', 'vector_optional'],
-                                                          'InputDescription':['Number concentration of hydrometeors in bin i','Average diameter of bin i','Shape factor of hydrometeor in size category i to account for asphericity','Density of hydrometeor in bin i, default is 1.0 g/cm^3'],
+                                                          'InputTypes':['array[time,bins]',
+                                                                        'vector[bins]',
+                                                                        'array[time, bins]_optional',
+                                                                        'vector[bins]_optional'],
+                                                          'InputDescription':['Number concentration of hydrometeors in bin i',
+                                                                              'Average diameter of bin i',
+                                                                              'Shape factor of hydrometeor in size category i to account for asphericity',
+                                                                              'Density of hydrometeor in bin i, default is 1.0 g/cm^3'],
                                                           'Outputs':['D_mvd'],
+                                                          'OutputUnits':['um'],
+                                                          'OutputTypes':['vector[time]'],
                                                           'OutputDescription':['Median volume diameter'],
                                                           'Purpose':'Calculation of median volume diameter',
                                                           'Description':'Calculates the median volume diameter given a size distribution. The median volume  diameter is the size of droplet below which 50% of the total water volume resides',
+                                                          'Category':'Microphysics',
+                                                          'Source':'',
+                                                          'References':"Data Analysis User's Guide, Chapter 1, Section 1.3.2.4, Droplet Measurement Technologies, 2009, http://www.dropletmeasurement.com/sites/default/files/ManualsGuides/Data%20Analysis%20Guide/DOC-0222%20Rev%20A%20Data%20Analysis%20Guide%20Ch%201.pdf",
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

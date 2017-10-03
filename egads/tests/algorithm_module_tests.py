@@ -4,8 +4,8 @@ Creates a dummy algorithm following the EGADS algorithm template, and tests for 
 """
 
 __author__ = "mfreer, henry"
-__date__ = "$Date:: 2016-12-6 11:35#$"
-__version__ = "$Revision:: 143       $"
+__date__ = "2016-12-6 11:35"
+__version__ = "1.2"
 
 import unittest
 import egads

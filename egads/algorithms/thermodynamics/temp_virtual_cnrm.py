@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2011-05-27 14:27"
-__version__ = "59"
+__version__ = "1.0"
 __all__ = ["TempVirtualCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        temp_virtual_cnrm.py
 
-    VERSION     $Revision: 59 $
+    VERSION     1.0
 
     CATEGORY    Thermodynamics
 
@@ -45,12 +45,14 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Virtual temperature'],
                                                           'Purpose':'Calculate virtual temperature',
                                                           'Description':'Calculates virtual temperature given static pressure and mixing ratio',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'Triplet-Roche, page 56',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
-
 
     def run(self, T_s, r):
         return egads_core.EgadsAlgorithm.run(self, T_s, r)

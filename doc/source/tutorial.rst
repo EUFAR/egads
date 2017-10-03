@@ -18,9 +18,7 @@ The first is using the Python built-in ``dir()`` command:
 
     >>> dir(egads)
 
-returns all the classes and subpackages contained in EGADS. EGADS follows the 
-naming conventions from the Python Style Guide (http://www.python.org/dev/peps/pep-0008), 
-so classes are always ``MixedCase``, functions and modules are generally ``lowercase`` or ``lowercase_with_underscores``. As a further example,
+returns all the classes and subpackages contained in EGADS. EGADS follows the naming conventions from the Python Style Guide (http://www.python.org/dev/peps/pep-0008), so classes are always ``MixedCase``, functions and modules are generally ``lowercase`` or ``lowercase_with_underscores``. As a further example,
 
     >>> dir(egads.input)
 
@@ -57,14 +55,9 @@ To have a list of file in a directory, use the following function:
 The :class:`~.EgadsData` class
 *******************************
 
-At the core of the EGADS package is a data class intended to handle data and associated metadata
-in a consistent way between files, algorithms and within the framework. This ensures that important
-metadata is not lost when combining data form various sources in EGADS.
+At the core of the EGADS package is a data class intended to handle data and associated metadata in a consistent way between files, algorithms and within the framework. This ensures that important metadata is not lost when combining data form various sources in EGADS.
 
-Additionally, by subclassing the Quantities and Numpy packages, :class:`~.EgadsData` 
-incorporates unit comprehension to reduce unit-conversion errors during calculation, and
-supports broad array manipulation capabilities. This section describes how to employ
-the :class:`~.EgadsData` class in the EGADS program scope.
+Additionally, by subclassing the Quantities and Numpy packages, :class:`~.EgadsData` incorporates unit comprehension to reduce unit-conversion errors during calculation, and supports broad array manipulation capabilities. This section describes how to employ the :class:`~.EgadsData` class in the EGADS program scope.
 
 
 Creating :class:`~.EgadsData` instances
@@ -76,16 +69,13 @@ The :class:`~.EgadsData` class takes four basic arguments:
    Value to assign to :class:`~.EgadsData` instance. Can be scalar, array, or other :class:`~.EgadsData` instance.
 
 * units
-   Units to assign to :class:`~.EgadsData` instance. Should be string representation of units, and can be
-   a compound units type such as 'g/kg', 'm/s^2', 'feet/second', etc.
+   Units to assign to :class:`~.EgadsData` instance. Should be string representation of units, and can be a compound units type such as 'g/kg', 'm/s^2', 'feet/second', etc.
 
 * variable metadata
-   An instance of the :class:`~.VariableMetadata` type or dictionary, containing keywords and 
-   values of any metadata to be associated with this :class:`~.EgadsData` instance.
+   An instance of the :class:`~.VariableMetadata` type or dictionary, containing keywords and  values of any metadata to be associated with this :class:`~.EgadsData` instance.
 
 * other attributes
-   Any other attributes added to the class are automatically stored in the :class:`~.VariableMetadata`
-   instance associated with the :class:`~.EgadsData` instance.
+   Any other attributes added to the class are automatically stored in the :class:`~.VariableMetadata` instance associated with the :class:`~.EgadsData` instance.
 
 The following are examples of creating :class:`~.EgadsData` instances:
 
@@ -94,69 +84,52 @@ The following are examples of creating :class:`~.EgadsData` instances:
    >>> b = egads.EgadsData(a, 'km', b_metadata)
    >>> c = egads.EgadsData(28, 'degC', long_name="current temperature")
 
-If, during the call to :class:`~.EgadsData`, no units are provided, but a variable metadata instance is provided
-with a units property, this will then be used to define the :class:`~.EgadsData` units:
+If, during the call to :class:`~.EgadsData`, no units are provided, but a variable metadata instance is provided with a units property, this will then be used to define the :class:`~.EgadsData` units:
 
    >>> x_metadata = egads.core.metadata.VariableMetadata({'units':'m', 'long_name':'Test Variable'})
    >>> x = egads.EgadsData([1,2,3], x_metadata)
    >>> print x.units
    m
+   >>> print x.metadata
+   {'units': 'm', 'long_name': 'Test Variable'}
    
 The :class:`~.EgadsData` is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations like addition, substraction, slicing, and many more. For each of those operations, a new :class:`~.EgadsData` class is created with all their attributes. 
 
 .. NOTE::
-  With mathematical operands, as metadata define an :class:`~.EgadsData` before an operation, and may not reflect the new :class:`~.EgadsData`, it has been decided to not keep the metadata attribute. It's the responsability of the user to add a new :class:`~.VariableMetadata` instance or a dictionary to the new :class:`~.EgadsData` object. It is not true if a user wants to slice an :class:`~.EgadsData`. In that case, metadata are automatically attributed to the new :class:`~.EgadsData`
+  With mathematical operands, as metadata define an :class:`~.EgadsData` before an operation, and may not reflect the new :class:`~.EgadsData`, it has been decided to not keep the metadata attribute. It's the responsability of the user to add a new :class:`~.VariableMetadata` instance or a dictionary to the new :class:`~.EgadsData` object. It is not true if a user wants to slice an :class:`~.EgadsData`. In that case, metadata are automatically attributed to the new :class:`~.EgadsData`.
 
 
 Metadata
 ---------
 
-The metadata object used by :class:`~.EgadsData` is an instance 
-of :class:`~.VariableMetadata`, a dictionary object containing 
-methods to recognize, convert and validate known metadata types. It can reference
-parent metadata objects, such as those from an algorithm or data file, to enable 
-users to track the source of a particular variable. 
+The metadata object used by :class:`~.EgadsData` is an instance of :class:`~.VariableMetadata`, a dictionary object containing methods to recognize, convert and validate known metadata types. It can reference parent metadata objects, such as those from an algorithm or data file, to enable users to track the source of a particular variable. 
 
-When reading in data from a supported file type (NetCDF, NASA Ames), or doing calculations with
-an EGADS algorithm, EGADS will automatically populate the associated metadata and assign it 
-to the output variable. However, when creating an :class:`~.EgadsData` instance manually, the metadata
-must be user-defined.
+When reading in data from a supported file type (NetCDF, NASA Ames), or doing calculations with an EGADS algorithm, EGADS will automatically populate the associated metadata and assign it to the output variable. However, when creating an :class:`~.EgadsData` instance manually, the metadata must be user-defined.
 
-As mentioned, :class:`~.VariableMetadata` is a dictionary object, thus all metadata 
-are stored as keyword:value pairs. To create metadata manually, simply pass in 
-a dictionary object containing the desired metadata:
+As mentioned, :class:`~.VariableMetadata` is a dictionary object, thus all metadata are stored as keyword:value pairs. To create metadata manually, simply pass in a dictionary object containing the desired metadata:
 
    >>> var_metadata_dict = {'long_name':'test metadata object',
                             '_FillValue':-9999}
    >>> var_metadata = egads.core.metadata.VariableMetadata(var_metadata_dict)
 
-To take advantage of its metadata recognition capabilities, a ``conventions`` keyword can be
-passed with the variable metadata to give a context to these metadata. 
+To take advantage of its metadata recognition capabilities, a ``conventions`` keyword can be passed with the variable metadata to give a context to these metadata. 
 
    >>> var_metadata = egads.core.metadata.VariableMetadata(var_metadata_dict, conventions='CF-1.0')
 
-If a particular :class:`~.VariableMetadata` object comes from a file or algorithm, the class attempts to assign the 
-``conventions`` automatically. While reading from a file, for example, the class attempts to 
-discover the conventions used based on the "Conventions" keyword, if present.
+If a particular :class:`~.VariableMetadata` object comes from a file or algorithm, the class attempts to assign the ``conventions`` automatically. While reading from a file, for example, the class attempts to discover the conventions used based on the "Conventions" keyword, if present.
 
 
 Working with units
 -------------------
 
-:class:`~.EgadsData` subclasses Quantities, thus all of the latter's unit comprehension methods are available
-when using :class:`~.EgadsData`. This section will outline the basics of unit comprehension. A
-more detailed tutorial of the unit comprehension capabilities can be found at 
-http://packages.python.org/quantities/
+:class:`~.EgadsData` subclasses Quantities, thus all of the latter's unit comprehension methods are available when using :class:`~.EgadsData`. This section will outline the basics of unit comprehension. A more detailed tutorial of the unit comprehension capabilities can be found at http://packages.python.org/quantities/
 
 In general, units are assigned to :class:`~.EgadsData` instances when they are being created. 
 
    >>> a = egads.EgadsData([1,2,3], 'm')
    >>> b = egads.EgadsData([4,5,6], 'meters/second')
 
-Once a unit type has been assigned to an :class:`~.EgadsData` instance, it will remain that 
-class of unit and can only be converted between other types of that same unit. The ``rescale``
-method can be used to convert between similar units, but will give an error if an attempt is made
-to convert to non-compatible units.
+Once a unit type has been assigned to an :class:`~.EgadsData` instance, it will remain that class of unit and can only be converted between other types of that same unit. The ``rescale`` method can be used to convert between similar units, but will give an error if an attempt is made to convert to non-compatible units.
 
    >>> a = egads.EgadsData([1,2,3], 'm')
    >>> a_km = a.rescale('km')
@@ -165,8 +138,7 @@ to convert to non-compatible units.
    >>> a_grams = a.rescale('g')
    ValueError: Unable to convert between units of "m" and "g"
 
-Likewise, arithmetic operations between :class:`~.EgadsData` instances are handled using the unit comprehension
-provided by Quantities, and behave . For example adding units of a similar type is permitted:
+Likewise, arithmetic operations between :class:`~.EgadsData` instances are handled using the unit comprehension provided by Quantities, and behave . For example adding units of a similar type is permitted:
 
    >>> a = egads.EgadsData(10, 'm')
    >>> b = egads.EgadsData(5, 'km')
@@ -182,13 +154,6 @@ But, non-compatible types cannot be added. They can, however, be multiplied or d
    >>> distance/time
    ['EgadsData', array(10), 'm/s']
 
-.. NOTE::
-   Quantities and therefore :class:`~.EgadsData` does not support conversions between coordinate systems
-   that require a point of reference, such as temperature. In Quantities, temperatures are assumed
-   to be temperature differences, e.g. a dT of 20 degC is equal to a dT of 20 degK and vice versa.
-   Thus, in the Egads implementation, while most variables will automatically be converted to the correct
-   units when using algorithms, an Error will be raised if a temperature is provided in incorrect units.
-
 .. raw:: latex
 
     \newpage
@@ -196,15 +161,12 @@ But, non-compatible types cannot be added. They can, however, be multiplied or d
 Working with raw text files
 ********************************
 
-EGADS provides the :class:`egads.input.text_file_io.EgadsFile` class as a simple wrapper for interacting with 
-generic text files. :class:`~.EgadsFile` can read, write and display data from text files, but does 
-not have any tools for automatically formatting input or output data. 
+EGADS provides the :class:`egads.input.text_file_io.EgadsFile` class as a simple wrapper for interacting with generic text files. :class:`~.EgadsFile` can read, write and display data from text files, but does not have any tools for automatically formatting input or output data. 
 
 Opening
 --------
 
-To open a text file the :class:`~.EgadsFile` class, use the
-:meth:`~.EgadsFile.open(filename, permissions)` method:
+To open a text file the :class:`~.EgadsFile` class, use the :meth:`~.EgadsFile.open(filename, permissions)` method:
 
     >>> import egads
     >>> f = egads.input.EgadsFile()
@@ -221,8 +183,7 @@ Valid values for permissions are:
 File Manipulation
 ------------------
 
-The following methods are available to control the current position in the file and display more 
-information about the file.
+The following methods are available to control the current position in the file and display more information about the file.
 
 * ``f.display_file()`` -- Prints contents of file out to standard output.
 * ``f.get_position()`` -- Returns current position in file as integer.
@@ -232,8 +193,7 @@ information about the file.
 Reading Data
 ----------------
 
-Reading data is done using the ``read(size)`` method on a file that has been opened with ``r`` or
-``r+`` permissions:
+Reading data is done using the ``read(size)`` method on a file that has been opened with ``r`` or ``r+`` permissions:
 
     >>> import egads
     >>> f = egads.input.EgadsFile()
@@ -241,9 +201,7 @@ Reading data is done using the ``read(size)`` method on a file that has been ope
     >>> single_char_value = f.read()
     >>> multiple_chars = f.read(10)
 
-If the ``size`` parameter is not specified, the ``read()`` function will input a single character
-from the open file. Providing an integer value *n* as the ``size`` parameter to ``read(size)`` 
-will return *n* characters from the open file.
+If the ``size`` parameter is not specified, the ``read()`` function will input a single character from the open file. Providing an integer value *n* as the ``size`` parameter to ``read(size)`` will return *n* characters from the open file.
 
 Data can be read line-by-line from text files using ``read_line()``:
 
@@ -252,8 +210,7 @@ Data can be read line-by-line from text files using ``read_line()``:
 Writing Data
 --------------
 
-To write data to a file, use the ``write(data)`` method on a file that has been opened with
-``w``, ``a`` or ``r+`` permissions:
+To write data to a file, use the ``write(data)`` method on a file that has been opened with ``w``, ``a`` or ``r+`` permissions:
 
    >>> import egads
    >>> f = egads.input.EgadsFile()
@@ -325,15 +282,12 @@ This file has been created with the following commands:
 Working with CSV files
 ***********************
 
-:class:`egads.input.text_file_io.EgadsCsv` is designed to easily input or output data in CSV format.
-Data input using :class:`~.EgadsCsv` is separated into a list of arrays, which each column a separate
-array in the list. 
+:class:`egads.input.text_file_io.EgadsCsv` is designed to easily input or output data in CSV format. Data input using :class:`~.EgadsCsv` is separated into a list of arrays, which each column a separate array in the list. 
 
 Opening
 ----------
 
-To open a text file the :class:`~.EgadsCsv` class, use the
-``open(pathname, permissions, delimiter, quotechar)`` method:
+To open a text file the :class:`~.EgadsCsv` class, use the ``open(pathname, permissions, delimiter, quotechar)`` method:
 
     >>> import egads
     >>> f = egads.input.EgadsCsv()
@@ -346,16 +300,12 @@ Valid values for permissions are:
 * ``a`` -- Append: opens file for appending data.
 * ``r+`` -- Read and write: opens file for both reading and writing.
 
-The ``delimiter`` argument is a one-character string specifying the character used to separate 
-fields in the CSV file to be read; the default value is ``,``. The ``quotechar`` argument is a 
-one-character string specifying the character used to quote fields containing special characters 
-in the CSV file to to be read; the default value is ``"``.
+The ``delimiter`` argument is a one-character string specifying the character used to separate fields in the CSV file to be read; the default value is ``,``. The ``quotechar`` argument is a one-character string specifying the character used to quote fields containing special characters in the CSV file to to be read; the default value is ``"``.
 
 File Manipulation
 ------------------
 
-The following methods are available to control the current position in the file and display more 
-information about the file.
+The following methods are available to control the current position in the file and display more information about the file.
 
 * ``f.display_file()`` -- Prints contents of file out to standard output.
 * ``f.get_position()`` -- Returns current position in file as integer.
@@ -374,11 +324,7 @@ Reading data is done using the ``read(lines, format)`` method on a file that has
     >>> all_lines_as_list = f.read()
 
 
-``read(lines, format)`` returns a list of the items read in from the CSV file. The arguments
-``lines`` and ``format`` are optional. If ``lines`` is provided, ``read(lines, format)``
-will read in the specified number of lines, otherwise it will read the whole file. ``format`` 
-is an optional list of characters used to decompose the elements read in from the CSV files to
-their proper types. Options are:
+``read(lines, format)`` returns a list of the items read in from the CSV file. The arguments ``lines`` and ``format`` are optional. If ``lines`` is provided, ``read(lines, format)`` will read in the specified number of lines, otherwise it will read the whole file. ``format`` is an optional list of characters used to decompose the elements read in from the CSV files to their proper types. Options are:
 
 * ``i`` -- int
 * ``f`` -- float
@@ -396,8 +342,7 @@ the command to input with proper formatting would look like this:
 Writing Data
 --------------
 
-To write data to a file, use the ``write(data)`` method on a file that has been opened with
-'w', 'a' or 'r+' permissions:
+To write data to a file, use the ``write(data)`` method on a file that has been opened with ``w``, ``a`` or ``r+`` permissions:
 
    >>> import egads
    >>> f = egads.input.EgadsCsv()
@@ -405,8 +350,7 @@ To write data to a file, use the ``write(data)`` method on a file that has been 
    >>> titles = ['Aircraft ID','Timestamp','Value1','Value2','Value3']
    >>> f.write(titles) 
 
-where the ``titles`` parameter is a list of strings. This list will be output to the CSV, with each
-strings separated by the delimiter specified when the file was opened (default is ',').
+where the ``titles`` parameter is a list of strings. This list will be output to the CSV, with each strings separated by the delimiter specified when the file was opened (default is ``,``).
 
 To write multiple lines out to a file, ``writerows(data)`` is used:
 
@@ -478,10 +422,7 @@ This file has been created with the following commands:
 Working with NetCDF files
 **************************
 
-EGADS provides two classes to work with NetCDF files. The simplest, :class:`egads.input.netcdf.NetCdf`, 
-allows simple read/write operations to NetCDF files. The other, :class:`egads.input.netcdf.EgadsNetCdf`, 
-is designed to interface with NetCDF files conforming to the EUFAR Standards & Protocols data and metadata regulations. 
-This class directly reads or writes NetCDF data using instances of the :class:`~.EgadsData` class.
+EGADS provides two classes to work with NetCDF files. The simplest, :class:`egads.input.netcdf.NetCdf`, allows simple read/write operations to NetCDF files. The other, :class:`egads.input.netcdf.EgadsNetCdf`, is designed to interface with NetCDF files conforming to the EUFAR Standards & Protocols data and metadata regulations. This class directly reads or writes NetCDF data using instances of the :class:`~.EgadsData` class.
 
 Opening
 --------
@@ -517,12 +458,9 @@ To read data from a file, use the ``read_variable()`` function:
 
     >>> data = f.read_variable(var_name, input_range)
 
-where ``var_name`` is the name of the variable to read in, and ``input_range`` (optional) is a list
-of min/max values.
+where ``var_name`` is the name of the variable to read in, and ``input_range`` (optional) is a list of min/max values.
 
-If using the ``egads.input.NetCdf()`` class, an array of values contained in ``var_name`` 
-will be returned. If using the ``egads.input.EgadsNetCdf()`` class, an instance of the 
-:class:`~.EgadsData` class will be returned containing the values and attributes of ``var_name``.
+If using the ``egads.input.NetCdf()`` class, an array of values contained in ``var_name`` will be returned. If using the ``egads.input.EgadsNetCdf()`` class, an instance of the :class:`~.EgadsData` class will be returned containing the values and attributes of ``var_name``.
 
 Writing data
 ------------
@@ -537,16 +475,10 @@ Data can be output to variables using the ``write_variable()`` function as follo
 
     >>> f.write_variable(data, var_name, dims, type)
 
-where ``var_name`` is a string for the variable name to output, ``dims`` is a tuple 
-of dimension names (not needed if the variable already exists), and ``type`` is the 
-data type of the variable. The default value is *double*, other valid options 
-are *float*, *int*, *short*, *char* and *byte*. 
+where ``var_name`` is a string for the variable name to output, ``dims`` is a tuple of dimension names (not needed if the variable already exists), and ``type`` is the data type of the variable. The default value is *double*, other valid options are *float*, *int*, *short*, *char* and *byte*. 
 
-If using :class:`~.NetCdf`, values for ``data`` passed into ``write_variable`` 
-must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance 
-of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes 
-that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well.
-    
+If using :class:`~.NetCdf`, values for ``data`` passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well.
+
 Conversion from NetCDF to NASA/Ames file format
 ------------------------------------------------
 
@@ -577,9 +509,9 @@ To close a file, simply use the ``close()`` method:
     >>> f.close()
 
 .. NOTE::
-   The EGADS :class:`~.NetCdf` and :class:`~.EgadsNetCdf` use the official NetCDF I/O routines, therefore, as described in the NetCDF documentation, it is not possible to remove a variable or more, and to modify the values of a variable. As attributes, global and those linked to a variable, are more dynamic, it is possible to remove, rename, or replace them.
-    
-    
+  The EGADS :class:`~.NetCdf` and :class:`~.EgadsNetCdf` use the official NetCDF I/O routines, therefore, as described in the NetCDF documentation, it is not possible to remove a variable or more, and to modify the values of a variable. As attributes, global and those linked to a variable, are more dynamic, it is possible to remove, rename, or replace them.
+
+
 Tutorial
 ---------
 
@@ -636,8 +568,7 @@ Working with NASA Ames files
 
 To work with NASA Ames files, EGADS incorporates the NAPpy library developed by Ag Stephens of BADC. Information about NAPpy can be found at http://proj.badc.rl.ac.uk/cows/wiki/CowsSupport/Nappy
 
-In EGADS, the NAPpy API has been adapted to match the other EGADS file access methods. Thus, from EGADS, NASA Ames files can be accessed via the
-:class:`egads.input.nasa_ames_io.NasaAmes` class. Actually, only the FFI 1001 has been interfaced with EGADS.
+In EGADS, the NAPpy API has been adapted to match the other EGADS file access methods. Thus, from EGADS, NASA Ames files can be accessed via the :class:`egads.input.nasa_ames_io.NasaAmes` class. Actually, only the FFI 1001 has been interfaced with EGADS.
 
 Opening
 --------
@@ -682,8 +613,7 @@ where ``var_name`` is the name of the variable to read in. The data will be read
 Writing data
 -------------
 
-To write data to the current file or to a new file, the user must save a dictionary of NASA/Ames elements. Few functions are 
-available to help him to prepare the dictionary:
+To write data to the current file or to a new file, the user must save a dictionary of NASA/Ames elements. Few functions are available to help him to prepare the dictionary:
 
 * ``f.create_na_dict`` -- create a new dictionary populated with standard NASA/Ames keys.
 * ``f.write_attribute_value(attr_name, attr_value)`` -- write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary
@@ -795,25 +725,18 @@ Since the first version of EGADS, the direct conversion was possible with the NA
 Working with algorithms
 ************************
 
-Algorithms in EGADS are stored in the :mod:`egads.algorithms` module, and separated into sub-modules
-by category (microphysics, thermodynamics, radiation, etc). Each algorithm follows a standard naming scheme, using the algorithm's purpose and source:
+Algorithms in EGADS are stored in the :mod:`egads.algorithms` module, and separated into sub-modules by category (microphysics, thermodynamics, radiation, etc). Each algorithm follows a standard naming scheme, using the algorithm's purpose and source:
 
 ``{CalculatedParameter}{Detail}{Source}``
 
-For example, an algorithm which calculates static temperature, which was provided by CNRM would be
-named:
+For example, an algorithm which calculates static temperature, which was provided by CNRM would be named:
 
 ``TempStaticCnrm``
 
 Getting algorithm information
 -----------------------------
 
-There are several methods to get information about each algorithm contained in EGADS. The EGADS
-Algorithm Handbook is available for easy reference outside of Python. In the handbook, each algorithm 
-is described in detail, including a brief algorithm summary, descriptions of algorithm inputs and outputs,
-the formula used in the algorithm, algorithm source and links to additional references. The handbook
-also specifies the exact name of the algorithm as defined in EGADS. The handbook
-can be found on the EGADS website.
+There are several methods to get information about each algorithm contained in EGADS. The EGADS Algorithm Handbook is available for easy reference outside of Python. In the handbook, each algorithm is described in detail, including a brief algorithm summary, descriptions of algorithm inputs and outputs, the formula used in the algorithm, algorithm source and links to additional references. The handbook also specifies the exact name of the algorithm as defined in EGADS. The handbook can be found on the EGADS website.
 
 Within Python, usage information on each algorithm can be found using the ``help()`` command::
 
@@ -857,27 +780,21 @@ Within Python, usage information on each algorithm can be found using the ``help
 Calling algorithms
 -------------------
 
-Algorithms in EGADS generally accept and return arguments of :class:`~.EgadsData` type, unless
-otherwise noted. This has the advantages of constant typing between algorithms, and allows
-metadata to be passed along the whole processing chain. Units on parameters being passed in are also
-checked for consistency, reducing errors in calculations. However, algorithms will accept any normal
-data type, as well. They can also return non-:class:`~.EgadsData` instances, if desired. 
+Algorithms in EGADS generally accept and return arguments of :class:`~.EgadsData` type, unless otherwise noted. This has the advantages of constant typing between algorithms, and allows metadata to be passed along the whole processing chain. Units on parameters being passed in are also checked for consistency, reducing errors in calculations, and rescaled if needed. However, algorithms will accept any normal data type, as well. They can also return non-:class:`~.EgadsData` instances, if desired.
 
-To call an algorithm, simply pass in the 
-required arguments, in the order they are described in the algorithm help function. An algorithm call, 
-using the ``VelocityTasCnrm`` in the previous section as an example, would therefore be the 
-following:
+To call an algorithm, simply pass in the required arguments, in the order they are described in the algorithm help function. An algorithm call, using the ``VelocityTasCnrm`` in the previous section as an example, would therefore be the following:
 
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm().run(T_s, P_s, dP, 
         cpa, Racpa)	
 
-where the arguments ``T_s``, ``P_s``, ``dP``, etc are all assumed to be previously defined in the 
-program scope. In this instance, the algorithm returns an :class:`~.EgadsData` instance to ``V_p``. To run
-the algorithm, but return a standard data type (scalar or array of doubles), set the ``return_Egads`` flag to ``false``.
+where the arguments ``T_s``, ``P_s``, ``dP``, etc are all assumed to be previously defined in the program scope. In this instance, the algorithm returns an :class:`~.EgadsData` instance to ``V_p``. To run the algorithm, but return a standard data type (scalar or array of doubles), set the ``return_Egads`` flag to ``false``.
 
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=false).
         run(T_s, P_s, dP, cpa, Racpa)
 
+.. NOTE::
+  When injecting a variable in an EgadsAlgorithm, the format of the variable should follow closely the documentation of the algorithm. If the variable is a scalar, and the algorithm needs a vector, the scalar should be surrounded by brackets: 52.123 -> [52.123].
+        
 .. raw:: latex
 
     \newpage
@@ -885,25 +802,19 @@ the algorithm, but return a standard data type (scalar or array of doubles), set
 Scripting
 **********
 
-The recommended method for using EGADS is to create script files, which are extremely useful for common or 
-repetitive tasks. This can be done using a text editor of your choice. The example script belows 
-shows the calculation of density for all NetCDF files in a directory.
+The recommended method for using EGADS is to create script files, which are extremely useful for common or repetitive tasks. This can be done using a text editor of your choice. The example script belows shows the calculation of density for all NetCDF files in a directory.
 
 .. literalinclude:: example_files/example.py
 
 Scripting Hints
 ----------------
 
-When scripting in Python, there are several important differences from other programming languages to keep in mind. This section outlines a few of these 
-differences.
+When scripting in Python, there are several important differences from other programming languages to keep in mind. This section outlines a few of these differences.
 
 Importance of white space
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Python differs from C++ and Fortran in how loops or nested statements are signified. Whereas
-C++ uses brackets ('``{``' and '``}``') and FORTRAN uses ``end`` statements to signify the end of a
-nesting, Python uses white space. Thus, for statements to nest properly, they must be set at the 
-proper depth. As long as the document is consistent, the number of spaces used doesn't matter, however, most conventions call for 4 spaces to be used per level. See below for examples:
+Python differs from C++ and Fortran in how loops or nested statements are signified. Whereas C++ uses brackets ('``{``' and '``}``') and FORTRAN uses ``end`` statements to signify the end of a nesting, Python uses white space. Thus, for statements to nest properly, they must be set at the proper depth. As long as the document is consistent, the number of spaces used doesn't matter, however, most conventions call for 4 spaces to be used per level. See below for examples:
 
 **FORTRAN**::
 
@@ -929,8 +840,8 @@ proper depth. As long as the document is consistent, the number of spaces used d
 Using the GUI
 **************
 
-Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply algorithms, display and plot data. Still in beta state, the user will have the possibility to create algorithms from the GUI, and to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, if EGADS is installed, and once in the EGADS GUI directory:
+Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply/create algorithms, display and plot data. Still in beta state, the user will have the possibility in the future to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, if EGADS is installed, and once in the EGADS GUI directory:
 
     >>> python egads_gui.py
 
-It will be available soon as a regular python package and as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).
+It will be available soon as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).

@@ -11,6 +11,18 @@ s = sec = second = UnitTime(
     symbol='s',
     aliases=['sec', 'seconds']
 )
+ks = kilosecond = UnitTime(
+    'kilosecond',
+    s*1000,
+    'ks',
+    aliases=['kiloseconds']
+)
+Ms = megasecond = UnitTime(
+    'megasecond',
+    ks*1000,
+    'Ms',
+    aliases=['megaseconds']
+)
 ms = millisecond = UnitTime(
     'millisecond',
     s/1000,

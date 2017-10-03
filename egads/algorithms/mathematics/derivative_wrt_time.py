@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-06-22 17:19"
-__version__ = "140"
+__version__ = "1.2"
 __all__ = ['DerivativeWrtTime']
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
 
     FILE        derivative_wrt_time.py
 
-    VERSION     140
+    VERSION     1.2
 
     CATEGORY    Mathematics
 
@@ -21,12 +21,12 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
                 of this derivative are centered for all except the first and last values in the vector
                 (Nones are returned for these values). Returns None for scalar parameters.
 
-    INPUT       x        vector        _                    Parameter to calculate first derivative
-                t        vector        s                    Time signal 
+    INPUT       x        vector        _       Parameter to calculate first derivative
+                t        vector        s       Time signal 
 
-    OUTPUT      x_dot    vector        units of 'x'/s       First derivative of x
+    OUTPUT      x_dot    vector        _       First derivative of x
 
-    SOURCE      sources
+    SOURCE
 
     REFERENCES
 
@@ -42,15 +42,21 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['x', 't'],
                                                           'InputUnits':[None, 's'],
-                                                          'InputTypes':['vector','time'],
+                                                          'InputTypes':['vector','vector'],
                                                           'InputDescription':['Parameter to calculate first derivative','Time signal'],
                                                           'Outputs':['x_dot'],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['First derivative of x'],
                                                           'Description':'Calculates the first derivative of a generic parameter wrt time. Calculations of this derivative are centered for all except the first and last values in the vector (Nones are returned for these values). Returns None for scalar parameters',
                                                           'Purpose':'Calculate first derivative of a generic parameter',
+                                                          'Category':'Mathematics',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

@@ -3,8 +3,8 @@ EGADS microphysics algorithms. See EGADS Algorithm Documentation for more info.
 """
 
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-19 11:43#$"
-__version__ = "$Revision:: 126       $"
+__date__ = "2017-01-19 11:43"
+__version__ = "1.2"
 
 import logging
 try:

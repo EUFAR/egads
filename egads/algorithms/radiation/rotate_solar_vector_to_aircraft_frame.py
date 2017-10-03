@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-01-11 9:31"
-__version__ = "120"
+__version__ = "1.3"
 __all__ = ['RotateSolarVectorToAircraftFrame']
 
 import egads.core.egads_core as egads_core
@@ -13,7 +13,7 @@ class RotateSolarVectorToAircraftFrame(egads_core.EgadsAlgorithm):
     """
     FILE        rotate_solar_vector_to_aircraft_frame.py
 
-    VERSION     120
+    VERSION     1.3
 
     CATEGORY    Radiation
 
@@ -62,6 +62,9 @@ class RotateSolarVectorToAircraftFrame(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Solar zenith, aircraft coordinates','Solar azimuth, aircraft coordinates (mathematic negative, north=0 deg)'],
                                                           'Purpose':'Rotates polar solar vector by rotation of aircraft roll, pitch and yaw',
                                                           'Description':'No description',
+                                                          'Category':'Radiation',
+                                                          'Source':'Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

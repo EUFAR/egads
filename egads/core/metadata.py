@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2017-01-11 16:05#$"
-__version__ = "$Revision:: 141       $"
+__date__ = "2017-01-11 16:05"
+__version__ = "1.2"
 __all__ = ['Metadata', 'FileMetadata', 'VariableMetadata', 'AlgorithmMetadata']
 
 import logging

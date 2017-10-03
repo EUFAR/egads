@@ -3,8 +3,8 @@ EGADS thermodynamics algorithms. See EGADS Algorithm Documentation for more info
 """
 
 __author__ = "ohenry"
-__date__ = "$Date: 2017-05-03 10:54$"
-__version__ = "$Revision: 100 $"
+__date__ = "2017-05-03 10:54"
+__version__ = "1.0"
 
 import logging
 try:

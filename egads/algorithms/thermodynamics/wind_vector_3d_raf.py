@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-06-22 17:19"
-__version__ = "140"
+__version__ = "1.2"
 __all__ = ['WindVector3dRaf']
 
 from numpy import sin, cos, tan, sqrt
@@ -12,7 +12,7 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
     """
     FILE        wind_vector_3d_raf.py
 
-    VERSION     140
+    VERSION     1.2
 
     CATEGORY    Thermodynamics
 
@@ -22,27 +22,27 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                 angle of attack and sideslip to calculate the three-dimensional
                 wind vector components.
 
-    INPUT     U_a        vector    m/s    corrected true air speed
-              alpha      vector    rad    aircraft angle of attack
-              beta       vector    rad    aircraft sideslip angle
-              u_p        vector    m/s    easterly aircraft velocity from INS
-              v_p        vector    m/s    northerly aircraft velocity from INS
-              w_p        vector    m/s    upward aircraft velocity from INS
-              phi        vector    rad    roll angle
-              theta      vector    rad    pitch angle
-              psi        vector    rad    true heading
-              theta_dot  vector    rad/s  pitch rate
-              psi_dot    vector    rad/s  roll rate
-              L          coeff     m      distance separating INS and gust probe
+    INPUT       U_a        vector    m/s    corrected true air speed
+                alpha      vector    rad    aircraft angle of attack
+                beta       vector    rad    aircraft sideslip angle
+                u_p        vector    m/s    easterly aircraft velocity from INS
+                v_p        vector    m/s    northerly aircraft velocity from INS
+                w_p        vector    m/s    upward aircraft velocity from INS
+                phi        vector    rad    roll angle
+                theta      vector    rad    pitch angle
+                psi        vector    rad    true heading
+                theta_dot  vector    rad/s  pitch rate
+                psi_dot    vector    rad/s  roll rate
+                L          coeff     m      distance separating INS and gust probe
                                           along aircraft center line
 
-    OUTPUT    u          vector    m/s    easterly wind velocity component
-              v          vector    m/s    northerly wind velocity component
-              w          vector    m/s    upward wind velocity component
+    OUTPUT      u          vector    m/s    easterly wind velocity component
+                v          vector    m/s    northerly wind velocity component
+                w          vector    m/s    upward wind velocity component
               
-    SOURCE      
+    SOURCE      NCAR-RAF
 
-    REFERENCES    NCAR-RAF Bulletin #23
+    REFERENCES  NCAR-RAF Bulletin #23
 
     """
 
@@ -79,6 +79,9 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Easterly wind velocity component','Northerly wind velocity component','Upward wind velocity component'],
                                                           'Purpose':'Calculation of 3d wind vector components',
                                                           'Description':'This algorithm applies vector transformations using aircraft speed, angle of attack and sideslip to calculate the three-dimensional wind vector components',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'NCAR-RAF',
+                                                          'References':'NCAR-RAF Bulletin #23',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

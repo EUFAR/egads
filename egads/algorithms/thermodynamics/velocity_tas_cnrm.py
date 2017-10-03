@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-17 13:29"
-__version__ = "101"
+__version__ = "1.0"
 __all__ = ["VelocityTasCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        velocity_tas_cnrm.py
 
-    VERSION     101
+    VERSION     1.0
 
     CATEGORY    Thermodynamics
 
@@ -52,6 +52,9 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['true airspeed'],
                                                           'Purpose':'Calculate true airspeed',
                                                           'Description':"Calculates true airspeed based on static temperature, static pressure and dynamic pressure using St Venant's formula",
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'"Mecanique des fluides", by S. Candel, Dunod. Bulletin NCAR/RAF Nr 23, Feb 87, by D. Lenschow and P. Spyers-Duran',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

@@ -3,6 +3,24 @@ CHANGELOG
 =========
 
 
+October 3 2017, Release version 0.8.4
+=====================================
+  MODIFIED:
+    - few logging messages have been modified for a better understanding.
+    - algorithm documentation has been updated.
+    - the documentation has been updated to inform the user on the use of scalars with algorithms.
+    
+  FIXED:
+    - the Quantities module has been updated in EGADS package to avoid a compatibility issue with the latest versions of Numpy.
+    
+  ADDED:
+    - the pre-validating function for units now can take care of dimensionless data based on events (unit = '1') and the CF unit for percent '0.01'.
+    - a test for Quantities module has been added.
+    - few new metadata have been added to algorithms for a better integration in the EGADS GUI.
+    - a basic conversion of temperature has been added to egads_core to palliate Quantities which does not support absolute temperature scales.
+    - a new algorithm to compute altitude from pressure and temperature, incrementally, has been added to EGADS.
+    - a new algorithm to compute decimal year from a specific time vector has been added to EGADS.
+
 
 June 22 2017, Release version 0.8.3
 ===================================

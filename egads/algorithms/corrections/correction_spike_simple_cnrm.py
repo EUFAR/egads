@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-06-22 17:19"
-__version__ = "140"
+__version__ = "1.1"
 __all__ = ['CorrectionSpikeSimpleCnrm']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        correction_spike_simple_cnrm.py
 
-    VERSION     140
+    VERSION     1.1
 
     CATEGORY    Corrections
 
@@ -47,12 +47,18 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','coeff'],
                                                           'InputDescription':['Parameter for analysis','Spike detection threshold (same units as X, must be positive)'],
                                                           'Outputs':['X_corr'],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Parameter with corrections applied'],
                                                           'Purpose':'Detects and corrects spikes which exceed a specific threshold',
                                                           'Description':'This algorithm detects spikes exceeding a specified threshold and corrects the spike with a mean of the surrounding values. This algorithm does not apply well to variables that are naturally discontinuous',
+                                                          'Category':'Corrections',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

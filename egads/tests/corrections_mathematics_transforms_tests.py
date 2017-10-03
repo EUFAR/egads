@@ -4,8 +4,8 @@ algorithms.
 """
 
 __author__ = "henry"
-__date__ = "$Date:: 2017-1-2 15:43#$"
-__version__ = "$Revision:: 11       $"
+__date__ = "2017-1-2 15:43"
+__version__ = "1.1"
 __all__ = ['CorrectionsTestCase', 'MathematicsTestCase', 'ConversionsTestCase']
 
 import numpy
@@ -27,7 +27,15 @@ class CorrectionsTestCase(unittest.TestCase):
         self.array_shape = self.array_test.shape
 
     def test_correction_spike_cnrm(self):
+        
+        print self.sea_level.value
+        
+        
         res_corr = corrections.CorrectionSpikeSimpleCnrm().run(self.sea_level, 5)
+        
+        print res_corr.value
+        
+        
         self.assertListEqual(res_corr.value.tolist(), self.corr_sea_level, 'The test vector and corrected vector dont match')
         res_corr = corrections.CorrectionSpikeSimpleCnrm().run(self.array_test, 5)
         self.assertEqual(res_corr.shape, self.array_shape, 'Sea level array shapes dont match')

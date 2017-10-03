@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-08-24 08:41"
-__version__ = "153"
+__version__ = "1.3"
 __all__ = ['ScatteringAngles']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
     """
     FILE        scattering_angles.py
 
-    VERSION     153
+    VERSION     1.3
 
     CATEGORY    Radiation
 
@@ -56,6 +56,9 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Scattering angles of each pixel'],
                                                           'Purpose':'Calculates the scattering angle for each pixel on an image given the camera viewing angle and solar vector',
                                                           'Description':'No description',
+                                                          'Category':'Radiation',
+                                                          'Source':'Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

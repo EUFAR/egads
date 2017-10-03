@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "163"
+__version__ = "1.2"
 __all__ = ['TempBlackbody']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class TempBlackbody(egads_core.EgadsAlgorithm):
     """
     FILE        temp_blackbody.py
 
-    VERSION     163
+    VERSION     1.2
 
     CATEGORY    Radiation
 
@@ -46,6 +46,9 @@ class TempBlackbody(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Temperature'],
                                                           'Purpose':'Calculates the blackbody temperature for a given radiance at a specific wavelength',
                                                           'Description':'No description',
+                                                          'Category':'Radiation',
+                                                          'Source':'Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

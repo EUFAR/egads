@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-6 15:46#$"
-__version__ = "$Revision:: 71        $"
+__date__ = "2016-12-6 15:46"
+__version__ = "1.1"
 
 
 from input_core import FileCore

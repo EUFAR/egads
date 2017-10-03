@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "163"
+__version__ = "1.3"
 __all__ = ['CameraViewingAngles']
 
 import egads
@@ -13,7 +13,7 @@ class CameraViewingAngles(egads_core.EgadsAlgorithm):
     """
     FILE        camera_viewing_angles.py
 
-    VERSION     163
+    VERSION     1.3
 
     CATEGORY    Radiation
 
@@ -61,6 +61,9 @@ class CameraViewingAngles(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Camera viewing zenith angle','Camera viewing azimuth angle (mathematic negative system with 0 deg into flight direction)'],
                                                           'Purpose':'Calculates per-pixel camera viewing angles for a digital camera image',
                                                           'Description':'Calculates per-pixel camera viewing angles of a digital camera given its sensor dimension and focal length. x--y coordinates are defined as having the left side of the image (x=0) aligned with the flight direction and y=0 to the top of the image',
+                                                          'Category':'Radiation',
+                                                          'Source':'Andre Ehrlich, Leipzig Institute for Meteorology (a.ehrlich@uni-leipzig.de)',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

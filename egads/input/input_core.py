@@ -1,6 +1,6 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2011-09-15 17:09#$"
-__version__ = "$Revision:: 83        $"
+__date__ = "2011-09-15 17:09"
+__version__ = "1.5"
 __all__ = ["FileCore", "get_file_list"]
 
 import glob

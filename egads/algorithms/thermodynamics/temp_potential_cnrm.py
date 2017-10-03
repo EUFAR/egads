@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-01-27 16:41"
-__version__ = "100"
+__version__ = "1.0"
 __all__ = ["TempPotentialCnrm"]
 
 import egads.core.egads_core as egads_core
@@ -11,7 +11,7 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
     """
     FILE        temp_potential_cnrm.py
 
-    VERSION     100
+    VERSION     1.0
 
     CATEGORY    Thermodynamics
 
@@ -48,6 +48,9 @@ class TempPotentialCnrm(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Potential temperature'],
                                                           'Purpose':'Calculates potential temperature',
                                                           'Description':'Calculates potential temperature given static temperature, pressure, and the ratio of gas constant and specific heat of air',
+                                                          'Category':'Thermodynamics',
+                                                          'Source':'CNRM/GMEI/TRAMM',
+                                                          'References':'Triplet-Roche.',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

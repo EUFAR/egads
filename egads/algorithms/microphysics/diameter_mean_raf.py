@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-02-07 17:23"
-__version__ = "125"
+__version__ = "1.1"
 __all__ = ['DiameterMeanRaf']
 
 import numpy
@@ -12,7 +12,7 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
     """
     FILE        diameter_mean_raf.py
 
-    VERSION     125
+    VERSION     1.1
 
     CATEGORY    Microphysics
 
@@ -40,21 +40,25 @@ class DiameterMeanRaf(egads_core.EgadsAlgorithm):
                                                                'standard_name':'',
                                                                'Category':['PMS Probe']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i'],
-                                                          'InputUnits':['', 'um'],
-                                                          'InputTypes':['array','vector'],
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i','d_i'],
+                                                          'InputUnits':['','um'],
+                                                          'InputTypes':['array[time, bins]','vector[bins]'],
                                                           'InputDescription':['Particle counts in each bin over time','Diameter of each channel'],
                                                           'Outputs':['D_bar'],
+                                                          'OutputUnits':['um'],
+                                                          'OutputTypes':['vector[time]'],
                                                           'OutputDescription':['Mean diameter'],
                                                           'Purpose':'Calculates mean diameter of particles',
                                                           'Description':'Calculates mean diameter of particles given an array of particle counts and a vector of their corresponding sizes, using the methods given in the NCAR RAF Bulletin #24',
+                                                          'Category':'Microphysics',
+                                                          'Source':'NCAR-RAF',
+                                                          'References':'NCAR-RAF Bulletin No. 24',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
+                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
-
-
 
     def run(self, n_i, d_i):
         return egads_core.EgadsAlgorithm.run(self, n_i, d_i)

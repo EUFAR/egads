@@ -11,7 +11,7 @@ Use of EGADS requires the following packages:
 * Python 2.7.10 or newer. Available at https://www.python.org/
 * numpy 1.10.1 or newer. Available at http://numpy.scipy.org/
 * scipy 0.15.0 or newer. Available at http://www.scipy.org/
-* Python netCDF4 libraries 1.1.9. Available at https://pypi.python.org/pypi/netCDF4
+* Python netCDF4 libraries 1.1.9 or newer. Available at https://pypi.python.org/pypi/netCDF4
 * python_dateutil 2.4.2 or newer. Available at https://pypi.python.org/pypi/python-dateutil
 
 

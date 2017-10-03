@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "163"
+__version__ = "1.3"
 __all__ = ['SampleAreaOapCenterInRaf']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
     """
     FILE        sample_area_oap_all_in_raf.py
 
-    VERSION     163
+    VERSION     1.3
 
     CATEGORY    Microphysics
 
@@ -52,6 +52,9 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
                                                           'OutputDescription':['Sample area'],
                                                           'Purpose':'Calculation of "center-in" sample area size for OAP probes',
                                                           'Description':'Calculation of "center-in" sample area size for OAP probes such as the 2DP, CIP, etc. The sample area varies by the number of shadowed diodes. This routine calculates a sample area per bin',
+                                                          'Category':'Microphysics',
+                                                          'Source':'NCAR-RAF',
+                                                          'References':'NCAR-RAF Bulletin No. 24',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

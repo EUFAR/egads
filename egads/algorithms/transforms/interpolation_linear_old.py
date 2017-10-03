@@ -1,6 +1,6 @@
 __author__ = "mfreer,ohenry"
 __date__ = "2016-01-04 09:39"
-__version__ = "152"
+__version__ = "1.2"
 __all__ = ['InterpolationLinearOld']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class InterpolationLinearOld(egads_core.EgadsAlgorithm):
     """
     FILE        interpolation_linear_old.py
 
-    VERSION     152
+    VERSION     1.2
 
     CATEGORY    Transforms
 
@@ -44,7 +44,7 @@ class InterpolationLinearOld(egads_core.EgadsAlgorithm):
                                                     and at the end are removed if f_right and f_left
                                                     are not set to nan.
 
-    SOURCE      sources
+    SOURCE
 
     REFERENCES
 
@@ -62,15 +62,18 @@ class InterpolationLinearOld(egads_core.EgadsAlgorithm):
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['x', 'f', 'x_interp', 'f_left', 'f_right'],
                                                           'InputUnits':[None, None, None, None, None],
                                                           'InputTypes':['vector','vector','vector','coeff_optional','coeff_optional'],
-                                                          'InputDescription':['x-coordinates of the data points (must be increasing)',
-                                                                              'Data points to interpolate',
+                                                          'InputDescription':['X-coordinates of the data points (must be increasing and must be the same size as f)',
+                                                                              'Data points to interpolate (nan can be used where data are missing, must be the same size as x)',
                                                                               'New set of coordinates to use in interpolation',
-                                                                              'value to return for x_interp < x[0], default is f[0]',
-                                                                              'Value to return when x_interp > x[-1], default is f[-1]'],
-                                                          'Outputs':['interpolated values of f'],
-                                                          'OutputDescription':['Interpolated values of f'],
+                                                                              'Value to return for x_interp < x[0], nan can be used if nans are present at the beginning of f and the user wants to keep them. Default is f[0], if nan are present at the beginning of f, the algorithm will keep them.',
+                                                                              'Value to return when x_interp > x[-1], nan can be used if nans are present at the end of f and the user wants to keep them. Default is f[-1], if nan are present at the end of f, the algorithm will keep them.'],
+                                                          'Outputs':['f_interp'],
+                                                          'OutputDescription':['Interpolated values of f, nans at the beginning and at the end are removed if f_right and f_left are not set to nan.'],
                                                           'Purpose':'Calculate linear interpolation of a variable',
                                                           'Description':'Calculates the one-dimensional piecewise linear interpolation of a variable between two coordinate systems',
+                                                          'Category':'Transforms',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

@@ -3,8 +3,8 @@ Test suite to verify complete functioning of all Microphysics algorithms.
 """
 
 __author__ = "henry"
-__date__ = "$Date:: 2017-1-5 14:48#$"
-__version__ = "$Revision:: 12       $"
+__date__ = "2017-1-5 14:48"
+__version__ = "1.4"
 __all__ = ['MicrophysicsTestCase']
 
 import unittest

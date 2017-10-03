@@ -1,0 +1,33 @@
+2017-10-03 10:35:03,624 : INFO : *****************************************
+2017-10-03 10:35:03,624 : INFO : EGADS 0.8.4 is starting ...
+2017-10-03 10:35:03,625 : INFO : *****************************************
+2017-10-03 10:35:04,698 : INFO : egads.Metadata has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.FileMetadata has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.VariableMetadata has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.AlgorithmMetadata has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.EgadsData has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.EgadsAlgorithm has been loaded
+2017-10-03 10:35:04,698 : INFO : egads.__init__: quantities has been imported
+2017-10-03 10:35:04,703 : INFO : egads [comparisons] algorithms have been loaded
+2017-10-03 10:35:04,715 : INFO : egads [corrections] algorithms have been loaded
+2017-10-03 10:35:04,717 : INFO : egads [mathematics] algorithms have been loaded
+2017-10-03 10:35:04,742 : INFO : egads [microphysics] algorithms have been loaded
+2017-10-03 10:35:04,760 : INFO : egads [thermodynamics] algorithms have been loaded
+2017-10-03 10:35:04,834 : INFO : egads [transforms] algorithms have been loaded
+2017-10-03 10:35:04,861 : INFO : egads [radiation] algorithms have been loaded
+2017-10-03 10:35:04,874 : INFO : egads [user/comparisons] algorithms have been loaded
+2017-10-03 10:35:04,884 : INFO : egads [user/corrections] algorithms have been loaded
+2017-10-03 10:35:04,890 : INFO : egads [user/mathematics] algorithms have been loaded
+2017-10-03 10:35:04,891 : INFO : egads [user/microphysics] algorithms have been loaded
+2017-10-03 10:35:04,891 : INFO : egads [user/thermodynamics] algorithms have been loaded
+2017-10-03 10:35:04,892 : INFO : egads [user/transforms] algorithms have been loaded
+2017-10-03 10:35:04,892 : INFO : egads [user/radiation] algorithms have been loaded
+2017-10-03 10:35:04,906 : INFO : egads.input.FileCore has been loaded
+2017-10-03 10:35:04,940 : INFO : egads.input.nasa_ames_io: nappy has been imported
+2017-10-03 10:35:04,940 : INFO : egads.input.NasaAmes has been loaded
+2017-10-03 10:35:05,111 : INFO : egads.input.NetCdf has been loaded
+2017-10-03 10:35:05,111 : INFO : egads.input.EgadsNetCdf has been loaded
+2017-10-03 10:35:05,131 : INFO : egads.input.EgadsFile has been loaded
+2017-10-03 10:35:05,131 : INFO : egads.input.EgadsCsv has been loaded
+2017-10-03 10:35:05,151 : INFO : egads.__init__: quantities has been imported
+2017-10-03 10:35:05,152 : INFO : EGADS 0.8.4 is ready ...

@@ -3,8 +3,8 @@ Test suite for Metadata classes.
 """
 
 __author__ = "mfreer, ohenry"
-__date__ = "$Date:: 2016-12-6 11:45#$"
-__version__ = "$Revision:: 130       $"
+__date__ = "2016-12-6 11:45"
+__version__ = "1.2"
 
 import unittest
 import egads.core.metadata as metadata
@@ -121,96 +121,6 @@ class MetadataCreationTestCase(unittest.TestCase):
         self.assertEqual(file_metadata, TEST_GLOBAL_METADATA_DICT, 'Global metadata not properly assigned to file metadata instance')
         self.assertEqual(alg_metadata, TEST_ALGORITHM_METADATA_DICT, 'Algorithm metadata not properly assigned to algorithm metadata instance')
         self.assertEqual(variable_metadata, TEST_VARIABLE_METADATA_DICT, 'Variable metadata not properly assigned to variable metadata instance')
-
-
-
-'''class MetadataConventionComplianceTestCase(unittest.TestCase):
-    """ Test compliance checker functionality in metadata cases. """
-
-    def setUp(self):
-        cf_var_metadata_dict = {'_FillValue':'',
-                                'valid_min':'',
-                                'valid_max':'',
-                                'valid_range':'',
-                                'scale_factor':'',
-                                'add_offset':'',
-                                'units':'',
-                                'long_name':'',
-                                'standard_name':'',
-                                'ancillary_variables':'',
-                                'flag_values':'',
-                                'flag_masks':'',
-                                'flag_meanings':''
-                                }
-        raf_var_metadata_dict = {'_FillValue':'',
-                                'units':'',
-                                'long_name':'',
-                                'standard_name':'',
-                                'SampledRate':'',
-                                'CalibrationCoefficients':'',
-                                'Category':'',
-                                'Dependencies':''
-                                }
-        iwgadts_var_metadata_dict = {'':'',
-                                     '':'',
-                                     '':'',
-                                     '':'',
-                                     '':'',
-                                     '':'',
-                                     '':''
-                                     }
-        eufar_var_metadata_dict = {'':'',
-                                  '':'',
-                                  '':'',
-                                  '':'',
-                                  '':'',
-                                  '':'',
-                                  '':'',
-                                  }
-        nasa_ames_var_metadata_dict = {'':'',
-                                       '':'',
-                                       '':'',
-                                       '':'',
-                                       '':'',
-                                       }
-
-        var_metadata = metadata.VariableMetadata();
-
-    def test_provide_convention_compliance_string(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_provide_convention_compliance_list(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_provide_convention_compliance_none(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_provide_nonexisting_convention_compliance(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_metadata_with_no_conventions(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_variable_metadata(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_file_metadata(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_complete_metadata(self):
-        #TODO: Complete test class 
-        pass
-
-    def test_incomplete_metadata(self):
-        #TODO: Complete test class 
-        pass'''
 
 
 def suite():

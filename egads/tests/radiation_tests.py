@@ -3,8 +3,8 @@ Test suite to verify complete functioning of all Radiation algorithms.
 """
 
 __author__ = "henry"
-__date__ = "$Date:: 2017-1-10 14:25#$"
-__version__ = "$Revision:: 21       $"
+__date__ = "2017-1-10 14:25"
+__version__ = "1.3"
 __all__ = ['RadiationTestCase']
 
 import unittest

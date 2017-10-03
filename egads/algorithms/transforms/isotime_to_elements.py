@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-07-06 17:42"
-__version__ = "146"
+__version__ = "1.2"
 __all__ = ['IsotimeToElements']
 
 import egads.core.egads_core as egads_core
@@ -12,14 +12,15 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
     """
     FILE        isotime_to_elements.py
 
-    VERSION     146
+    VERSION     1.2
 
     CATEGORY    Transforms
 
     PURPOSE     Splits a series of ISO string date-times (yyyymmddThhmmss, yyyy-mm-ddThh:mm:ss,
                  yyyymmdd or similar) into composant values.
 
-    DESCRIPTION ...
+    DESCRIPTION Splits a series of ISO string date-times (yyyymmddThhmmss, yyyy-mm-ddThh:mm:ss,
+                 yyyymmdd or similar) into composant values.
 
     INPUT       date_time    vector    yyyymmddThhmmss    ISO date-time string
                                        yyyymmdd           ISO date string
@@ -34,7 +35,7 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
                 second       vector    s                  second, equal to 0 if time string is not 
                                                           provided
 
-    SOURCE      sources
+    SOURCE
 
     REFERENCES
 
@@ -80,7 +81,10 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
                                                           'Outputs':['year', 'month', 'day', 'hour', 'minute', 'second'],
                                                           'OutputDescription':['Year', 'Month', 'Day', 'Hour', 'Minute', 'Second'],
                                                           'Purpose':'Splits a series of ISO string date-times (yyyymmddThhmmss or similar) into composant values',
-                                                          'Description':'No description',
+                                                          'Description':'Splits a series of ISO string date-times (yyyymmddThhmmss, yyyy-mm-ddThh:mm:ss, yyyymmdd or similar) into composant values.',
+                                                          'Category':'Transforms',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

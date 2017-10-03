@@ -1,13 +1,12 @@
 __author__ = "mfreer"
-__date__ = "$Date:: 2012-07-06 17:42#$"
-__version__ = "$Revision:: 148       $"
+__date__ = "2012-07-06 17:42"
+__version__ = "1.4"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
 import weakref
 import datetime
 import re
-import warnings
 import numpy
 import quantities as pq  # @UnresolvedImport
 import metadata
@@ -306,9 +305,7 @@ class EgadsAlgorithm(object):
             Parameters to pass into algorithm in the order specified in algorithm metadata.
         """
         
-        logging.debug('egads.EgadsAlgorithm.run invoked: name ' + self.name + ', args ')
-        for i in args:
-            logging.debug('.........................................' + str(i))   
+        logging.debug('egads.EgadsAlgorithm.run invoked: name ' + self.name + ', args ' + str(args)) 
         if not isinstance(self.output_metadata, list):
             output_metadata = self.output_metadata
             self.output_metadata = []
@@ -382,6 +379,7 @@ class EgadsAlgorithm(object):
             if isinstance(arg, EgadsData):
                 required_units = self.metadata['InputUnits'][i]
                 if required_units is not None:
+                    arg_corr = arg
                     required_units = _validate_units(required_units)
                     to_dims = pq.quantity.validate_dimensionality(required_units)
                     to_temps = []
@@ -394,11 +392,13 @@ class EgadsAlgorithm(object):
                             from_temps.append(from_unit)
                     for from_temp, to_temp in zip(from_temps, to_temps):
                         if from_temp._dimensionality != to_temp._dimensionality:
-                            warnings.warn("Unsupported conversion between temperature types." +
-                                             "'%s' given, '%s' expected."
-                                             % (from_temp._dimensionality.string, to_temp._dimensionality.string),
-                                             UserWarning)
-                    arg_corr = arg.rescale(required_units)
+                            if 'degC' in str(from_temp) and 'K' in str(to_temp):
+                                arg_corr = arg_corr + EgadsData(value=273.15, units=from_temp)
+                            elif 'K' in str(from_temp) and 'degC' in str(to_temp):
+                                arg_corr = arg_corr - EgadsData(value=273.15, units=from_temp)
+                            else:
+                                pass
+                    arg_corr = arg_corr.rescale(required_units)
                     out_arg.append(arg_corr.value)
                 else:
                     out_arg.append(arg.value)
@@ -470,8 +470,14 @@ def _validate_units(units):
     Corrects string units which are written without carets or multiplication symbols:
     'kg m-3' becomes 'kg*m^-3'
     
-    In quantities 0.10.1, the '%' symbol is not correctly recognized. Thus corrects
+    In quantities 0.10.1+, the '%' symbol is not correctly recognized. Thus corrects
     the '%' symbol to 'percent'.
+    
+    In few atmospheric measurement dataset, '0.01' can be used to represent '%'. Thus
+    corrects the '0.01' symbol to 'percent'.
+    
+    In few atmospheric measurement dataset, dimensionless data based on event have their
+    units equal to '1'. Thus corrects the '1' to 'dimensionless'.
     
     In quantities, the time unit 'time since ...' is not correctly recognized. Thus
     corrects the 'time since ...' to 'time'.
@@ -500,6 +506,9 @@ def _validate_units(units):
         units = regex_space.sub('*', units)
         if '%' in units:
             units = units.replace('%', 'percent')
-    logging.debug('...................................units ' + str(units))
+        if units == '1':
+            units = 'dimensionless'
+        if units == '0.01':
+            units = 'percent'
     return units
 

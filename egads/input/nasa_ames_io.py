@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2016-11-29 15:38"
-__version__ = "1.5"
+__version__ = "1.6"
 __all__ = ["NasaAmes"]
 
 import logging
@@ -12,13 +12,14 @@ import os
 from egads.input import FileCore
 try:
     import nappy
+    logging.info('egads.input.nasa_ames_io: nappy has been imported')
     if 'egads' not in nappy.__path__[0]:
-        logging.warning('EGADS has imported an already installed version of Nappy. If issues occure,'
+        logging.warning('egads.input.nasa_ames_io: EGADS has imported an already installed version of Nappy. If issues occure,'
                         + ' please check the version number of Nappy.')
         print ('EGADS has imported an already installed version of Nappy. If issues occure,'
                + ' please check the version number of Nappy.')
 except ImportError:
-    logging.warning('EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
+    logging.warning('egads.input.nasa_ames_io: EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
                  + ' or the presence of Nappy in third-party software directory.')
     raise ImportError('EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
                  + ' or the presence of Nappy in third-party software directory.')
@@ -64,6 +65,7 @@ class NasaAmes(FileCore):
         will have to populate the dictionary with other functions.
         """
         
+        logging.debug('egads.input.NasaAmes.create_na_dict invoked')
         rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
         ffi = 1001
         nlhead = 10
@@ -96,9 +98,7 @@ class NasaAmes(FileCore):
                 var_list = self.get_variable_list()
                 varnum = var_list.index(varname)
             variable, units, miss, scale = self.f.getVariable(varnum)
-            logging.debug('.................................................... main')
         except ValueError:
-            logging.debug('.................................................... independant')
             var_type = "independant"
             if isinstance(varname, int):
                 varnum = varname
@@ -405,7 +405,6 @@ class NasaAmes(FileCore):
                 for i in na_dict['XNAME']:
                     (var, _) = self._attemptVarAndUnitsMatch(i)
                     varname.append(var)
-        logging.debug('................................................varname ' + str(varname))
         return varname
     
     def get_dimension_list(self, vartype="main", na_dict=None):
@@ -438,7 +437,6 @@ class NasaAmes(FileCore):
                     dim_dict[var] = len(na_dict['V'][varnum])
                 if vartype == 'independant':
                     dim_dict[var] = len(na_dict['X'][varnum])
-        logging.debug('................................................dim_list ' + str(dim_dict))
         return dim_dict
     
     def get_attribute_list(self, varname=None, vartype="main", na_dict=None):
@@ -485,11 +483,8 @@ class NasaAmes(FileCore):
                         attr_list.append("name")
                     if units is not None:
                         attr_list.append("units")
-                logging.debug('................................................attr_list ' + str(attr_list))
                 return attr_list
             else:
-                logging.debug('................................................self.na_dict.keys() ' + 
-                              str(self.na_dict.keys()))
                 return self.na_dict.keys()
         else:
             if varname is not None:
@@ -525,11 +520,8 @@ class NasaAmes(FileCore):
                             attr_list.append("units")
                     except (KeyError, ValueError):
                         pass
-                logging.debug('................................................attr_list ' + str(attr_list))
                 return attr_list
             else:
-                logging.debug('................................................self.na_dict.keys() ' + 
-                              str(self.na_dict.keys()))
                 return self.na_dict.keys()
         
     def get_attribute_value(self, attrname, varname=None, vartype="main", na_dict=None):
@@ -557,8 +549,6 @@ class NasaAmes(FileCore):
         
         if not na_dict:
             if varname is None:
-                logging.debug('................................................self.na_dict[attrname] ' + 
-                              str(self.na_dict[attrname]))
                 return self.na_dict[attrname]
             else:
                 if isinstance(varname, int):
@@ -574,14 +564,9 @@ class NasaAmes(FileCore):
                 elif vartype == "independant":
                     vardict = {'name':self.f.getIndependentVariable(varnum)[0],
                            'units':self.f.getIndependentVariable(varnum)[1]}
-                
-                logging.debug('................................................vardict[attrname] ' + 
-                              str(vardict[attrname]))
                 return vardict[attrname]
         else:
             if varname is None:
-                logging.debug('................................................self.na_dict[attrname] ' + 
-                              str(na_dict[attrname]))
                 return na_dict[attrname]
             else:
                 if isinstance(varname, int):
@@ -599,8 +584,6 @@ class NasaAmes(FileCore):
                     (variable, units) = self._attemptVarAndUnitsMatch(na_dict["XNAME"][varnum])
                     vardict = {'name':variable,
                                'units':units}
-                logging.debug('................................................vardict[attrname] ' + 
-                              str(vardict[attrname]))
                 return vardict[attrname]
     
     def write_attribute_value(self,attrname, attrvalue, na_dict=None, varname=None, vartype="main"):
@@ -735,7 +718,8 @@ class NasaAmes(FileCore):
             Optional - String name of the netcdf file to be written. If no filename is passed, 
             the function will used the name of the actually opened NASA/Ames file.
         """
-
+        
+        logging.debug('egads.input.NasaAmes.convert_to_netcdf invoked: nc_file ' + str(nc_file))
         if not nc_file:
             filename, _ = os.path.splitext(self.filename)
             nc_file = filename + '.nc'
@@ -792,6 +776,8 @@ class NasaAmes(FileCore):
         for var in variable_list:
             g.write_variable(self.read_variable(var), var, dim_tuple)
         g.close()
+        logging.debug('egads.input.NasaAmes.convert_to_netcdf invoked: nc_file ' + str(nc_file)
+                      + ' -> file conversion OK')
 
     def _open_file(self, filename, perms):
         """

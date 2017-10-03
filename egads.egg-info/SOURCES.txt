@@ -6,14 +6,10 @@ run_tests.py
 setup.cfg
 setup.py
 Documentation/EGADS Algorithm Handbook - LATEX
-Documentation/EGADS Algorithm Handbook - v0.8.3.pdf
-Documentation/EGADS Documentation - v0.8.3.pdf
+Documentation/EGADS Algorithm Handbook - v0.8.4.pdf
+Documentation/EGADS Documentation - v0.8.4.pdf
 Documentation/changelog.txt
-Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.idx
-Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.log
-Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.out
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
-Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.toc
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
 Documentation/EGADS Algorithm Handbook - LATEX/fancyvrb.cfg
 Documentation/EGADS Algorithm Handbook - LATEX/pagesetup.cfg
@@ -68,6 +64,7 @@ Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/solar_vector
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/solar_vector_reda.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/radiation/temp_blackbody.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/algorithm_template.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/altitude_pressure_incremental_cnrm.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/altitude_pressure_raf.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/density_dry_air_cnrm.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/hum_rel_capacitive_cnrm.tex
@@ -86,6 +83,7 @@ Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_elements.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_seconds.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/seconds_to_isotime.tex
+Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/time_to_decimal_year.tex
 Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.tex
 Documentation/EGADS Algorithm Handbook - LATEX/cover/eufar_a_sm.png
 doc/Makefile
@@ -107,8 +105,6 @@ doc/source/example_files/na_example_file.na
 doc/source/example_files/na_example_script.py
 doc/source/example_files/ncdump_example_file.txt
 doc/source/example_files/temp_static_cnrm.tex
-doc/source/images/eufar_a_sm.pdf
-doc/source/images/eufar_new_logo.png
 doc/source/images/eufar_new_logo_white_bkgrd.png
 egads/__init__.py
 egads/_version.py
@@ -148,6 +144,7 @@ egads/algorithms/radiation/solar_vector_blanco.py
 egads/algorithms/radiation/solar_vector_reda.py
 egads/algorithms/radiation/temp_blackbody.py
 egads/algorithms/thermodynamics/__init__.py
+egads/algorithms/thermodynamics/altitude_pressure_incremental_cnrm.py
 egads/algorithms/thermodynamics/altitude_pressure_raf.py
 egads/algorithms/thermodynamics/density_dry_air_cnrm.py
 egads/algorithms/thermodynamics/hum_rel_capacitive_cnrm.py
@@ -168,9 +165,11 @@ egads/algorithms/transforms/interpolation_linear_old.py
 egads/algorithms/transforms/isotime_to_elements.py
 egads/algorithms/transforms/isotime_to_seconds.py
 egads/algorithms/transforms/seconds_to_isotime.py
+egads/algorithms/transforms/time_to_decimal_year.py
 egads/algorithms/user/__init__.py
 egads/algorithms/user/comparisons/__init__.py
 egads/algorithms/user/corrections/__init__.py
+egads/algorithms/user/corrections/my_algorithm_for_correction.py
 egads/algorithms/user/mathematics/__init__.py
 egads/algorithms/user/microphysics/__init__.py
 egads/algorithms/user/radiation/__init__.py

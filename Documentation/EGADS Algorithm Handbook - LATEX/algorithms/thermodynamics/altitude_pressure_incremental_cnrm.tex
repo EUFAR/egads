@@ -1,0 +1,41 @@
+%% $Date: 2017-09-30 11:21#$
+%% $Revision: 100 $
+\index{altitude\_pressure\_incremental\_cnrm}
+\algdesc{Incremantal pressure altitude
+}
+{ %%%%%% Algorithm name %%%%%%
+altitude\_pressure\_incremental\_cnrm
+}
+{ %%%%%% Algorithm summary %%%%%%
+Calculate a pressure altitude incrementally along the trajectory of an aircraft from the Laplace formula (Z2 = Z1 + Ra/g \textless\ Tv \textgreater\ log(P1/P2)).
+}
+{ %%%%%% Category %%%%%%
+Thermodynamics
+}
+{ %%%%%% Inputs %%%%%%
+$Ps$ & Vector[$t$] & Static pressure [hPa] \\
+$Tv$ & Vector[$t$] & Virtual temperature [K or \deg C] \\
+$t$ & Vector[$t$] & Measurement period [s] \\
+$Z0$ & Coeff & Reference altitude at S0 if S0 is provided, can be airport altitude (m) if S0 is not provided and measurements start in airport [m] \\
+$S0$ & Coeff, optional & Reference time, if not provided S0 = t[0] [s]
+}
+{ %%%%%% Outputs %%%%%%
+$alt\_p$ & Vector[$t$] & Pressure altitude [m]
+}
+{ %%%%%% Formula %%%%%%
+$Tv$ is converted to Kelvin if needed, then:
+\begin{center}$Z_{i0}$ = $Z0$ with $i0$ such as $ref\_time_{i0}$ = $S0$\end{center}
+\begin{displaymath}Zj = Zi + \frac{R_a}{g}\cdot\left(\frac{Tv_j + Tv_i}{2}\right)\cdot\log\left(\frac{Ps_i}{Ps_j}\right)\mbox{ with }\left\{\begin{array}{ll}
+        i = j + 1 \mbox{ for } j < i0 \\
+        i = j - 1 \mbox{ for } j > i0
+    \end{array}
+\right.\end{displaymath}
+
+
+}
+{ %%%%%% Author %%%%%%
+CNRM/GMEI/TRAMM
+}
+{ %%%%%% References %%%%%% 
+Equation of state for a perfect gas, Triplet-Roche \cite{Triplet}, page 36.
+}
