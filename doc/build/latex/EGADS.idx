@@ -1,0 +1,83 @@
+\indexentry{egads.core.egads\_core (module)|hyperpage}{32}
+\indexentry{EgadsData (class in egads.core.egads\_core)|hyperpage}{32}
+\indexentry{copy() (egads.core.egads\_core.EgadsData method)|hyperpage}{32}
+\indexentry{get\_units() (egads.core.egads\_core.EgadsData method)|hyperpage}{32}
+\indexentry{print\_description() (egads.core.egads\_core.EgadsData method)|hyperpage}{32}
+\indexentry{print\_shape() (egads.core.egads\_core.EgadsData method)|hyperpage}{32}
+\indexentry{rescale() (egads.core.egads\_core.EgadsData method)|hyperpage}{32}
+\indexentry{EgadsAlgorithm (class in egads.core.egads\_core)|hyperpage}{32}
+\indexentry{get\_info() (egads.core.egads\_core.EgadsAlgorithm method)|hyperpage}{33}
+\indexentry{now() (egads.core.egads\_core.EgadsAlgorithm method)|hyperpage}{33}
+\indexentry{processor() (egads.core.egads\_core.EgadsAlgorithm method)|hyperpage}{33}
+\indexentry{run() (egads.core.egads\_core.EgadsAlgorithm method)|hyperpage}{33}
+\indexentry{time\_stamp() (egads.core.egads\_core.EgadsAlgorithm method)|hyperpage}{33}
+\indexentry{egads.core.metadata (module)|hyperpage}{33}
+\indexentry{Metadata (class in egads.core.metadata)|hyperpage}{33}
+\indexentry{add\_items() (egads.core.metadata.Metadata method)|hyperpage}{33}
+\indexentry{compliance\_check() (egads.core.metadata.Metadata method)|hyperpage}{33}
+\indexentry{set\_conventions() (egads.core.metadata.Metadata method)|hyperpage}{33}
+\indexentry{FileMetadata (class in egads.core.metadata)|hyperpage}{33}
+\indexentry{set\_filename() (egads.core.metadata.FileMetadata method)|hyperpage}{34}
+\indexentry{VariableMetadata (class in egads.core.metadata)|hyperpage}{34}
+\indexentry{set\_parent() (egads.core.metadata.VariableMetadata method)|hyperpage}{34}
+\indexentry{AlgorithmMetadata (class in egads.core.metadata)|hyperpage}{34}
+\indexentry{assign\_children() (egads.core.metadata.AlgorithmMetadata method)|hyperpage}{34}
+\indexentry{egads.input.input\_core (module)|hyperpage}{35}
+\indexentry{FileCore (class in egads.input.input\_core)|hyperpage}{35}
+\indexentry{close() (egads.input.input\_core.FileCore method)|hyperpage}{35}
+\indexentry{get\_filename() (egads.input.input\_core.FileCore method)|hyperpage}{35}
+\indexentry{get\_perms() (egads.input.input\_core.FileCore method)|hyperpage}{35}
+\indexentry{open() (egads.input.input\_core.FileCore method)|hyperpage}{35}
+\indexentry{get\_file\_list() (in module egads.input.input\_core)|hyperpage}{35}
+\indexentry{egads.input.nasa\_ames\_io (module)|hyperpage}{35}
+\indexentry{NasaAmes (class in egads.input.nasa\_ames\_io)|hyperpage}{35}
+\indexentry{convert\_to\_netcdf() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{35}
+\indexentry{create\_na\_dict() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{36}
+\indexentry{get\_attribute\_list() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{36}
+\indexentry{get\_attribute\_value() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{36}
+\indexentry{get\_dimension\_list() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{36}
+\indexentry{get\_variable\_list() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{36}
+\indexentry{read\_na\_dict() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{37}
+\indexentry{read\_variable() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{37}
+\indexentry{save\_na\_file() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{37}
+\indexentry{write\_attribute\_value() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{37}
+\indexentry{write\_variable() (egads.input.nasa\_ames\_io.NasaAmes method)|hyperpage}{37}
+\indexentry{egads.input.netcdf\_io (module)|hyperpage}{38}
+\indexentry{NetCdf (class in egads.input.netcdf\_io)|hyperpage}{38}
+\indexentry{add\_attribute() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{38}
+\indexentry{add\_dim() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{38}
+\indexentry{change\_variable\_name() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{38}
+\indexentry{convert\_to\_csv() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{38}
+\indexentry{convert\_to\_nasa\_ames() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{39}
+\indexentry{delete\_attribute() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{39}
+\indexentry{get\_attribute\_list() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{39}
+\indexentry{get\_attribute\_value() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{39}
+\indexentry{get\_dimension\_list() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{get\_perms() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{get\_variable\_list() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{open() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{read\_variable() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{write\_variable() (egads.input.netcdf\_io.NetCdf method)|hyperpage}{40}
+\indexentry{EgadsNetCdf (class in egads.input.netcdf\_io)|hyperpage}{40}
+\indexentry{convert\_to\_csv() (egads.input.netcdf\_io.EgadsNetCdf method)|hyperpage}{41}
+\indexentry{convert\_to\_nasa\_ames() (egads.input.netcdf\_io.EgadsNetCdf method)|hyperpage}{41}
+\indexentry{read\_variable() (egads.input.netcdf\_io.EgadsNetCdf method)|hyperpage}{41}
+\indexentry{write\_variable() (egads.input.netcdf\_io.EgadsNetCdf method)|hyperpage}{41}
+\indexentry{egads.input.text\_file\_io (module)|hyperpage}{42}
+\indexentry{EgadsFile (class in egads.input.text\_file\_io)|hyperpage}{42}
+\indexentry{close() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{display\_file() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{get\_position() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{read() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{read\_line() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{reset() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{seek() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{write() (egads.input.text\_file\_io.EgadsFile method)|hyperpage}{42}
+\indexentry{EgadsCsv (class in egads.input.text\_file\_io)|hyperpage}{42}
+\indexentry{display\_file() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{open() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{read() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{skip\_line() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{write() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{writerows() (egads.input.text\_file\_io.EgadsCsv method)|hyperpage}{43}
+\indexentry{parse\_string\_array() (in module egads.input.text\_file\_io)|hyperpage}{43}

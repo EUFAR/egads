@@ -41,7 +41,7 @@ Within the file itself, there are one rule to respect and several elements in th
 
     self.metadata:
         * Inputs: representation of each input in the documentation and in the code (ex: P_a for altitude pressure).
-        * InputUnits: a list of all input units, one unit per input, '' for dimensionless input and 'None' for the input parameter from which the output is to be derived.
+        * InputUnits: a list of all input units, one unit per input, '' for dimensionless input and 'None' for the input accepting every kind of units.
         * InputTypes: the type of the input (array, vector, coeff, ...) linked to the ``var_type`` string in the algorithm template ; the string ``_optional`` can be added to inform that the input is optional (used in the EGADS GUI).
         * InputDescription: short description of each input.
         * Outputs: representation of each output (ex: P_a for altitude pressure).
@@ -58,8 +58,12 @@ Within the file itself, there are one rule to respect and several elements in th
    
    
 .. NOTE::
-   For algorithms in which the output units depend on the input units (i.e. a purely mathematical transform, derivative, etc), there is a specific methodology to tell EGADS how to set the output units. To do this, set the appropriate 'units' parameter of output_metadata to 'inputn' where *n* is the number of the input parameter from which to get units (starting at 0). The units on the input parameter from which the output is to be derived should be set to 'None'. For algorithms in which the input units are dimensionless (a factor, a quantity, a coefficient), the units on the input parameter should be set to ''.
+  For algorithms in which the output units depend on the input units (i.e. a purely mathematical transform, derivative, etc), there is a specific methodology to tell EGADS how to set the output units. To do this, set the appropriate ``units`` parameter of output_metadata to ``inputn`` where *n* is the number of the input parameter from which to get units (starting at 0). For algorithms in which the units of the input has no importance, the input units should set to ``None``. For algorithms in which the input units are dimensionless (a factor, a quantity, a coefficient), the units on the input parameter should be set to ``''``.
+   
+.. NOTE::
+  EGADS accepts different kind of input type: coeff. for coefficient, vector, array, string, ... When writing the docstring of an algorithm and the metadata ``InputTypes``, the user should write the type carefully as it is interpreted by EGADS. If a type depends on another variable or multiple variables, for example the time, or geographic coordinates, the variable name should be written between brackets (ex: array[lon,lat]). If a variable is optional, the user should add ``, optional`` to the type in the doctstring, and ``_optional`` to the type in the metadata ``InputTypes``.
 
+  
 5. Definition of parameters
     In both the run and _algorithm methods, the local names intended for inputs need to be included. There are three locations where the same list must be added (marked in bold):
    

@@ -169,7 +169,6 @@ egads/algorithms/transforms/time_to_decimal_year.py
 egads/algorithms/user/__init__.py
 egads/algorithms/user/comparisons/__init__.py
 egads/algorithms/user/corrections/__init__.py
-egads/algorithms/user/corrections/my_algorithm_for_correction.py
 egads/algorithms/user/mathematics/__init__.py
 egads/algorithms/user/microphysics/__init__.py
 egads/algorithms/user/radiation/__init__.py
