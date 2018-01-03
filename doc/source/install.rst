@@ -57,7 +57,7 @@ Log
 A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/EGADS x.x.x/egads' directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
 
    >>> import egads
-   >>> egads.set_log_options('level'='INFO', 'path'='/path/to/log/directory/')
+   >>> egads.set_log_options(log_level='INFO', log_path='/path/to/log/directory/')
    >>> exit()
 
 Actual options to control the logging system are for now:

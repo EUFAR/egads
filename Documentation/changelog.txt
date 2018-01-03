@@ -3,6 +3,12 @@ CHANGELOG
 =========
 
 
+January 3 2018, Release version 0.8.7
+=====================================
+  FIXED:
+    - the documentation has been fixed and updated.
+
+
 January 3 2018, Release version 0.8.6
 =====================================
   FIXED:

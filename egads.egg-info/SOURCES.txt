@@ -6,8 +6,8 @@ run_tests.py
 setup.cfg
 setup.py
 Documentation/EGADS Algorithm Handbook - LATEX
-Documentation/EGADS Algorithm Handbook - v0.8.6.pdf
-Documentation/EGADS Documentation - v0.8.6.pdf
+Documentation/EGADS Algorithm Handbook - v0.8.7.pdf
+Documentation/EGADS Documentation - v0.8.7.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
