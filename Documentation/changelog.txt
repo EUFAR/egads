@@ -3,6 +3,22 @@ CHANGELOG
 =========
 
 
+January 3 2018, Release version 0.8.6
+=====================================
+  FIXED:
+    - in the algorithm TimeToDecimalYear, when rescaling ISOtime to seconds, the value was passed as a scalar and not as a list.
+
+  MODIFIED:
+    - logging messages have been standardized with those of EGADS GUI.
+    - the set_log_options has been modified to accept level and path for log, and not a dictionary for options.
+
+  ADDED:
+    - if an egads.ini file doesn't exist in the EGADS directory, EGADS will create it with default options.
+    - functions have been added to explore the config dictionary.
+    - the user can now check if an update for EGADS exist.
+    - an option in the egads.ini file has been added to check, or not, for an update automatically when EGADS is imported.
+
+
 October 4 2017, Release version 0.8.5
 =====================================
   MODIFIED:

@@ -13,7 +13,7 @@ import microphysics_tests
 import radiation_tests
 
 def test():
-    logging.info('egads tests are starting ...')
+    logging.info('egads - test_all.py - test - egads tests are starting ...')
     suite = unittest.TestSuite()
     suite.addTest(egads_tests.suite())
     suite.addTest(metadata_tests.suite())
@@ -24,17 +24,17 @@ def test():
     suite.addTest(microphysics_tests.suite())
     suite.addTest(radiation_tests.suite())
     result = unittest.TextTestRunner(verbosity=2).run(suite)
-    logging.info('egads tests are finished.')
-    logging.debug('egads.test invoked: tests run ' + str(result.testsRun))
+    logging.info('egads - test_all.py - test - egads tests are finished.')
+    logging.debug('egads - test_all.py - test - tests run ' + str(result.testsRun))
     if result.errors:
-        logging.debug('egads.test invoked: errors ' + str(len(result.errors)))
+        logging.debug('egads - test_all.py - test - errors ' + str(len(result.errors)))
         for i in result.errors:
             logging.debug('...........................' + str(i))
     else:
-        logging.debug('egads.test invoked: no error')
+        logging.debug('egads - test_all.py - test - no error')
     if result.failures:
-        logging.debug('egads.test invoked: failures ' + str(len(result.failures)))
+        logging.debug('egads - test_all.py - test - failures ' + str(len(result.failures)))
         for i in result.failures:
             logging.debug('.............................' + str(i[0]) + ' -> ' + str(i[-1]))
     else:
-        logging.debug('egads.test invoked: no failure')
+        logging.debug('egads - test_all.py - test - no failure')

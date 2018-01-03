@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2016-11-29 15:38"
-__version__ = "1.6"
+__version__ = "1.7"
 __all__ = ["NasaAmes"]
 
 import logging
@@ -12,14 +12,14 @@ import os
 from egads.input import FileCore
 try:
     import nappy
-    logging.info('egads.input.nasa_ames_io: nappy has been imported')
+    logging.info('egads - nasa_ames_io.py - nappy has been imported')
     if 'egads' not in nappy.__path__[0]:
-        logging.warning('egads.input.nasa_ames_io: EGADS has imported an already installed version of Nappy. If issues occure,'
+        logging.warning('egads - nasa_ames_io.py - EGADS has imported an already installed version of Nappy. If issues occure,'
                         + ' please check the version number of Nappy.')
         print ('EGADS has imported an already installed version of Nappy. If issues occure,'
                + ' please check the version number of Nappy.')
 except ImportError:
-    logging.warning('egads.input.nasa_ames_io: EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
+    logging.exception('egads - nasa_ames_io.py - EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
                  + ' or the presence of Nappy in third-party software directory.')
     raise ImportError('EGADS couldn''t find Nappy. Please check for a valid installation of Nappy'
                  + ' or the presence of Nappy in third-party software directory.')
@@ -46,7 +46,7 @@ class NasaAmes(FileCore):
             and ``r`` for read. ``r`` is the default value.
         """
         
-        logging.debug('egads.input.NasaAmes.get_filename invoked: filename ' + str(filename) + ', perms' + str(perms))
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - get_filename - filename ' + str(filename) + ', perms' + str(perms))
         self.file_metadata = None
         FileCore.__init__(self, filename, perms)
 
@@ -56,7 +56,7 @@ class NasaAmes(FileCore):
         the user to read the dictionary in a custom object.
         """
         
-        logging.debug('egads.input.NasaAmes.read_na_dict invoked')
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - read_na_dict')
         return copy.deepcopy(self.f.getNADict())
 
     def create_na_dict(self):
@@ -65,7 +65,7 @@ class NasaAmes(FileCore):
         will have to populate the dictionary with other functions.
         """
         
-        logging.debug('egads.input.NasaAmes.create_na_dict invoked')
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - create_na_dict')
         rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
         ffi = 1001
         nlhead = 10
@@ -89,7 +89,7 @@ class NasaAmes(FileCore):
             open file.
         """
         
-        logging.debug('egads.input.NasaAmes.read_variable invoked: varname ' + str(varname))
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - read_variable - varname ' + str(varname))
         var_type = "main"
         try:
             if isinstance(varname, int):
@@ -99,6 +99,7 @@ class NasaAmes(FileCore):
                 varnum = var_list.index(varname)
             variable, units, miss, scale = self.f.getVariable(varnum)
         except ValueError:
+            logging.exception('egads - nasa_ames_io.py - NasaAmes - read_variable - no main variable called ' + str(varname))
             var_type = "independant"
             if isinstance(varname, int):
                 varnum = varname
@@ -116,7 +117,7 @@ class NasaAmes(FileCore):
                                                                   self.file_metadata)
         na_data = self.f.getVariableValues(varnum, var_type)
         data = egads.EgadsData(na_data, variable_metadata)
-        logging.debug('egads.input.NasaAmes.read_variable invoked: varname ' + str(varname) + ' -> data read OK')
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - read_variable - varname ' + str(varname) + ' -> data read OK')
         return data
 
     def write_variable(self, data, varname=None, vartype="main", attrdict=None, na_dict=None):
@@ -142,7 +143,7 @@ class NasaAmes(FileCore):
             mandatory if creating a new file or creating a new dictionary.
         """
         
-        logging.debug('egads.input.NasaAmes.write_variable invoked: data_type ' + str(type(data)) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - write_variable - data_type ' + str(type(data)) + 
                       ', vartype ' + str(vartype) + ', na_dict ' + str(na_dict) + ', varname ' + 
                       str(varname) + ', attrdict ' + str(attrdict))
         if na_dict is None:
@@ -168,14 +169,17 @@ class NasaAmes(FileCore):
                                 try:
                                     name = data.metadata["long_name"]
                                 except KeyError:
+                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                     raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = data.metadata["units"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                             raise KeyError('The EgadsData object has no units metadata')
                         try:
                             scale = data.metadata["scale_factor"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no scale_factor metadata')
                             raise KeyError('The EgadsData object has no scale_factor metadata')
                         try:
                             miss = data.metadata["_FillValue"]
@@ -183,6 +187,7 @@ class NasaAmes(FileCore):
                             try:
                                 miss = data.metadata["missing_value"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no _FillValue or missing_value metadata')
                                 raise KeyError('The EgadsData object has no _FillValue or missing_value metadata')
                     else:
                         value = data
@@ -195,14 +200,17 @@ class NasaAmes(FileCore):
                                 try:
                                     name = attrdict["long_name"]
                                 except KeyError:
+                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                     raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = attrdict["units"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                             raise KeyError('The EgadsData object has no units metadata')
                         try:
                             scale = attrdict["scale_factor"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no scale_factor metadata')
                             raise KeyError('The EgadsData object has no scale_factor metadata')
                         try:
                             miss = attrdict["_FillValue"]
@@ -210,6 +218,7 @@ class NasaAmes(FileCore):
                             try:
                                 miss = attrdict["missing_value"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no _FillValue or missing_value metadata')
                                 raise KeyError('The EgadsData object has no _FillValue or missing_value metadata')
                     self.f.NV += 1
                     self.f.V.append(value)
@@ -239,10 +248,12 @@ class NasaAmes(FileCore):
                                 try:
                                     name = data.metadata["long_name"]
                                 except KeyError:
+                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                     raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = data.metadata["units"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                             raise KeyError('The EgadsData object has no units metadata')
                     else:
                         value = data
@@ -255,10 +266,12 @@ class NasaAmes(FileCore):
                                 try:
                                     name = attrdict["long_name"]
                                 except KeyError:
+                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                     raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = attrdict["units"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                             raise KeyError('The EgadsData object has no units metadata')
                     self.f.NX += 1
                     self.f.X.append(value)
@@ -276,14 +289,17 @@ class NasaAmes(FileCore):
                             try:
                                 name = data.metadata["long_name"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                 raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = data.metadata["units"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                         raise KeyError('The EgadsData object has no units metadata')
                     try:
                         scale = data.metadata["scale_factor"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no scale_factor metadata')
                         raise KeyError('The EgadsData object has no scale_factor metadata')
                     try:
                         miss = data.metadata["_FillValue"]
@@ -291,6 +307,7 @@ class NasaAmes(FileCore):
                         try:
                             miss = data.metadata["missing_value"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no _FillValue or missing_value metadata')
                             raise KeyError('The EgadsData object has no _FillValue or missing_value metadata')
                 else:
                     value = data
@@ -303,14 +320,17 @@ class NasaAmes(FileCore):
                             try:
                                 name = attrdict["long_name"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                 raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = attrdict["units"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                         raise KeyError('The EgadsData object has no units metadata')
                     try:
                         scale = attrdict["scale_factor"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no scale_factor metadata')
                         raise KeyError('The EgadsData object has no scale_factor metadata')
                     try:
                         miss = attrdict["_FillValue"]
@@ -318,6 +338,7 @@ class NasaAmes(FileCore):
                         try:
                             miss = attrdict["missing_value"]
                         except KeyError:
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no _FillValue or missing_value metadata')
                             raise KeyError('The EgadsData object has no _FillValue or missing_value metadata')
             
                 na_dict['VNAME'].append(name + ' (' + units + ')' )
@@ -337,10 +358,12 @@ class NasaAmes(FileCore):
                             try:
                                 name = data.metadata["long_name"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                 raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = data.metadata["units"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                         raise KeyError('The EgadsData object has no units metadata')
                 else:
                     value = data
@@ -353,16 +376,18 @@ class NasaAmes(FileCore):
                             try:
                                 name = attrdict["long_name"]
                             except KeyError:
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
                                 raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = attrdict["units"]
                     except KeyError:
+                        logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no units metadata')
                         raise KeyError('The EgadsData object has no units metadata')
                     
                 na_dict['XNAME'].append(name + ' (' + units + ')' )
                 na_dict['NX'] += 1
                 na_dict['X'] = value 
-        logging.debug('egads.input.NasaAmes.write_variable invoked -> data write OK')
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - write_variable - data write OK')
 
     def get_variable_list(self, na_dict=None, vartype="main"):
         """ 
@@ -378,7 +403,7 @@ class NasaAmes(FileCore):
             and ``auxiliary`` for auxiliary variables.
         """
         
-        logging.debug('egads.input.NasaAmes.get_variable_list invoked: vartype ' + str(vartype) +
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - get_variable_list - vartype ' + str(vartype) +
                       ', na_dict ' + str(na_dict))
         if not na_dict:
             try:
@@ -392,7 +417,7 @@ class NasaAmes(FileCore):
                 for var in var_list:
                     varname.append(var[0])
             except AttributeError:
-                logging.error('egads.input.NasaAmes.get_variable_list invoked: AttributeError, no ' +
+                logging.exception('egads - nasa_ames_io.py - NasaAmes - get_variable_list - AttributeError, no ' +
                               'file opened or no na_dict passed.')
                 raise AttributeError("ERROR: no file opened or no na_dict passed")
         else:
@@ -421,7 +446,7 @@ class NasaAmes(FileCore):
             file . Only mandatory if creating a new file or creating a new dictionary.
         """
         
-        logging.debug('egads.input.NasaAmes.get_dimension_list invoked: vartype ' + str(vartype) +
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - get_dimension_list - vartype ' + str(vartype) +
                       ', na_dict ' + str(na_dict))
         dim_dict = {}
         if not na_dict:
@@ -457,7 +482,7 @@ class NasaAmes(FileCore):
             file . Only mandatory if creating a new file or creating a new dictionary.
         """
 
-        logging.debug('egads.input.NasaAmes.get_attribute_list invoked: varname ' + str(varname) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - get_attribute_list - varname ' + str(varname) + 
                       ', vartype ' + str(vartype) + ', na_dict ' + str(na_dict))
         if not na_dict:
             if varname is not None:
@@ -544,7 +569,7 @@ class NasaAmes(FileCore):
             file . Only mandatory if creating a new file or creating a new dictionary.
         """
         
-        logging.debug('egads.input.NasaAmes.get_attribute_value invoked: attrname ' + str(attrname) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - get_attribute_value - attrname ' + str(attrname) + 
                       ', varname ' + str(varname) + ', vartype ' + str(vartype))
         
         if not na_dict:
@@ -609,7 +634,7 @@ class NasaAmes(FileCore):
             of the main variable .
         """
         
-        logging.debug('egads.input.NasaAmes.write_attribute_value invoked: attrname ' + str(attrname) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - write_attribute_value - attrname ' + str(attrname) + 
                       ', attrvalue ' + str(attrvalue) + ', varname ' + str(varname) + ', vartype ' +
                        str(vartype) + '; na_dict ' + str(na_dict))
         if na_dict is None:
@@ -669,7 +694,7 @@ class NasaAmes(FileCore):
                                          "VNAME or XNAME metadata. Please check your inputs or " +
                                          "create a new variable before.")
             
-        logging.debug('egads.input.NasaAmes.write_attribute_value invoked -> attribute write OK')
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - write_attribute_value - attribute write OK')
 
     def save_na_file(self, filename=None, na_dict=None, float_format='%.g', delimiter=None, 
                      annotation=False, no_header=False):
@@ -695,7 +720,7 @@ class NasaAmes(FileCore):
             data section. Default - False.
         """
         
-        logging.debug('egads.input.NasaAmes.save_na_file invoked: filename ' + str(filename) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - save_na_file - filename ' + str(filename) + 
                       ', float_format ' + str(float_format))
         if not na_dict:
             na_dict = self.f.na_dict
@@ -719,7 +744,7 @@ class NasaAmes(FileCore):
             the function will used the name of the actually opened NASA/Ames file.
         """
         
-        logging.debug('egads.input.NasaAmes.convert_to_netcdf invoked: nc_file ' + str(nc_file))
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - convert_to_netcdf - nc_file ' + str(nc_file))
         if not nc_file:
             filename, _ = os.path.splitext(self.filename)
             nc_file = filename + '.nc'
@@ -776,7 +801,7 @@ class NasaAmes(FileCore):
         for var in variable_list:
             g.write_variable(self.read_variable(var), var, dim_tuple)
         g.close()
-        logging.debug('egads.input.NasaAmes.convert_to_netcdf invoked: nc_file ' + str(nc_file)
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - convert_to_netcdf - nc_file ' + str(nc_file)
                       + ' -> file conversion OK')
 
     def _open_file(self, filename, perms):
@@ -790,7 +815,7 @@ class NasaAmes(FileCore):
             ``a`` and ``r+`` for append, and ``r`` for read.
         """
         
-        logging.debug('egads.input.NasaAmes.open_file invoked: filename ' + str(filename) + 
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - open_file - filename ' + str(filename) + 
                       ', perms ' + str(perms))
         self.close()
         try:
@@ -812,11 +837,11 @@ class NasaAmes(FileCore):
             self.file_metadata = egads.core.metadata.FileMetadata(attr_dict, self.filename,
                                                                   conventions="NASAAmes")
         except RuntimeError:
-            logging.error('egads.input.NasaAmes.open_file invoked: RuntimeError, File '+
+            logging.exception('egads - nasa_ames_io.py - NasaAmes - open_file - RuntimeError, File '+
                            str(filename) + ' doesn''t exist')
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
         except IOError:
-            logging.error('egads.input.NasaAmes.open_file invoked: IOError, File '+
+            logging.exception('egads - nasa_ames_io.py - NasaAmes - open_file - IOError, File '+
                            str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % (filename))
 
@@ -900,6 +925,6 @@ class NasaAmes(FileCore):
         return (var_name.strip(), units)
     
     
-    logging.info('egads.input.NasaAmes has been loaded')
+    logging.info('egads - nasa_ames_io.py - NasaAmes has been loaded')
         
         

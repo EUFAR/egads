@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2011-09-15 17:09"
-__version__ = "1.5"
+__version__ = "1.6"
 __all__ = ["FileCore", "get_file_list"]
 
 import glob
@@ -32,7 +32,7 @@ class FileCore(object):
             ``a`` and ``r+`` for append, and ``r`` for read. ``r`` is the default value
         """
 
-        logging.debug('egads.input.FileCore.__init__ invoked: filename ' + str(filename) + 
+        logging.debug('egads - input_core.py - FileCore - __init__ - filename ' + str(filename) + 
                       ', perms ' + perms + ', kwargs ' + str(kwargs))
         self.f = None
         self.filename = filename
@@ -53,7 +53,7 @@ class FileCore(object):
             ``a`` and ``r+`` for append, and ``r`` for read. ``r`` is the default value
         """
 
-        logging.debug('egads.input.FileCore.open invoked: filename ' + str(filename) + ', perms ' + str(perms))
+        logging.debug('egads - input_core.py - FileCore - open - filename ' + str(filename) + ', perms ' + str(perms))
         if perms is not None:
             self.perms = perms
         else:
@@ -65,7 +65,7 @@ class FileCore(object):
         Close opened file.
         """
         
-        logging.debug('egads.input.FileCore.close invoked: filename ' + str(self.filename))
+        logging.debug('egads - input_core.py - FileCore - close - filename ' + str(self.filename))
         if self.f is not None:
             self.f.close()
             self.f = None
@@ -78,7 +78,7 @@ class FileCore(object):
         data in file),``a`` and ``r+`` for append, and ``r`` for read.
         """
         
-        logging.debug('egads.input.FileCore.get_perms invoked: perms ' + str(self.perms))
+        logging.debug('egads - input_core.py - FileCore - get_perms - perms ' + str(self.perms))
         if self.f is not None:
             return self.perms
         else:
@@ -89,10 +89,10 @@ class FileCore(object):
         If file is open, returns the filename.
         """
         
-        logging.debug('egads.input.FileCore.get_filename invoked: filename ' + str(self.filename))
+        logging.debug('egads - input_core.py - FileCore - get_filename - filename ' + str(self.filename))
         return self.filename
 
-    logging.info('egads.input.FileCore has been loaded')
+    logging.info('egads - input_core.py - FileCore has been loaded')
 
 def get_file_list(path):
     """
@@ -103,6 +103,6 @@ def get_file_list(path):
         file_list = get_file_list('data/*.nc')
     """
 
-    logging.debug('egads.input.get_file_list invocked: path ' + str(path))
+    logging.debug('egads - input_core.py - get_file_list - path ' + str(path))
     return glob.glob(path)
 

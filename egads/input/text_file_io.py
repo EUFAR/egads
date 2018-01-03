@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2017-01-20 10:00"
-__version__ = "1.2"
+__version__ = "1.3"
 __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
@@ -26,7 +26,7 @@ class EgadsFile(FileCore):
             default value.
         """
 
-        logging.debug('egads.input.EgadsFile.__init__ invoked: filename ' + str(filename) + ', perms' + str(perms))
+        logging.debug('egads - text_file_io.py - EgadsFile - __init__ - filename ' + str(filename) + ', perms' + str(perms))
         FileCore.__init__(self, filename, perms, pos=0)
 
     def close(self):
@@ -34,7 +34,7 @@ class EgadsFile(FileCore):
         Close opened file.
         """
 
-        logging.debug('egads.input.EgadsFile.close invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - close')
         FileCore.close(self)
         self.pos = 0
 
@@ -50,7 +50,7 @@ class EgadsFile(FileCore):
             default value.
         """
 
-        logging.debug('egads.input.EgadsFile._open_file invoked: filename ' + str(filename) + ', perms' + str(perms))
+        logging.debug('egads - text_file_io.py - EgadsFile - _open_file - filename ' + str(filename) + ', perms' + str(perms))
         self.close()
         try:
             self.f = open(filename, perms)
@@ -58,15 +58,15 @@ class EgadsFile(FileCore):
             self.perms = perms
             self.pos = self.f.tell()
         except RuntimeError:
-            logging.error('egads.input.EgadsFile._open_file invoked: RuntimeError, File '+
+            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - RuntimeError, File '+
                            str(filename) + ' doesn''t exist')
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
         except IOError:
-            logging.error('egads.input.EgadsFile._open_file invoked: IOError, File '+
+            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - IOError, File '+
                            str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
-            logging.error('egads.input.EgadsFile._open_file invoked: Exception, Unexpected error')
+            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
 
     def display_file(self):
@@ -74,7 +74,7 @@ class EgadsFile(FileCore):
         Prints contents of file out to standard output.
         """
 
-        logging.debug('egads.input.EgadsFile.display_file invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - display_file')
         self.f.seek(0)
         for line in self.f:
             print line
@@ -85,7 +85,7 @@ class EgadsFile(FileCore):
         Returns current position in file.
         """
         
-        logging.debug('egads.input.EgadsFile.get_position invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - get_position')
         self.pos = self.f.tell()
         return self.pos
 
@@ -100,7 +100,7 @@ class EgadsFile(FileCore):
             current and ``e`` for end.
         """
 
-        logging.debug('egads.input.EgadsFile.seek invoked: location ' + str(location) + ', from_where ' + str(from_where))
+        logging.debug('egads - text_file_io.py - EgadsFile - seek - location ' + str(location) + ', from_where ' + str(from_where))
         from_switch = {'b': lambda: 0,
             'c': lambda: 1,
             'e': lambda: 2}
@@ -118,10 +118,10 @@ class EgadsFile(FileCore):
             be a string, with ``\\n`` signifying line end.
         """
 
-        logging.debug('egads.input.EgadsFile.write invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - write')
         self.f.write(data)
         self.pos = self.f.tell()
-        logging.debug('egads.input.EgadsFile.write invoked -> data write OK, self.pos ' + str(self.pos))
+        logging.debug('egads - text_file_io.py - EgadsFile - write - data write OK, self.pos ' + str(self.pos))
 
     def read(self, size=None):
         """
@@ -136,13 +136,13 @@ class EgadsFile(FileCore):
         :rtype: string
         """
 
-        logging.debug('egads.input.EgadsFile.read invoked: size' + str(size))
+        logging.debug('egads - text_file_io.py - EgadsFile - read - size' + str(size))
         if size is None:
             filedata = self.f.read()
         else:
             filedata = self.f.read(size)
         self.pos = self.f.tell()
-        logging.debug('egads.input.EgadsFile.read invoked -> data read OK, self.pos ' + str(self.pos))
+        logging.debug('egads - text_file_io.py - EgadsFile - read - data read OK, self.pos ' + str(self.pos))
         return filedata
 
     def read_line(self):
@@ -150,7 +150,7 @@ class EgadsFile(FileCore):
         Reads single line of data from file.
         """
         
-        logging.debug('egads.input.EgadsFile.read_line invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - read_line')
         filedata = self.f.readline()
         self.pos = self.f.tell()
         return filedata
@@ -160,11 +160,11 @@ class EgadsFile(FileCore):
         Returns to beginning of file
         """
         
-        logging.debug('egads.input.EgadsFile.reset invoked')
+        logging.debug('egads - text_file_io.py - EgadsFile - reset')
         self.f.seek(0)
         self.pos = self.f.tell()
 
-    logging.info('egads.input.EgadsFile has been loaded')
+    logging.info('egads - text_file_io.py - EgadsFile has been loaded')
 
 
 class EgadsCsv(EgadsFile):
@@ -189,7 +189,7 @@ class EgadsCsv(EgadsFile):
             The default is '"'.
         """
         
-        logging.debug('egads.input.EgadsCsv.__init__ invoked: filename ' + str(filename) + 
+        logging.debug('egads - text_file_io.py - EgadsCsv - __init__ - filename ' + str(filename) + 
                       ', perms ' + str(perms) + ', delimiter ' + str(delimiter) + ', quotechar ' +
                       str(quotechar))
         FileCore.__init__(self, filename, perms,
@@ -215,7 +215,7 @@ class EgadsCsv(EgadsFile):
             The default is '"'.
         """
         
-        logging.debug('egads.input.EgadsCsv.open invoked: filename ' + str(filename) + 
+        logging.debug('egads - text_file_io.py - EgadsCsv - open - filename ' + str(filename) + 
                       ', perms ' + str(perms) + ', delimiter ' + str(delimiter) + ', quotechar ' +
                       str(quotechar))
         if perms is not None:
@@ -237,12 +237,12 @@ class EgadsCsv(EgadsFile):
         Prints contents of file out to standard output.
         """
         
-        logging.debug('egads.input.EgadsCsv.display_file invoked')
+        logging.debug('egads - text_file_io.py - EgadsCsv - display_file')
         try:
             for row in self.reader:
                 print row
         except csv.Error, e:
-            logging.error('egads.input.EgadsCsv.display_file invoked: csv.Error, file ' +
+            logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
             sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
@@ -266,7 +266,7 @@ class EgadsCsv(EgadsFile):
         :rtype: list of arrays
         """
 
-        logging.debug('egads.input.EgadsCsv.read invoked: lines ' + str(lines) + ', out_format ' +
+        logging.debug('egads - text_file_io.py - EgadsCsv - read - lines ' + str(lines) + ', out_format ' +
                       str(out_format))
         data = []
         if lines is None:
@@ -274,7 +274,7 @@ class EgadsCsv(EgadsFile):
                 for row in self.reader:
                     data.append(row)
             except csv.Error, e:
-                logging.error('egads.input.EgadsCsv.display_file invoked: csv.Error, file ' +
+                logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
                 sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
@@ -284,7 +284,7 @@ class EgadsCsv(EgadsFile):
                     row = self.reader.next()
                     data.append(row)
             except csv.Error, e:
-                logging.error('egads.input.EgadsCsv.display_file invoked: csv.Error, file ' +
+                logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
                 sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
@@ -295,7 +295,7 @@ class EgadsCsv(EgadsFile):
         else:
             parsed_data = parse_string_array(data, out_format)
             return parsed_data
-        logging.debug('egads.input.EgadsCsv.read invoked -> data read OK')
+        logging.debug('egads - text_file_io.py - EgadsCsv - read - data read OK')
 
     def skip_line(self, amount=1):
         """
@@ -305,7 +305,7 @@ class EgadsCsv(EgadsFile):
             Optional - Number of lines to skip over. Default value is 1.
         """
         
-        logging.debug('egads.input.EgadsCsv.skip_line invoked: amount ' + str(amount))
+        logging.debug('egads - text_file_io.py - EgadsCsv - skip_line - amount ' + str(amount))
         for _ in xrange(amount):
             self.f.readline()
 
@@ -317,9 +317,9 @@ class EgadsCsv(EgadsFile):
             Data to be output to file using specified delimiter.
         """
         
-        logging.debug('egads.input.EgadsCsv.write invoked')
+        logging.debug('egads - text_file_io.py - EgadsCsv - write')
         self.writer.writerow(data)
-        logging.debug('egads.input.EgadsCsv.write invoked -> data write OK')
+        logging.debug('egads - text_file_io.py - EgadsCsv - write - data write OK')
 
     def writerows(self, data):
         """
@@ -329,10 +329,10 @@ class EgadsCsv(EgadsFile):
             List of variables to output.
         """
         
-        logging.debug('egads.input.EgadsCsv.writerows invoked')
+        logging.debug('egads - text_file_io.py - EgadsCsv - writerows')
         data_arr = numpy.column_stack(tuple(data))
         self.writer.writerows(data_arr)
-        logging.debug('egads.input.EgadsCsv.writerows invoked -> data write OK')
+        logging.debug('egads - text_file_io.py - EgadsCsv - writerows - data write OK')
 
     def _open_file(self, filename, perms):
         """
@@ -351,7 +351,7 @@ class EgadsCsv(EgadsFile):
             The default is '"'.
         """
 
-        logging.debug('egads.input.EgadsCsv._open_file invoked: filename ' + str(filename) + 
+        logging.debug('egads - text_file_io.py - EgadsCsv - _open_file - filename ' + str(filename) + 
                       ', perms ' + str(perms))
         self.close()
         try:
@@ -366,18 +366,18 @@ class EgadsCsv(EgadsFile):
                 self.writer = csv.writer(self.f, delimiter=self.delimiter,
                                          quotechar=self.quotechar)
         except RuntimeError:
-            logging.error('egads.input.EgadsCsv._open_file invoked: RuntimeError, File '+
+            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - RuntimeError, File '+
                            str(filename) + ' doesn''t exist')
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
         except IOError:
-            logging.error('egads.input.EgadsCsv._open_file invoked: IOError, File '+
+            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - IOError, File '+
                            str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
-            logging.error('egads.input.EgadsCsv._open_file invoked: Exception, Unexpected error')
+            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
         
-    logging.info('egads.input.EgadsCsv has been loaded')
+    logging.info('egads - text_file_io.py - EgadsCsv has been loaded')
 
 
 def parse_string_array(data, data_format):
@@ -395,7 +395,8 @@ def parse_string_array(data, data_format):
         Array parsed into its proper types.
     :rtype: numpy.ndarray
     """
-
+    
+    logging.debug('egads - text_file_io.py - parse_string_array')
     format_array_dict = {'i': 'i4', 'f': 'f8', 'l':'f8', 's':'a20'}
     parsed_data = list(data)
     i = 0

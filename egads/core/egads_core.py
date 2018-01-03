@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2012-07-06 17:42"
-__version__ = "1.4"
+__version__ = "1.6"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
@@ -22,7 +22,7 @@ class EgadsData(pq.Quantity):
     __refs__ = defaultdict(list)
 
     def __new__(cls, value, units='', variable_metadata={}, dtype=None, **attrs):
-        logging.debug('egads.EgadsData.__new__ invoked')
+        logging.debug('egads - egads_core.py - EgadsData - __new__')
         if isinstance(units, metadata.VariableMetadata):
             if not variable_metadata:
                 variable_metadata = units
@@ -74,11 +74,11 @@ class EgadsData(pq.Quantity):
         """
         
         try:
-            logging.debug('egads.EgadsData.__init__ invoked: value [' + str(value[0]) + ' ... ' + 
+            logging.debug('egads - egads_core.py - EgadsData __init__ - value [' + str(value[0]) + ' ... ' + 
                           str(value[-1]) + '], units ' + str(units) + ', variale_metadata ' + 
                           str(variable_metadata) + ', dtype' + str(dtype))
         except (IndexError, TypeError):
-            logging.debug('egads.EgadsData.__init__ invoked: value [' + str(value) + '], units ' +
+            logging.exception('egads - egads_core.py - EgadsData - __init__ - value [' + str(value) + '], units ' +
                            str(units) + ', variale_metadata ' + str(variable_metadata) + ', dtype' + 
                            str(dtype))
         for key, val in attrs.iteritems():
@@ -160,7 +160,7 @@ class EgadsData(pq.Quantity):
         Generate and return a copy of the current EgadsData instance.
         """
         
-        logging.debug('egads.EgadsData.copy invoked: metadata %s', self.metadata)
+        logging.debug('egads - egads_core.py - EgadsData - copy - metadata %s', self.metadata)
         var_copy = EgadsData(super(EgadsData, self).copy())
         var_copy.__dict__ = self.__dict__.copy()
         var_copy.metadata = self.metadata.copy()
@@ -174,7 +174,7 @@ class EgadsData(pq.Quantity):
             String representation of desired units.
         """
         
-        logging.debug('egads.EgadsData.rescale invoked: units %s to %s', self.units, units)
+        logging.debug('egads - egads_core.py - EgadsData - rescale - units %s to %s', self.units, units)
         units = _validate_units(units)
         metadata = None
         try:
@@ -200,7 +200,7 @@ class EgadsData(pq.Quantity):
         Generate and return a description of current EgadsData instance.
         """
         
-        logging.debug('egads.EgadsData.print_description invoked: ' +  self._get_description())
+        logging.debug('egads - egads_core.py - EgadsData - print_description - ' +  self._get_description())
         outstr = self._get_description()
         print outstr
 
@@ -209,7 +209,7 @@ class EgadsData(pq.Quantity):
         Return units used in current EgadsData instance.
         """
 
-        logging.debug('egads.EgadsData.get_units invoked: ' +  self.units)
+        logging.debug('egads - egads_core.py - EgadsData - get_units - ' +  self.units)
         return self.units
 
     def print_shape(self):
@@ -217,7 +217,7 @@ class EgadsData(pq.Quantity):
         Prints shape of current EgadsData instance
         """
 
-        logging.debug('egads.EgadsData.print_shape invoked: ' +  str(self._get_shape()))
+        logging.debug('egads - egads_core.py - EgadsData - print_shape - ' +  str(self._get_shape()))
         print self._get_shape()
 
     def _get_description(self):
@@ -259,7 +259,7 @@ class EgadsData(pq.Quantity):
                 yield inst
 
 
-    logging.info('egads.EgadsData has been loaded')
+    logging.info('egads - egads_core.py - EgadsData has been loaded')
 
 
 class EgadsAlgorithm(object):
@@ -284,7 +284,7 @@ class EgadsAlgorithm(object):
             scalar will be returned.
         """
         
-        logging.debug('egads.EgadsAlgorithm.__init__ invoked: return_egads ' +  str(return_Egads))
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - __init__ - return_egads ' +  str(return_Egads))
         self.name = self.__class__.__name__
         self.return_Egads = return_Egads
         self.metadata = None
@@ -305,7 +305,7 @@ class EgadsAlgorithm(object):
             Parameters to pass into algorithm in the order specified in algorithm metadata.
         """
         
-        logging.debug('egads.EgadsAlgorithm.run invoked: name ' + self.name + ', args ' + str(args)) 
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - run - name ' + self.name + ', args ' + str(args)) 
         if not isinstance(self.output_metadata, list):
             output_metadata = self.output_metadata
             self.output_metadata = []
@@ -373,7 +373,7 @@ class EgadsAlgorithm(object):
         is passed to algorithm.
         """
 
-        logging.debug('egads.EgadsAlgorithm._call_algorithm invoked:')
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - _call_algorithm')
         out_arg = []
         for i, arg in enumerate(args):
             if isinstance(arg, EgadsData):
@@ -421,7 +421,7 @@ class EgadsAlgorithm(object):
         Print docstring of algorithm to standard output. 
         """
         
-        logging.debug('egads.EgadsAlgorithm.get_info invoked.')
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - get_info')
         print self.__doc__
 
     def time_stamp(self):
@@ -429,7 +429,7 @@ class EgadsAlgorithm(object):
         Calculate and set date processed for all output variables.
         """
         
-        logging.debug('egads.EgadsAlgorithm.time_stamp invoked.')
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - time_stamp.')
         for output in self.output_metadata:
                 output['DateProcessed'] = self.now()
 
@@ -438,14 +438,14 @@ class EgadsAlgorithm(object):
         Calculate and return current date/time in ISO 8601 format.
         """
         
-        logging.debug('egads.EgadsAlgorithm.now invoked: time_stamp ' + datetime.datetime.isoformat(datetime.datetime.today()))
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - now - time_stamp ' + datetime.datetime.isoformat(datetime.datetime.today()))
         return datetime.datetime.isoformat(datetime.datetime.today())
     
     def processor(self):
         """
         Indicate the algorithm used to produce the output variable
         """
-        logging.debug('egads.EgadsAlgorithm.processor invoked.')
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - processor')
         for output in self.output_metadata:
                 output['Processor'] = self.metadata['Processor']
 
@@ -460,7 +460,7 @@ class EgadsAlgorithm(object):
             result.__setattr__(key, val)
         return result
     
-    logging.info('egads.EgadsAlgorithm has been loaded')
+    logging.info('egads - egads_core.py - EgadsAlgorithm has been loaded')
 
 
 def _validate_units(units):
@@ -483,7 +483,7 @@ def _validate_units(units):
     corrects the 'time since ...' to 'time'.
     """
 
-    logging.debug('egads.core._validate_units invoked: units ' + str(units))
+    logging.debug('egads - egads_core.py - _validate_units - units ' + str(units))
     
     # few patches have been introduced for compatibility"
     if "degree_" in units or "decimal degree" in units:

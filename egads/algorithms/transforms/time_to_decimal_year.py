@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2017-09-28 16:06"
-__version__ = "0.1"
+__version__ = "1.1"
 __all__ = ['TimeToDecimalYear']
 
 import egads.core.egads_core as egads_core
@@ -64,7 +64,7 @@ class TimeToDecimalYear(egads_core.EgadsAlgorithm):
     def _algorithm(self, t, t_ref=None):
         t_ref_s = 0
         if t_ref:
-            t_ref_s = egads.algorithms.transforms.IsotimeToSeconds().run(t_ref, '19500101T000000')  # @UndefinedVariable
+            t_ref_s = egads.algorithms.transforms.IsotimeToSeconds().run([t_ref], '19500101T000000')  # @UndefinedVariable
         t_s = t + egads.EgadsData(value=t_ref_s, units='s').rescale('year').value
         t_y = t_s + 1950
         return t_y

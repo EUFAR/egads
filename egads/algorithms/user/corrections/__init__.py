@@ -8,7 +8,6 @@ __version__ = "1.0"
 
 import logging
 try:
-    from my_algorithm_for_correction import *
     logging.info('egads [user/corrections] algorithms have been loaded')
 except Exception:
     logging.error('an error occured during the loading of a [user/corrections] algorithm')

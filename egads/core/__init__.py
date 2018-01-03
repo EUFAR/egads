@@ -9,10 +9,10 @@ import logging
 
 try:
     import quantities
-    logging.info('egads.__init__: quantities has been imported')
+    logging.info('egads - core - __init__.py - quantities has been imported')
     if 'egads' not in quantities.__path__[0]:
-        logging.warning('egads.__init__: EGADS has imported an already installed version of Quantities. If issues occure,'
+        logging.warning('egads - core - __init__.py - EGADS has imported an already installed version of Quantities. If issues occure,'
                         + ' please check the version number of Quantities.')
 except ImportError:
-    logging.warning('egads.__init__: EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
+    logging.exception('egads - core - __init__.py - EGADS couldn''t find quantities. Please check for a valid installation of Quantities'
                  + ' or the presence of Quantities in third-party software directory.')

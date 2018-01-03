@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.10"
+__version__ = "1.11"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -46,7 +46,7 @@ class NetCdf(FileCore):
             read. ``r`` is the default value
         """
         
-        logging.debug('egads.input.NetCdf.open invocked: filename ' + str(filename) + ', perms ' + str(perms))
+        logging.debug('egads - netcdf_io.py - NetCdf - open - filename ' + str(filename) + ', perms ' + str(perms))
         FileCore.open(self, filename, perms)
 
     def get_attribute_list(self, varname=None):
@@ -59,6 +59,7 @@ class NetCdf(FileCore):
             provided, the function returns top-level NetCDF attributes.
         """
         
+        logging.debug('egads - netcdf_io.py - NetCdf - get_attribute_list - varname ' + str(varname))
         return self._get_attribute_list(varname)
 
     def get_attribute_value(self, attrname, varname=None):
@@ -74,7 +75,7 @@ class NetCdf(FileCore):
             attributes are examined.
         """
         
-        logging.debug('egads.input.NetCdf.get_attribute_value invocked: attrname ' + str(attrname) + ', varname ' + str(varname))
+        logging.debug('egads - netcdf_io.py - NetCdf - get_attribute_value - attrname ' + str(attrname) + ', varname ' + str(varname))
         attrs = self._get_attribute_list(varname)
         return attrs[attrname]
 
@@ -88,14 +89,16 @@ class NetCdf(FileCore):
             Optional - Name of variable to get list of associated dimensions for. If no variable
             name is provided, the function returns all dimensions in the NetCDF file.
         """
-
+        
+        logging.debug('egads - netcdf_io.py - NetCdf - get_dimension_list - varname ' + str(varname))
         return self._get_dimension_list(varname)
 
     def get_variable_list(self):
         """
         Returns a list of variables found in the current NetCDF file.
         """
-
+        
+        logging.debug('egads - netcdf_io.py - NetCdf - get_variable_list')
         return self._get_variable_list()
 
     def get_perms(self):
@@ -105,11 +108,11 @@ class NetCdf(FileCore):
         data in file),``a`` and ``r+`` for append, and ``r`` for read.
         """
         
-        logging.debug('egads.input.NetCdf.get_perms invocked')
+        logging.debug('egads - netcdf_io.py - NetCdf - get_perms')
         if self.f is not None:
             return self.perms
         else:
-            logging.error('egads.input.NetCdf.get_perms invocked: AttributeError, no file open')
+            logging.exception('egads - netcdf_io.py - NetCdf - get_perms - AttributeError, no file open')
             raise AttributeError('No file open')
 
     def read_variable(self, varname, input_range=None):
@@ -122,14 +125,14 @@ class NetCdf(FileCore):
             Optional - Range of values in each dimension to input. TODO add example
         """
         
-        logging.debug('egads.input.NetCdf.read_variable invocked: varname ' + str(varname) + ', input_range ' + str(input_range))
+        logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ', input_range ' + str(input_range))
         try:
             varin = self.f.variables[varname]
         except KeyError:
-            logging.error('egads.input.NetCdf.read_variable invocked: KeyError, variable does not exist in netcdf file')
+            logging.exception('egads - netcdf_io.py - NetCdf - read_variable - KeyError, variable does not exist in netcdf file')
             raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
         except Exception:
-            logging.error('egads.input.NetCdf.read_variable invocked: Exception, unexpected error')
+            logging.exception('egads - netcdf_io.py - NetCdf - read_variable - Exception, unexpected error')
             raise Exception("Error: Unexpected error")
         if input_range is None:
             value = varin[:]
@@ -138,7 +141,7 @@ class NetCdf(FileCore):
             for i in xrange(2, len(input_range), 2):
                 obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
             value = varin[eval(obj)]
-        logging.debug('egads.input.NetCdf.read_variable invoked: varname ' + str(varname) + ' -> data read OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return value
     
     def change_variable_name(self, varname, newname):
@@ -151,11 +154,11 @@ class NetCdf(FileCore):
             the new name.
         """
         
-        logging.debug('egads.input.NetCdf.change_variable_name invocked: varname ' + str(varname) + ', newname ' + str(newname))
+        logging.debug('egads - netcdf_io.py - NetCdf - change_variable_name - varname ' + str(varname) + ', newname ' + str(newname))
         if self.f is not None:
             self.f.renameVariable(varname, newname)
         else:
-            logging.error('egads.input.NetCdf.change_variable_name invocked: AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - .change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
 
     def write_variable(self, value, varname, dims=None, ftype='double', fillvalue=None):
@@ -177,7 +180,7 @@ class NetCdf(FileCore):
             Optional - Overrides default NetCDF _FillValue, if provided.
         """
 
-        logging.debug('egads.input.NetCdf.write_variable invoked: varname ' + str(varname) + 
+        logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) + 
                       ', dims ' + str(dims) + ', ftype ' + str(ftype) + ', fillvalue ' + str(fillvalue))
         if self.f is not None:
             try:
@@ -186,9 +189,9 @@ class NetCdf(FileCore):
                 varout = self.f.createVariable(varname, ftype, dims, fillvalue)
             varout[:] = value
         else:
-            logging.error('egads.input.NetCdf.change_variable_name invocked: AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads.input.NetCdf.write_variable invoked: varname ' + str(varname) + ' -> data write OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) + ' -> data write OK')
 
     def add_dim(self, name, size):
         """
@@ -200,13 +203,13 @@ class NetCdf(FileCore):
             Integer size of dimension to add.
         """
 
-        logging.debug('egads.input.NetCdf.add_dim invoked: name ' + str(name) + ', size ' + str(size))
+        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ', size ' + str(size))
         if self.f is not None:
             self.f.createDimension(name, size)
         else:
-            logging.error('egads.input.NetCdf.change_variable_name invocked: AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads.input.NetCdf.add_dim invoked: name ' + str(name) + ' -> dim add OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ' -> dim add OK')
 
     def add_attribute(self, attrname, value, varname=None):
         """
@@ -223,7 +226,7 @@ class NetCdf(FileCore):
             variable in the NetCDF file.
         """
         
-        logging.debug('egads.input.NetCdf.add_attribute invoked: attrname ' + str(attrname) + 
+        logging.debug('egads - netcdf_io.py - NetCdf - add_attribute - attrname ' + str(attrname) + 
                       ', value ' + str(value) + ', varname ' + str(varname))
         if self.f is not None:
             if varname is not None:
@@ -232,9 +235,9 @@ class NetCdf(FileCore):
             else:
                 setattr(self.f, attrname, value)
         else:
-            logging.error('egads.input.change_variable_name invocked: AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads.input.NetCdf.add_attribute invoked: attrname ' + str(attrname) + ' -> attribute add OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - add_attribute - attrname ' + str(attrname) + ' -> attribute add OK')
         
     def delete_attribute(self, attrname, varname=None):
         """
@@ -249,7 +252,7 @@ class NetCdf(FileCore):
             variable in the NetCDF file.
         """
         
-        logging.debug('egads.input.NetCdf.delete_attribute invoked: attrname ' + str(attrname) + 
+        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname) + 
                       ', varname ' + str(varname))
         if self.f is not None:
             if varname is not None:
@@ -257,9 +260,9 @@ class NetCdf(FileCore):
             else:
                 delattr(self.f, attrname)
         else:
-            logging.error('egads.input.delete_attribute invocked: AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - delete_attribute - AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads.input.NetCdf.delete_attribute invoked: attrname ' + str(attrname) + ' -> attribute delete OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname) + ' -> attribute delete OK')
     
 
     def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', 
@@ -292,7 +295,7 @@ class NetCdf(FileCore):
             Default - False.
         """
         
-        logging.debug('egads.input.NetCdf.convert_to_nasa_ames invoked: na_file ' + str(na_file)
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
                       + ', requested_ffi ' + str(requested_ffi) + ', float_format ' + str(float_format)
                       + ', delimiter ' + str(delimiter) + ', annotation ' + str(annotation)
                       + ', no_header ' + str(no_header))
@@ -335,6 +338,8 @@ class NetCdf(FileCore):
                 dims = self.get_dimension_list(var)
                 if len(dims) > 1:
                     raise Exception('the actual convert_to_nasa_ames cant process data of multiple '
+                                + 'dimensions, FFI is set to 1001')
+                    logging.exception('egads - netcdf_io.py - NetCdf - the actual convert_to_nasa_ames cant process data of multiple '
                                 + 'dimensions, FFI is set to 1001')
                 vvar = {}
                 value = self.read_variable(var).tolist()
@@ -493,7 +498,7 @@ class NetCdf(FileCore):
             f.write_attribute_value('NV', nv, na_dict = na_dict)
             f.save_na_file(na_file_out, na_dict, float_format, delimiter=delimiter, 
                            annotation=annotation, no_header=no_header)
-            logging.debug('egads.input.NetCdf.convert_to_nasa_ames invoked: na_file ' + str(na_file)
+            logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
                       + ' -> file conversion OK')
       
     def convert_to_csv(self, csv_file=None, float_format='%g', annotation=False, no_header=False):
@@ -514,7 +519,7 @@ class NetCdf(FileCore):
             Default - False.
         """
         
-        logging.debug('egads.input.NetCdf.convert_to_csv invoked: csv_file ' + str(csv_file)
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ', float_format ' + str(float_format) + ', annotation ' + str(annotation)
                       + ', no_header ' + str(no_header))
         if not csv_file:
@@ -523,7 +528,7 @@ class NetCdf(FileCore):
         
         self.convert_to_nasa_ames(na_file=csv_file, requested_ffi=1001, float_format=float_format, 
                              delimiter=',', annotation=annotation, no_header=no_header)
-        logging.debug('egads.input.NetCdf.convert_to_csv invoked: csv_file ' + str(csv_file)
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
 
     def _open_file(self, filename, perms):
@@ -537,7 +542,7 @@ class NetCdf(FileCore):
             ``a`` and ``r+`` for append, and ``r`` for read.
         """
 
-        logging.debug('egads.input.NetCdf._open_file invoked: filename ' + str(filename) + 
+        logging.debug('egads - netcdf_io.py - NetCdf - _open_file - filename ' + str(filename) + 
                       ', perms ' + str(perms))
         self.close()
         try:
@@ -545,15 +550,15 @@ class NetCdf(FileCore):
             self.filename = filename
             self.perms = perms
         except RuntimeError:
-            logging.error('egads.input.NetCdf._open_file invoked: RuntimeError, File '+
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - RuntimeError, File '+
                            str(filename) + ' doesn''t exist')
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
         except IOError:
-            logging.error('egads.input.NetCdf._open_file invoked: IOError, File '+
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - IOError, File '+
                            str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
-            logging.error('egads.input.NetCdf._open_file invoked: Exception, Unexpected error')
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
 
     def _get_attribute_list(self, var=None):
@@ -564,7 +569,7 @@ class NetCdf(FileCore):
         If multiple white spaces exist, they are removed.
         """
         
-        logging.debug('egads.input.NetCdf._get_attribute_list invoked: var ' + str(var))
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_attribute_list - var ' + str(var))
         if self.f is not None:
             if var is not None:
                 attr_dict = {}
@@ -582,7 +587,7 @@ class NetCdf(FileCore):
                     attr_dict[key] = value
                 return attr_dict
         else:
-            logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
+            logging.error('egads - netcdf_io.py - NetCdf - _get_attribute_list - AttributeError, No file open')
             raise AttributeError('No file open')
 
     def _get_dimension_list(self, var=None):
@@ -592,7 +597,7 @@ class NetCdf(FileCore):
         attached to specified variable, if none, returns all dimensions in the file.
         """
         
-        logging.debug('egads.input.NetCdf._get_dimension_list invoked: var ' + str(var))
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_dimension_list - var ' + str(var))
         dimdict = {}
         if self.f is not None:
             file_dims = self.f.dimensions
@@ -608,7 +613,7 @@ class NetCdf(FileCore):
                     dimdict[dimname] = len(dimobj)
             return dimdict
         else:
-            logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
+            logging.error('egads - netcdf_io.py - NetCdf - _get_attribute_list - AttributeError, No file open')
             raise AttributeError('No file open')
         return None
 
@@ -617,14 +622,14 @@ class NetCdf(FileCore):
         Private method for getting list of variable names.
         """
 
-        logging.debug('egads.input.NetCdf._get_variable_list invoked')
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
         if self.f is not None:
             return self.f.variables.keys()
         else:
             logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
             raise AttributeError('No file open')
 
-    logging.info('egads.input.NetCdf has been loaded')
+    logging.info('egads - netcdf_io.py - NetCdf has been loaded')
 
 
 class EgadsNetCdf(NetCdf):
@@ -645,7 +650,7 @@ class EgadsNetCdf(NetCdf):
             for read. ``r`` is the default value.
         """
 
-        logging.debug('egads.input.EgadsNetCdf.__init__ invoked: filename ' + str(filename) + 
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - __init__ - filename ' + str(filename) + 
                       ', perms ' + str(perms))
         self.file_metadata = None
         FileCore.__init__(self, filename, perms)
@@ -662,15 +667,15 @@ class EgadsNetCdf(NetCdf):
             Optional - Range of values in each dimension to input.
         """
         
-        logging.debug('egads.input.EgadsNetCdf.read_variable invoked: varname ' + str(varname) + 
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname) + 
                       ', input_range ' + str(input_range))
         try:
             varin = self.f.variables[varname]
         except KeyError:
-            logging.error('egads.input.EgadsNetCdf.read_variable invocked: KeyError, variable does not exist in netcdf file')
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - read_variable - KeyError, variable does not exist in netcdf file')
             raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
         except Exception:
-            logging.error('egads.input.EgadsNetCdf.read_variable invocked: Exception, unexpected error')
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - read_variable - Exception, unexpected error')
             raise Exception("Error: Unexpected error")
         if input_range is None:
             value = varin[:]
@@ -683,7 +688,7 @@ class EgadsNetCdf(NetCdf):
         variable_attrs['cdf_name'] = varname
         variable_metadata = egads.core.metadata.VariableMetadata(variable_attrs, self.file_metadata)
         data = egads.EgadsData(value, variable_metadata=variable_metadata)
-        logging.debug('egads.input.EgadsNetCdf.read_variable invoked: varname ' + str(varname) + ' -> data read OK')
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return data
 
     def write_variable(self, data, varname=None, dims=None, ftype='double'):
@@ -706,7 +711,7 @@ class EgadsNetCdf(NetCdf):
             ``short``, ``char``, and ``byte``
         """
 
-        logging.debug('egads.input.EgadsNetCdf.write_variable invoked: varname ' + str(varname) + 
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname) + 
                       ', dims ' + str(dims) + ', ftype ' + str(ftype))
         if self.f is not None:
             try:
@@ -725,7 +730,7 @@ class EgadsNetCdf(NetCdf):
                 if key != '_FillValue':
                     if val:
                         setattr(varout, str(key), val)
-        logging.debug('egads.input.EgadsNetCdf.write_variable invoked: varname ' + str(varname) + ' -> data write OK')
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname) + ' -> data write OK')
         
     def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', 
                              delimiter=None, annotation=False, no_header=False):
@@ -754,7 +759,7 @@ class EgadsNetCdf(NetCdf):
             Default - False.
         """
         
-        logging.debug('egads.input.EgadsNetCdf.convert_to_nasa_ames invoked: na_file ' + str(na_file)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
                       + ', requested_ffi ' + str(requested_ffi) + ', float_format ' + str(float_format)
                       + ', delimiter ' + str(delimiter) + ', annotation ' + str(annotation)
                       + ', no_header ' + str(no_header))
@@ -797,6 +802,8 @@ class EgadsNetCdf(NetCdf):
                 dims = self.get_dimension_list(var)
                 if len(dims) > 1:
                     raise Exception('the actual convert_to_nasa_ames cant process data of multiple '
+                                + 'dimensions, FFI is set to 1001')
+                    logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant process data of multiple '
                                 + 'dimensions, FFI is set to 1001')
                 vvar = {}
                 value = self.read_variable(var).value.tolist()
@@ -952,7 +959,7 @@ class EgadsNetCdf(NetCdf):
             f.write_attribute_value('NV', nv, na_dict = na_dict)
             f.save_na_file(na_file_out, na_dict, float_format, delimiter=delimiter, 
                            annotation=annotation, no_header=no_header)
-            logging.debug('egads.input.EgadsNetCdf.convert_to_nasa_ames invoked: na_file ' + str(na_file)
+            logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
                       + ' -> file conversion OK')
       
     def convert_to_csv(self, csv_file=None, float_format='%g', annotation=False, no_header=False):
@@ -973,7 +980,7 @@ class EgadsNetCdf(NetCdf):
             Default - False.
         """
         
-        logging.debug('egads.input.EgadsNetCdf.convert_to_csv invoked: csv_file ' + str(csv_file)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ', float_format ' + str(float_format) + ', annotation ' + str(annotation)
                       + ', no_header ' + str(no_header))
         if not csv_file:
@@ -981,7 +988,7 @@ class EgadsNetCdf(NetCdf):
             csv_file = filename + '.csv'
         self.convert_to_nasa_ames(na_file=csv_file, requested_ffi=1001, float_format=float_format, 
                              delimiter=',', annotation=annotation, no_header=no_header)
-        logging.debug('egads.input.EgadsNetCdf.convert_to_csv invoked: csv_file ' + str(csv_file)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
     
     def _open_file(self, filename, perms):
@@ -995,26 +1002,26 @@ class EgadsNetCdf(NetCdf):
             ``a`` and ``r+`` for append, and ``r`` for read.
         """
         
-        logging.debug('egads.input.EgadsNetCdf._open_file invoked: filename ' + str(filename) + 
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _open_file - filename ' + str(filename) + 
                       ', perms ' + str(perms))
         self.close()
         try:
-            self.f = netCDF4.Dataset(filename, perms)
+            self.f = netCDF4.Dataset(filename, perms)  # @UndefinedVariable
             self.filename = filename
             self.perms = perms
             attr_dict = self.get_attribute_list()
             self.file_metadata = egads.core.metadata.FileMetadata(attr_dict, self.filename)
         except RuntimeError:
-            logging.error('egads.input.EgadsNetCdf._open_file invoked: RuntimeError, File '+
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _open_file - RuntimeError, File '+
                            str(filename) + ' doesn''t exist')
             raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
         except IOError:
-            logging.error('egads.input.EgadsNetCdf._open_file invoked: IOError, File '+
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _open_file - IOError, File '+
                            str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % (filename))
         except Exception:
-            logging.error('egads.input.EgadsNetCdf._open_file invoked: Exception, Unexpected error')
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
         
-    logging.info('egads.input.EgadsNetCdf has been loaded')
+    logging.info('egads - netcdf_io.py - EgadsNetCdf has been loaded')
 

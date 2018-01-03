@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads',
-      version='0.8.5',
+      version='0.8.6',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR',
@@ -93,8 +93,7 @@ setup(name='egads',
           'doc.source.images',
           'doc.source._static'],
       package_data={
-          'egads': ['*.ini'],
-	      'egads.thirdparty.nappy': ['*.ini'],
+	  'egads.thirdparty.nappy': ['*.ini'],
           'egads.thirdparty.nappy.config':['*.ini'],
           'Documentation': ['*.*'],
           'Documentation.EGADS Algorithm Handbook - LATEX': ['*.*'],
