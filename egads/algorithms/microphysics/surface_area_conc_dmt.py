@@ -53,6 +53,8 @@ class SurfaceAreaConcDmt(egads_core.EgadsAlgorithm):
                                                                               'average diameter of size category i',
                                                                               'shape factor of hydrometeor in size category i to account for asphericity'],
                                                           'Outputs':['S'],
+                                                          'OutputUnits':['um^2/cm^3'],
+                                                          'OutputTypes':['vector[time]'],
                                                           'OutputDescription':['Surface area concentration'],
                                                           'Purpose':'Calculates surface area concentration given size distribution from particle probe',
                                                           'Description':'Calculates surface area concentration (2nd moment) given size distribution from particle probe',

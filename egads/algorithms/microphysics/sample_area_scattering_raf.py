@@ -20,10 +20,10 @@ class SampleAreaScatteringRaf(egads_core.EgadsAlgorithm):
     DESCRIPTION Calculation of sampling area for scattering probes such as the FSSP,
                 CAS, CIP, etc., given depth of field and beam diameter.
 
-    INPUT       DOF     coeff.      m   Depth of field
-                BD      coeff.      m   Beam diameter
+    INPUT       DOF     coeff       m   Depth of field
+                BD      coeff       m   Beam diameter
 
-    OUTPUT      SA      coeff.      m2  Sample area
+    OUTPUT      SA      coeff       m2  Sample area
 
     SOURCE      NCAR-RAF
 
@@ -45,6 +45,8 @@ class SampleAreaScatteringRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['coeff','coeff'],
                                                           'InputDescription':['Depth of field','Beam diameter'],
                                                           'Outputs':['SA'],
+                                                          'OutputUnits':['m^2'],
+                                                          'OutputTypes':['coeff'],
                                                           'OutputDescription':['Sample area'],
                                                           'Purpose':'Calculation of sampling area for scattering probes',
                                                           'Description':'Calculation of sampling area for scattering probes such as the FSSP, CAS, CIP, etc., given depth of field and beam diameter',

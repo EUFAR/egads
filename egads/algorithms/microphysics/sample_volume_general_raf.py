@@ -45,6 +45,8 @@ class SampleVolumeGeneralRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector', 'vector', 'coeff'],
                                                           'InputDescription':['True air speed', 'Probe sample area', 'Probe sample rate'],
                                                           'Outputs':['SV'],
+                                                          'OutputUnits':['m^3'],
+                                                          'OutputTypes':['array[time, bins]'],
                                                           'OutputDescription':['Sample volume'],
                                                           'Purpose':'Calculate sample volume for microphysics probes',
                                                           'Description':'Calculate sample volume for microphysics probes given true air speed, probe sample area and sample rate',

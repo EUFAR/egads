@@ -58,6 +58,8 @@ class CameraViewingAngles(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['coeff','coeff','coeff','coeff','coeff'],
                                                           'InputDescription':['Number of pixels in x direction','Number of pixels in y direction','Length of the camera sensor in x direction','Length of the camera sensor in y direction','Focal length of the camera lens'],
                                                           'Outputs':['theta_c', 'phi_c'],
+                                                          'OutputUnits':['deg','deg'],
+                                                          'OutputTypes':['array[n_x, n_y]','array[n_x, n_y]'],
                                                           'OutputDescription':['Camera viewing zenith angle','Camera viewing azimuth angle (mathematic negative system with 0 deg into flight direction)'],
                                                           'Purpose':'Calculates per-pixel camera viewing angles for a digital camera image',
                                                           'Description':'Calculates per-pixel camera viewing angles of a digital camera given its sensor dimension and focal length. x--y coordinates are defined as having the left side of the image (x=0) aligned with the flight direction and y=0 to the top of the image',

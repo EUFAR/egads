@@ -43,6 +43,8 @@ class TempBlackbody(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','coeff'],
                                                           'InputDescription':['Blackbody radiance','Wavelength'],
                                                           'Outputs':['T'],
+                                                          'OutputUnits':['K'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Temperature'],
                                                           'Purpose':'Calculates the blackbody temperature for a given radiance at a specific wavelength',
                                                           'Description':'No description',

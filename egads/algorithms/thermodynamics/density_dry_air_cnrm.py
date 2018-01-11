@@ -44,6 +44,8 @@ class DensityDryAirCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector'],
                                                           'InputDescription':['Static pressure','Static temperature'],
                                                           'Outputs':['rho'],
+                                                          'OutputUnits':['kg/m^3'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Density'],
                                                           'Purpose':'Calculates density of dry air',
                                                           'Description':'Calculates density of dry air given static temperature and pressure. If virtual temperature is used instead of static, this algorithm calculates density of humid air',

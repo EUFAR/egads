@@ -59,6 +59,8 @@ class RotateSolarVectorToAircraftFrame(egads_core.EgadsAlgorithm):
                                                                               'Aircraft pitch (mathematic positive, nose down=positive)',
                                                                               'Aircraft yaw (mathematic negative, north=0 deg)'],
                                                           'Outputs':['theta_new', 'phi_new'],
+                                                          'OutputUnits':['deg','deg'],
+                                                          'OutputTypes':['vector','vector'],
                                                           'OutputDescription':['Solar zenith, aircraft coordinates','Solar azimuth, aircraft coordinates (mathematic negative, north=0 deg)'],
                                                           'Purpose':'Rotates polar solar vector by rotation of aircraft roll, pitch and yaw',
                                                           'Description':'No description',

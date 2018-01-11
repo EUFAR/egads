@@ -73,6 +73,8 @@ class PressureAngleIncidenceCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector','vector','vector','coeff.[2]','coeff.[2]','coeff.[4]'],
                                                           'InputDescription':['Raw static pressure','Raw dynamic pressure','Horizontal differential pressure','Vertical differential pressure','Angle of attack calibration coefficients','Sideslip calibration coefficients','Static error coefficients'],
                                                           'Outputs':['P_s', 'delta_P', 'alpha', 'beta'],
+                                                          'OutputUnits':['hPa', 'hPa', 'rad', 'rad'],
+                                                          'OutputTypes':['vector','vector','vector','vector'],
                                                           'OutputDescription':['Static pressure','Static error corrected dynamic pressure','Angle of attack','Sideslip angle'],
                                                           'Purpose':'Calculate static pressure, error-corrected dynamic pressure, angle of attack and sideslip',
                                                           'Description':'Calculates static pressure and dynamic pressure by correction of static error. Angle of attack and sideslip are calculated from the horizontal and vertical differential pressures',

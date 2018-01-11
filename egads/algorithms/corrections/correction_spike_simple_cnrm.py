@@ -47,7 +47,7 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','coeff'],
                                                           'InputDescription':['Parameter for analysis','Spike detection threshold (same units as X, must be positive)'],
                                                           'Outputs':['X_corr'],
-                                                          'OutputUnits':[None],
+                                                          'OutputUnits':['input0'],
                                                           'OutputTypes':['vector'],
                                                           'OutputDescription':['Parameter with corrections applied'],
                                                           'Purpose':'Detects and corrects spikes which exceed a specific threshold',
@@ -58,7 +58,6 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
-                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

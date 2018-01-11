@@ -42,6 +42,8 @@ class TempVirtualCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector'],
                                                           'InputDescription':['Static temperature','Water vapor mixing ratio'],
                                                           'Outputs':['T_v'],
+                                                          'OutputUnits':['K'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Virtual temperature'],
                                                           'Purpose':'Calculate virtual temperature',
                                                           'Description':'Calculates virtual temperature given static pressure and mixing ratio',

@@ -45,16 +45,18 @@ Within the file itself, there are one rule to respect and several elements in th
         * InputTypes: the type of the input (array, vector, coeff, ...) linked to the ``var_type`` string in the algorithm template ; the string ``_optional`` can be added to inform that the input is optional (used in the EGADS GUI).
         * InputDescription: short description of each input.
         * Outputs: representation of each output (ex: P_a for altitude pressure).
+        * OutputUnits: units of each output (cf. self.output_metadata['units']).
+        * OutputTypes: type of each output (ex: vector).
         * OutputDescription: short description of each output.
-        * Purpose: the goal of the algorithm
-        * Description: a description of the algorithm
-        * Category: the category of the algorithm (ex: Transforms, Thermodynamis, ...)
-        * Source : the source of the algorithm (ex: CNRM)
+        * Purpose: the goal of the algorithm.
+        * Description: a description of the algorithm.
+        * Category: the category of the algorithm (ex: Transforms, Thermodynamis, ...).
+        * Source : the source of the algorithm (ex: CNRM).
         * Reference : the reference of the algorithm (ex: Doe et al, My wonderful algorithm, Journal of Algorithms, 11, pp 21-22, 2017).
-        * Processor: self.name
-        * ProcessorDate: ``__date__``
-        * ProcessorVersion: ``__version__``
-        * DateProcessed: self.now()
+        * Processor: self.name.
+        * ProcessorDate: ``__date__``.
+        * ProcessorVersion: ``__version__``.
+        * DateProcessed: self.now().
    
    
 .. NOTE::
@@ -77,7 +79,7 @@ Within the file itself, there are one rule to respect and several elements in th
 7. Integration of the algorithm in EGADS
     Once the algorithm file is ready, the user has to move it in the appropriate directory in the ``./egads/algorithms/user`` directory. Once it has been done, the ``__init__.py`` file has to be modified to declare the new algorithm. The following line can be added to the ``__init__.py`` file: ``from the_name_of_the_file import \*``.
     
-    If the algorithm requires a new directory, the user has to create it, move the file inside and create a ``__init__.py`` file to declare the new directory and the algoritm to EGADS. A template can be found in ``./egads/algorithms/file_templates/init_template.py`` and is shown below:
+    If the algorithm requires a new directory, the user has to create it in the ``user`` directory, move the file inside and create a ``__init__.py`` file to declare the new directory and the algoritm to EGADS. A template can be found in ``./egads/algorithms/user/file_templates/init_template.py`` and is shown below:
     
     .. literalinclude:: example_files/init_template.py
 

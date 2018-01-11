@@ -37,8 +37,8 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
                 pressure     vector    hPa                local pressure
                 temperature  vector    degC               local temperature
 
-    OUTPUT      Theta        vector    degrees            solar zenith angle
-                Phi          vector    degrees            solar azimuth angle
+    OUTPUT      Theta        vector    degree            solar zenith angle
+                Phi          vector    degree            solar azimuth angle
 
     SOURCE
 
@@ -51,12 +51,12 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
         self.output_metadata = []
-        self.output_metadata.append(egads_metadata.VariableMetadata({'units':'degrees',
+        self.output_metadata.append(egads_metadata.VariableMetadata({'units':'degree',
                                                                'long_name':'Solar Zenith Angle',
                                                                'standard_name':'solar_zenith_angle',
                                                                'Category':['Radiation']}))
 
-        self.output_metadata.append(egads_metadata.VariableMetadata({'units':'degrees',
+        self.output_metadata.append(egads_metadata.VariableMetadata({'units':'degree',
                                                                'long_name':'Solar Azimuth Angle',
                                                                'standard_name':'solar_azimuth_angle',
                                                                'Category':['Radiation']}))
@@ -66,6 +66,8 @@ class SolarVectorReda(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['time','vector','vector','vector','vector','vector'],
                                                           'InputDescription':['ISO string of current date time in UTC', 'Latitude', 'Longitude', 'Elevation','Local pressure','Local temperature'],
                                                           'Outputs':['Theta', 'Phi'],
+                                                          'OutputUnits':['degree','degree'],
+                                                          'OutputTypes':['vector','vector'],
                                                           'OutputDescription':['Solar zenith angle','Solar azimuth angle'],
                                                           'Purpose':'Calculates the solar vector based on current date/time, elevation, latitude and longitude',
                                                           'Description':'Calculates the solar vector based on current date/time, elevation, latitude and longitude. Takes additional optional arguments of pressure and temperature to correct for atmospheric refraction effects. The zenith and azimuth angle calculated by this algorithm have uncertainties equal to +/- 0.0003 degrees in the period from year -2000 to 6000',

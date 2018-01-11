@@ -43,6 +43,8 @@ class PlanckEmission(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector', 'coeff'],
                                                           'InputDescription':['Temperature', 'Wavelength'],
                                                           'Outputs':['rad'],
+                                                          'OutputUnits':['W m^-2 sr^-1 nm^-1'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Black body radiance'],
                                                           'Purpose':'Calculates the radiance of a surface at a given wavelength given its temperature',
                                                           'Description':'No description',

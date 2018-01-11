@@ -6,8 +6,8 @@ run_tests.py
 setup.cfg
 setup.py
 Documentation/EGADS Algorithm Handbook - LATEX
-Documentation/EGADS Algorithm Handbook - v0.8.7.pdf
-Documentation/EGADS Documentation - v0.8.7.pdf
+Documentation/EGADS Algorithm Handbook - v0.8.8.pdf
+Documentation/EGADS Documentation - v0.8.8.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -87,6 +87,7 @@ Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/time_to_dec
 Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.tex
 Documentation/EGADS Algorithm Handbook - LATEX/cover/eufar_a_sm.png
 doc/Makefile
+doc/egads.log
 doc/source
 doc/source/alg_development.rst
 doc/source/conf.py

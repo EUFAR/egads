@@ -58,7 +58,6 @@ class NumberConcTotalDmt(egads_core.EgadsAlgorithm):
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
-                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

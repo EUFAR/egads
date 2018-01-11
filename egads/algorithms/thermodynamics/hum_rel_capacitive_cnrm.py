@@ -51,6 +51,8 @@ class HumRelCapacitiveCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector','vector','vector','coeff','coeff','coeff','coeff','coeff'],
                                                           'InputDescription':['Output frequency of capacitive probe','Static temperature','Static pressure','Dynamic pressure','Temperature correction coefficient','Minimal acceptable frequency','Calibration law 0th degree coefficient','Calibration law 1st degree coefficient','Calibration law 2nd degree coefficient'],
                                                           'Outputs':['H_u'],
+                                                          'OutputUnits':[''],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Relative humidity'],
                                                           'Purpose':'Calculate relative humidity from capacitive probe',
                                                           'Description':'Calculates relative humidity of the air based on the frequency of the capacitive probe',

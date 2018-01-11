@@ -76,6 +76,8 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector','vector','vector','vector','vector','vector','vector','vector','vector','vector','coeff'],
                                                           'InputDescription':['Corrected true air speed','Aircraft angle of attack','Aircraft sideslip angle','Easterly aircraft velocity from INS','Northerly aircraft velocity from INS','Upward aircraft velocity from INS','Roll angle','Pitch angle','True heading','Pitch rate','Roll rate','Distance separating INS and gust probe along aircraft center line'],
                                                           'Outputs':['u', 'v', 'w'],
+                                                          'OutputUnits':['m/s','m/s','m/s'],
+                                                          'OutputTypes':['vector','vector','vector'],
                                                           'OutputDescription':['Easterly wind velocity component','Northerly wind velocity component','Upward wind velocity component'],
                                                           'Purpose':'Calculation of 3d wind vector components',
                                                           'Description':'This algorithm applies vector transformations using aircraft speed, angle of attack and sideslip to calculate the three-dimensional wind vector components',

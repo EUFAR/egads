@@ -46,6 +46,8 @@ class VelocityTasLongitudinalCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector','vector'],
                                                           'InputDescription':['True air speed','Angle of attack','Sideslip angle'],
                                                           'Outputs':['V_tx'],
+                                                          'OutputUnits':['m/s'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Longitudinal true airspeed'],
                                                           'Purpose':'Calculates the longitudinal true air speed',
                                                           'Description':'Calculates the true air speed along the longitudinal axis of the aircraft',

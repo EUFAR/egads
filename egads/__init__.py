@@ -23,7 +23,7 @@ if not os.path.exists(os.path.join(path, 'egads.ini')):
         config_dict.write(ini_file)
         ini_file.close()   
 config_dict.read(os.path.join(path, 'egads.ini'))
-log_filename = os.path.join(config_dict.get('LOG', 'path'),'egads_log.out')
+log_filename = os.path.join(config_dict.get('LOG', 'path'),'egads.log')
 logging.getLogger('').handlers = []
 logging.basicConfig(filename = log_filename,
                     level = getattr(logging, config_dict.get('LOG', 'level')),

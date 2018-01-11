@@ -53,6 +53,8 @@ class ScatteringAngles(egads_core.EgadsAlgorithm):
                                                                               'Solar zenith angle',
                                                                               'Solar azimuth angle'],
                                                           'Outputs':['theta_scat'],
+                                                          'OutputUnits':['deg'],
+                                                          'OutputTypes':['array[n_x, n_y]'],
                                                           'OutputDescription':['Scattering angles of each pixel'],
                                                           'Purpose':'Calculates the scattering angle for each pixel on an image given the camera viewing angle and solar vector',
                                                           'Description':'No description',

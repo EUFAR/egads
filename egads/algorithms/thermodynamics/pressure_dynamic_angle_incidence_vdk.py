@@ -78,6 +78,8 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
                                                                               'Sideslip calibration coefficients',
                                                                               'Dynamic pressure calibration coefficients'],
                                                           'Outputs':['P_d', 'alpha', 'beta'],
+                                                          'OutputUnits':['hPa','rad','rad'],
+                                                          'OutputTypes':['vector','vector','vector'],
                                                           'OutputDescription':['Dynamic pressure','Angle of attack','Sideslip angle'],
                                                           'Purpose':'Calculate dynamic pressure, angle of attack and sideslip',
                                                           'Description':'Calculates dynamic pressure and angles of incidence from a 5-hole probe'

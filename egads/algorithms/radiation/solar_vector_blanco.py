@@ -71,6 +71,8 @@ class SolarVectorBlanco(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['time','vector','vector'],
                                                           'InputDescription':['ISO8601 string of current date/time','Latitude','Longitude'],
                                                           'Outputs':['ra', 'delta', 'theta_z', 'gamma'],
+                                                          'OutputUnits':['radians','radians','radians','radians'],
+                                                          'OutputTypes':['vector','vector','vector','vector'],
                                                           'OutputDescription':['Right ascension','Declination','Solar zenith','Solar azimuth'],
                                                           'Purpose':'Calculation of solar vector based on current time, latitude and longitude',
                                                           'Description':'Calculation of solar vector using the Blanco-Muriel et al. algorithm. This algorithm is optimized for the period between 1999 and 2005, however it has been shown to compute the solar vector with an error of less than 0.5 minutes of arc out to 2015',

@@ -46,6 +46,8 @@ class TimeToDecimalYear(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','coeff_optional'],
                                                           'InputDescription':['Time.','Time reference in year.'],
                                                           'Outputs':['t_y'],
+                                                          'OutputUnits':['year'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Time in decimal year.'],
                                                           'Purpose':'Converts a time or a time vector to decimal year.',
                                                           'Description':'Given a vector of time elapsed and an optional reference year, this algorithm convert the data to a format in decimal year. Ex: 1995.0125',

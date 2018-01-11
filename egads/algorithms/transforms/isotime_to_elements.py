@@ -79,6 +79,8 @@ class IsotimeToElements(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector'],
                                                           'InputDescription':['ISO date-time string'],
                                                           'Outputs':['year', 'month', 'day', 'hour', 'minute', 'second'],
+                                                          'OutputUnits':['year','month','day','hour','min','s'],
+                                                          'OutputTypes':['vector','vector','vector','vector','vector','vector'],
                                                           'OutputDescription':['Year', 'Month', 'Day', 'Hour', 'Minute', 'Second'],
                                                           'Purpose':'Splits a series of ISO string date-times (yyyymmddThhmmss or similar) into composant values',
                                                           'Description':'Splits a series of ISO string date-times (yyyymmddThhmmss, yyyy-mm-ddThh:mm:ss, yyyymmdd or similar) into composant values.',

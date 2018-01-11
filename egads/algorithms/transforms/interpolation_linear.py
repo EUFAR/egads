@@ -64,6 +64,8 @@ class InterpolationLinear(egads_core.EgadsAlgorithm):
                                                                               'Value to return for x_interp < x[0]. default is f[0], if nan are present at the beginning of f, the algorithm will keep them.',
                                                                               'Value to return when x_interp > x[-1]. Default is f[-1], if nan are present at the end of f, the algorithm will keep them.'],
                                                           'Outputs':['f_interp'],
+                                                          'OutputUnits':['input0'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Interpolated values of f, nans at the beginning and at the end are removed if f_right and f_left are not set to nan.'],
                                                           'Purpose':'Calculate linear interpolation of a variable',
                                                           'Description':'Calculates the one-dimensional piecewise linear interpolation of a variable between two coordinate systems',

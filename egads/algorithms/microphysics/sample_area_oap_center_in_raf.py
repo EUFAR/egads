@@ -28,7 +28,7 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
                 M           coeff.          _       Probe magnification factor
                 N           coeff.          _       Number of diodes in array
 
-    OUTPUT      SA          Vector[bins]    m2      Sample area
+    OUTPUT      SA          vector[bins]    m2      Sample area
 
     SOURCE      NCAR-RAF
 
@@ -49,6 +49,8 @@ class SampleAreaOapCenterInRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['coeff','coeff','coeff','coeff','coeff'],
                                                           'InputDescription':['Laser wavelength','Distance between probe arms','Diode diameter','Probe magnification factor','Number of diodes in array'],
                                                           'Outputs':['SA'],
+                                                          'OutputUnits':['m^2'],
+                                                          'OutputTypes':['vector[bins]'],
                                                           'OutputDescription':['Sample area'],
                                                           'Purpose':'Calculation of "center-in" sample area size for OAP probes',
                                                           'Description':'Calculation of "center-in" sample area size for OAP probes such as the 2DP, CIP, etc. The sample area varies by the number of shadowed diodes. This routine calculates a sample area per bin',

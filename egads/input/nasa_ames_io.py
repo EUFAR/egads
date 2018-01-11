@@ -160,17 +160,15 @@ class NasaAmes(FileCore):
                         self.f.V[varnum] = data
                 except ValueError:
                     if isinstance(data, egads.EgadsData):
+                        value = data.value.tolist()
                         try:
-                            name = data.metadata["name"]
+                            name = data.metadata["standard_name"]
                         except KeyError:
                             try:
-                                name = data.metadata["standard_name"]
+                                name = data.metadata["long_name"]
                             except KeyError:
-                                try:
-                                    name = data.metadata["long_name"]
-                                except KeyError:
-                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                    raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = data.metadata["units"]
                         except KeyError:
@@ -192,16 +190,13 @@ class NasaAmes(FileCore):
                     else:
                         value = data
                         try:
-                            name = attrdict["name"]
+                            name = attrdict["standard_name"]
                         except KeyError:
                             try:
-                                name = attrdict["standard_name"]
+                                name = attrdict["long_name"]
                             except KeyError:
-                                try:
-                                    name = attrdict["long_name"]
-                                except KeyError:
-                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                    raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = attrdict["units"]
                         except KeyError:
@@ -240,16 +235,13 @@ class NasaAmes(FileCore):
                     if isinstance(data, egads.EgadsData):
                         value = data.value.tolist()
                         try:
-                            name = data.metadata["name"]
+                            name = data.metadata["standard_name"]
                         except KeyError:
                             try:
-                                name = data.metadata["standard_name"]
+                                name = data.metadata["long_name"]
                             except KeyError:
-                                try:
-                                    name = data.metadata["long_name"]
-                                except KeyError:
-                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                    raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = data.metadata["units"]
                         except KeyError:
@@ -258,16 +250,13 @@ class NasaAmes(FileCore):
                     else:
                         value = data
                         try:
-                            name = attrdict["name"]
+                            name = attrdict["standard_name"]
                         except KeyError:
                             try:
-                                name = attrdict["standard_name"]
+                                name = attrdict["long_name"]
                             except KeyError:
-                                try:
-                                    name = attrdict["long_name"]
-                                except KeyError:
-                                    logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                    raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                         try:
                             units = attrdict["units"]
                         except KeyError:
@@ -281,16 +270,13 @@ class NasaAmes(FileCore):
                 if isinstance(data, egads.EgadsData):
                     value = data.value.tolist()
                     try:
-                        name = data.metadata["name"]
+                        name = data.metadata["standard_name"]
                     except KeyError:
                         try:
-                            name = data.metadata["standard_name"]
+                            name = data.metadata["long_name"]
                         except KeyError:
-                            try:
-                                name = data.metadata["long_name"]
-                            except KeyError:
-                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                            raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = data.metadata["units"]
                     except KeyError:
@@ -312,16 +298,13 @@ class NasaAmes(FileCore):
                 else:
                     value = data
                     try:
-                        name = attrdict["name"]
+                        name = attrdict["standard_name"]
                     except KeyError:
                         try:
-                            name = attrdict["standard_name"]
+                            name = attrdict["long_name"]
                         except KeyError:
-                            try:
-                                name = attrdict["long_name"]
-                            except KeyError:
-                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                            raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = attrdict["units"]
                     except KeyError:
@@ -350,16 +333,13 @@ class NasaAmes(FileCore):
                 if isinstance(data, egads.EgadsData):
                     value = data.value.tolist()
                     try:
-                        name = data.metadata["name"]
+                        name = data.metadata["standard_name"]
                     except KeyError:
                         try:
-                            name = data.metadata["standard_name"]
+                            name = data.metadata["long_name"]
                         except KeyError:
-                            try:
-                                name = data.metadata["long_name"]
-                            except KeyError:
-                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                            raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = data.metadata["units"]
                     except KeyError:
@@ -368,16 +348,13 @@ class NasaAmes(FileCore):
                 else:
                     value = data
                     try:
-                        name = attrdict["name"]
+                        name = attrdict["standard_name"]
                     except KeyError:
                         try:
-                            name = attrdict["standard_name"]
+                            name = attrdict["long_name"]
                         except KeyError:
-                            try:
-                                name = attrdict["long_name"]
-                            except KeyError:
-                                logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
-                                raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
+                            logging.exception('egads - nasa_ames_io.py - NasaAmes - write_variable - The EgadsData object has no name, standard_name or long_name metadata')
+                            raise KeyError('The EgadsData object has no name, standard_name or long_name metadata')
                     try:
                         units = attrdict["units"]
                     except KeyError:
@@ -495,7 +472,7 @@ class NasaAmes(FileCore):
                 if vartype == "main":
                     (variable, units, miss, scale) = self.f.getVariable(varnum)
                     if variable is not None:
-                        attr_list.append("name")
+                        attr_list.append("standard_name")
                     if units is not None:
                         attr_list.append("units")
                     if miss is not None:
@@ -505,7 +482,7 @@ class NasaAmes(FileCore):
                 elif vartype == "independant":
                     (variable, units) = self.f.getIndependentVariable(varnum)
                     if variable is not None:
-                        attr_list.append("name")
+                        attr_list.append("standard_name")
                     if units is not None:
                         attr_list.append("units")
                 return attr_list
@@ -522,7 +499,7 @@ class NasaAmes(FileCore):
                 if vartype == "main":
                     try:
                         (variable, units) = self._attemptVarAndUnitsMatch(na_dict["VNAME"][varnum])
-                        attr_list.append("name")
+                        attr_list.append("standard_name")
                         if units is not None:
                             attr_list.append("units")
                     except (KeyError, ValueError):
@@ -540,7 +517,7 @@ class NasaAmes(FileCore):
                 elif vartype == "independant":
                     try:
                         (variable, units) = self._attemptVarAndUnitsMatch(na_dict["XNAME"][varnum])
-                        attr_list.append("name")
+                        attr_list.append("standard_name")
                         if units is not None:
                             attr_list.append("units")
                     except (KeyError, ValueError):
@@ -582,12 +559,12 @@ class NasaAmes(FileCore):
                     var_list = self.get_variable_list(vartype=vartype)
                     varnum = var_list.index(varname)
                 if vartype == "main":
-                    vardict = {'name':self.f.getVariable(varnum)[0],
+                    vardict = {'standard_name':self.f.getVariable(varnum)[0],
                            'units':self.f.getVariable(varnum)[1],
                            '_FillValue':self.f.getVariable(varnum)[2],
                            'scale_factor':self.f.getVariable(varnum)[3]}
                 elif vartype == "independant":
-                    vardict = {'name':self.f.getIndependentVariable(varnum)[0],
+                    vardict = {'standard_name':self.f.getIndependentVariable(varnum)[0],
                            'units':self.f.getIndependentVariable(varnum)[1]}
                 return vardict[attrname]
         else:
@@ -601,13 +578,13 @@ class NasaAmes(FileCore):
                     varnum = var_list.index(varname)
                 if vartype == "main":
                     (variable, units) = self._attemptVarAndUnitsMatch(na_dict["VNAME"][varnum])
-                    vardict = {'name':variable,
+                    vardict = {'standard_name':variable,
                                'units':units,
                                '_FillValue':na_dict['VMISS'][varnum],
                                'scale_factor':na_dict['VSCAL'][varnum]}
                 elif vartype == "independant":
                     (variable, units) = self._attemptVarAndUnitsMatch(na_dict["XNAME"][varnum])
-                    vardict = {'name':variable,
+                    vardict = {'standard_name':variable,
                                'units':units}
                 return vardict[attrname]
     
@@ -646,7 +623,7 @@ class NasaAmes(FileCore):
                 else:
                     var_list = self.get_variable_list(vartype=vartype)
                     varnum = var_list.index(varname)
-                attr_dict = {"name":"NAME", "units":"UNITS", "_FillValue":"VMISS", "scale_factor":"VSCAL"}
+                attr_dict = {"standard_name":"NAME", "units":"UNITS", "_FillValue":"VMISS", "scale_factor":"VSCAL"}
                 if attr_dict[attrname] == "NAME" or attr_dict[attrname] == "UNITS":
                     if vartype == "main":
                         (variable, units) = self.f._attemptVarAndUnitsMatch(self.na_dict["VNAME"][varnum])
@@ -672,7 +649,7 @@ class NasaAmes(FileCore):
                     try:
                         var_list = self.get_variable_list(vartype=vartype, na_dict=na_dict)
                         varnum = var_list.index(varname)
-                        attr_dict = {"name":"NAME", "units":"UNITS", "_FillValue":"VMISS", "scale_factor":"VSCAL"}
+                        attr_dict = {"standard_name":"NAME", "units":"UNITS", "_FillValue":"VMISS", "scale_factor":"VSCAL"}
                         if attr_dict[attrname] == "NAME" or attr_dict[attrname] == "UNITS":
                             if vartype == 'main':
                                 (variable, units) = self._attemptVarAndUnitsMatch(na_dict["VNAME"][varnum])
@@ -722,8 +699,10 @@ class NasaAmes(FileCore):
         
         logging.debug('egads - nasa_ames_io.py - NasaAmes - save_na_file - filename ' + str(filename) + 
                       ', float_format ' + str(float_format))
+        if not filename:
+            filename = self.filename
         if not na_dict:
-            na_dict = self.f.na_dict
+            na_dict = self.na_dict
         args = {}
         if delimiter:
             args['delimiter'] = delimiter

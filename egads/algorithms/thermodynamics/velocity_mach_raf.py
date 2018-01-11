@@ -44,6 +44,8 @@ class VelocityMachRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector'],
                                                           'InputDescription':['Dynamic pressure','Static pressure'],
                                                           'Outputs':['M'],
+                                                          'OutputUnits':[''],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Mach number'],
                                                           'Purpose':'Calculates mach number based on dynamic and static pressure',
                                                           'Description':'No description',

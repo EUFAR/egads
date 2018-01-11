@@ -45,7 +45,7 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector'],
                                                           'InputDescription':['Parameter to calculate first derivative','Time signal'],
                                                           'Outputs':['x_dot'],
-                                                          'OutputUnits':[None],
+                                                          'OutputUnits':['input0/s'],
                                                           'OutputTypes':['vector'],
                                                           'OutputDescription':['First derivative of x'],
                                                           'Description':'Calculates the first derivative of a generic parameter wrt time. Calculations of this derivative are centered for all except the first and last values in the vector (Nones are returned for these values). Returns None for scalar parameters',
@@ -56,7 +56,6 @@ class DerivativeWrtTime(egads_core.EgadsAlgorithm):
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
-                                                          'ProcessorAuthor':__author__,
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 

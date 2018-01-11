@@ -44,6 +44,8 @@ class AltitudePressureRaf(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector'],
                                                           'InputDescription':['Static pressure'],
                                                           'Outputs':['alt_p'],
+                                                          'OutputUnits':['m'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Pressure altitude'],
                                                           'Purpose':'Calculate pressure altitude',
                                                           'Description':'Calculate pressure altitude using static pressure and the US Standard Atmosphere definitions',

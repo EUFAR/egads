@@ -53,6 +53,8 @@ class IsotimeToSeconds(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','string_optional','string_optional'],
                                                           'InputDescription':['ISO 8601 strings','Reference time (ISO 8601 string) - default is 19700101T000000','Time string format - if none provided algorithm will attempt to automatically deconstruct timestring'],
                                                           'Outputs':['delta_t'],
+                                                          'OutputUnits':['s'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['Seconds since reference'],
                                                           'Purpose':'Calculates seconds elapsed from a series of ISO 8601 date/time strings',
                                                           'Description':'Calculates seconds elapsed from a series of ISO 8601 date/time strings using the Python dateutil and datetime modules',

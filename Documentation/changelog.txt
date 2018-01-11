@@ -3,6 +3,17 @@ CHANGELOG
 =========
 
 
+January 11 2018, Release version 0.8.8
+======================================
+  FIXED:
+    - metadata were missing for few algorithms.
+    - initialisation of filename was missing in a function of the nasa_ames_io module.
+    - fixed an issue in the write_variable function of the nasa_ames_io module.
+
+  MODIFIED:
+    - "name" metadata in nasa_ames_io module has been changed to "standard_name" for consistency with NetCDF module.
+
+
 January 3 2018, Release version 0.8.7
 =====================================
   FIXED:

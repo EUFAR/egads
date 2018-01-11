@@ -49,6 +49,8 @@ class VelocityTasCnrm(egads_core.EgadsAlgorithm):
                                                           'InputTypes':['vector','vector','vector','coeff','coeff'],
                                                           'InputDescription':['Static temperature','Static pressure','Dynamic pressure','specific heat of air (dry air is 1004 J K-1 kg-1)','R_a/c_pa'],
                                                           'Outputs':['V_p'],
+                                                          'OutputUnits':['m/s'],
+                                                          'OutputTypes':['vector'],
                                                           'OutputDescription':['true airspeed'],
                                                           'Purpose':'Calculate true airspeed',
                                                           'Description':"Calculates true airspeed based on static temperature, static pressure and dynamic pressure using St Venant's formula",
