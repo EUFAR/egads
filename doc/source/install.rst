@@ -1,7 +1,7 @@
 =============
 Installation
 =============
-The latest version of EGADS can be obtained from https://github.com/eufarn7sp/egads
+The latest version of EGADS can be obtained from https://github.com/EUFAR/egads
 
 
 Prerequisites
@@ -19,7 +19,7 @@ Optional Packages
 *****************
 The following are useful when using or compiling EGADS:
 
-* IPython - An optional package which simplifies Python command line usage (http://ipython.scipy.org). IPython is an enhanced interactive Python shell which supports tab-completion, debugging, command history, etc. 
+* IPython - An optional package which simplifies Python command line usage (http://ipython.scipy.org). IPython is an enhanced interactive Python shell which supports tab-completion, debugging, command history, etc.
 * setuptools - An optional package which allows easier installation of Python packages (http://pypi.python.org/pypi/setuptools). It gives access to the ``easy_install`` command which allows packages to be downloaded and installed in one step from the command line.
 
 
@@ -64,7 +64,7 @@ Actual options to control the logging system are for now:
 
 * ``level``: the logging level (``DEBUG``, ``INFO``, ``WARNING``, ``CRITICAL``, ``ERROR``).
 * ``path``: the path of the file containing all logs.
-   
+
 New logging options will be loaded at the next import of EGADS. Logging levels are the standard Python ones (``DEBUG``, ``INFO``, ``WARNING``, ``CRITICAL``, ``ERROR``). It is also possible to change dynamically the logging level in a script:
 
    >>> egads.change_log_level('DEBUG')
@@ -89,9 +89,3 @@ If the ``check_update`` option is set on True in the egads.ini file, EGADS will 
    >>> exit()
 
 The use of pip or easy_install is still required to update EGADS package.
-
-
-
-
-
-

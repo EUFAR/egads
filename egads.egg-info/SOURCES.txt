@@ -6,8 +6,8 @@ run_tests.py
 setup.cfg
 setup.py
 Documentation/EGADS Algorithm Handbook - LATEX
-Documentation/EGADS Algorithm Handbook - v0.8.8.pdf
-Documentation/EGADS Documentation - v0.8.8.pdf
+Documentation/EGADS Algorithm Handbook - v0.8.9.pdf
+Documentation/EGADS Documentation - v0.8.9.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -84,10 +84,10 @@ Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_seconds.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/seconds_to_isotime.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/time_to_decimal_year.tex
+Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.aux
 Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.tex
 Documentation/EGADS Algorithm Handbook - LATEX/cover/eufar_a_sm.png
 doc/Makefile
-doc/egads.log
 doc/source
 doc/source/alg_development.rst
 doc/source/conf.py
@@ -181,6 +181,7 @@ egads/core/metadata.py
 egads/input/__init__.py
 egads/input/input_core.py
 egads/input/nasa_ames_io.py
+egads/input/nasa_ames_io_2.py
 egads/input/netcdf_io.py
 egads/input/text_file_io.py
 egads/tests/__init__.py
