@@ -1,21 +1,17 @@
 """
 Test suite for EgadsData class.
-
-Uses NetCDF4 Python library to test know inputs and outputs against the EGADS
-NetCDF library (based on NetCDF4).
 """
 
-__author__ = "mfreer, ohenry"
-__date__ = "2016-12-6 11:19"
-__version__ = "1.1"
+__author__ = "ohenry"
+__date__ = "2018-03-05 11:46"
+__version__ = "1.0"
 
 import unittest
 import egads
 import numpy
-from numpy.testing import assert_array_equal  # @UnresolvedImport
+from numpy.testing import assert_array_equal
 
-UNITS1 = 'm'
-UNITS2 = 's'
+UNITS1, UNITS2 = 'm', 's'
 
 
 class EgadsDataScalarTestCase(unittest.TestCase):
@@ -161,7 +157,6 @@ def suite():
     egads_scalar_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsDataScalarTestCase)
     egads_vector_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsDataVectorTestCase)
     egads_assignment_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsValueAssignmentTestCase)
-    
     return unittest.TestSuite([egads_scalar_suite, egads_vector_suite, egads_assignment_suite])
 
 

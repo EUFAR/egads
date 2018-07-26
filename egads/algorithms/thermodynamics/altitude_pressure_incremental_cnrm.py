@@ -29,7 +29,7 @@ class AltitudePressureIncrementalCnrm(egads_core.EgadsAlgorithm):
                                                        provided and measurements start in airport)
                 S0          coeff,optional   s         reference time (if not provided, S0 = t[0]
                 
-    OUTPUT      alt_p         vector           m         pressure altitude
+    OUTPUT      alt_p       vector           m         pressure altitude
 
     SOURCE      CNRM/GMEI/TRAMM
 

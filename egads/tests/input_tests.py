@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.3"
+__version__ = "1.4"
 
 import tempfile
 import unittest
@@ -338,19 +338,19 @@ class EgadsFileInputTestCase(unittest.TestCase):
     def test_seek_file(self):
         """ Test file seek function """
 
-        f = einput.EgadsFile(self.filename, 'r')
+        f = einput.EgadsFile(self.filename, 'rb')
         f.seek(3)
         data = f.read(1)
         self.assertEqual(4, f.pos, 'Positions do not match')
-        self.assertEqual(self.strdata2ln[3], data, 'Data from pos 3 does not match')
+        self.assertEqual(self.strdata2ln[3], data.decode('ascii'), 'Data from pos 3 does not match')
         f.seek(3, 'c')
         data = f.read(1)
         self.assertEqual(8, f.pos, 'Positions do not match')
-        self.assertEqual(self.strdata2ln[7], data, 'Data from pos 7 does not match')
+        self.assertEqual(self.strdata2ln[7], data.decode('ascii'), 'Data from pos 7 does not match')
         f.seek(4)
         data = f.read(1)
         self.assertEqual(5, f.pos, 'Positions do not match')
-        self.assertEqual(self.strdata2ln[4], data, 'Data from pos 3 does not match')
+        self.assertEqual(self.strdata2ln[4], data.decode('ascii'), 'Data from pos 3 does not match')
         f.close()
 
 
@@ -415,7 +415,7 @@ class EgadsCsvInputTestCase(unittest.TestCase):
                             ['1', '0', '-1'],
                             ['0.3', '1.5', '1.7']]
         self.format = ['s', 'i', 'i', 'f']
-        f = open(self.filename, 'w')
+        f = open(self.filename, 'w', newline='')
         writer = csv.writer(f)
         writer.writerow(self.titles)
         writer.writerows(self.data)
@@ -504,7 +504,7 @@ class NAInputTestCase(unittest.TestCase):
         f.close()
         self.originator = 'John Doe; email: john.doe@email.com'
         self.org = 'ORGANIS'
-        self.scom = ['This is a test file for verifying the status of the EGADS NASA Ames functionality.']
+        self.scom = 'This is a test file for verifying the status of the EGADS NASA Ames functionality.\n'
         self.var_names = ['GPS LAT', 'GPS LON', 'Height above sea level', 'Time2']
         self.units = ['degrees', 'degrees', 'm', 'seconds after midnight']
         self.miss_vals = [-9900.0, -9900.0, -9900.0, -9900.0]
@@ -546,7 +546,7 @@ class NAOutputTestCase(unittest.TestCase):
         self.originator = 'John Doe; email: john.doe@email.com'
         self.new_originator = 'Jane Doe; email: jane.doe@email.net'
         self.org = 'ORGANIS'
-        self.scom = ['This is a test file for verifying the status of the EGADS NASA Ames functionality.']
+        self.scom = 'This is a test file for verifying the status of the EGADS NASA Ames functionality.\n'
         self.var_names = ['GPS LAT', 'GPS LON', 'Height above sea level', 'Time2']
         self.units = ['degrees', 'degrees', 'm', 'seconds after midnight']
         self.miss_vals = [-9900.0, -9900.0, -9900.0, -9900.0]
@@ -742,9 +742,8 @@ def suite():
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
     nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
-    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, 
-                               csv_in_suite, csv_out_suite, na_in_suite, na_out_suite, 
-                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])
+    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, csv_in_suite,csv_out_suite,
+                               na_in_suite, na_out_suite, netcdf_convert_format_suite,nasa_ames_convert_format_suite])
 
 
 if __name__ == '__main__':

@@ -70,7 +70,7 @@ class SampleAreaOapAllInRaf(egads_core.EgadsAlgorithm):
         SA = numpy.array([])
         Lambda_mm = Lambda * 1e-6  # convert wavelength to mm
         dD_mm = dD * 1e-3  # convert diameter to mm
-        for i in range(N):
+        for i in range(int(N)):
             X = i + 1
             R = X * dD_mm / 2.0
             DOF = 6 * R ** 2 / (Lambda_mm)

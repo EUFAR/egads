@@ -2,9 +2,9 @@
 Test suite to verify complete functioning of all Microphysics algorithms.
 """
 
-__author__ = "henry"
-__date__ = "2017-1-5 14:48"
-__version__ = "1.4"
+__author__ = "ohenry"
+__date__ = "2018-03-07 16:31"
+__version__ = "1.0"
 __all__ = ['MicrophysicsTestCase']
 
 import unittest

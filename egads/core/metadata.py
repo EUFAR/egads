@@ -1,6 +1,6 @@
-__author__ = "mfreer, ohenry"
-__date__ = "2017-01-11 16:05"
-__version__ = "1.3"
+__author__ = "ohenry"
+__date__ = "2018-03-05 11:01"
+__version__ = "1.1"
 __all__ = ['Metadata', 'FileMetadata', 'VariableMetadata', 'AlgorithmMetadata']
 
 import logging
@@ -48,7 +48,17 @@ VAR_ATTR_LIST = ['units',
 
 ALG_ATTR_LIST = ['Inputs',
                  'InputUnits',
+                 'InputTypes',
+                 'InputDescription',
                  'Outputs',
+                 'OutputUnits',
+                 'OutputTypes',
+                 'OutputDescription',
+                 'Purpose',
+                 'Description',
+                 'Category',
+                 'Source',
+                 'References',
                  'Processor',
                  'ProcessorDate',
                  'ProcessorVersion',
@@ -144,7 +154,7 @@ class Metadata(dict):
             Dictionary object containing metadata names and values.
         """
 
-        logging.debug('egads - metadata.py - Metadata - __init__ - dict ' + str(metadata_dict) + ', conventions ' + str(conventions))
+        logging.debug('egads - metadata.py - Metadata - __init__ - conventions ' + str(conventions))
         dict.__init__(self, metadata_dict)
         self._metadata_list = metadata_list
         self._conventions = conventions
@@ -157,8 +167,8 @@ class Metadata(dict):
             Dictionary object containing metadata names and values.
         """
         
-        logging.debug('egads - metadata.py - Metadata - add_items - dict ' + str(metadata_dict))
-        for key, var in metadata_dict.iteritems():
+        logging.debug('egads - metadata.py - Metadata - add_items')
+        for key, var in metadata_dict.items():
             self[key] = var
         return
 
@@ -172,9 +182,6 @@ class Metadata(dict):
         
         logging.debug('egads - metadata.py - Metadata - set_conventions - conventions ' + str(conventions))
         self._conventions = conventions
-
-    def parse_dictionary_objs(self):
-        pass
 
     def compliance_check(self, conventions=None):
         """
@@ -190,7 +197,7 @@ class Metadata(dict):
 
         logging.debug('egads - metadata.py - Metadata - compliance_check - conventions ' + str(conventions))
         if conventions is None:
-            if self.has_key('Conventions'):
+            if 'Conventions' in self:
                 conventions = self['Conventions']
             else:
                 logging.error('egads - metadata.py - Metadata - compliance_check - AttributeError, no convention found')
@@ -265,8 +272,7 @@ class FileMetadata(Metadata):
             List of metadata conventions used in provided metadata dictionary.
         """
         
-        logging.debug('egads - metadata.py - FileMetadata - __init__ - dict ' + str(metadata_dict) + 
-                      ', filename ' + str(filename) + 'conventions_keyword ' + 
+        logging.debug('egads - metadata.py - FileMetadata - __init__ - conventions_keyword ' + 
                       str(conventions_keyword) + ', conventions ' + str(conventions))
         if not conventions:
             try:
@@ -288,11 +294,8 @@ class FileMetadata(Metadata):
             Filename of provided metadata.
         """
         
-        logging.debug('egads - metadata.py - FileMetadata - set_filename - filename ' + str(filename))
+        logging.debug('egads - metadata.py - FileMetadata - set_filename')
         self._filename = filename
-
-    def parse_dictionary_objs(self):
-        pass
 
     logging.info('egads - metadata.py - FileMetadata has been loaded')
 
@@ -319,9 +322,7 @@ class VariableMetadata(Metadata):
             List of metadata conventions used in provided metadata dictionary.
         """
 
-        logging.debug('egads - metadata.py - VariableMetadata - __init__ - dict ' + str(metadata_dict) + 
-                      ', parent_metadata_obj ' + str(parent_metadata_obj) + ', conventions ' + 
-                      str(conventions))
+        logging.debug('egads - metadata.py - VariableMetadata - __init__ -  conventions ' + str(conventions))
         Metadata.__init__(self, metadata_dict, metadata_list=VAR_ATTR_LIST)
         if conventions is None:
             if parent_metadata_obj is None:
@@ -342,16 +343,14 @@ class VariableMetadata(Metadata):
             algorithm, etc)
         """
 
-        logging.debug('egads - metadata.py - VariableMetadata - set_parent - parent_metadata_obj ' + str(parent_metadata_obj))
+        logging.debug('egads - metadata.py - VariableMetadata - set_parent')
         self.parent = parent_metadata_obj
 
     def compliance_check(self, conventions=None):
+        logging.debug('egads - metadata.py - VariableMetadata - compliance_check')
         if conventions is None:
             conventions = self.parent.get("Conventions", None)
         return super(VariableMetadata, self).compliance_check(conventions)
-
-    def parse_dictionary_objs(self):
-        pass
 
     logging.info('egads - metadata.py - VariableMetadata has been loaded')
 
@@ -374,19 +373,18 @@ class AlgorithmMetadata(Metadata):
             List containing VariableMetadata
         """
         
-        logging.debug('egads - metadata.py - AlgorithmMetadata - __init__ - metadata_dict ' + str(metadata_dict) + 
-                      ', child_variable_metadata' + str(child_variable_metadata))
+        logging.debug('egads - metadata.py - AlgorithmMetadata - __init__')
         if 'ProcessorDate' in metadata_dict:
             replace_dic = {'$':'', '#':'', 'Date::':''}
             processor_date_value = metadata_dict['ProcessorDate']
-            for i, j in replace_dic.iteritems():
+            for i, j in replace_dic.items():
                 processor_date_value = processor_date_value.replace(i, j)
             metadata_dict['ProcessorDate'] = processor_date_value.strip()
 
         if 'ProcessorVersion' in metadata_dict:
             replace_dic = {'$':'', 'Revision::':''}
             processor_version_value = metadata_dict['ProcessorVersion']
-            for i, j in replace_dic.iteritems():
+            for i, j in replace_dic.items():
                 processor_version_value = processor_version_value.replace(i, j)
             metadata_dict['ProcessorVersion'] = processor_version_value.strip()
 
@@ -409,7 +407,7 @@ class AlgorithmMetadata(Metadata):
             Child metadata object to add to current instance children.
         """
 
-        logging.debug('egads - metadata.py - AlgorithmMetadata - assign_children - child ' + str(child))
+        logging.debug('egads - metadata.py - AlgorithmMetadata - assign_children')
         self.child_metadata.append(child)
         if isinstance(child, VariableMetadata):
             child.set_parent(self)

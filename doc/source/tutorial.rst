@@ -487,12 +487,12 @@ The conversion is only possible on opened NetCDF files. If modifications have be
 To convert a NetCDF file, simply use:
 
 * ``f.convert_to_nasa_ames()`` -- convert the currently opened NetCDF file to NASA/Ames file format
-* ``f.convert_to_nasa_ames(na_file, requested_ffi, float_format, delimiter, annotation, no_header)`` -- ``na_file``, ``requested_ffi``, ``float_format``, ``delimiter``, ``annotation`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``requested_ffi`` is not used actually, but will be functional in a next version of EGADS ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``annotation`` is set to ``True``, write the output file with an additional left-hand column describing the contents of each header line, by default ``False`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+* ``f.convert_to_nasa_ames(na_file, requested_ffi, float_format, delimiter, no_header)`` -- ``na_file``, ``requested_ffi``, ``float_format``, ``delimiter`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``requested_ffi`` is not used actually, but will be functional in a next version of EGADS ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
 
 To convert a NetCDF file to NASA/Ames CSV format, simply use:
 
 * ``f.convert_to_csv()`` -- convert the currently opened NetCDF file to NASA/Ames CSV format
-* ``f.convert_to_csv(csv_file, float_format, annotation, no_header)`` -- ``csv_file``, ``float_format``, ``annotation`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; if ``annotation`` is set to ``True``, write the output file with an additional left-hand column describing the contents of each header line, by default ``False`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+* ``f.convert_to_csv(csv_file, float_format, no_header)`` -- ``csv_file``, ``float_format`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
     
 Other operations
 -----------------
@@ -566,9 +566,7 @@ This file has been created with the following commands:
 Working with NASA Ames files
 *****************************
 
-To work with NASA Ames files, EGADS incorporates the NAPpy library developed by Ag Stephens of BADC. Information about NAPpy can be found at http://proj.badc.rl.ac.uk/cows/wiki/CowsSupport/Nappy
-
-In EGADS, the NAPpy API has been adapted to match the other EGADS file access methods. Thus, from EGADS, NASA Ames files can be accessed via the :class:`egads.input.nasa_ames_io.NasaAmes` class. Actually, only the FFI 1001 has been interfaced with EGADS.
+To work with NASA Ames files, EGADS Lineage incorporates its own library. Thus, from EGADS, NASA Ames files can be accessed via the :class:`egads.input.nasa_ames_io.NasaAmes` class. Actually, only the FFI 1001 has been interfaced with EGADS.
 
 Opening
 --------
@@ -683,10 +681,13 @@ This file has been created with the following commands:
 
     >>> na_dict = f.create_na_dict()
 
-* prepare the normal and special comments if needed, in a list, one cell for each line:
+* prepare the normal and special comments if needed, in a list, one cell for each line, or only one string with lines separated by ``\n``:
 
     >>> scom = ['========SPECIAL COMMENTS===========','this file has been created with egads','=========END=========']
     >>> ncom = ['========NORMAL COMMENTS===========','headers:','time    sea level   corrected sea level','=========END=========']
+or
+    >>> scom = '========SPECIAL COMMENTS===========\nthis file has been created with egads\n=========END========='
+    >>> ncom = '========NORMAL COMMENTS===========\nheaders:\ntime    sea level   corrected sea level\n=========END========='
     
 * populate the main NASA/Ames attributes:
 
@@ -716,7 +717,7 @@ This file has been created with the following commands:
 Converting between file formats
 ********************************
 
-Since the first version of EGADS, the direct conversion was possible with the NAPpy library with the help of CDMS. As CDMS is not compatible with windows, that possibility has been dropped. However, two functions have been introduced to allow a conversion from NetCDF to NASA/Ames format, and from NASA/Ames format to NetCDF. Please read the section about NetCDF and NASA/Ames file handling to learn how to convert between those formats.
+Two functions have been introduced to allow a conversion from NetCDF to NASA/Ames format, and from NASA/Ames format to NetCDF. Please read the section about NetCDF and NASA/Ames file handling to learn how to convert between those formats.
 
 .. raw:: latex
 
@@ -845,3 +846,6 @@ Since September 2016, a Graphical User Interface is available at https://github.
     >>> python egads_gui.py
 
 It will be available soon as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).
+
+.. NOTE::
+  As it was coded for Python 2.7, the Graphical User Interface is not yet compatible with EGADS Lineage. A compatible version should be released before the end of 2018.

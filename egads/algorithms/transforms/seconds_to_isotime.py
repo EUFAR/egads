@@ -7,7 +7,7 @@ import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 import datetime
 import dateutil.parser
-from convert_time_format import convert_time_format
+from .convert_time_format import convert_time_format
 
 class SecondsToIsotime(egads_core.EgadsAlgorithm):
     
@@ -81,10 +81,10 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
         if t_ref:
             datetime_ref = dateutil.parser.parse(str(t_ref))
         else:
-            datetime_ref = dateutil.parser.parse(str(self.default_ref_time))
+            datetime_ref = dateutil.parser.parse(str(self.default_ref_time)) 
         for time in t_secs:
             time_delta = datetime.timedelta(0, float(time))
             merge_time = datetime_ref + time_delta
-            t_ISO.append(merge_time.strftime(fmt))
+            tmp = merge_time.strftime(fmt)
+            t_ISO.append(tmp)
         return t_ISO
-

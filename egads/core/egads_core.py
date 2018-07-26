@@ -1,6 +1,6 @@
-__author__ = "mfreer"
-__date__ = "2012-07-06 17:42"
-__version__ = "1.6"
+__author__ = "ohenry"
+__date__ = "2018-03-07 16:42"
+__version__ = "1.2"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
@@ -8,8 +8,8 @@ import weakref
 import datetime
 import re
 import numpy
-import quantities as pq  # @UnresolvedImport
-import metadata
+import quantities as pq
+from . import metadata
 from collections import defaultdict
 
 class EgadsData(pq.Quantity):
@@ -73,15 +73,8 @@ class EgadsData(pq.Quantity):
             the existing variable_metadata object.
         """
         
-        try:
-            logging.debug('egads - egads_core.py - EgadsData __init__ - value [' + str(value[0]) + ' ... ' + 
-                          str(value[-1]) + '], units ' + str(units) + ', variale_metadata ' + 
-                          str(variable_metadata) + ', dtype' + str(dtype))
-        except (IndexError, TypeError):
-            logging.exception('egads - egads_core.py - EgadsData - __init__ - value [' + str(value) + '], units ' +
-                           str(units) + ', variale_metadata ' + str(variable_metadata) + ', dtype' + 
-                           str(dtype))
-        for key, val in attrs.iteritems():
+        logging.debug('egads - egads_core.py - EgadsData __init__')
+        for key, val in attrs.items():
             self.metadata[key] = val
         self.__refs__[self.__class__].append(weakref.ref(self))
         
@@ -92,7 +85,7 @@ class EgadsData(pq.Quantity):
     
     @value.setter
     def value(self, value, indx=None):
-        print value, indx
+        print(value, indx)
 
     @property
     def units(self):
@@ -160,7 +153,7 @@ class EgadsData(pq.Quantity):
         Generate and return a copy of the current EgadsData instance.
         """
         
-        logging.debug('egads - egads_core.py - EgadsData - copy - metadata %s', self.metadata)
+        logging.debug('egads - egads_core.py - EgadsData - copy')
         var_copy = EgadsData(super(EgadsData, self).copy())
         var_copy.__dict__ = self.__dict__.copy()
         var_copy.metadata = self.metadata.copy()
@@ -200,16 +193,16 @@ class EgadsData(pq.Quantity):
         Generate and return a description of current EgadsData instance.
         """
         
-        logging.debug('egads - egads_core.py - EgadsData - print_description - ' +  self._get_description())
+        logging.debug('egads - egads_core.py - EgadsData - print_description')
         outstr = self._get_description()
-        print outstr
+        print(outstr)
 
     def get_units(self):
         """
         Return units used in current EgadsData instance.
         """
 
-        logging.debug('egads - egads_core.py - EgadsData - get_units - ' +  self.units)
+        logging.debug('egads - egads_core.py - EgadsData - get_units')
         return self.units
 
     def print_shape(self):
@@ -217,8 +210,8 @@ class EgadsData(pq.Quantity):
         Prints shape of current EgadsData instance
         """
 
-        logging.debug('egads - egads_core.py - EgadsData - print_shape - ' +  str(self._get_shape()))
-        print self._get_shape()
+        logging.debug('egads - egads_core.py - EgadsData - print_shape')
+        print(self._get_shape())
 
     def _get_description(self):
         """
@@ -305,13 +298,13 @@ class EgadsAlgorithm(object):
             Parameters to pass into algorithm in the order specified in algorithm metadata.
         """
         
-        logging.debug('egads - egads_core.py - EgadsAlgorithm - run - name ' + self.name + ', args ' + str(args)) 
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - run - name ' + self.name) 
         if not isinstance(self.output_metadata, list):
             output_metadata = self.output_metadata
             self.output_metadata = []
             self.output_metadata.append(output_metadata)
         for metadata in self.output_metadata:
-            for key, value in metadata.iteritems():
+            for key, value in metadata.items():
                 try:
                     match = re.compile('input[0-9]+').search(value)
                     while match:
@@ -340,14 +333,15 @@ class EgadsAlgorithm(object):
             result = []
             for i, value in enumerate(output):
                 self.output_metadata[i].set_parent(self.metadata)
-                result.append(self._return_result(value, self.output_metadata[i]))
+                result.append(self._return_result(value, self.output_metadata[i], self.metadata['OutputTypes'][i]))
             result = tuple(result)
         else:
             self.output_metadata[0].set_parent(self.metadata)
-            result = self._return_result(output, self.output_metadata[0])
+            result = self._return_result(output, self.output_metadata[0], self.metadata['OutputTypes'][0])
         return result
 
     def _none_units_check(self, *args):
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - _none_units_check')
         try:
             for i, _ in enumerate(self.output_metadata):
                 if self.output_metadata[i]['units'] is None:
@@ -356,7 +350,23 @@ class EgadsAlgorithm(object):
             if self.output_metadata['units'] is None:
                 self.output_metadata[i]['units'] = args.get('units', '')
 
-    def _return_result(self, value, metadata):
+    def _return_result(self, value, metadata, out_type):
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - _return_result')
+        if out_type == '' or out_type is None:
+            if numpy.isscalar(value):
+                value = [value]
+        else:
+            if numpy.isscalar(value):
+                if 'coeff' not in out_type and 'scalar' not in out_type:
+                    value = [value]
+                else:
+                    if '[' in out_type:
+                        value = [value]
+            else:
+                if len(value) == 1:
+                    if 'coeff' in out_type or 'scalar' in out_type:
+                        if '[' not in out_type:
+                            value = value[0]
         if self.return_Egads is True:
             result = EgadsData(value, metadata)
         else:
@@ -383,11 +393,11 @@ class EgadsAlgorithm(object):
                     required_units = _validate_units(required_units)
                     to_dims = pq.quantity.validate_dimensionality(required_units)
                     to_temps = []
-                    for to_unit in to_dims.iterkeys():
+                    for to_unit in to_dims.keys():
                         if isinstance(to_unit, pq.UnitTemperature):
                             to_temps.append(to_unit)
                     from_temps = []
-                    for from_unit in arg._dimensionality.iterkeys():
+                    for from_unit in arg._dimensionality.keys():
                         if isinstance(from_unit, pq.UnitTemperature):
                             from_temps.append(from_unit)
                     for from_temp, to_temp in zip(from_temps, to_temps):
@@ -422,7 +432,7 @@ class EgadsAlgorithm(object):
         """
         
         logging.debug('egads - egads_core.py - EgadsAlgorithm - get_info')
-        print self.__doc__
+        print(self.__doc__)
 
     def time_stamp(self):
         """
@@ -438,7 +448,7 @@ class EgadsAlgorithm(object):
         Calculate and return current date/time in ISO 8601 format.
         """
         
-        logging.debug('egads - egads_core.py - EgadsAlgorithm - now - time_stamp ' + datetime.datetime.isoformat(datetime.datetime.today()))
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - now')
         return datetime.datetime.isoformat(datetime.datetime.today())
     
     def processor(self):
@@ -454,9 +464,10 @@ class EgadsAlgorithm(object):
         Method for automatically populating new EgadsData instance 
         with calculated value and algorithm/variable metadata.
         """
-
+        
+        logging.debug('egads - egads_core.py - EgadsAlgorithm - _populate_data_object')
         result = EgadsData(value, metadata)
-        for key, val in self.output_properties.iteritems():
+        for key, val in self.output_properties.items():
             result.__setattr__(key, val)
         return result
     
@@ -496,7 +507,7 @@ def _validate_units(units):
         units = units[:units.index(" after ")]
     if " / " in units:
         units = units[:units.index(" / ")] + "/" + units[units.index(" / ")+3:]
-    if isinstance(units, str) or isinstance(units, unicode):
+    if isinstance(units, str) or isinstance(units, str):
         regex = re.compile('(?<=[A-Za-z])[0-9-]')
         match = regex.search(units)
         while match is not None:
@@ -510,5 +521,6 @@ def _validate_units(units):
             units = 'dimensionless'
         if units == '0.01':
             units = 'percent'
+    logging.debug('....................................... - units ' + str(units))
     return units
 

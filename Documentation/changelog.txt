@@ -1,6 +1,31 @@
-=========
-CHANGELOG
-=========
+==========================
+CHANGELOG | LINEAGE BRANCH
+==========================
+
+July 26 2018, Release version 0.9.0
+====================================
+EGADS Lineage has been converted for Python 3.5.x and above. As Nappy is not yet compatible with Python 3, it has been discarded and replaced by a homemade function. Quantities has been removed from third party folder, now to use EGADS it must be installed as a usual python package.
+
+  FIXED:
+    - few lines of code for testing purpose were still in the EGADS official test section. They have been removed.
+	- the function to compute the iso format for time has been fixed: a dictionnary was used for iso format interpretation and gave wrong result in few particular situations.
+    - fixed an issue with dict.keys() function: a list was return in Python 2.x and a dict_keys object is now return in Python 3.x.
+    - fixed an issue with delimiter in NasaAmes class.
+	
+  MODIFIED:
+    - simplified the code of few EGADS functions.
+    - few unecessary functions have been removed.
+    - 'U' has been added for string encoding in the 'parse_string_array' function.
+	- if the seek function is used with the parameter 1 for 'current' on an ascii file not opened in binary mode, an exception will be raised.
+	- for consistency, the type (scalar, vector, array) of the output of an algorithm is now based on the metadata 'OutputTypes' of the algorithm.
+    - the function _get_dimension_list in the NasaAmes class has been modified to display dimensions based on the independant variable (FFI1001).
+    - automatic update check has been disabled until I understand how branches work on Github ;o).
+    - when reading a NASA Ames file, SCOM and NCOM attributes are now stored in a NA Dict as a string with '\n' to delimit lines (no conversion, before each line of a comment was converted into a list). A user can create SCOM and NCOM as string with '\n' for newlines, or provide a list of line, when creating a new NASA Ames file.
+    - logging messages have been cleaned for a better understanding.
+    - the documentation has been updated.
+    
+  ADDED:
+    - a new function to read/write NASA Ames files has been introduced. For now, only reading/writing capabilities for FFI 1001 have been developed. It is possible to save NASA Ames file as csv by giving a delimiter.
 
 
 January 31 2018, Release version 0.8.9

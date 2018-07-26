@@ -7,7 +7,7 @@ import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
 import dateutil.parser
 import datetime
-from convert_time_format import convert_time_format
+from .convert_time_format import convert_time_format
 
 class IsotimeToSeconds(egads_core.EgadsAlgorithm):
     

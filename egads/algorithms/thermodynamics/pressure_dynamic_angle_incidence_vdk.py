@@ -102,7 +102,7 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
 
     def _algorithm(self, delta_P_t, delta_P_b, delta_P_l, delta_P_r, delta_P_s, C_alpha, C_beta, C_dyn):
 
-        print 'Warning: the algorithm is still in beta phase and must be reviewed.'
+        print('Warning: the algorithm is still in beta phase and must be reviewed.')
 
         P_tot =  (numpy.sqrt((1. / 125.) * ((delta_P_t + delta_P_r + delta_P_b + delta_P_l)**2 
                                       + (- 4 * delta_P_t + delta_P_r + delta_P_b + delta_P_l)**2

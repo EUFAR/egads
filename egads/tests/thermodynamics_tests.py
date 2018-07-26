@@ -23,11 +23,11 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                      units='Hz',
                                      long_name='output frequency of capacitive probe')
 
-        self.Racpa = egads.EgadsData(value=287.058 / 1003.5,
+        self.Racpa = egads.EgadsData(value=[287.058 / 1003.5],
                                      units='',
                                      long_name='Air gas constant divided by specific heat cap')
 
-        self.cpa = egads.EgadsData(value=1003.5,
+        self.cpa = egads.EgadsData(value=[1003.5],
                                    units='J/kg/K',
                                    long_name='specific heat of air at constant pressure')
 
@@ -43,7 +43,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                    units='hPa',
                                    long_name='static pressure')
         
-        self.T_t = egads.EgadsData(value=345,
+        self.T_t = egads.EgadsData(value=[345],
                                    units='K',
                                    long_name='total temperature')
         
@@ -55,7 +55,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                   units='hPa',
                                   long_name='dynamic pressure')
 
-        self.r = egads.EgadsData(value=1e-3, 
+        self.r = egads.EgadsData(value=[1e-3], 
                                  units='g/kg', 
                                  long_name='water vapor mixing ratio')
 
@@ -67,7 +67,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                    units='K',
                                    long_name='virtual temperature')
 
-        self.theta = egads.EgadsData(value=288.76752,
+        self.theta = egads.EgadsData(value=[288.76752],
                                      units='K',
                                      long_name='potential temperature')
 
@@ -79,31 +79,31 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                      units='m/K',
                                      long_name='air gas constant divided by gravity')
 
-        self.M = egads.EgadsData(value=0.5081, 
+        self.M = egads.EgadsData(value=[0.5081], 
                                  units='', 
                                  long_name='mach number')
 
-        self.e = egads.EgadsData(value=1, 
+        self.e = egads.EgadsData(value=[1], 
                                  units='', 
                                  long_name='thermometer recovery factor')
 
-        self.C_t = egads.EgadsData(value=1, 
+        self.C_t = egads.EgadsData(value=[1], 
                                    units='%/degC', 
                                    long_name='temperature correction coeff')
 
-        self.Fmin = egads.EgadsData(value=2, 
+        self.Fmin = egads.EgadsData(value=[2], 
                                     units='Hz', 
                                     long_name='minimum acceptible frequency')
 
-        self.C_0 = egads.EgadsData(value=0.5, 
+        self.C_0 = egads.EgadsData(value=[0.5], 
                                    units='', 
                                    long_name='0th calibration coeff')
 
-        self.C_1 = egads.EgadsData(value=0.6, 
+        self.C_1 = egads.EgadsData(value=[0.6], 
                                    units='', 
                                    long_name='1st calibration coeff')
 
-        self.C_2 = egads.EgadsData(value=0.5, 
+        self.C_2 = egads.EgadsData(value=[0.5], 
                                    units='', 
                                    long_name='2nd calibration coeff')
 
@@ -131,7 +131,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                       units='', 
                                       long_name='dynamic pressure calibration')
 
-        self.r_f = egads.EgadsData(value=0.5, units='', long_name='probe recovery factor')
+        self.r_f = egads.EgadsData(value=[0.5], units='', long_name='probe recovery factor')
 
         self.alpha = egads.EgadsData(value=0.01,
                                      units='rad',
@@ -169,13 +169,13 @@ class  ThermodynamicsTestCase(unittest.TestCase):
 
     def test_altitude_pressure_raf(self):
         alt_p = thermodynamics.AltitudePressureRaf().run(self.P_s)
-        self.assertAlmostEqual(alt_p.value, 806.8736, 3, 'Altitudes dont match')
+        self.assertAlmostEqual(alt_p.value[0], 806.8736, 3, 'Altitudes dont match')
         alt_p = thermodynamics.AltitudePressureRaf().run(self.array_test)
         self.assertEqual(alt_p.shape, self.array_shape, 'Altitude array shapes dont match')
 
     def test_density_dry_air_cnrm(self):
         rho = thermodynamics.DensityDryAirCnrm().run(self.P_s, self.T_s)
-        self.assertAlmostEqual(rho.value, 1.0749, 3, 'Densities dont match')
+        self.assertAlmostEqual(rho.value[0], 1.0749, 3, 'Densities dont match')
         rho = thermodynamics.DensityDryAirCnrm().run(self.array_test, self.array_test)
         self.assertEqual(rho.shape, self.array_shape, 'Density array shapes dont match')
 
@@ -184,7 +184,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
                                                      self.dP, self.C_t,
                                                      self.Fmin, self.C_0,
                                                      self.C_1, self.C_2)
-        self.assertAlmostEqual(H_u.value, 51.5624, 3, "Humidites dont match")
+        self.assertAlmostEqual(H_u.value[0], 51.5624, 3, "Humidites dont match")
         H_u = thermodynamics.HumRelCapacitiveCnrm().run(self.array_test, self.array_test, self.array_test,
                                                      self.array_test, self.coeff_test,
                                                      self.coeff_test, self.coeff_test,
@@ -195,10 +195,10 @@ class  ThermodynamicsTestCase(unittest.TestCase):
         P_s, dP, alpha, beta = thermodynamics.PressureAngleIncidenceCnrm().run(self.P_sr, self.delta_P_r, self.delta_P_h,
                                                                             self.delta_P_v, self.C_alpha, self.C_beta,
                                                                             self.C_errstat)
-        self.assertAlmostEqual(P_s.value, 469.296, 2, 'Static pressure doesnt match')
-        self.assertAlmostEqual(dP.value, 628.0132, 3, 'dynamic pressure doesnt match')
-        self.assertAlmostEqual(alpha.value, 1.0254, 3, 'angle of attack doesnt match')
-        self.assertAlmostEqual(beta.value, 0.83811, 3, 'sideslip doenst match')
+        self.assertAlmostEqual(P_s.value[0], 469.296, 2, 'Static pressure doesnt match')
+        self.assertAlmostEqual(dP.value[0], 628.0132, 3, 'dynamic pressure doesnt match')
+        self.assertAlmostEqual(alpha.value[0], 1.0254, 3, 'angle of attack doesnt match')
+        self.assertAlmostEqual(beta.value[0], 0.83811, 3, 'sideslip doenst match')
         P_s, dP, alpha, beta = thermodynamics.PressureAngleIncidenceCnrm().run(self.array_test, self.array_test, self.array_test,
                                                                             self.array_test, self.coeff2_test, self.coeff2_test,
                                                                             self.coeff4_test)
@@ -207,23 +207,23 @@ class  ThermodynamicsTestCase(unittest.TestCase):
         self.assertEqual(alpha.shape, self.array_shape, 'Angle of attack array shapes dont match')
         self.assertEqual(beta.shape, self.array_shape, 'sideslip array shapes dont match')
 
-    def test__pressure_angle_incidence_vdk(self):
+    def test_pressure_angle_incidence_vdk(self):
         P_d, alpha, beta = thermodynamics.PressureAngleIncidenceVdk().run(self.delta_P_t, self.delta_P_b, self.delta_P_l,
                                                                             self.delta_P_r, self.delta_P_s, self.C_alpha_2, 
                                                                             self.C_beta_2, self.C_dyn)
-        self.assertAlmostEqual(P_d.value, 7188.25, 2, 'Static pressure doesnt match')
-        self.assertAlmostEqual(alpha.value, 55.900, 3, 'angle of attack doesnt match')
-        self.assertAlmostEqual(beta.value, -0.760, 3, 'sideslip doenst match')
+        self.assertAlmostEqual(P_d.value[0], 7188.25, 2, 'Static pressure doesnt match')
+        self.assertAlmostEqual(alpha.value[0], 55.900, 3, 'angle of attack doesnt match')
+        self.assertAlmostEqual(beta.value[0], -0.760, 3, 'sideslip doenst match')
 
     def test_temp_potential_cnrm(self):
         theta = thermodynamics.TempPotentialCnrm().run(self.T_s, self.P_s, self.Racpa)
-        self.assertAlmostEqual(theta.value, 305.34692, 3, 'Potential temp doesnt match')
+        self.assertAlmostEqual(theta.value[0], 305.34692, 3, 'Potential temp doesnt match')
         theta = thermodynamics.TempPotentialCnrm().run(self.array_test, self.array_test, self.coeff_test)
         self.assertEqual(theta.shape, self.array_shape, 'Potential temp array shapes dont match')
 
     def test_temp_static_cnrm(self):
         T_s = thermodynamics.TempStaticCnrm().run(self.T_t, self.dP, self.P_s, self.r_f, self.Racpa)
-        self.assertAlmostEqual(T_s.value, 336.30515, 3, 'Static temp doesnt match')
+        self.assertAlmostEqual(T_s.value[0], 336.30515, 3, 'Static temp doesnt match')
         T_s = thermodynamics.TempStaticCnrm().run(self.array_test, self.array_test,
                                               self.array_test, self.coeff_test,
                                               self.coeff_test)
@@ -231,19 +231,19 @@ class  ThermodynamicsTestCase(unittest.TestCase):
 
     def test_temp_virtual_cnrm(self):
         T_v = thermodynamics.TempVirtualCnrm().run(self.T_s, self.r)
-        self.assertAlmostEqual(T_v.value, 298.33109, 3, 'Virtual temp doesnt match')
+        self.assertAlmostEqual(T_v.value[0], 298.33109, 3, 'Virtual temp doesnt match')
         T_v = thermodynamics.TempVirtualCnrm().run(self.array_test, self.array_test)
         self.assertEqual(T_v.shape, self.array_shape, 'Virtual temp array shapes dont match')
 
     def test_velocity_mach_raf(self):
         M = thermodynamics.VelocityMachRaf().run(self.dP, self.P_s)
-        self.assertAlmostEqual(M.value, 0.5081, 3, "Mach numbers don't match")
+        self.assertAlmostEqual(M.value[0], 0.5081, 3, "Mach numbers don't match")
         M = thermodynamics.VelocityMachRaf().run(self.array_test, self.array_test)
         self.assertEqual(M.shape, self.array_shape, "Mach number array shapes dont match")
 
     def test_velocity_tas_cnrm(self):
         V_p = thermodynamics.VelocityTasCnrm().run(self.T_s, self.P_s, self.dP, self.cpa, self.Racpa)
-        self.assertAlmostEqual(V_p.value, 175.9018, 3, 'TAS doenst match')
+        self.assertAlmostEqual(V_p.value[0], 175.9018, 3, 'TAS doenst match')
         V_p = thermodynamics.VelocityTasCnrm().run(self.array_test, self.array_test,
                                                self.array_test, self.coeff_test,
                                                self.coeff_test)
@@ -251,7 +251,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
 
     def test_velocity_tas_longitudinal(self):
         V_tx = thermodynamics.VelocityTasLongitudinalCnrm().run(self.V_t, self.alpha, self.beta)
-        self.assertAlmostEqual(V_tx.value, 199.9875, 3, 'Longitudinal TAS doesnt match')
+        self.assertAlmostEqual(V_tx.value[0], 199.9875, 3, 'Longitudinal TAS doesnt match')
         V_tx = thermodynamics.VelocityTasLongitudinalCnrm().run(self.array_test,
                                                              self.array_test,
                                                              self.array_test)
@@ -259,7 +259,7 @@ class  ThermodynamicsTestCase(unittest.TestCase):
 
     def test_velocity_tas_raf(self):
         V_t = thermodynamics.VelocityTasRaf().run(self.T_s, self.M, self.e)
-        self.assertAlmostEqual(V_t.value, 171.502, 3, "TAS(RAF) doesnt match")
+        self.assertAlmostEqual(V_t.value[0], 171.502, 3, "TAS(RAF) doesnt match")
         V_t = thermodynamics.VelocityTasRaf().run(self.array_test, self.array_test, self.coeff_test)
         self.assertEqual(V_t.shape, self.array_shape, "TAS(RAF) array shapes dont match")
 

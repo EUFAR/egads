@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "1.5"
+__version__ = "1.6"
 __all__ = ['CompareParamLcss']
 
 import egads.core.egads_core as egads_core
@@ -166,19 +166,12 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
         for j in range(n):
             c = 0
             temp = matches[0]
-
             for k in L[j]:
                 if temp < k:
                     while matches[c] < k:
                         c += 1
-
                     temp = matches[c]
                     matches[c] = k
-                    
                     if c > max:
                         max_seq = c
-
-
         return max_seq
-
-

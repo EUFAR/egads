@@ -66,7 +66,7 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         """ Test sample algorithm with single input and single non-egads output"""
         
         out1 = self.single_alg_no_egads.run(IN1)
-        self.assertEqual(out1, OUT1, "Single algorithm no egads value not equal")
+        self.assertEqual(out1[0], OUT1, "Single algorithm no egads value not equal")
         self.assert_(not isinstance(out1, egads.EgadsData), "Returned value is EgadsData instance")
 
     def test_call_alg_directly(self):
@@ -125,7 +125,17 @@ class TestAlgorithmSingleIO(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
                                                           'InputUnits':[IN_UNITS1],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':[LONG_NAME1],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
@@ -158,7 +168,17 @@ class TestAlgorithmDualIO(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1, LONG_NAME2],
                                                           'InputUnits':[IN_UNITS1, IN_UNITS2],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':[LONG_NAME1, LONG_NAME2],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector','vector'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
@@ -186,7 +206,17 @@ class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
                                                           'InputUnits':[None],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':[LONG_NAME1],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
@@ -213,7 +243,17 @@ class TestAlgorithmSingleIOSetUnits(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
                                                           'InputUnits':[None],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':[LONG_NAME1],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,
@@ -240,7 +280,17 @@ class TestAlgorithmDualIOSetUnits(egads_core.EgadsAlgorithm):
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME2, LONG_NAME1],
                                                           'InputUnits':[IN_UNITS2, None],
+                                                          'InputTypes':[''],
+                                                          'InputDescription':[''],
                                                           'Outputs':[LONG_NAME1],
+                                                          'OutputUnits':[None],
+                                                          'OutputTypes':['vector'],
+                                                          'OutputDescription':[''],
+                                                          'Purpose':'',
+                                                          'Description':'',
+                                                          'Category':'Comparisons',
+                                                          'Source':'',
+                                                          'References':'',
                                                           'Processor':self.name,
                                                           'ProcessorDate':__date__,
                                                           'ProcessorVersion':__version__,

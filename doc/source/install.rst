@@ -1,18 +1,20 @@
 =============
 Installation
 =============
-The latest version of EGADS can be obtained from https://github.com/EUFAR/egads
+The latest version of EGADS Lineage can be obtained from GitHub (https://github.com/EUFAR/egads/tree/Lineage) or from PyPi (https://pypi.org/project/egads-lineage/)
 
 
 Prerequisites
 *************
 Use of EGADS requires the following packages:
 
-* Python 2.7.10 or newer. Available at https://www.python.org/
-* numpy 1.10.1 or newer. Available at http://numpy.scipy.org/
-* scipy 0.15.0 or newer. Available at http://www.scipy.org/
-* Python netCDF4 libraries 1.1.9 or newer. Available at https://pypi.python.org/pypi/netCDF4
-* python_dateutil 2.4.2 or newer. Available at https://pypi.python.org/pypi/python-dateutil
+* Python 3.5.4 or newer. Available at https://www.python.org/
+* numpy 1.14 or newer. Available at http://numpy.scipy.org/
+* scipy 1.00 or newer. Available at http://www.scipy.org/
+* Python netCDF4 libraries 1.3.0 or newer. Available at https://pypi.python.org/pypi/netCDF4
+* python_dateutil 2.6.1 or newer. Available at https://pypi.python.org/pypi/python-dateutil
+* quantities 0.12.1 or newer. Available at https://pypi.org/project/quantities
+* requests 2.18.4 or newer. Optional, only for update checking. Available at https://pypi.org/project/requests/
 
 
 Optional Packages
@@ -25,12 +27,12 @@ The following are useful when using or compiling EGADS:
 
 Installation
 ************
-Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file ``setup.py``, type ``python setup.py install`` or ``pip install egads`` from the command line. To install to a user-specified location, type ``python setup.py install --prefix=$MYDIR``. To avoid the installation of dependencies, use the option ``--no-depts``. On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system and of the new Graphical User Interface algorithm creation system.
+Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file ``setup.py``, type ``python setup.py install`` or ``pip install egads-lineage`` from the command line. To install to a user-specified location, type ``python setup.py install --prefix=$MYDIR``. To avoid the installation of dependencies, use the option ``--no-depts``. On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system and of the new Graphical User Interface algorithm creation system.
 
 
 Testing
 *******
-To test EGADS after it is installed, run the run_tests.py Python script, or from Python, run the following commands:
+To test EGADS after it is installed, from Python terminal, run the following commands:
 
    >>> import egads
    >>> egads.test()
@@ -45,7 +47,7 @@ Since version 0.7.0, an .ini file has been added to EGADS to welcome few options
    The logging level is set on DEBUG and the log file is available in default directory.
    The option to check automatically for an update is set on False.
 
-Actually, the number of option is limited and will probably incrase in the future. Here is a list of the options:
+Actually, the number of option is limited and will probably incrase in the future. Here is a list of all options:
 
 * ``level`` in ``LOG`` section: one of the items in the following list ``DEBUG``, ``INFO``, ``WARNING``, ``CRITICAL``, ``ERROR`` ; it is used to set the logging level when EGADS is imported.
 * ``path`` in ``LOG`` section: a string corresponding to an OS path ; it is used to set the directory path where the log file is saved.
@@ -54,10 +56,12 @@ Actually, the number of option is limited and will probably incrase in the futur
 
 Log
 ***
-A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/EGADS x.x.x/egads' directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
+A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/egads' directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
 
    >>> import egads
    >>> egads.set_log_options(log_level='INFO', log_path='/path/to/log/directory/')
+   >>> egads.set_log_options(log_level='INFO')
+   >>> egads.set_log_options(log_path='/path/to/log/directory/')
    >>> exit()
 
 Actual options to control the logging system are for now:
@@ -78,11 +82,11 @@ Since version 0.8.6, EGADS can check for an update on GitHub. The check system i
 
    >>> import egads
    >>> egads.check_update()
-   EGADS vx.x.x is available on GitHub. You can update EGADS by using pip (pip install egads --upgrade)
+   EGADS Lineage vx.x.x is available on GitHub. You can update EGADS Lineage by using pip (pip install egads-lineage --upgrade)
    or by using the following link: https://github.com/eufarn7sp/egads/releases/download/x.x.x/egads-x.
    x.x.tar.gz
 
-If the ``check_update`` option is set on True in the egads.ini file, EGADS will check automatically for an update each time it is imported. The user can modify the option this way:
+If the ``check_update`` option is set on True in the egads.ini file, EGADS will check automatically for an update each time it is imported. By default, the option is set on False. The user can modify the option this way:
 
    >>> import egads
    >>> egads.set_update_check_option(True)

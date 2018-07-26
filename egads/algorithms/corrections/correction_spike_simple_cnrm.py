@@ -74,4 +74,3 @@ class CorrectionSpikeSimpleCnrm(egads_core.EgadsAlgorithm):
                         ((X_i - X[i_down]) * (X_i - X[i_up])) > 0):
                     X_corr[i] = (X[i_up] + X[i_down]) / 2.0
         return X_corr
-

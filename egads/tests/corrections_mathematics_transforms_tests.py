@@ -3,9 +3,9 @@ Test suite to verify complete functioning of all Corrections, Mathematics and Tr
 algorithms.
 """
 
-__author__ = "henry"
-__date__ = "2017-1-2 15:43"
-__version__ = "1.1"
+__author__ = "ohenry"
+__date__ = "2018-03-05 11:38"
+__version__ = "1.0"
 __all__ = ['CorrectionsTestCase', 'MathematicsTestCase', 'ConversionsTestCase']
 
 import numpy
@@ -27,15 +27,7 @@ class CorrectionsTestCase(unittest.TestCase):
         self.array_shape = self.array_test.shape
 
     def test_correction_spike_cnrm(self):
-        
-        print self.sea_level.value
-        
-        
         res_corr = corrections.CorrectionSpikeSimpleCnrm().run(self.sea_level, 5)
-        
-        print res_corr.value
-        
-        
         self.assertListEqual(res_corr.value.tolist(), self.corr_sea_level, 'The test vector and corrected vector dont match')
         res_corr = corrections.CorrectionSpikeSimpleCnrm().run(self.array_test, 5)
         self.assertEqual(res_corr.shape, self.array_shape, 'Sea level array shapes dont match')
@@ -128,24 +120,23 @@ class TransformsTestCase(unittest.TestCase):
                                long_name='time')
         res_interp = transforms.InterpolationLinear().run(time, sea_level, new_time)
         self.assertListEqual(res_interp.value.tolist(), interp_sea_level, 'The test vector and interpolated vector dont match')
-        
-    def test_isotime_to_elements(self):
-        y, m, d, h, mm, s = transforms.IsotimeToElements().run(['2017-01-04T13:43:11'])
-        self.assertEqual(y, 2017, 'Test year and converted year dont match')
-        self.assertEqual(m, 1, 'Test month and converted month dont match')
-        self.assertEqual(d, 4, 'Test day and converted day dont match')
-        self.assertEqual(h, 13, 'Test hour and converted hour dont match')
-        self.assertEqual(mm, 43, 'Test minute and converted minute dont match')
-        self.assertEqual(s, 11, 'Test second and converted second dont match')
-        
-    def test_isotime_to_seconds(self):
-        seconds = transforms.IsotimeToSeconds().run(['2017-01-04T13:43:11'])
-        self.assertEqual(seconds, 1483537391, 'Test seconds and converted seconds dont match')
-        
+    
     def test_seconds_to_isotime(self):
         string = transforms.SecondsToIsotime().run([1483537391], '19700101T000000', 'yyyy-mm-ddTHH:MM:ss')
-        self.assertEqual(string, '2017-01-04T13:43:11', 'Test ISO time and converted ISO time dont match')
+        self.assertEqual(string.value[0], '2017-01-04T13:43:11', 'Test ISO time and converted ISO time dont match')
+    
+    def test_isotime_to_elements(self):
+        y, m, d, h, mm, s = transforms.IsotimeToElements().run(['2017-01-04T13:43:11'])
+        self.assertEqual(y.value[0], 2017, 'Test year and converted year dont match')
+        self.assertEqual(m.value[0], 1, 'Test month and converted month dont match')
+        self.assertEqual(d.value[0], 4, 'Test day and converted day dont match')
+        self.assertEqual(h.value[0], 13, 'Test hour and converted hour dont match')
+        self.assertEqual(mm.value[0], 43, 'Test minute and converted minute dont match')
+        self.assertEqual(s.value[0], 11, 'Test second and converted second dont match')
 
+    def test_isotime_to_seconds(self):
+        seconds = transforms.IsotimeToSeconds().run(['2017-01-04T13:43:11'])
+        self.assertEqual(seconds.value[0], 1483537391, 'Test seconds and converted seconds dont match')
 
 '''class ComparisonsTestCase(unittest.TestCase):
     def setUp(self):

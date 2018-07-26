@@ -34,7 +34,7 @@ class WindVector3dRaf(egads_core.EgadsAlgorithm):
                 theta_dot  vector    rad/s  pitch rate
                 psi_dot    vector    rad/s  roll rate
                 L          coeff     m      distance separating INS and gust probe
-                                          along aircraft center line
+                                            along aircraft center line
 
     OUTPUT      u          vector    m/s    easterly wind velocity component
                 v          vector    m/s    northerly wind velocity component

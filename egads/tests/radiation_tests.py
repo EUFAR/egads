@@ -30,7 +30,7 @@ class RadiationTestCase(unittest.TestCase):
             
     def test_planck_emission(self):
         res_emission = radiation.PlanckEmission().run(273, 500)
-        self.assertAlmostEqual(res_emission.value, 6.35e-40, 42, "Planck emission dont match")
+        self.assertAlmostEqual(res_emission.value[0], 6.35e-40, 42, "Planck emission dont match")
         
     def test_rotate_solar_vector(self):
         solar_zenith = [-90.0,-45.0,0.0,33.0,66.0]
@@ -56,19 +56,19 @@ class RadiationTestCase(unittest.TestCase):
     
     def test_solar_vector_blanco(self):
         ra, delta, theta, gamma = radiation.SolarVectorBlanco().run('20041231T104352', -30.3, 0.0)
-        self.assertAlmostEqual(ra.value, 4.90, 2, 'Right ascension values dont match')
-        self.assertAlmostEqual(delta.value, -0.402, 3, 'Declination values dont match')
-        self.assertAlmostEqual(theta.value, 0.333, 3, 'Solar zenith values dont match')
-        self.assertAlmostEqual(gamma.value, 1.26, 2, 'Solar azimuth values dont match')
+        self.assertAlmostEqual(ra.value[0], 4.91, 2, 'Right ascension values dont match')
+        self.assertAlmostEqual(delta.value[0], -0.402, 3, 'Declination values dont match')
+        self.assertAlmostEqual(theta.value[0], 0.334, 3, 'Solar zenith values dont match')
+        self.assertAlmostEqual(gamma.value[0], 1.26, 2, 'Solar azimuth values dont match')
         
     def test_solar_vector_resa_andreas(self):
         theta, phi = radiation.SolarVectorReda().run('20120821T230005', 15.0, -145.0, 150.0, 1024)
-        self.assertAlmostEqual(theta.value, 19.05, 2, 'Solar zenith values dont match')
-        self.assertAlmostEqual(phi.value, 262.45, 2, 'Solar azimuth values dont match')
+        self.assertAlmostEqual(theta.value[0], 19.05, 2, 'Solar zenith values dont match')
+        self.assertAlmostEqual(phi.value[0], 262.45, 2, 'Solar azimuth values dont match')
     
     def test_temp_black_body(self):
         temperature = radiation.TempBlackbody().run(0.0000001, 500)
-        self.assertAlmostEqual(temperature.value, 920.214, 3, 'Temperature values dont match')
+        self.assertAlmostEqual(temperature.value[0], 920.214, 3, 'Temperature values dont match')
 
 
 def suite():

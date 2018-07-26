@@ -1,6 +1,6 @@
-__author__ = "mfreer, ohenry"
-__date__ = "2017-01-20 10:00"
-__version__ = "1.3"
+__author__ = "ohenry"
+__date__ = "2018-03-05 11:28"
+__version__ = "1.2"
 __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
@@ -26,7 +26,7 @@ class EgadsFile(FileCore):
             default value.
         """
 
-        logging.debug('egads - text_file_io.py - EgadsFile - __init__ - filename ' + str(filename) + ', perms' + str(perms))
+        logging.debug('egads - text_file_io.py - EgadsFile - __init__')
         FileCore.__init__(self, filename, perms, pos=0)
 
     def close(self):
@@ -50,7 +50,7 @@ class EgadsFile(FileCore):
             default value.
         """
 
-        logging.debug('egads - text_file_io.py - EgadsFile - _open_file - filename ' + str(filename) + ', perms' + str(perms))
+        logging.debug('egads - text_file_io.py - EgadsFile - _open_file')
         self.close()
         try:
             self.f = open(filename, perms)
@@ -77,7 +77,7 @@ class EgadsFile(FileCore):
         logging.debug('egads - text_file_io.py - EgadsFile - display_file')
         self.f.seek(0)
         for line in self.f:
-            print line
+            print(line)
         self.f.seek(self.pos)
 
     def get_position(self):
@@ -89,7 +89,7 @@ class EgadsFile(FileCore):
         self.pos = self.f.tell()
         return self.pos
 
-    def seek(self, location, from_where=None):
+    def seek(self, location, from_where='b'):
         """
         Change current position in file.
 
@@ -97,15 +97,16 @@ class EgadsFile(FileCore):
             Position in file to seek to.
         :param char from_where: 
             Optional - Where to seek from. Valid options are ``b`` for beginning, ``c`` for
-            current and ``e`` for end.
+            current and ``e`` for end. Default is ``b``.
         """
 
-        logging.debug('egads - text_file_io.py - EgadsFile - seek - location ' + str(location) + ', from_where ' + str(from_where))
-        from_switch = {'b': lambda: 0,
-            'c': lambda: 1,
-            'e': lambda: 2}
-        from_val = from_switch.get(from_where, lambda: 0)()
-        self.f.seek(location, from_val)
+        logging.debug('egads - text_file_io.py - EgadsFile - seek - location ' + str(location) + ' , from_where ' + str(from_where))
+        if from_where == 'c':
+            if 'b' not in self.perms:
+                raise Exception("With Python 3.x, the seek function works with the current 'c' option only if the file is "
+                                + "opened in binary mode.")
+        from_switch = {'b': 0, 'c': 1, 'e': 2}
+        self.f.seek(location, from_switch[from_where])
         self.pos = self.f.tell()
 
     def write(self, data):
@@ -189,9 +190,8 @@ class EgadsCsv(EgadsFile):
             The default is '"'.
         """
         
-        logging.debug('egads - text_file_io.py - EgadsCsv - __init__ - filename ' + str(filename) + 
-                      ', perms ' + str(perms) + ', delimiter ' + str(delimiter) + ', quotechar ' +
-                      str(quotechar))
+        logging.debug('egads - text_file_io.py - EgadsCsv - __init__ - delimiter ' + str(delimiter)
+                      + ' , quotechar ' + str(quotechar))
         FileCore.__init__(self, filename, perms,
                            reader=None,
                            writer=None,
@@ -215,9 +215,8 @@ class EgadsCsv(EgadsFile):
             The default is '"'.
         """
         
-        logging.debug('egads - text_file_io.py - EgadsCsv - open - filename ' + str(filename) + 
-                      ', perms ' + str(perms) + ', delimiter ' + str(delimiter) + ', quotechar ' +
-                      str(quotechar))
+        logging.debug('egads - text_file_io.py - EgadsCsv - open - delimiter ' + str(delimiter)
+                      + ', quotechar ' + str(quotechar))
         if perms is not None:
             self.perms = perms
         else:
@@ -240,8 +239,8 @@ class EgadsCsv(EgadsFile):
         logging.debug('egads - text_file_io.py - EgadsCsv - display_file')
         try:
             for row in self.reader:
-                print row
-        except csv.Error, e:
+                print(row)
+        except csv.Error as e:
             logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
@@ -273,17 +272,17 @@ class EgadsCsv(EgadsFile):
             try:
                 for row in self.reader:
                     data.append(row)
-            except csv.Error, e:
+            except csv.Error as e:
                 logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
                 sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
         else:
             try:
-                for _ in xrange(lines):
-                    row = self.reader.next()
+                for _ in range(lines):
+                    row = next(self.reader)
                     data.append(row)
-            except csv.Error, e:
+            except csv.Error as e:
                 logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
                           str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
                           str(e))
@@ -306,7 +305,7 @@ class EgadsCsv(EgadsFile):
         """
         
         logging.debug('egads - text_file_io.py - EgadsCsv - skip_line - amount ' + str(amount))
-        for _ in xrange(amount):
+        for _ in range(amount):
             self.f.readline()
 
     def write(self, data):
@@ -350,12 +349,11 @@ class EgadsCsv(EgadsFile):
             Optional - One-character string used to quote fields containing special characters.
             The default is '"'.
         """
-
-        logging.debug('egads - text_file_io.py - EgadsCsv - _open_file - filename ' + str(filename) + 
-                      ', perms ' + str(perms))
+        
+        logging.debug('egads - text_file_io.py - EgadsCsv - _open_file')
         self.close()
         try:
-            self.f = open(filename, perms)
+            self.f = open(filename, perms, newline='')
             self.filename = filename
             self.perms = perms
             self.pos = self.f.tell()
@@ -397,12 +395,8 @@ def parse_string_array(data, data_format):
     """
     
     logging.debug('egads - text_file_io.py - parse_string_array')
-    format_array_dict = {'i': 'i4', 'f': 'f8', 'l':'f8', 's':'a20'}
+    format_array_dict = {'i': 'i4', 'f': 'f8', 'l':'f8', 's':'U'}
     parsed_data = list(data)
-    i = 0
-    for row in parsed_data:
-        fmt_count = i % len(data_format)
-        parsed_data[i] = numpy.asarray(row, dtype=format_array_dict[data_format[fmt_count]])
-        i += 1
+    for i, row in enumerate(parsed_data):
+        parsed_data[i] = numpy.asarray(row, dtype=format_array_dict[data_format[i]])
     return parsed_data
-

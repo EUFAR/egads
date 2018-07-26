@@ -66,4 +66,3 @@ class VelocityTasLongitudinalCnrm(egads_core.EgadsAlgorithm):
     def _algorithm(self, V_t, alpha, beta):
         V_tx = V_t / sqrt(1 + tan(alpha) ** 2 + tan(beta) ** 2)
         return V_tx
-

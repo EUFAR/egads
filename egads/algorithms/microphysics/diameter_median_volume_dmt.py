@@ -1,6 +1,6 @@
 __author__ = "mfreer"
 __date__ = "2013-03-27 20:26"
-__version__ = "1.6"
+__version__ = "1.7"
 __all__ = ['DiameterMedianVolumeDmt']
 
 import numpy
@@ -13,7 +13,7 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
     """
     FILE        diameter_median_volume_dmt.py
 
-    VERSION     1.6
+    VERSION     1.7
 
     CATEGORY    Microphysics
 
@@ -90,7 +90,7 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
             i = 0
             S_n = 0
             while S_n < 0.5 * LWC_total[j] and i <= len(d_i):
-                LWC_i.append(LWC_alg.run(n_i[j, i], d_i[i], s_i[j, i], rho_i[i]))
+                LWC_i.append(LWC_alg.run(n_i[j, i], d_i[i], s_i[j, i], rho_i[i])[0])
                 S_n += LWC_i[i]
                 i = i + 1
             i = i - 1

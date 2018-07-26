@@ -3,14 +3,14 @@ Initiate all functions to test EGADS functionality.
 """
 
 import unittest, logging
-import input_tests
-import thermodynamics_tests
-import corrections_mathematics_transforms_tests
-import egads_tests
-import algorithm_module_tests
-import metadata_tests
-import microphysics_tests
-import radiation_tests
+from . import input_tests
+from . import thermodynamics_tests
+from . import corrections_mathematics_transforms_tests
+from . import egads_tests
+from . import algorithm_module_tests
+from . import metadata_tests
+from . import microphysics_tests
+from . import radiation_tests
 
 def test():
     logging.info('egads - test_all.py - test - egads tests are starting ...')

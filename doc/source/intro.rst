@@ -5,5 +5,7 @@ The EGADS (EUFAR General Airborne Data-processing Software) core is a Python-bas
 
 Python is used in development of EGADS due to its straightforward syntax and portability between systems. Users interact with data processing algorithms using the Python command-line, by creating Python scripts for more complex tasks, or by using the EGADS GUI for a simplified interaction. The core of EGADS is built upon a data structure that encapsulates data and metadata into a single object. This simplifies the housekeeping of data and metadata and allows these data to be easily passed between algorithms and data files. Algorithms in EGADS also contain metadata elements that allow data and their sources to be tracked through processing chains.
 
+As the EUFAR FP7 project ended the 31st of January 2018, the development of EGADS has been stopped for now. To continue to improve EGADS outside the scope of EUFAR, a new branch has been created: EGADS Lineage. EGADS Lineage is still EGADS, but compatible with Python 3 and maintained by Olivier Henry. All issues reported in EGADS and EGADS Lineage will be fixed in EGADS Lineage only. A merging of both project will probably happen in the next EUFAR project.
+
 .. NOTE::
   Even if EGADS is easily accessible, a certain knowledge in Python is still required to use EGADS.

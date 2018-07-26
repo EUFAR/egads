@@ -6,7 +6,8 @@ toolbox for processing airborne atmospheric data. EGADS provides a framework
 for researchers to apply expert-contributed algorithms to data files, and acts
 as a platform for data intercomparison. Algorithms used in EGADS were
 contributed by members of the EUFAR Expert Working Groups and are mature and
-well-established in the scientific community.
+well-established in the scientific community. EGADS Lineage is a new branch in
+EGADS development maintained outside the scope of EUFAR et compatible with Python 3.
 """
 
 
@@ -21,7 +22,7 @@ Environment :: Console
 Intended Audience :: Developers
 Intended Audience :: Education
 Intended Audience :: Science/Research
-License :: OSI Approved :: BSD License
+License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Natural Language :: English
 Programming Language :: Python
 Topic :: Scientific/Engineering :: Atmospheric Science
@@ -29,17 +30,17 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 
 doclines = __doc__.split('\n')
 
-setup(name='egads',
-      version='0.8.9',
+setup(name='egads-lineage',
+      version='0.9.0',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
-      author='EUFAR',
-      author_email='bureau@eufar.net',
+      author='EUFAR, Olivier Henry',
+      author_email='olivier.pascal.henry@gmail.com',
       maintainer='Olivier Henry',
-      maintainer_email='olivier.henry@meteo.fr',
-      url='http://www.eufar.net',
-      download_url='http://www.eufar.net/software-tools/tool/eufar-general-airborne-data-processing-software-core-da-cedg-osr',
-      license='New BSD License',
+      maintainer_email='olivier.pascal.henry@gmail.com',
+      url='https://github.com/EUFAR/egads/tree/Lineage',
+      download_url='https://github.com/EUFAR/egads/tree/Lineage',
+      license='GNU General Public License v3 (GPLv3)',
       keywords=['airbornescience', 'netcdf', 'nasa-ames', 'eufar', 'science',
                   'microphysics', 'thermodynamics'],
       platforms=['Windows', 'Linux', 'MacOS'],
@@ -63,18 +64,6 @@ setup(name='egads',
           'egads.algorithms.user.transforms',
           'egads.input',
           'egads.tests',
-		  'egads.thirdparty.nappy',
-		  'egads.thirdparty.nappy.config',
-		  'egads.thirdparty.nappy.contrib',
-		  'egads.thirdparty.nappy.na_error',
-		  'egads.thirdparty.nappy.na_file',
-		  'egads.thirdparty.nappy.nc_interface',
-		  'egads.thirdparty.nappy.script',
-		  'egads.thirdparty.nappy.utils',
-          'egads.thirdparty.quantities',
-		  'egads.thirdparty.quantities.constants',
-		  'egads.thirdparty.quantities.tests',
-		  'egads.thirdparty.quantities.units',
           'Documentation',
           'Documentation.EGADS Algorithm Handbook - LATEX',
           'Documentation.EGADS Algorithm Handbook - LATEX.algorithms',
@@ -93,8 +82,6 @@ setup(name='egads',
           'doc.source.images',
           'doc.source._static'],
       package_data={
-	  'egads.thirdparty.nappy': ['*.ini'],
-          'egads.thirdparty.nappy.config':['*.ini'],
           'Documentation': ['*.*'],
           'Documentation.EGADS Algorithm Handbook - LATEX': ['*.*'],
           'Documentation.EGADS Algorithm Handbook - LATEX.algorithms': ['*.*'],
@@ -114,6 +101,6 @@ setup(name='egads',
           'doc.source._static': ['*.*']
           },
       classifiers=filter(None, classifiers.split("\n")),
-      requires=['numpy (>=1.10.1)', 'scipy (>=0.15.0)', 'netCDF4 (>=1.1.9)', 'python_dateutil (>=2.4.2)'],
-      install_requires=['numpy >= 1.10.1', 'scipy >=0.15.0', 'netCDF4 >= 1.1.9', 'python_dateutil >= 2.4.2'],
+      requires=['numpy (>=1.14)', 'scipy (>=1.00)', 'netCDF4 (>=1.3.0)', 'python_dateutil (>=2.6.1)', 'quantities (>=0.12.1)'],
+      install_requires=['numpy >= 1.14', 'scipy >=1.00', 'netCDF4 >= 1.3.0', 'python_dateutil >= 2.6.1', 'quantities >= 0.12.1'],
       )
