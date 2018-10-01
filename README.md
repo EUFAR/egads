@@ -1,7 +1,7 @@
 Version:
 -------
 
-EGADS Lineage 0.9.1
+EGADS Lineage 0.9.2
 
 
 Developments:
@@ -25,7 +25,7 @@ EGADS is under development by EUFAR (European Facility for Airborne Research), a
 More Information:
 -----------------
 
-An overview of how the toolbox is installed and used can be found at the EGADS Lineage Documentation (Read the docs: https://no-doc-yet ; PDF file: Documentation directory). Information on the specific algorithms can be found in the Algorithm Documentation (PDF file: Documentation directory).
+An overview of how the toolbox is installed and used can be found at the EGADS Lineage Documentation (Read the docs: https://egads.readthedocs.io/en/lineage/ ; PDF file: Documentation directory). Information on the specific algorithms can be found in the Algorithm Documentation (PDF file: Documentation directory).
 
 
 Features:

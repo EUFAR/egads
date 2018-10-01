@@ -3,6 +3,12 @@ CHANGELOG | LINEAGE BRANCH
 ==========================
 
 
+October 1 2018, Release version 0.9.2
+=====================================
+  MODIFIED:
+    - the setup.py file has been modify to include a link to the online documentation on ReadTheDocs.
+
+    
 October 1 2018, Release version 0.9.1
 =====================================
   MODIFIED:
