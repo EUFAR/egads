@@ -1,13 +1,13 @@
 Version:
 -------
 
-EGADS Lineage 0.9.0
+EGADS Lineage 0.9.1
 
 
 Developments:
 -------------
 
-As the EUFAR project ended the 31st of January 2018, developments involving EGADS are now done in a new branch and the current version of EGADS is called EGADS Lineage. It is developed and maintained by Olivier Henry (https://github.com/olivierpascalhenry) and is not developed under the scope of EUFAR. Merging of the Master and Lineage branch can happen in the next EUFAR project.
+As the EUFAR project ended the 31st of January 2018, developments involving EGADS are now done in a new branch and the current version of EGADS is called EGADS Lineage. It is developed and maintained by Olivier and is not developed under the scope of EUFAR. Merging of the Master and Lineage branch can happen in the next EUFAR project.
 
 
 Project Overview:
@@ -25,7 +25,7 @@ EGADS is under development by EUFAR (European Facility for Airborne Research), a
 More Information:
 -----------------
 
-An overview of how the toolbox is installed and used can be found at the EGADS Lineage Documentation (Read the docs: https://egads.readthedocs.io/en/lineage/ ; PDF file: Documentation directory). Information on the specific algorithms can be found in the Algorithm Documentation (PDF file: Documentation directory).
+An overview of how the toolbox is installed and used can be found at the EGADS Lineage Documentation (Read the docs: https://no-doc-yet ; PDF file: Documentation directory). Information on the specific algorithms can be found in the Algorithm Documentation (PDF file: Documentation directory).
 
 
 Features:
@@ -37,10 +37,10 @@ Features:
 * Straightforward scripting for data processing
 * Fully documented algorithms
 * I/O routines for common file formats:
-  * NetCDF
-  * NASA Ames
-  * CSV
-  * ASCII
+..* NetCDF
+..* NASA Ames
+..* CSV
+..* ASCII
 
 
 Installation:
@@ -52,4 +52,4 @@ Read INSTALL.txt to lear how to install EGADS Lineage.
 Documentation:
 --------------
 
-The documentation of EGADS Lineage is available as a PDF in the Documentation folder and as HTML on Read the docs (https://egads.readthedocs.io/en/lineage/).
+The documentation of EGADS Lineage is available as a PDF in the Documentation folder and on Read The Docs (https://egads.readthedocs.io/en/lineage/index.html)

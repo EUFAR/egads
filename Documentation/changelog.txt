@@ -2,6 +2,15 @@
 CHANGELOG | LINEAGE BRANCH
 ==========================
 
+
+October 1 2018, Release version 0.9.1
+=====================================
+  MODIFIED:
+    - the result of the function 'get_dimension_list()' in the 'NetCDF' class has been changed from a standard dictionary to an OrderedDict from collections to keep the original distribution of dimensions in the opened netcdf file.
+    - as the netcdf library returns an OrderedDict when asking for a list of variables, the OrderedDict is changed into a list in EGADS.
+    - the branch version has been added to the '_version.py' file.
+  
+
 July 26 2018, Release version 0.9.0
 ====================================
 EGADS Lineage has been converted for Python 3.5.x and above. As Nappy is not yet compatible with Python 3, it has been discarded and replaced by a homemade function. Quantities has been removed from third party folder, now to use EGADS it must be installed as a usual python package.

@@ -3,8 +3,8 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
-Documentation/EGADS Lineage Algorithm Handbook - v0.9.0.pdf
-Documentation/EGADS Lineage Documentation - v0.9.0.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v0.9.1.pdf
+Documentation/EGADS Lineage Documentation - v0.9.1.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -76,13 +76,9 @@ Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocit
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/velocity_tas_raf.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/thermodynamics/wind_vector_3d_raf.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate_linear.tex
-Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate_linear_old.aux
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/interpolate_linear_old.tex
-Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_elements.aux
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_elements.tex
-Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_seconds.aux
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/isotime_to_seconds.tex
-Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/seconds_to_isotime.aux
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/seconds_to_isotime.tex
 Documentation/EGADS Algorithm Handbook - LATEX/algorithms/transforms/time_to_decimal_year.tex
 Documentation/EGADS Algorithm Handbook - LATEX/cover/alg_cover.tex

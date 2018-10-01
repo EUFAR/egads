@@ -3,7 +3,7 @@ EGADS Lineage Installation
 ==========================
 
 Information about EGADS Lineage and the latest release can be found at: https://github.com/EUFAR/egads/tree/Lineage and https://pypi.org/project/egads-lineage/
-Documentation about EGADS Lineage can be found at: https://no-website-yet and in EGADS Lineage package.
+Documentation about EGADS Lineage can be found at https://egads.readthedocs.io/en/lineage/index.html and in the Documentation folder.
 
 
 Important information

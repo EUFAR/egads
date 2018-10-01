@@ -9,6 +9,7 @@ import egads
 import datetime
 import operator
 import os
+import collections
 from egads.input import FileCore
 
 class NetCdf(FileCore):
@@ -81,7 +82,7 @@ class NetCdf(FileCore):
 
     def get_dimension_list(self, varname=None):
         """
-        Returns a dictionary of dimensions and their sizes found in the current
+        Returns an ordered dictionary of dimensions and their sizes found in the current
         NetCDF file. If a variable name is provided, the dimension names and
         lengths associated with that variable are returned.
 
@@ -588,7 +589,7 @@ class NetCdf(FileCore):
         """
         
         logging.debug('egads - netcdf_io.py - NetCdf - _get_dimension_list - var ' + str(var))
-        dimdict = {}
+        dimdict = collections.OrderedDict()
         if self.f is not None:
             file_dims = self.f.dimensions
             if var:
@@ -614,7 +615,7 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
         if self.f is not None:
-            return self.f.variables.keys()
+            return list(self.f.variables.keys())
         else:
             logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
             raise AttributeError('No file open')
