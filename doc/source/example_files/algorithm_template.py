@@ -66,6 +66,8 @@ class AlgorithmTemplate(egads_core.EgadsAlgorithm):
             'InputTypes':['vector'],
             'InputDescription':['A description for an input'],
             'Outputs':['template'],
+			'OutputUnits':[%],
+            'OutputTypes':['vector'],
             'OutputDescription':['A description for an output'],
             'Purpose':'Template for EGADS algorithm files',
             'Description':'...',

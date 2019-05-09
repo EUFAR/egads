@@ -2,6 +2,35 @@
 CHANGELOG | LINEAGE BRANCH
 ==========================
 
+To do list:
+-----------
+  - display a warning if a unit is not well recognized.
+
+To fix list:
+------------
+
+
+May 9 2019, Release version 0.9.3
+=================================
+  MODIFIED:
+    - the documentation of an algorithm has been modified for better understanding in the EGADS GUI.
+	- the code has been cleaned thanks to PyCharm.
+	- few logging messages have been modified.
+	- egads functions to set and read options have been modified for better handling.
+	- the user algorithm default folders are now created in EGADS init. This way it is possible to uninstall or update EGADS without loosing the algorithms created by users.
+	- the thread to check egads update has been a bit modified to remove the use of importlib.
+	- the documentation has been updated.
+  
+  ADDED:
+    - the unit psu (Practical Salinity Unit) has been added in EGADS. EGADS should be able to handle it correctly, when the unit is coded as 'psu' or as '0.001'.
+	- few logging messages have been added.
+	- code to test the CompareParamLcss algorithm has been added.
+	- the algorithm template in the documentation has been corrected.
+  
+  FIXED:
+    - an issue (a mispelled variable) has been corrected in the CompareParamLcss algorithm, leading to a crash of EGADS.
+	- changed log path to EGADS module path by default.
+
 
 October 1 2018, Release version 0.9.2
 =====================================

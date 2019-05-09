@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """EGADS: EUFAR General Airborne Data-processing Software
 
 EGADS (EUFAR General Airborne Data-processing Software) is a Python-based
@@ -31,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads-lineage',
-      version='0.9.2',
+      version='0.9.3',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR, Olivier Henry',
@@ -55,14 +54,6 @@ setup(name='egads-lineage',
           'egads.algorithms.radiation',
           'egads.algorithms.thermodynamics',
           'egads.algorithms.transforms',
-          'egads.algorithms.user',
-          'egads.algorithms.user.comparisons',
-          'egads.algorithms.user.corrections',
-          'egads.algorithms.user.mathematics',
-          'egads.algorithms.user.microphysics',
-          'egads.algorithms.user.radiation',
-          'egads.algorithms.user.thermodynamics',
-          'egads.algorithms.user.transforms',
           'egads.input',
           'egads.tests',
           'Documentation',

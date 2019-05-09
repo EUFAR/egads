@@ -17,14 +17,6 @@ Use of EGADS requires the following packages:
 * requests 2.18.4 or newer. Optional, only for update checking. Available at https://pypi.org/project/requests/
 
 
-Optional Packages
-*****************
-The following are useful when using or compiling EGADS:
-
-* IPython - An optional package which simplifies Python command line usage (http://ipython.scipy.org). IPython is an enhanced interactive Python shell which supports tab-completion, debugging, command history, etc.
-* setuptools - An optional package which allows easier installation of Python packages (http://pypi.python.org/pypi/setuptools). It gives access to the ``easy_install`` command which allows packages to be downloaded and installed in one step from the command line.
-
-
 Installation
 ************
 Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file ``setup.py``, type ``python setup.py install`` or ``pip install egads-lineage`` from the command line. To install to a user-specified location, type ``python setup.py install --prefix=$MYDIR``. To avoid the installation of dependencies, use the option ``--no-depts``. On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system and of the new Graphical User Interface algorithm creation system.
@@ -44,8 +36,10 @@ Since version 0.7.0, an .ini file has been added to EGADS to welcome few options
 
    >>> import egads
    >>> egads.print_options()
-   The logging level is set on DEBUG and the log file is available in default directory.
-   The option to check automatically for an update is set on False.
+   EGADS options:
+       - logging level: DEBUG
+       - log path: PATH_TO_PYTHON\Python35\lib\site-packages\egads
+       - update automatic check: False
 
 Actually, the number of option is limited and will probably incrase in the future. Here is a list of all options:
 
@@ -59,9 +53,9 @@ Log
 A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/egads' directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
 
    >>> import egads
-   >>> egads.set_log_options(log_level='INFO', log_path='/path/to/log/directory/')
-   >>> egads.set_log_options(log_level='INFO')
-   >>> egads.set_log_options(log_path='/path/to/log/directory/')
+   >>> egads.set_options(log_level='INFO', log_path='/path/to/log/directory/')
+   >>> egads.set_options(log_level='INFO')
+   >>> egads.set_options(log_path='/path/to/log/directory/')
    >>> exit()
 
 Actual options to control the logging system are for now:
@@ -83,13 +77,12 @@ Since version 0.8.6, EGADS can check for an update on GitHub. The check system i
    >>> import egads
    >>> egads.check_update()
    EGADS Lineage vx.x.x is available on GitHub. You can update EGADS Lineage by using pip (pip install egads-lineage --upgrade)
-   or by using the following link: https://github.com/eufarn7sp/egads/releases/download/x.x.x/egads-x.
-   x.x.tar.gz
+   or by using the following link: https://github.com/eufarn7sp/egads/releases/download/x.x.x/egads-x.x.x.tar.gz
 
 If the ``check_update`` option is set on True in the egads.ini file, EGADS will check automatically for an update each time it is imported. By default, the option is set on False. The user can modify the option this way:
 
    >>> import egads
-   >>> egads.set_update_check_option(True)
+   >>> egads.set_options(check_update=True)
    >>> exit()
 
-The use of pip or easy_install is still required to update EGADS package.
+The use of pip is still required to update EGADS package. The module Requests is optional for EGADS but is mandatory to check for an update.

@@ -1,12 +1,11 @@
 __author__ = "ohenry"
-__date__ = "2018-01-02 14:32"
+__date__ = "2019-06-05 13:45"
 __version__ = "1.0"
 __all__ = ["CheckEgadsUpdate"]
 
 import logging
 import requests
 from distutils.version import LooseVersion
-from egads._version import __version__
 from threading import Thread
 
 
@@ -15,25 +14,35 @@ class CheckEgadsUpdate(Thread):
     This class is designed to check the availability of an update for egads on GitHub.
     """
     
-    def __init__(self):
+    def __init__(self, egads_version):
         logging.debug('egads - egads_thread.py - CheckEgadsUpdate - __init__')
         Thread.__init__(self)
+        self.egads_version = egads_version
     
     def run(self):
         logging.debug('egads - egads_thread.py - CheckEgadsUpdate - run')
-        url = 'https://api.github.com/repos/eufarn7sp/egads/releases/latest'
+        url = 'https://api.github.com/repos/eufarn7sp/egads/releases'
         try:
             json_object = requests.get(url=url, timeout=5).json()
-            if LooseVersion(__version__) < LooseVersion(json_object['tag_name']):
-                logging.info('EGADS v' + json_object['tag_name'] + ' is available on GitHub. You can update'
-                       + ' EGADS by using pip (pip install egads --upgrade) or by using the following'
-                       + ' link: ' + str(json_object['assets'][0]['browser_download_url']))
-                print ('EGADS v' + json_object['tag_name'] + ' is available on GitHub. You can update'
-                       + ' EGADS by using pip (pip install egads --upgrade) or by using the following'
-                       + ' link: ' + str(json_object['assets'][0]['browser_download_url']))
+            lineage_list = []
+            for egads_package in json_object:
+                if 'Lineage' in egads_package['name']:
+                    lineage_list.append([egads_package['tag_name'], egads_package['assets'][2]['browser_download_url']])
+
+            lineage_list = sorted(lineage_list)
+            if LooseVersion(self.egads_version) < LooseVersion(lineage_list[-1][0]):
+                logging.info('EGADS v' + lineage_list[-1][0] + ' is available on GitHub. You can updateccEGADS '
+                             + 'by using pip (pip install egads-lineage --upgrade) or by using the following  link: '
+                             + str(lineage_list[-1][1]))
+                print('EGADS v' + lineage_list[-1][0] + ' is available on GitHub. You can update EGADS by using pip '
+                      + '(pip install egads-lineage --upgrade) or by using the following link: '
+                      + str(lineage_list[-1][1]))
+            else:
+                print('No update available.')
+                logging.info('No update available.')
         except Exception:
-            logging.exception('egads - egads_thread.py - CheckEgadsUpdate - run - internet connection error - url ' + url)
+            logging.exception('egads - egads_thread.py - CheckEgadsUpdate - run - internet connection error - url ' +
+                              url)
         
     def stop(self):
         self.terminate()
-        

@@ -39,39 +39,45 @@ class AlgorithmModuleTestCase(unittest.TestCase):
 
     def test_alg_single_input_output(self):
         """ Test sample algorithm with single input and output"""
-        
+
         out1 = self.single_alg.run(IN1)
         self.assertEqual(out1, OUT1, "Single algorithm value not equal")
         self.assertEqual(out1.units, OUT_UNITS1, "Single algorithm output units not equal")
-        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmSingleIO", "Single algorithm processor name does not match")
+        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmSingleIO",
+                         "Single algorithm processor name does not match")
         self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE, "Single algorithm processed date does not match")
-        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION, "Single algorithm processor version does not match")
+        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION,
+                         "Single algorithm processor version does not match")
 
     def test_alg_double_input_output(self):
         """ Test sample algorithm with multiple inputs and outputs."""
-        
+
         [out1, out2] = self.double_alg.run(IN1, IN2)
         self.assertEqual(out1, OUT1, "Double algorithm value not equal")
         self.assertEqual(out1.units, OUT_UNITS1, "Double algorithm output units not equal")
-        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmDualIO", "Double algorithm processor name does not match")
+        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmDualIO",
+                         "Double algorithm processor name does not match")
         self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE, "Double algorithm processed date does not match")
-        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION, "Double algorithm processor version does not match")
+        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION,
+                         "Double algorithm processor version does not match")
         self.assertEqual(out2, OUT2, "Double algorithm value not equal")
         self.assertEqual(out2.units, OUT_UNITS2, "Double algorithm output units not equal")
-        self.assertEqual(out2.metadata.parent['Processor'], "TestAlgorithmDualIO", "Double algorithm processor name does not match")
+        self.assertEqual(out2.metadata.parent['Processor'], "TestAlgorithmDualIO",
+                         "Double algorithm processor name does not match")
         self.assertEqual(out2.metadata.parent['ProcessorDate'], DATE, "Double algorithm processed date does not match")
-        self.assertEqual(out2.metadata.parent['ProcessorVersion'], VERSION, "Double algorithm processor version does not match")
+        self.assertEqual(out2.metadata.parent['ProcessorVersion'], VERSION,
+                         "Double algorithm processor version does not match")
 
     def test_alg_single_no_egads(self):
         """ Test sample algorithm with single input and single non-egads output"""
-        
+
         out1 = self.single_alg_no_egads.run(IN1)
         self.assertEqual(out1[0], OUT1, "Single algorithm no egads value not equal")
         self.assert_(not isinstance(out1, egads.EgadsData), "Returned value is EgadsData instance")
 
     def test_call_alg_directly(self):
         """ Test sample algorithm bypassing run call"""
-        
+
         self.assert_(self.single_alg._algorithm(IN1) == OUT1, "Direct call to single algorithm failed")
         [out1, out2] = self.double_alg._algorithm(IN1, IN2)
         self.assertEqual(out1, OUT1, "Direct call to double algorithm first parameter not equal")
@@ -79,7 +85,7 @@ class AlgorithmModuleTestCase(unittest.TestCase):
 
     def test_alg_pass_units(self):
         """ Test sample algorithm passing input units"""
-        
+
         out1 = self.single_passunits_alg.run(IN1)
         self.assertEqual(out1, OUT1, "Single algorithm passing units value not equal")
         self.assertEqual(out1.units, 'dimensionless', "Single algorithm passing units output units not equal")
@@ -91,26 +97,34 @@ class AlgorithmModuleTestCase(unittest.TestCase):
         out1 = self.single_alg.run(in_egads)
         self.assertEqual(out1, OUT1, "Single algorithm auto-conversion value not equal")
         self.assertEqual(out1.units, OUT_UNITS1, "Single algorithm auto-conversion output units not equal")
-        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmSingleIO", "Single algorithm auto-conversion processor name does not match")
-        self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE, "Single algorithm auto-conversion processed date does not match")
-        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION, "Single algorithm processor auto-conversion version does not match")
+        self.assertEqual(out1.metadata.parent['Processor'], "TestAlgorithmSingleIO",
+                         "Single algorithm auto-conversion processor name does not match")
+        self.assertEqual(out1.metadata.parent['ProcessorDate'], DATE,
+                         "Single algorithm auto-conversion processed date does not match")
+        self.assertEqual(out1.metadata.parent['ProcessorVersion'], VERSION,
+                         "Single algorithm processor auto-conversion version does not match")
 
     def test_alg_set_other_units(self):
         """ Test sample algorithm modifying passed input units """
 
-        in_egads = egads.EgadsData(IN1, IN_UNITS1, {'long_name':LONG_NAME1})
+        in_egads = egads.EgadsData(IN1, IN_UNITS1, {'long_name': LONG_NAME1})
         out1 = self.single_set_units_alg.run(in_egads)
         self.assertEqual(out1, OUT1, "Single algorithm setting units value not equal")
-        self.assertEqual(out1.units, IN_UNITS1 + '/s', "Single algorithm setting units output units not equal, returned {0}".format(out1.units))
-        self.assertEqual(out1.metadata['long_name'], 'first derivative of ' + LONG_NAME1, 'Single algorithm setting units output long name not equal, returned {0}'.format(out1.metadata['long_name']))
-    
+        self.assertEqual(out1.units, IN_UNITS1 + '/s',
+                         "Single algorithm setting units output units not equal, returned {0}".format(out1.units))
+        self.assertEqual(out1.metadata['long_name'], 'first derivative of ' + LONG_NAME1,
+                         'Single algorithm setting units output long name not equal, returned {0}'.format(
+                             out1.metadata['long_name']))
+
     def test_alg_set_dual_other_units(self):
         """ Test sample algorithm modifying dual passed input units"""
 
-        in_egads1 = egads.EgadsData(IN1, IN_UNITS1, {'long_name':LONG_NAME1})
-        in_egads2 = egads.EgadsData(IN2, IN_UNITS2, {'long_name':LONG_NAME2})
+        in_egads1 = egads.EgadsData(IN1, IN_UNITS1, {'long_name': LONG_NAME1})
+        in_egads2 = egads.EgadsData(IN2, IN_UNITS2, {'long_name': LONG_NAME2})
         out1 = self.dual_set_units_alg.run(in_egads2, in_egads1)
-        self.assertEqual(out1.units, IN_UNITS1 + '/' + IN_UNITS2, "Dual algorithm setting units output units not equal, expected {0}, received {1}".format(IN_UNITS1 + '/' + IN_UNITS2, out1.units))
+        self.assertEqual(out1.units, IN_UNITS1 + '/' + IN_UNITS2,
+                         "Dual algorithm setting units output units not equal, expected {0}, received {1}".format(
+                             IN_UNITS1 + '/' + IN_UNITS2, out1.units))
 
 
 class TestAlgorithmSingleIO(egads_core.EgadsAlgorithm):
@@ -118,29 +132,29 @@ class TestAlgorithmSingleIO(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-        self.output_metadata = egads_metadata.VariableMetadata({'units':OUT_UNITS1,
-                                                               'long_name':LONG_NAME1,
-                                                               'standard_name':'',
-                                                               'Category':['']})
+        self.output_metadata = egads_metadata.VariableMetadata({'units': OUT_UNITS1,
+                                                                'long_name': LONG_NAME1,
+                                                                'standard_name': '',
+                                                                'Category': ['']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
-                                                          'InputUnits':[IN_UNITS1],
-                                                          'InputTypes':[''],
-                                                          'InputDescription':[''],
-                                                          'Outputs':[LONG_NAME1],
-                                                          'OutputUnits':[None],
-                                                          'OutputTypes':['vector'],
-                                                          'OutputDescription':[''],
-                                                          'Purpose':'',
-                                                          'Description':'',
-                                                          'Category':'Comparisons',
-                                                          'Source':'',
-                                                          'References':'',
-                                                          'Processor':self.name,
-                                                          'ProcessorDate':__date__,
-                                                          'ProcessorVersion':__version__,
-                                                          'DateProcessed':self.now()},
-                                                          self.output_metadata)
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs': [LONG_NAME1],
+                                                          'InputUnits': [IN_UNITS1],
+                                                          'InputTypes': [''],
+                                                          'InputDescription': [''],
+                                                          'Outputs': [LONG_NAME1],
+                                                          'OutputUnits': [None],
+                                                          'OutputTypes': ['vector'],
+                                                          'OutputDescription': [''],
+                                                          'Purpose': '',
+                                                          'Description': '',
+                                                          'Category': 'Comparisons',
+                                                          'Source': '',
+                                                          'References': '',
+                                                          'Processor': self.name,
+                                                          'ProcessorDate': __date__,
+                                                          'ProcessorVersion': __version__,
+                                                          'DateProcessed': self.now()},
+                                                         self.output_metadata)
 
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
@@ -156,34 +170,34 @@ class TestAlgorithmDualIO(egads_core.EgadsAlgorithm):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
         self.output_metadata = []
-        self.output_metadata.append(egads_metadata.VariableMetadata({'units':OUT_UNITS1,
-                                                               'long_name':LONG_NAME1,
-                                                               'standard_name':'',
-                                                               'Category':['']}))
+        self.output_metadata.append(egads_metadata.VariableMetadata({'units': OUT_UNITS1,
+                                                                     'long_name': LONG_NAME1,
+                                                                     'standard_name': '',
+                                                                     'Category': ['']}))
 
-        self.output_metadata.append(egads_metadata.VariableMetadata({'units':OUT_UNITS2,
-                                                               'long_name':LONG_NAME2,
-                                                               'standard_name':'',
-                                                               'Category':['']}))
+        self.output_metadata.append(egads_metadata.VariableMetadata({'units': OUT_UNITS2,
+                                                                     'long_name': LONG_NAME2,
+                                                                     'standard_name': '',
+                                                                     'Category': ['']}))
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1, LONG_NAME2],
-                                                          'InputUnits':[IN_UNITS1, IN_UNITS2],
-                                                          'InputTypes':[''],
-                                                          'InputDescription':[''],
-                                                          'Outputs':[LONG_NAME1, LONG_NAME2],
-                                                          'OutputUnits':[None],
-                                                          'OutputTypes':['vector','vector'],
-                                                          'OutputDescription':[''],
-                                                          'Purpose':'',
-                                                          'Description':'',
-                                                          'Category':'Comparisons',
-                                                          'Source':'',
-                                                          'References':'',
-                                                          'Processor':self.name,
-                                                          'ProcessorDate':__date__,
-                                                          'ProcessorVersion':__version__,
-                                                          'DateProcessed':self.now()},
-                                                          self.output_metadata)
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs': [LONG_NAME1, LONG_NAME2],
+                                                          'InputUnits': [IN_UNITS1, IN_UNITS2],
+                                                          'InputTypes': [''],
+                                                          'InputDescription': [''],
+                                                          'Outputs': [LONG_NAME1, LONG_NAME2],
+                                                          'OutputUnits': [None],
+                                                          'OutputTypes': ['vector', 'vector'],
+                                                          'OutputDescription': [''],
+                                                          'Purpose': '',
+                                                          'Description': '',
+                                                          'Category': 'Comparisons',
+                                                          'Source': '',
+                                                          'References': '',
+                                                          'Processor': self.name,
+                                                          'ProcessorDate': __date__,
+                                                          'ProcessorVersion': __version__,
+                                                          'DateProcessed': self.now()},
+                                                         self.output_metadata)
 
     def run(self, x, t):
         return egads_core.EgadsAlgorithm.run(self, x, t)
@@ -199,29 +213,29 @@ class TestAlgorithmSingleIOPassUnits(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-        self.output_metadata = egads_metadata.VariableMetadata({'units':'input0',
-                                                               'long_name':LONG_NAME1,
-                                                               'standard_name':'',
-                                                               'Category':['']})
+        self.output_metadata = egads_metadata.VariableMetadata({'units': 'input0',
+                                                                'long_name': LONG_NAME1,
+                                                                'standard_name': '',
+                                                                'Category': ['']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
-                                                          'InputUnits':[None],
-                                                          'InputTypes':[''],
-                                                          'InputDescription':[''],
-                                                          'Outputs':[LONG_NAME1],
-                                                          'OutputUnits':[None],
-                                                          'OutputTypes':['vector'],
-                                                          'OutputDescription':[''],
-                                                          'Purpose':'',
-                                                          'Description':'',
-                                                          'Category':'Comparisons',
-                                                          'Source':'',
-                                                          'References':'',
-                                                          'Processor':self.name,
-                                                          'ProcessorDate':__date__,
-                                                          'ProcessorVersion':__version__,
-                                                          'DateProcessed':self.now()},
-                                                          self.output_metadata)
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs': [LONG_NAME1],
+                                                          'InputUnits': [None],
+                                                          'InputTypes': [''],
+                                                          'InputDescription': [''],
+                                                          'Outputs': [LONG_NAME1],
+                                                          'OutputUnits': [None],
+                                                          'OutputTypes': ['vector'],
+                                                          'OutputDescription': [''],
+                                                          'Purpose': '',
+                                                          'Description': '',
+                                                          'Category': 'Comparisons',
+                                                          'Source': '',
+                                                          'References': '',
+                                                          'Processor': self.name,
+                                                          'ProcessorDate': __date__,
+                                                          'ProcessorVersion': __version__,
+                                                          'DateProcessed': self.now()},
+                                                         self.output_metadata)
 
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
@@ -236,29 +250,29 @@ class TestAlgorithmSingleIOSetUnits(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-        self.output_metadata = egads_metadata.VariableMetadata({'units':'input0/sec',
-                                                               'long_name':'first derivative of input0',
-                                                               'standard_name':'',
-                                                               'Category':['']})
+        self.output_metadata = egads_metadata.VariableMetadata({'units': 'input0/sec',
+                                                                'long_name': 'first derivative of input0',
+                                                                'standard_name': '',
+                                                                'Category': ['']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME1],
-                                                          'InputUnits':[None],
-                                                          'InputTypes':[''],
-                                                          'InputDescription':[''],
-                                                          'Outputs':[LONG_NAME1],
-                                                          'OutputUnits':[None],
-                                                          'OutputTypes':['vector'],
-                                                          'OutputDescription':[''],
-                                                          'Purpose':'',
-                                                          'Description':'',
-                                                          'Category':'Comparisons',
-                                                          'Source':'',
-                                                          'References':'',
-                                                          'Processor':self.name,
-                                                          'ProcessorDate':__date__,
-                                                          'ProcessorVersion':__version__,
-                                                          'DateProcessed':self.now()},
-                                                          self.output_metadata)
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs': [LONG_NAME1],
+                                                          'InputUnits': [None],
+                                                          'InputTypes': [''],
+                                                          'InputDescription': [''],
+                                                          'Outputs': [LONG_NAME1],
+                                                          'OutputUnits': [None],
+                                                          'OutputTypes': ['vector'],
+                                                          'OutputDescription': [''],
+                                                          'Purpose': '',
+                                                          'Description': '',
+                                                          'Category': 'Comparisons',
+                                                          'Source': '',
+                                                          'References': '',
+                                                          'Processor': self.name,
+                                                          'ProcessorDate': __date__,
+                                                          'ProcessorVersion': __version__,
+                                                          'DateProcessed': self.now()},
+                                                         self.output_metadata)
 
     def run(self, x):
         return egads_core.EgadsAlgorithm.run(self, x)
@@ -273,31 +287,29 @@ class TestAlgorithmDualIOSetUnits(egads_core.EgadsAlgorithm):
     def __init__(self, return_Egads=True):
         egads_core.EgadsAlgorithm.__init__(self, return_Egads)
 
-        self.output_metadata = egads_metadata.VariableMetadata({'units':'input1/input0',
-                                                               'long_name':'first derivative of input0',
-                                                               'standard_name':'',
-                                                               'Category':['']})
+        self.output_metadata = egads_metadata.VariableMetadata({'units': 'input1/input0',
+                                                                'long_name': 'first derivative of input0',
+                                                                'standard_name': '',
+                                                                'Category': ['']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':[LONG_NAME2, LONG_NAME1],
-                                                          'InputUnits':[IN_UNITS2, None],
-                                                          'InputTypes':[''],
-                                                          'InputDescription':[''],
-                                                          'Outputs':[LONG_NAME1],
-                                                          'OutputUnits':[None],
-                                                          'OutputTypes':['vector'],
-                                                          'OutputDescription':[''],
-                                                          'Purpose':'',
-                                                          'Description':'',
-                                                          'Category':'Comparisons',
-                                                          'Source':'',
-                                                          'References':'',
-                                                          'Processor':self.name,
-                                                          'ProcessorDate':__date__,
-                                                          'ProcessorVersion':__version__,
-                                                          'DateProcessed':self.now()},
-                                                          self.output_metadata)
-        
-    
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs': [LONG_NAME2, LONG_NAME1],
+                                                          'InputUnits': [IN_UNITS2, None],
+                                                          'InputTypes': [''],
+                                                          'InputDescription': [''],
+                                                          'Outputs': [LONG_NAME1],
+                                                          'OutputUnits': [None],
+                                                          'OutputTypes': ['vector'],
+                                                          'OutputDescription': [''],
+                                                          'Purpose': '',
+                                                          'Description': '',
+                                                          'Category': 'Comparisons',
+                                                          'Source': '',
+                                                          'References': '',
+                                                          'Processor': self.name,
+                                                          'ProcessorDate': __date__,
+                                                          'ProcessorVersion': __version__,
+                                                          'DateProcessed': self.now()},
+                                                         self.output_metadata)
 
     def run(self, t, x):
         return egads_core.EgadsAlgorithm.run(self, t, x)
@@ -305,7 +317,7 @@ class TestAlgorithmDualIOSetUnits(egads_core.EgadsAlgorithm):
     def _algorithm(self, t, x):
         result = x / t
         return result
-    
+
 
 def suite():
     algorithm_module_test_suite = unittest.TestLoader().loadTestsFromTestCase(AlgorithmModuleTestCase)

@@ -4,7 +4,7 @@ Test suite for EgadsData class.
 
 __author__ = "ohenry"
 __date__ = "2018-03-05 11:46"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import unittest
 import egads
@@ -33,8 +33,10 @@ class EgadsDataScalarTestCase(unittest.TestCase):
         egadstest1 = egads.EgadsData(self.value1, units='')
         egadstest2 = egads.EgadsData(self.value2, units='')
         self.assertEqual(self.value1 + self.value2, egadstest1 + egadstest2, 'Egads to Egads scalar addition not equal')
-        self.assertEqual(self.value1 - self.value2, egadstest1 - egadstest2, 'Egads to Egads scalar subtraction not equal')
-        self.assertEqual(self.value1 * self.value2, egadstest1 * egadstest2, 'Egads to Egads scalar multiplication not equal')
+        self.assertEqual(self.value1 - self.value2, egadstest1 - egadstest2, 'Egads to Egads scalar subtraction not '
+                                                                             'equal')
+        self.assertEqual(self.value1 * self.value2, egadstest1 * egadstest2, 'Egads to Egads scalar multiplication '
+                                                                             'not equal')
         self.assertEqual(self.value1 / self.value2, egadstest1 / egadstest2, 'Egads to Egads scalar division not equal')
         self.assertEqual(self.value1 ** self.value2, egadstest1 ** egadstest2, 'Egads to Egads scalar power not equal')
 
@@ -42,20 +44,28 @@ class EgadsDataScalarTestCase(unittest.TestCase):
         """ Test scalar operations between egads class and other scalar"""
         
         egadstest1 = egads.EgadsData(self.value1, units='')
-        self.assertEqual(self.value1 + self.value2, egadstest1 + self.value2, 'Egads to other scalar addition not equal')
-        self.assertEqual(self.value1 - self.value2, egadstest1 - self.value2, 'Egads to other scalar subtraction not equal')
-        self.assertEqual(self.value1 * self.value2, egadstest1 * self.value2, 'Egads to other scalar multiplication not equal')
-        self.assertEqual(self.value1 / self.value2, egadstest1 / self.value2, 'Egads to other scalar division not equal')
+        self.assertEqual(self.value1 + self.value2, egadstest1 + self.value2, 'Egads to other scalar addition not '
+                                                                              'equal')
+        self.assertEqual(self.value1 - self.value2, egadstest1 - self.value2, 'Egads to other scalar subtraction not '
+                                                                              'equal')
+        self.assertEqual(self.value1 * self.value2, egadstest1 * self.value2, 'Egads to other scalar multiplication '
+                                                                              'not equal')
+        self.assertEqual(self.value1 / self.value2, egadstest1 / self.value2, 'Egads to other scalar division not '
+                                                                              'equal')
         self.assertEqual(self.value1 ** self.value2, egadstest1 ** self.value2, 'Egads to other scalar power not equal')
 
     def test_other_to_egads_calcs(self):
         """ Test scalar operations between other scalar and egads class"""
         
         egadstest1 = egads.EgadsData(self.value1, units='')
-        self.assertEqual(self.value2 + self.value1, self.value2 + egadstest1, 'Other to Egads scalar addition not equal')
-        self.assertEqual(self.value2 - self.value1, self.value2 - egadstest1, 'Other to Egads scalar subtraction not equal')
-        self.assertEqual(self.value2 * self.value1, self.value2 * egadstest1, 'Other to Egads scalar multiplication not equal')
-        self.assertEqual(self.value2 / self.value1, self.value2 / egadstest1, 'Other to Egads scalar division not equal')
+        self.assertEqual(self.value2 + self.value1, self.value2 + egadstest1, 'Other to Egads scalar addition not '
+                                                                              'equal')
+        self.assertEqual(self.value2 - self.value1, self.value2 - egadstest1, 'Other to Egads scalar subtraction not '
+                                                                              'equal')
+        self.assertEqual(self.value2 * self.value1, self.value2 * egadstest1, 'Other to Egads scalar multiplication '
+                                                                              'not equal')
+        self.assertEqual(self.value2 / self.value1, self.value2 / egadstest1, 'Other to Egads scalar division not '
+                                                                              'equal')
         self.assertEqual(self.value2 ** self.value1, self.value2 ** egadstest1, 'Other to Egads scalar power not equal')
 
 

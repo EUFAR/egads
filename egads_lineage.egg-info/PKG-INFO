@@ -1,12 +1,10 @@
-Metadata-Version: 1.2
+Metadata-Version: 1.1
 Name: egads-lineage
-Version: 0.9.1
+Version: 0.9.3
 Summary: EGADS: EUFAR General Airborne Data-processing Software
 Home-page: https://github.com/EUFAR/egads/tree/Lineage
-Author: EUFAR, Olivier Henry
+Author: Olivier Henry
 Author-email: olivier.pascal.henry@gmail.com
-Maintainer: Olivier Henry
-Maintainer-email: olivier.pascal.henry@gmail.com
 License: GNU General Public License v3 (GPLv3)
 Download-URL: https://github.com/EUFAR/egads/tree/Lineage
 Description: EGADS (EUFAR General Airborne Data-processing Software) is a Python-based

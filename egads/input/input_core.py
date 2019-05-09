@@ -1,10 +1,11 @@
 __author__ = "ohenry"
 __date__ = "2018-03-05 11:27"
-__version__ = "1.1"
+__version__ = "1.2"
 __all__ = ["FileCore", "get_file_list"]
 
 import glob
 import logging
+
 
 class FileCore(object):
     """
@@ -93,6 +94,7 @@ class FileCore(object):
 
     logging.info('egads - input_core.py - FileCore has been loaded')
 
+
 def get_file_list(path):
     """
     Given path, returns a list of all files in that path. Wildcards are supported.
@@ -104,4 +106,3 @@ def get_file_list(path):
 
     logging.debug('egads - input_core.py - get_file_list - path ' + str(path))
     return glob.glob(path)
-

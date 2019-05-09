@@ -10,7 +10,7 @@ The EGADS framework is designed to facilitate integration of third-party algorit
 Python module creation
 ************************
 
-To guide creation of Python modules containing algorithms in EGADS, an algorithm template has been included in the distribution. It can be found in ./egads/algorithms/file_templates/algorithm_template.py and is shown below:
+To guide creation of Python modules containing algorithms in EGADS, an algorithm template has been included in the distribution. It can be found in doc/source/example_files/algorithm_template.py and is shown below:
 
 .. literalinclude:: example_files/algorithm_template.py
 
@@ -31,7 +31,7 @@ Within the file itself, there are one rule to respect and several elements in th
 4. Algorithm and output metadata
     In the ``__init__`` method of the module, two important parameters are defined. The first is the 'output_metadata', which defines the metadata elements that will be assigned to the variable output by the algorithm. A few recommended elements are included, but a broader list of variable metadata parameters can be found in the NetCDF standards document on the EUFAR website (http://www.eufar.net/documents/6140, Annexe III). In the case that there are multiple parameters output by the algorithm, the output_metadata parameter can be defined as a list VariableMetadata instances.
    
-    Next, the 'metadata' parameter defines metadata concerning the algorithm itself. These information include the names, types, descriptions and units of inputs; names and descriptions of outputs; name, description, purpose, category, source, reference, date and version of the algorithm; date processed; and a reference to the output parameters. Of these parameters, only the names, types, descriptions and units of the inputs, names and descriptions of the outputs and category, source, reference, description and purpose of the algorithm need to be altered. The other parameters (name, date and version of the processor, date processed) are populated automatically.
+    Next, the 'metadata' parameter defines metadata concerning the algorithm itself. These information include the names, types, descriptions and units of inputs; names, units, types and descriptions of outputs; name, description, purpose, category, source, reference, date and version of the algorithm; date processed; and a reference to the output parameters. Of these parameters, only the names, types, descriptions and units of the inputs, names and descriptions of the outputs and category, source, reference, description and purpose of the algorithm need to be altered. The other parameters (name, date and version of the processor, date processed) are populated automatically.
 
     self.output_metadata:
         * units: units of the output.
@@ -87,7 +87,7 @@ Within the file itself, there are one rule to respect and several elements in th
 Documentation creation
 ***********************
 
-Within the EGADS structure, each algorithm has accompanying documentation in the EGADS Algorithm Handbook. These descriptions are contained in LaTeX files, organized in a structure similar to the toolbox itself, with one algorithm per file. These files can be found in the Documentation/EGADS Algorithm Handbook directory in the EGADS package downloaded from GitHub repository: https://github.com/eufarn7sp/egads.
+Within the EGADS structure, each algorithm has accompanying documentation in the EGADS Algorithm Handbook. These descriptions are contained in LaTeX files, organized in a structure similar to the toolbox itself, with one algorithm per file. These files can be found in the Documentation/EGADS Algorithm Handbook directory in the EGADS package downloaded from GitHub repository: https://github.com/EUFAR/egads/tree/Lineage.
 
 A template is provided to guide creation of the documentation files. This can be found at Documentation/EGADS Algorithm Handbook/algorithms/algorithm_template.tex. The template is divided into 8 sections, enclosed in curly braces. These sections are explained below:
 

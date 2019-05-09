@@ -3,8 +3,8 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
-Documentation/EGADS Lineage Algorithm Handbook - v0.9.1.pdf
-Documentation/EGADS Lineage Documentation - v0.9.1.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v0.9.3.pdf
+Documentation/EGADS Lineage Documentation - v0.9.2.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -156,14 +156,6 @@ egads/algorithms/transforms/isotime_to_elements.py
 egads/algorithms/transforms/isotime_to_seconds.py
 egads/algorithms/transforms/seconds_to_isotime.py
 egads/algorithms/transforms/time_to_decimal_year.py
-egads/algorithms/user/__init__.py
-egads/algorithms/user/comparisons/__init__.py
-egads/algorithms/user/corrections/__init__.py
-egads/algorithms/user/mathematics/__init__.py
-egads/algorithms/user/microphysics/__init__.py
-egads/algorithms/user/radiation/__init__.py
-egads/algorithms/user/thermodynamics/__init__.py
-egads/algorithms/user/transforms/__init__.py
 egads/core/__init__.py
 egads/core/egads_core.py
 egads/core/egads_update.py

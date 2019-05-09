@@ -662,6 +662,7 @@ This file has been created with the following commands:
 
 
 * import EGADS module:
+
     >>> import egads
     
 * create two main variables, following the official EGADS convention:
@@ -685,7 +686,7 @@ This file has been created with the following commands:
 
     >>> scom = ['========SPECIAL COMMENTS===========','this file has been created with egads','=========END=========']
     >>> ncom = ['========NORMAL COMMENTS===========','headers:','time    sea level   corrected sea level','=========END=========']
-or
+    or
     >>> scom = '========SPECIAL COMMENTS===========\nthis file has been created with egads\n=========END========='
     >>> ncom = '========NORMAL COMMENTS===========\nheaders:\ntime    sea level   corrected sea level\n=========END========='
     
@@ -848,4 +849,4 @@ Since September 2016, a Graphical User Interface is available at https://github.
 It will be available soon as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).
 
 .. NOTE::
-  As it was coded for Python 2.7, the Graphical User Interface is not yet compatible with EGADS Lineage. A compatible version should be released before the end of 2018.
+  As for EGADS, the Graphical User Interface is available from two branches: master and Lineage. The Lineage one is only compatible with Python 3 and the earlier versions of EGADS Lineage.

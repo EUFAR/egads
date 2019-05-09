@@ -1,11 +1,13 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "1.6"
+__version__ = "1.7"
 __all__ = ['CompareParamLcss']
 
 import egads.core.egads_core as egads_core
 import egads.core.metadata as egads_metadata
-import numpy, math
+import numpy
+import math
+
 
 class CompareParamLcss(egads_core.EgadsAlgorithm):
 
@@ -132,7 +134,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
         for item, _ in numpy.ndenumerate(L):
             L[item] = []
 
-        # Determine matches between R and S using correspondance matrix G and store matches in 
+        # Determine matches between R and S using correspondence matrix G and store matches in
         # L. All dimensions must match with maximum difference of epsilon in order to be stored
         # in L.
         for i in range(n):
@@ -172,6 +174,6 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
                         c += 1
                     temp = matches[c]
                     matches[c] = k
-                    if c > max:
+                    if c > max_seq:
                         max_seq = c
         return max_seq

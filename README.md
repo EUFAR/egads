@@ -1,7 +1,7 @@
 Version:
 -------
 
-EGADS Lineage 0.9.2
+EGADS Lineage 0.9.3
 
 
 Developments:
@@ -37,10 +37,10 @@ Features:
 * Straightforward scripting for data processing
 * Fully documented algorithms
 * I/O routines for common file formats:
-..* NetCDF
-..* NASA Ames
-..* CSV
-..* ASCII
+  * NetCDF
+  * NASA Ames
+  * CSV
+  * ASCII
 
 
 Installation:

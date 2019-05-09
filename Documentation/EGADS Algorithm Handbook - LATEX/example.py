@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # import egads package
 import egads			
 # import thermodynamic module and rename to simplify usage

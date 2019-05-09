@@ -27,14 +27,12 @@ To use EGADS Lineage, the following packages must be installed:
 
  6. python_dateutil 2.6.1 or newer.
  
- 7. Requests 2.18.4 or newer. Optional, only for update checking.
+ 7. Requests 2.18.4 or newer. Optional, only to check updates (if activated by the user).
 
 
 Installation
 ============
-EGADS is a pure Python distribution, thus, it does not need to built. However,
-to use it, it must be installed to a location on the Python path. To install
-EGADS (assuming priviledged user rights), run the following command from the EGADS Lineage directory:
+EGADS is a pure Python distribution, thus, it does not need to built. However, to use it, it must be installed to a location on the Python path. To install EGADS (assuming priviledged user rights), run the following command from the EGADS Lineage directory:
 
   python setup.py install
 or
@@ -64,3 +62,12 @@ To test the EGADS installation, from within Python, run the following commands:
 
   >>> import egads
   >>> egads.test()
+
+
+Uninstallation
+============
+Just run the following command from your terminal:
+
+  pip uninstall egads-lineage
+or
+  remove manually all folders in you Python site-packages folder containing egads name.

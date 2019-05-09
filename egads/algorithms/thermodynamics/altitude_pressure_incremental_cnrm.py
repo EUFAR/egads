@@ -89,4 +89,3 @@ class AltitudePressureIncrementalCnrm(egads_core.EgadsAlgorithm):
             alt_p[i] = alt_p[i - 1] + R_ag * ((T_v[i] + T_v[i - 1])/2.)*numpy.log(P_s[i - 1]/P_s[i])
         
         return alt_p
-        

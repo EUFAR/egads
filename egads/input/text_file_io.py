@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-03-05 11:28"
-__version__ = "1.2"
+__version__ = "1.3"
 __all__ = ["EgadsFile", "EgadsCsv", "parse_string_array"]
 
 import csv
@@ -8,6 +8,7 @@ import sys
 from egads.input import FileCore
 import numpy
 import logging
+
 
 class EgadsFile(FileCore): 
     """
@@ -58,13 +59,13 @@ class EgadsFile(FileCore):
             self.perms = perms
             self.pos = self.f.tell()
         except RuntimeError:
-            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - RuntimeError, File '+
-                           str(filename) + ' doesn''t exist')
-            raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
+            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - RuntimeError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise RuntimeError("ERROR: File %s doesn't exist" % filename)
         except IOError:
-            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - IOError, File '+
-                           str(filename) + ' doesn''t exist')
-            raise IOError("ERROR: File %s doesn't exist" % (filename))
+            logging.exception('egads - text_file_io.py - EgadsFile - _open_file - IOError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise IOError("ERROR: File %s doesn't exist" % filename)
         except Exception:
             logging.exception('egads - text_file_io.py - EgadsFile - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
@@ -100,11 +101,12 @@ class EgadsFile(FileCore):
             current and ``e`` for end. Default is ``b``.
         """
 
-        logging.debug('egads - text_file_io.py - EgadsFile - seek - location ' + str(location) + ' , from_where ' + str(from_where))
+        logging.debug('egads - text_file_io.py - EgadsFile - seek - location ' + str(location) + ' , from_where ' +
+                      str(from_where))
         if from_where == 'c':
             if 'b' not in self.perms:
-                raise Exception("With Python 3.x, the seek function works with the current 'c' option only if the file is "
-                                + "opened in binary mode.")
+                raise Exception("With Python 3.x, the seek function works with the current 'c' option only if the "
+                                "file is opened in binary mode.")
         from_switch = {'b': 0, 'c': 1, 'e': 2}
         self.f.seek(location, from_switch[from_where])
         self.pos = self.f.tell()
@@ -192,11 +194,7 @@ class EgadsCsv(EgadsFile):
         
         logging.debug('egads - text_file_io.py - EgadsCsv - __init__ - delimiter ' + str(delimiter)
                       + ' , quotechar ' + str(quotechar))
-        FileCore.__init__(self, filename, perms,
-                           reader=None,
-                           writer=None,
-                           delimiter=delimiter,
-                           quotechar=quotechar)
+        FileCore.__init__(self, filename, perms, reader=None, writer=None, delimiter=delimiter, quotechar=quotechar)
 
     def open(self, filename, perms, delimiter=None, quotechar=None):
         """
@@ -254,7 +252,7 @@ class EgadsCsv(EgadsFile):
         :param int lines:
             Optional - Number specifying the number of lines to read in. If left blank,
             the whole file will be read and returned.
-        :param list format:
+        :param list out_format:
             Optional - List type composed of one character strings used to decompose elements
             read in to their proper types. Options are ``i`` for int, ``f`` for float,
             ``l`` for long and ``s`` for string.
@@ -274,8 +272,8 @@ class EgadsCsv(EgadsFile):
                     data.append(row)
             except csv.Error as e:
                 logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
-                          str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
-                          str(e))
+                              str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
+                              str(e))
                 sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
         else:
             try:
@@ -284,17 +282,18 @@ class EgadsCsv(EgadsFile):
                     data.append(row)
             except csv.Error as e:
                 logging.error('egads - text_file_io.py - EgadsCsv - display_file - csv.Error, file ' +
-                          str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
-                          str(e))
+                              str(self.filename) + ', line ' + str(self.reader.linenum) + ', message ' +
+                              str(e))
                 sys.exit('file %s, line %d: %s' % (self.filename, self.reader.linenum, e))
         data = numpy.array(data)
         data = data.transpose()
         if out_format is None:
+            logging.debug('egads - text_file_io.py - EgadsCsv - read - data read OK')
             return list(data)
         else:
             parsed_data = parse_string_array(data, out_format)
+            logging.debug('egads - text_file_io.py - EgadsCsv - read - data read OK')
             return parsed_data
-        logging.debug('egads - text_file_io.py - EgadsCsv - read - data read OK')
 
     def skip_line(self, amount=1):
         """
@@ -343,11 +342,6 @@ class EgadsCsv(EgadsFile):
             Optional - Permissions used to open file. Options are ``w`` for write (overwrites
             data), ``a`` for append ``r+`` for read and write, and ``r`` for read. ``r`` is 
             the default value.
-        :param string delimiter:
-            Optional - One-character string used to separate fields. Default is ','.
-        :param string quotechar:
-            Optional - One-character string used to quote fields containing special characters.
-            The default is '"'.
         """
         
         logging.debug('egads - text_file_io.py - EgadsCsv - _open_file')
@@ -358,19 +352,17 @@ class EgadsCsv(EgadsFile):
             self.perms = perms
             self.pos = self.f.tell()
             if perms == 'r' or perms == 'r+':
-                self.reader = csv.reader(self.f, delimiter=self.delimiter,
-                                         quotechar=self.quotechar)
+                self.reader = csv.reader(self.f, delimiter=self.delimiter, quotechar=self.quotechar)
             if perms == 'w' or perms == 'a' or perms == 'r+':
-                self.writer = csv.writer(self.f, delimiter=self.delimiter,
-                                         quotechar=self.quotechar)
+                self.writer = csv.writer(self.f, delimiter=self.delimiter, quotechar=self.quotechar)
         except RuntimeError:
-            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - RuntimeError, File '+
-                           str(filename) + ' doesn''t exist')
-            raise RuntimeError("ERROR: File %s doesn't exist" % (filename))
+            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - RuntimeError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise RuntimeError("ERROR: File %s doesn't exist" % filename)
         except IOError:
-            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - IOError, File '+
-                           str(filename) + ' doesn''t exist')
-            raise IOError("ERROR: File %s doesn't exist" % (filename))
+            logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - IOError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise IOError("ERROR: File %s doesn't exist" % filename)
         except Exception:
             logging.exception('egads - text_file_io.py - EgadsCsv - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
@@ -395,7 +387,7 @@ def parse_string_array(data, data_format):
     """
     
     logging.debug('egads - text_file_io.py - parse_string_array')
-    format_array_dict = {'i': 'i4', 'f': 'f8', 'l':'f8', 's':'U'}
+    format_array_dict = {'i': 'i4', 'f': 'f8', 'l': 'f8', 's': 'U'}
     parsed_data = list(data)
     for i, row in enumerate(parsed_data):
         parsed_data[i] = numpy.asarray(row, dtype=format_array_dict[data_format[i]])

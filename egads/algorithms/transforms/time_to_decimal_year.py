@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2017-09-28 16:06"
-__version__ = "1.1"
+__version__ = "1.2"
 __all__ = ['TimeToDecimalYear']
 
 import egads.core.egads_core as egads_core
@@ -12,7 +12,7 @@ class TimeToDecimalYear(egads_core.EgadsAlgorithm):
     """
     FILE        time_to_decimal_year.py
 
-    VERSION     1.1
+    VERSION     1.2
 
     CATEGORY    Transforms
 
@@ -44,7 +44,8 @@ class TimeToDecimalYear(egads_core.EgadsAlgorithm):
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['t', 't_ref'],
                                                           'InputUnits':['year', None],
                                                           'InputTypes':['vector','coeff_optional'],
-                                                          'InputDescription':['Time.','Time reference in year.'],
+                                                          'InputDescription':['Time.','Time reference in year, '
+                                                                                      'format: yyyymmddTHHMMss'],
                                                           'Outputs':['t_y'],
                                                           'OutputUnits':['year'],
                                                           'OutputTypes':['vector'],

@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.4"
+__version__ = "1.5"
 
 import tempfile
 import unittest
@@ -65,35 +65,35 @@ TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2
 
 
 NA_DICT = {
-    "NLHEAD":26,
-    "FFI":1001,
-    "ONAME":"John Doe; email: john.doe@email.com",
-    "ORG":"ORGANIS",
-    "SNAME":"Test NASA Ames File",
-    "MNAME":"Test001",
-    "IVOL":1,
-    "NVOL":1,
-    "DATE":[2011,8,23],
-    "RDATE":[2011,8,24],
-    "DX":"0",
-    "NIV":1,
-    "XNAME":["Time_np (seconds after midnight)"],
-    "NV":4,
-    "VSCAL":[1,1,1,1],
-    "VMISS":[-9900,-9900,-9900,-9900],
-    "VNAME":["GPS LAT (degrees)","GPS LON (degrees)","Height above sea level (m)","Time2 (seconds after midnight)"],
-    "NSCOML":1,
-    "SCOM":["This is a test file for verifying the status of the EGADS NASA Ames functionality."],
-    "NNCOML":1,
-    "NCOM":["TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2"],
-    "X":[51143.42,51144.42,51145.42,51146.42,51147.42],
-    "V":[[48.0797,48.0792,48.0787,48.0782,48.0775],
-         [11.2809,11.2800,11.2793,11.2786,11.2778],
-         [584.3,585.6,587.8,591.3,596.0],
-         [51143.42,51144.42,51145.42,51146.42,51147.42]]
+    "NLHEAD": 26,
+    "FFI": 1001,
+    "ONAME": "John Doe; email: john.doe@email.com",
+    "ORG": "ORGANIS",
+    "SNAME": "Test NASA Ames File",
+    "MNAME": "Test001",
+    "IVOL": 1,
+    "NVOL": 1,
+    "DATE": [2011, 8, 23],
+    "RDATE": [2011, 8, 24],
+    "DX": "0",
+    "NIV": 1,
+    "XNAME": ["Time_np (seconds after midnight)"],
+    "NV": 4,
+    "VSCAL": [1, 1, 1, 1],
+    "VMISS": [-9900, -9900, -9900, -9900],
+    "VNAME": ["GPS LAT (degrees)", "GPS LON (degrees)", "Height above sea level (m)", "Time2 (seconds after midnight)"],
+    "NSCOML": 1,
+    "SCOM": ["This is a test file for verifying the status of the EGADS NASA Ames functionality."],
+    "NNCOML": 1,
+    "NCOM": ["TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2"],
+    "X": [51143.42, 51144.42, 51145.42, 51146.42, 51147.42],
+    "V": [[48.0797, 48.0792, 48.0787, 48.0782, 48.0775],
+          [11.2809, 11.2800, 11.2793, 11.2786, 11.2778],
+          [584.3, 585.6, 587.8, 591.3, 596.0],
+          [51143.42, 51144.42, 51145.42, 51146.42, 51147.42]]
     }
 
-random_data = uniform(size=(DIM1_LEN))
+random_data = uniform(size=DIM1_LEN)
 random_mult_data = uniform(size=(DIM1_LEN, DIM2_LEN))
 
 
@@ -111,7 +111,7 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         f.project = PROJECT
         f.createDimension(DIM1_NAME, DIM1_LEN)
         f.createDimension(DIM2_NAME, DIM2_LEN)
-        v1 = f.createVariable(VAR_NAME, 'f8', (DIM1_NAME))
+        v1 = f.createVariable(VAR_NAME, 'f8', DIM1_NAME)
         v2 = f.createVariable(VAR_MULT_NAME, 'f8', (DIM1_NAME, DIM2_NAME))
         v1.units = VAR_UNITS
         v2.units = VAR_MULT_UNITS
@@ -160,22 +160,18 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         """ Test reading attribute from file """
 
         data = einput.NetCdf(self.file)
-        self.assertEqual(data.get_attribute_value('units', VAR_NAME), VAR_UNITS,
-                        'Variable attributes do not match')
-        self.assertEqual(data.get_attribute_value('attribute'), GLOBAL_ATTRIBUTE,
-                         'Global attributes do not match')
+        self.assertEqual(data.get_attribute_value('units', VAR_NAME), VAR_UNITS, 'Variable attributes do not match')
+        self.assertEqual(data.get_attribute_value('attribute'), GLOBAL_ATTRIBUTE, 'Global attributes do not match')
         data.close()
 
     def test_read_dimensions(self):
         """ Test reading dimensions from file """
 
         data = einput.NetCdf(self.file)
-        dimdict = {DIM1_NAME : DIM1_LEN, DIM2_NAME : DIM2_LEN}
-        self.assertEqual(data.get_dimension_list(), dimdict,
-                        'dimensions dictionary does not match')
-        vardimdict = {DIM1_NAME : DIM1_LEN}
-        self.assertEqual(data.get_dimension_list(VAR_NAME), vardimdict,
-                         'variable dimensions do not match')
+        dimdict = {DIM1_NAME: DIM1_LEN, DIM2_NAME: DIM2_LEN}
+        self.assertEqual(data.get_dimension_list(), dimdict, 'dimensions dictionary does not match')
+        vardimdict = {DIM1_NAME: DIM1_LEN}
+        self.assertEqual(data.get_dimension_list(VAR_NAME), vardimdict, 'variable dimensions do not match')
         data.close()
 
     def test_load_data_1d(self):
@@ -229,16 +225,16 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
     """ Test output to NetCDF file """
     
     def setUp(self):
-        self.data1 = egads.EgadsData(value = [0.5,2.3,6.2,8.1,4.],
-                        units = 'mm',
-                        long_name = 'a common data',
-                        scale_factor = 1.,
-                        _FillValue = -999)
-        self.data2 = egads.EgadsData(value = [0.,1.,2.,3.,4.],
-                        units = 'days since 20170101 00:00:00Z',
-                        long_name = 'a common time vector',
-                        scale_factor = 1.,
-                        _FillValue = -999)
+        self.data1 = egads.EgadsData(value=[0.5, 2.3, 6.2, 8.1, 4.],
+                                     units='mm',
+                                     long_name='a common data',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data2 = egads.EgadsData(value=[0., 1., 2., 3., 4.],
+                                     units='days since 20170101 00:00:00Z',
+                                     long_name='a common time vector',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
         self.file = FILE_NAME_ALT
         f = einput.NetCdf(self.file, 'w')
         f.add_dim(DIM1_NAME, DIM1_LEN)
@@ -252,7 +248,7 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
     def test_dimension_creation(self):
         """ Test creation of dimensions in file """
 
-        f = netCDF4.Dataset(self.file, 'r')  # @UndefinedVariable
+        f = netCDF4.Dataset(self.file, 'r')
         self.assertTrue(DIM1_NAME in f.dimensions, 'Dim1 missing')
         self.assertTrue(DIM2_NAME in f.dimensions, 'Dim2 missing')
         self.assertEqual(DIM1_LEN, len(f.dimensions[DIM1_NAME]), 'Dim1 length not equal')
@@ -457,17 +453,17 @@ class EgadsCsvOutputTestCase(unittest.TestCase):
         self.filename = tempfile.mktemp('.csv')
         self.titles = ['Time', 'Lat', 'Lon', 'Alt']
         self.data = [['1', '2', '3'],
-                [0, 1, 2],
-                [1, 0, -1],
-                [0.3, 1.5, 1.7]]
+                     [0, 1, 2],
+                     [1, 0, -1],
+                     [0.3, 1.5, 1.7]]
         self.times = ['1', '2', '3']
         self.lats = [0, 1, 2]
         self.lons = [1, 0, -1]
         self.alts = [0.3, 1.5, 1.7]
         self.data_as_str = [['1', '2', '3'],
-                ['0', '1', '2'],
-                ['1', '0', '-1'],
-                ['0.3', '1.5', '1.7']]
+                            ['0', '1', '2'],
+                            ['1', '0', '-1'],
+                            ['0.3', '1.5', '1.7']]
         self.format = ['s', 'i', 'i', 'f']
         f = einput.EgadsCsv(self.filename, 'w')
         f.write(self.titles)
@@ -498,7 +494,7 @@ class NAInputTestCase(unittest.TestCase):
     """ Test reading of NASA Ames files. """
 
     def setUp(self):
-        self.filename = tempfile.mktemp('.na');
+        self.filename = tempfile.mktemp('.na')
         f = einput.EgadsFile(self.filename, 'w')
         f.write(NAFILETEXT)
         f.close()
@@ -514,7 +510,7 @@ class NAInputTestCase(unittest.TestCase):
         self.GPS_LON_min = 11.2809
 
     def test_read_file(self):
-        " Test reading data from NASA Ames file"
+        """ Test reading data from NASA Ames file"""
         
         f = einput.NasaAmes(self.filename)
         self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
@@ -523,7 +519,9 @@ class NAInputTestCase(unittest.TestCase):
         var_names = f.get_variable_list()
         self.assertEqual(self.var_names, var_names, 'Variable names do not match')
         var1_intcall = f.read_variable(1)
-        self.assertEqual(self.units[1], var1_intcall.metadata['units'], 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1], var1_intcall.metadata['units']))
+        text_string = 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1],
+                                                                                    var1_intcall.metadata['units'])
+        self.assertEqual(self.units[1], var1_intcall.metadata['units'], text_string)
         self.assertEqual(self.miss_vals[1], var1_intcall.metadata['_FillValue'], 'Var 1 missing values do not match')
         self.assertEqual(self.GPS_LON_max, var1_intcall.value[-1], 'Var 1 max values do not match')
         self.assertEqual(self.GPS_LON_min, var1_intcall.value[0], 'Var 1 min values do not match')
@@ -539,7 +537,7 @@ class NAOutputTestCase(unittest.TestCase):
     """ Test writing of NASA Ames files. """
     
     def setUp(self):
-        self.filename = tempfile.mktemp('.na');
+        self.filename = tempfile.mktemp('.na')
         f = einput.NasaAmes()
         f.save_na_file(self.filename, NA_DICT, float_format='%.4f')
         f.close()
@@ -554,10 +552,10 @@ class NAOutputTestCase(unittest.TestCase):
         self.time_min = 51143.42
         self.GPS_LON_max = 11.2778
         self.GPS_LON_min = 11.2809
-        self.new_data = [61143.42,61144.42,61145.42,61146.42,61147.42]
+        self.new_data = [61143.42, 61144.42, 61145.42, 61146.42, 61147.42]
     
     def test_read_file(self):
-        " Test reading data from NASA Ames file"
+        """ Test reading data from NASA Ames file"""
         
         f = einput.NasaAmes(self.filename)
         self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
@@ -566,7 +564,9 @@ class NAOutputTestCase(unittest.TestCase):
         var_names = f.get_variable_list()
         self.assertEqual(self.var_names, var_names, 'Variable names do not match')
         var1_intcall = f.read_variable(1)
-        self.assertEqual(self.units[1], var1_intcall.metadata['units'], 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1], var1_intcall.metadata['units']))
+        text_string = 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1],
+                                                                                    var1_intcall.metadata['units'])
+        self.assertEqual(self.units[1], var1_intcall.metadata['units'], text_string)
         self.assertEqual(self.miss_vals[1], var1_intcall.metadata['_FillValue'], 'Var 1 missing values do not match')
         self.assertEqual(self.GPS_LON_max, var1_intcall.value[-1], 'Var 1 max values do not match')
         self.assertEqual(self.GPS_LON_min, var1_intcall.value[0], 'Var 1 min values do not match')
@@ -578,12 +578,12 @@ class NAOutputTestCase(unittest.TestCase):
         f.close()
     
     def test_replace_data_in_file(self):
-        " Test replacing data in NASA Ames file"
+        """ Test replacing data in NASA Ames file"""
         
         f = einput.NasaAmes(self.filename)
         f.write_attribute_value("ONAME", "Jane Doe; email: jane.doe@email.net")
         f.write_variable(self.new_data, varname="Time2")
-        f.save_na_file(self.filename, float_format = '%.4f')
+        f.save_na_file(self.filename, float_format='%.4f')
         f.close()
         g = einput.NasaAmes(self.filename)
         self.assertEqual(self.new_originator, g.file_metadata['Originator'], 'Originator values do not match')
@@ -596,16 +596,16 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
     """ Test conversion between formats using nappy toolbox """
 
     def setUp(self):
-        self.data1 = egads.EgadsData(value = [0.5,2.3,6.2,8.1,4.],
-                        units = 'mm',
-                        long_name = 'a common data',
-                        scale_factor = 1.,
-                        _FillValue = -999)
-        self.data2 = egads.EgadsData(value = [0.,1.,2.,3.,4.],
-                        units = 'days since 20170101 00:00:00Z',
-                        long_name = 'a common time vector',
-                        scale_factor = 1.,
-                        _FillValue = -999)
+        self.data1 = egads.EgadsData(value=[0.5, 2.3, 6.2, 8.1, 4.],
+                                     units='mm',
+                                     long_name='a common data',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data2 = egads.EgadsData(value=[0., 1., 2., 3., 4.],
+                                     units='days since 20170101 00:00:00Z',
+                                     long_name='a common time vector',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
         self.ncfilename = tempfile.mktemp('.nc')
         self.nafilename = tempfile.mktemp('.na')
         self.csvfilename = tempfile.mktemp('.csv')
@@ -635,12 +635,12 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
         g = einput.NasaAmes(self.nafilename)
-        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not match')
+        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not '
+                                                                                         'match')
         self.assertEqual('computer', g.file_metadata['Source'], 'Source values do not match')
         data = g.read_variable('data')
         self.assertListEqual(self.data1.value.tolist(), data.value.tolist(), 'data and data1 values do not match')
         g.close()
-
 
     def test_convert_nc_to_na_egadsnetcdf(self):
         """ Test conversion of NetCDF to NASA Ames, using the EgadsNetCdf class """
@@ -649,7 +649,8 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
         g = einput.NasaAmes(self.nafilename)
-        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not match')
+        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not '
+                                                                                         'match')
         self.assertEqual('computer', g.file_metadata['Source'], 'Source values do not match')
         data = g.read_variable('data')
         self.assertListEqual(self.data1.value.tolist(), data.value.tolist(), 'data and data1 values do not match')
@@ -704,8 +705,8 @@ class NAConvertFormatTestCase(unittest.TestCase):
     """ Test conversion between formats using nappy toolbox """
 
     def setUp(self):
-        self.na_filename = tempfile.mktemp('.na');
-        self.nc_filename = tempfile.mktemp('.nc');
+        self.na_filename = tempfile.mktemp('.na')
+        self.nc_filename = tempfile.mktemp('.nc')
         f = einput.NasaAmes()
         f.save_na_file(self.na_filename, NA_DICT, float_format='%.4f')
         f.close()
@@ -742,8 +743,9 @@ def suite():
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
     nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
-    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, csv_in_suite,csv_out_suite,
-                               na_in_suite, na_out_suite, netcdf_convert_format_suite,nasa_ames_convert_format_suite])
+    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, csv_in_suite,
+                               csv_out_suite,
+                               na_in_suite, na_out_suite, netcdf_convert_format_suite, nasa_ames_convert_format_suite])
 
 
 if __name__ == '__main__':

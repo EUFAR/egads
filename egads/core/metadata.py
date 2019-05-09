@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-03-05 11:01"
-__version__ = "1.1"
+__version__ = "1.2"
 __all__ = ['Metadata', 'FileMetadata', 'VariableMetadata', 'AlgorithmMetadata']
 
 import logging
@@ -204,7 +204,6 @@ class Metadata(dict):
                 raise AttributeError('No convention found. Please specify a convention.')
         if isinstance(conventions, str):
             conventions = conventions.split(',')
-        convention_num = None
         for convention in conventions:
             if 'CF' in convention:
                 convention_num = CF_TABLE_COLUMN
@@ -231,15 +230,17 @@ class Metadata(dict):
             Number specifying which convention standard to use in comparison.
         """
         
-        logging.debug('egads - metadata.py - Metadata - _parse_metadata_compliance - convention_num ' + str(convention_num))
+        logging.debug('egads - metadata.py - Metadata - _parse_metadata_compliance - convention_num '
+                      + str(convention_num))
         use_table = None
         if isinstance(self, FileMetadata):
             use_table = METADATA_GLOBAL_CONVERT_TABLE
         if isinstance(self, VariableMetadata):
             use_table = METADATA_VARIABLE_CONVERT_TABLE
         if use_table is None:
-            logging.error('egads - metadata.py - Metadata - _parse_metadata_compliance - AttributeError, metadata couldn''t be parsed')
-            raise AttributeError('A problem occured: the metadata couldn''t be parsed')
+            logging.error('egads - metadata.py - Metadata - _parse_metadata_compliance - AttributeError, '
+                          'metadata couldn''t be parsed')
+            raise AttributeError('A problem occurred: the metadata couldn''t be parsed')
         param_missing_list = []
         for parameter in use_table:
             if parameter[convention_num] not in self and parameter[convention_num] is not '':
@@ -369,20 +370,20 @@ class AlgorithmMetadata(Metadata):
 
         :param dict metadata_dict:
             Dictionary object containing variable metadata names and values
-        :param list child_varable_metadata: Optional -
+        :param list child_variable_metadata: Optional -
             List containing VariableMetadata
         """
         
         logging.debug('egads - metadata.py - AlgorithmMetadata - __init__')
         if 'ProcessorDate' in metadata_dict:
-            replace_dic = {'$':'', '#':'', 'Date::':''}
+            replace_dic = {'$': '', '#': '', 'Date::': ''}
             processor_date_value = metadata_dict['ProcessorDate']
             for i, j in replace_dic.items():
                 processor_date_value = processor_date_value.replace(i, j)
             metadata_dict['ProcessorDate'] = processor_date_value.strip()
 
         if 'ProcessorVersion' in metadata_dict:
-            replace_dic = {'$':'', 'Revision::':''}
+            replace_dic = {'$': '', 'Revision::': ''}
             processor_version_value = metadata_dict['ProcessorVersion']
             for i, j in replace_dic.items():
                 processor_version_value = processor_version_value.replace(i, j)
@@ -413,4 +414,3 @@ class AlgorithmMetadata(Metadata):
             child.set_parent(self)
 
     logging.info('egads - metadata.py - AlgorithmMetadata has been loaded')
-    

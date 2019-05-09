@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-03-07 16:42"
-__version__ = "1.2"
+__version__ = "1.3"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
@@ -11,6 +11,7 @@ import numpy
 import quantities as pq
 from . import metadata
 from collections import defaultdict
+
 
 class EgadsData(pq.Quantity):
     """
@@ -77,7 +78,6 @@ class EgadsData(pq.Quantity):
         for key, val in attrs.items():
             self.metadata[key] = val
         self.__refs__[self.__class__].append(weakref.ref(self))
-        
 
     @property
     def value(self):
@@ -251,7 +251,6 @@ class EgadsData(pq.Quantity):
             if inst is not None:
                 yield inst
 
-
     logging.info('egads - egads_core.py - EgadsData has been loaded')
 
 
@@ -317,7 +316,7 @@ class EgadsAlgorithm(object):
                             metadata[key] = metadata[key].replace(input_seq, '')
                         match = re.compile('input[0-9]+').search(metadata[key])
                 except TypeError:
-                    match = None
+                    pass
                 try:
                     if key == 'Category':
                         if value == ['']:
@@ -339,16 +338,6 @@ class EgadsAlgorithm(object):
             self.output_metadata[0].set_parent(self.metadata)
             result = self._return_result(output, self.output_metadata[0], self.metadata['OutputTypes'][0])
         return result
-
-    def _none_units_check(self, *args):
-        logging.debug('egads - egads_core.py - EgadsAlgorithm - _none_units_check')
-        try:
-            for i, _ in enumerate(self.output_metadata):
-                if self.output_metadata[i]['units'] is None:
-                    self.output_metadata[i]['units'] = args[i].get('units', '')
-        except TypeError:
-            if self.output_metadata['units'] is None:
-                self.output_metadata[i]['units'] = args.get('units', '')
 
     def _return_result(self, value, metadata, out_type):
         logging.debug('egads - egads_core.py - EgadsAlgorithm - _return_result')
@@ -441,7 +430,7 @@ class EgadsAlgorithm(object):
         
         logging.debug('egads - egads_core.py - EgadsAlgorithm - time_stamp.')
         for output in self.output_metadata:
-                output['DateProcessed'] = self.now()
+            output['DateProcessed'] = self.now()
 
     def now(self):
         """
@@ -457,7 +446,7 @@ class EgadsAlgorithm(object):
         """
         logging.debug('egads - egads_core.py - EgadsAlgorithm - processor')
         for output in self.output_metadata:
-                output['Processor'] = self.metadata['Processor']
+            output['Processor'] = self.metadata['Processor']
 
     def _populate_data_object(self, value, metadata):
         """
@@ -489,6 +478,10 @@ def _validate_units(units):
     
     In few atmospheric measurement dataset, dimensionless data based on event have their
     units equal to '1'. Thus corrects the '1' to 'dimensionless'.
+
+    In Oceanography, the quantity of salt in sea water is expressed as practical salinity unit,
+    and often noted '0.001' in a netcdf file. '0.001' is now replaced by 'psu' (unit created in
+    the __init__ file of EGADS).
     
     In quantities, the time unit 'time since ...' is not correctly recognized. Thus
     corrects the 'time since ...' to 'time'.
@@ -521,6 +514,7 @@ def _validate_units(units):
             units = 'dimensionless'
         if units == '0.01':
             units = 'percent'
+        if units == '0.001':
+            units = 'psu'
     logging.debug('....................................... - units ' + str(units))
     return units
-

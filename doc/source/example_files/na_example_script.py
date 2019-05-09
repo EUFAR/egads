@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import egads
 
 data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0],
