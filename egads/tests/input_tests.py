@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.5"
+__version__ = "1.6"
 
 import tempfile
 import unittest
@@ -77,7 +77,7 @@ NA_DICT = {
     "RDATE": [2011, 8, 24],
     "DX": "0",
     "NIV": 1,
-    "XNAME": ["Time_np (seconds after midnight)"],
+    "XNAME": "Time_np (seconds after midnight)",
     "NV": 4,
     "VSCAL": [1, 1, 1, 1],
     "VMISS": [-9900, -9900, -9900, -9900],

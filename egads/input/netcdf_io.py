@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.14"
+__version__ = "1.18"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -10,6 +10,8 @@ import datetime
 import operator
 import os
 import collections
+import dateutil
+import numpy
 from egads.input import FileCore
 
 
@@ -118,7 +120,7 @@ class NetCdf(FileCore):
             logging.exception('egads - netcdf_io.py - NetCdf - get_perms - AttributeError, no file open')
             raise AttributeError('No file open')
 
-    def read_variable(self, varname, input_range=None):
+    def read_variable(self, varname, input_range=None, read_as_float=False):
         """
         Reads a variable from currently opened NetCDF file.
         
@@ -126,6 +128,9 @@ class NetCdf(FileCore):
             Name of NetCDF variable to read in.
         :param vector input_range:
             Optional - Range of values in each dimension to input.
+        :param boolean read_as_float:
+            Optional - if True, EGADS reads the data and convert them to float numbers. If False,
+            the data type is the type of data in file.
         """
         
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ', input_range '
@@ -141,11 +146,15 @@ class NetCdf(FileCore):
             raise Exception("Error: Unexpected error")
         if input_range is None:
             value = varin[:]
+            if read_as_float:
+                value = [float(item) for item in value]
         else:
             obj = 'slice(input_range[0], input_range[1])'
             for i in range(2, len(input_range), 2):
                 obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
             value = varin[eval(obj)]
+            if read_as_float:
+                value = [float(item) for item in value]
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return value
     
@@ -225,7 +234,7 @@ class NetCdf(FileCore):
 
         :param string attrname:
             Attribute name.
-        :param string value:
+        :param string|float|int value:
             Value to assign to attribute name.
         :param string varname:
             Optional - If varname is provided, attribute name and value are added to specified
@@ -235,6 +244,11 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - add_attribute - attrname ' + str(attrname) + ', varname '
                       + str(varname))
         if self.f is not None:
+            if isinstance(value, list):
+                tmp = ''
+                for item in value:
+                    tmp += item + ', '
+                value = tmp[:-2]
             if varname is not None:
                 varin = self.f.variables[varname]
                 setattr(varin, attrname, value)
@@ -272,8 +286,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname)
                       + ' -> attribute delete OK')
 
-    def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', delimiter='    ',
-                             no_header=False):
+    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
         """
         Convert currently open NetCDF file to one or more NASA Ames files.
         For now can only process NetCdf files to NASA/Ames FFI 1001 : 
@@ -282,15 +295,12 @@ class NetCdf(FileCore):
         :param string na_file:
             Optional - Name of output NASA Ames file. If none is provided, name of
             current NetCDF file is used and suffix changed to .na
-        :param int requested_ffi:
-            The NASA Ames File Format Index (FFI) you wish to write to. Options
-            are limited depending on the data structures found.
         :param string delimiter:
             Optional - The delimiter desired for use between data items in the data
             file. Default - Tab.
         :param string float_format:
-            Optional - The formatting string used for formatting floats when writing
-            to output file. Default - %g
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
         :param string delimiter:
             Optional - The delimiter desired for use between data items in the data
             file. Default - '    ' (four spaces).
@@ -299,99 +309,83 @@ class NetCdf(FileCore):
             Default - False.
         """
         
-        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames -' + ' requested_ffi '
-                      + str(requested_ffi) + ', float_format ' + str(float_format) + ', delimiter ' + str(delimiter)
-                      + ', no_header ' + str(no_header))
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - float_format ' + str(float_format)
+                      + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+
         if not na_file:
-            filename, _ = os.path.splitext(self.filename)
-            na_file = filename + '.na'
-        
+            na_file = os.path.splitext(self.filename)[0] + '.na'
+
+        # read dimensions and variables, try to check if ffi = 1001
+        dim_list = self.get_dimension_list()
+        var_list = self.get_variable_list()
+        if len(dim_list) > 1:
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant '
+                              'process file with multiple dimensions, FFI is set to 1001')
+            raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
+                            'FFI is set to 1001')
+
         # create NASA/Ames dictionary
         f = egads.input.NasaAmes()
         na_dict = f.create_na_dict()
         missing_attributes = []
-        
-        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE
-        nlhead, ffi, org, oname, sname, mname, dx = 1, 1001, '', '', '', '', 0.0
+
+        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE, DX, IVOL, NVOL
+        nlhead, ffi, org, oname, sname, mname, dx = -999, 1001, '', '', '', '', 0.0
+        ivol, nvol, date, niv, nv = 1, 1, None, 0, 0
         try:
             org = self.get_attribute_value('institution')
         except KeyError:
+            org = 'no institution'
             missing_attributes.append('institution')
         try:
             oname = self.get_attribute_value('authors')
         except KeyError:
-            missing_attributes.append('authors - replaced by institution')
-            oname = org
+            try:
+                oname = self.get_attribute_value('institution')
+                missing_attributes.append('authors - replaced by institution')
+            except KeyError:
+                oname = 'no author'
+                missing_attributes.append('authors')
         try:
             sname = self.get_attribute_value('source')
         except KeyError:
+            sname = 'no source'
             missing_attributes.append('source')
         try:
             mname = self.get_attribute_value('title')
         except KeyError:
+            mname = 'no title'
             missing_attributes.append('title')
         rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
-        
-        # read dimensions and variables, try to check if ffi = 1001
-        var_dims = self.get_dimension_list()
-        var_list = self.get_variable_list()
-        variables = []
-        for var in var_list:
-            if var not in var_dims.keys():
-                dims = self.get_dimension_list(var)
-                if len(dims) > 1:
-                    logging.exception('egads - netcdf_io.py - NetCdf - the actual convert_to_nasa_ames cant process '
-                                      'data of multiple dimensions, FFI is set to 1001')
-                    raise Exception('the actual convert_to_nasa_ames cant process data of multiple  dimensions, '
-                                    'FFI is set to 1001')
-                vvar = {}
-                value = self.read_variable(var).tolist()
-                attr_dict = {}
-                all_attr = self.get_attribute_list(var)
-                for index, item in enumerate(value):
-                    if item is None:
-                        value[index] = all_attr['_FillValue']
-                for attr in all_attr:
-                    attr_dict[attr] = self.get_attribute_value(attr, var)
-                vvar[var] = [value, list(dims.keys())[0], attr_dict]
-                variables.append(vvar)
-        
-        # read independant variables (actual dimensions) and populate XNAME
+
+        # read independant variables
         independant_variables = []
-        niv = 0
-        for key, _ in var_dims.items():
-            ivar = {}
+        for key in dim_list:
             try:
                 var = self.read_variable(key).tolist()
                 attr_dict = {}
-                all_attr = self.get_attribute_list(key)
-                for attr in all_attr:
+                for attr in self.get_attribute_list(key):
                     attr_dict[attr] = self.get_attribute_value(attr, key)
-                ivar[key] = [var, attr_dict]
-                independant_variables.append(ivar)
+                independant_variables.append([key, var, attr_dict])
                 niv += 1
             except KeyError:
-                ivar[key] = None
-                independant_variables.append(ivar)
-        
+                independant_variables.append([key, None, None])
+
         # populate DATE if time is in independant_variables
-        date = None
-        for ivar in independant_variables:
-            if 'time' in ivar.keys():
-                var = list(ivar.values())[0][0]
-                ref_time = None
+        for sublist in independant_variables:
+            if 'time' in sublist[0]:
                 try:
-                    index = list(ivar.values())[0][1]['units'].index(' since ')
-                    ref_time = list(ivar.values())[0][1]['units'][index + 7:]
-                except (KeyError, ValueError):
-                    pass
-                isotime = egads.algorithms.transforms.SecondsToIsotime().run([var[0]], ref_time)
-                y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
-                date = [y.value[0], m.value[0], d.value[0]]
+                    index = sublist[2]['units'].index(' since ')
+                    ref_time = dateutil.parser.parse(sublist[2]['units'][index + 7:]).strftime("%Y%m%dT%H%M%S")
+                    isotime = egads.algorithms.transforms.SecondsToIsotime().run(sublist[1], ref_time)
+                    y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
+                    date = [y.value[0], m.value[0], d.value[0]]
+                except Exception:
+                    date = [999, 999, 999]
         if not date:
             date = [999, 999, 999]
-        
-        # add global attributes to NA dict
+
+        # add first global metadata to na file
         f.write_attribute_value('NLHEAD', nlhead, na_dict=na_dict)
         f.write_attribute_value('FFI', ffi, na_dict=na_dict)
         f.write_attribute_value('ONAME', oname, na_dict=na_dict)
@@ -403,107 +397,110 @@ class NetCdf(FileCore):
         f.write_attribute_value('RDATE', rdate, na_dict=na_dict)
         f.write_attribute_value('NIV', niv, na_dict=na_dict)
         f.write_attribute_value('DX', dx, na_dict=na_dict)
-        
-        # loop on the different independant variables and save
-        ivol = 0
-        nvol = len(var_dims)
-        for key, _ in reversed(sorted(var_dims.items(), key=operator.itemgetter(1))):
-        
-            # populate NVOL and filename
-            ivol += 1
-            if len(var_dims) > 1:
-                filename, extension = os.path.splitext(na_file)
-                na_file_out = filename + '_' + str(ivol) + extension
-            else:
-                na_file_out = na_file
-            
-            # populate NV, VMISS, VSCAL, VNAME, SCOM and V
-            nv = 0
-            vmiss = []
-            vscal = []
-            vname = []
-            v = []
-            xname = []
-            x = []
-            name_string = ''
-            scom = ['==== Special Comments follow ====',
-                    '=== Additional Variable Attributes defined in the source file ===',
-                    '== Variable attributes from source (NetCDF) file follow ==']
-            for var in variables:
-                if key == list(var.values())[0][1]:
-                    try:
-                        units = list(var.values())[0][2]['units']
-                    except KeyError:
-                        units = 'no units'
-                    name = list(var.keys())[0]
-                    try:
-                        miss = list(var.values())[0][2]['_FillValue']
-                    except KeyError:
-                        try:
-                            miss = list(var.values())[0][2]['missing_value']
-                        except KeyError:
-                            miss = None
-                    scom.append('  Variable ' + name + ':')
-                    attr_list = self.get_attribute_list(name)
-                    for attr in attr_list:
-                        if attr not in ['_FillValue', 'scale_factor', 'add_offset']:
-                            value = self.get_attribute_value(attr, name)
-                            scom.append('    ' + attr + ' = ' + str(value))     
-                    vmiss.append(miss)
-                    vscal.append(1)
-                    vname.append(name + ' (' + units + ')')
-                    v.append(list(var.values())[0][0])
-                    nv += 1
-            scom.append('== Variable attributes from source (NetCDF) file end ==')
-            scom.append('==== Special Comments end ====') 
-        
-            # populate NCOM
-            ncom = ['==== Normal Comments follow ====']
-            attr_list = self.get_attribute_list()
-            for attr in attr_list:
+        f.write_attribute_value('NVOL', nvol, na_dict=na_dict)
+        f.write_attribute_value('IVOL', ivol, na_dict=na_dict)
+
+        # read variables
+        variables = []
+        for var in var_list:
+            if var not in dim_list:
+                dim = self.get_dimension_list(var)
+                value = self.read_variable(var).tolist()
+                attr_dict = {}
+                all_attr = self.get_attribute_list(var)
+                for index, item in enumerate(value):
+                    if item is None:
+                        value[index] = all_attr['_FillValue']
+                for attr in all_attr:
+                    attr_dict[attr] = self.get_attribute_value(attr, var)
+                variables.append([var, value, dim, attr_dict])
+
+        # prepare and set NCOM and SCOM
+        name_string = ''
+        ncom = ['==== Normal Comments follow ====']
+        ncom = ['The NA file has been converted from a NetCDF file by EGADS']
+        for attr in self.get_attribute_list():
+            if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
                 ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
-            ncom.append('==== Normal Comments end ====')
-            ncom.append('=== Data Section begins on the next line ===')
-            for name in xname:
-                if name in key:
-                    name_string += name + ','
-            for name in vname:
-                name_string += name + ','
-            name_string = name_string[:-1]
-            
-            # populate X and XNAME
-            for ivar in independant_variables:
-                if key == list(ivar.keys())[0]:
-                    try:
-                        x = list(ivar.values())[0][0]
-                    except TypeError:
-                        x = [0]
-                    try:
-                        units = list(ivar.values())[0][1]['units']
-                    except (KeyError, TypeError):
-                        units = 'no units'
-                    xname.append(key + ' (' + units + ')')
-                    name_string = key + ' (' + units + '),' + name_string
-            
-            # add attributes to NA dict and save
-            f.write_attribute_value('NVOL', nvol, na_dict = na_dict)
-            f.write_attribute_value('IVOL', ivol, na_dict = na_dict)
-            f.write_attribute_value('SCOM', scom, na_dict = na_dict)
-            f.write_attribute_value('NCOM', ncom, na_dict = na_dict)
-            f.write_attribute_value('NSCOML', len(scom), na_dict = na_dict)
-            f.write_attribute_value('NNCOML', len(ncom), na_dict = na_dict)
-            f.write_attribute_value('VMISS', vmiss, na_dict = na_dict)
-            f.write_attribute_value('VSCAL', vscal, na_dict = na_dict)
-            f.write_attribute_value('XNAME', xname, na_dict = na_dict)
-            f.write_attribute_value('VNAME', vname, na_dict = na_dict)
-            f.write_attribute_value('V', v, na_dict = na_dict)
-            f.write_attribute_value('X', x, na_dict = na_dict)
-            f.write_attribute_value('NV', nv, na_dict = na_dict)
-            f.save_na_file(na_file_out, na_dict, float_format, delimiter=delimiter, no_header=no_header)
-            logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
-                          + ' -> file conversion OK')
+        ncom.append('==== Normal Comments end ====')
+        ncom.append('=== Data Section begins on the next line ===')
+        for name in dim_list:
+            name_string += name + '    '
+        scom = ['==== Special Comments follow ====',
+                '=== Additional Variable Attributes defined in the source file ===',
+                '== Variable attributes from source (NetCDF) file follow ==']
+        for var in variables:
+            if var[0] not in dim_list:
+                first_line = True
+                for metadata in var[3]:
+                    if metadata != '_FillValue' and metadata != 'scale_factor' and metadata != 'units' and metadata \
+                            != 'var_name':
+                        if first_line:
+                            first_line = False
+                            scom.append('  Variable ' + var[0] + ':')
+                        try:
+                            scom.append('    ' + metadata + ' = ' + str(var[3][metadata]))
+                        except TypeError:
+                            logging.exception('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - an error '
+                                              + 'occurred when trying to add variable metadata in SCOM - metadata '
+                                              + str(metadata))
+                name_string += var[0] + '    '
+        name_string = name_string[:-4]
+        ncom.append(name_string)
+        scom.append('== Variable attributes from source (NetCDF) file end ==')
+        scom.append('==== Special Comments end ====')
+        f.write_attribute_value('SCOM', scom, na_dict=na_dict)
+        f.write_attribute_value('NCOM', ncom, na_dict=na_dict)
+        f.write_attribute_value('NSCOML', len(scom), na_dict=na_dict)
+        f.write_attribute_value('NNCOML', len(ncom), na_dict=na_dict)
+
+        # write independant variable
+        xname, x = None, None
+        for ivar in independant_variables:
+            x = ivar[1]
+            try:
+                units = ivar[2]['units']
+            except KeyError:
+                units = 'no units'
+            xname = ivar[0] + ' (' + units + ')'
+        f.write_attribute_value('XNAME', xname, na_dict=na_dict)
+        f.write_attribute_value('X', x, na_dict=na_dict)
+
+        # write main variables
+        vmiss, vscal, vname, v = [], [], [], []
+        for var in variables:
+            try:
+                units = var[3]['units']
+            except KeyError:
+                units = ''
+            try:
+                miss = var[3]['_FillValue']
+            except KeyError:
+                try:
+                    miss = var[3]['missing_value']
+                except KeyError:
+                    miss = None
+            vmiss.append(miss)
+            vscal.append(1)
+            vname.append(var[0] + ' (' + units + ')')
+            v.append(var[1])
+            nv += 1
+
+        f.write_attribute_value('VMISS', vmiss, na_dict=na_dict)
+        f.write_attribute_value('VSCAL', vscal, na_dict=na_dict)
+        f.write_attribute_value('XNAME', xname, na_dict=na_dict)
+        f.write_attribute_value('VNAME', vname, na_dict=na_dict)
+        f.write_attribute_value('V', v, na_dict=na_dict)
+        f.write_attribute_value('X', x, na_dict=na_dict)
+        f.write_attribute_value('NV', nv, na_dict=na_dict)
+
+        # write na file
+        f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
+        f.close()
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
+                      + ' -> file conversion OK')
       
-    def convert_to_csv(self, csv_file=None, float_format='%g', no_header=False):
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
         """
         Converts currently open NetCDF file to CSV file using the NasaAmes class.
         
@@ -511,8 +508,8 @@ class NetCdf(FileCore):
             Optional - Name of output CSV file. If none is provided, name of current
             NetCDF is used and suffix changed to .csv
         :param string float_format:
-            Optional - The formatting string used for formatting floats when writing
-            to output file. Default - %g
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
         :param bool no_header:
             Optional - If set to true, then only the data blocks are written to file.
             Default - False.
@@ -521,11 +518,9 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
         if not csv_file:
-            filename, _ = os.path.splitext(self.filename)
-            csv_file = filename + '.csv'
+            csv_file = os.path.splitext(self.filename)[0] + '.csv'
         
-        self.convert_to_nasa_ames(na_file=csv_file, requested_ffi=1001, float_format=float_format, 
-                                  delimiter=',', no_header=no_header)
+        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format,delimiter=',', no_header=no_header)
         logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
 
@@ -650,16 +645,21 @@ class EgadsNetCdf(NetCdf):
         self.file_metadata = None
         FileCore.__init__(self, filename, perms)
 
-    def read_variable(self, varname, input_range=None):
+    def read_variable(self, varname, input_range=None, read_as_float=False, replace_fill_value=False):
         """
         Reads in a variable from currently opened NetCDF file and maps the NetCDF
         attributies to an :class:`~egads.core.EgadsData` instance.
 
         :param string varname:
             Name of NetCDF variable to read in.
-
         :param vector input_range:
-            Optional - Range of values in each dimension to input.
+            Optional - Range of values in each dimension to input. ``None`` is the default value.
+        :param boolean read_as_float:
+            Optional - if True, EGADS reads the data and convert them to float numbers. If False,
+            the data type is the type of data in file. ``False`` is the default value.
+        :param boolean replace_fill_value:
+            Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN.
+            ``False`` is the default value.
         """
         
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname) + 
@@ -680,8 +680,21 @@ class EgadsNetCdf(NetCdf):
             for i in range(2, len(input_range), 2):
                 obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
             value = varin[eval(obj)]
+        if read_as_float:
+            value = [float(item) for item in value]
         variable_attrs = self.get_attribute_list(varname)
-        variable_attrs['cdf_name'] = varname
+        value = numpy.array(value)
+        if replace_fill_value:
+            if '_FillValue' in variable_attrs.keys():
+                _fill_value = variable_attrs['_FillValue']
+                value[value == _fill_value] = numpy.nan
+            else:
+                if 'missing_value' in variable_attrs.keys():
+                    _fill_value = variable_attrs['missing_value']
+                    value[value == _fill_value] = numpy.nan
+                else:
+                    logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname)
+                                  + ', no _FillValue or missing_value attribute found.')
         variable_metadata = egads.core.metadata.VariableMetadata(variable_attrs, self.file_metadata)
         data = egads.EgadsData(value, variable_metadata=variable_metadata)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname)
@@ -702,7 +715,7 @@ class EgadsNetCdf(NetCdf):
         :param tuple dims:
             Optional - Name(s) of dimensions to assign to variable. If variable already exists
             in NetCDF file, this parameter is optional. For scalar variables, pass an empty tuple.
-        :param string type:
+        :param string ftype:
             Optional - Data type of variable to write. Defaults to ``double``. If variable exists,
             data type remains unchanged. Options for type are ``double``, ``float``, ``int``, 
             ``short``, ``char``, and ``byte``
@@ -710,6 +723,7 @@ class EgadsNetCdf(NetCdf):
 
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname) + 
                       ', dims ' + str(dims) + ', ftype ' + str(ftype))
+        fillvalue = None
         if self.f is not None:
             try:
                 varout = self.f.variables[varname]
@@ -720,32 +734,37 @@ class EgadsNetCdf(NetCdf):
                     try:
                         fillvalue = data.metadata['missing_value']
                     except KeyError:
-                        fillvalue = None
+                        pass
                 varout = self.f.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
-            varout[:] = data.value
+            if fillvalue is not None:
+                varout[:] = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
+            else:
+                varout[:] = data.value
             for key, val in data.metadata.items():
                 if key != '_FillValue':
                     if val:
-                        setattr(varout, str(key), val)
+                        if isinstance(val, list):
+                            tmp = ''
+                            for item in val:
+                                tmp += item + ', '
+                            setattr(varout, str(key), tmp[:-2])
+                        else:
+                            setattr(varout, str(key), val)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname)
                       + ' -> data write OK')
         
-    def convert_to_nasa_ames(self, na_file=None, requested_ffi=1001, float_format='%g', delimiter='    ',
-                             no_header=False):
+    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
         """
-        Convert currently open EGADS NetCDF file to one or more NASA Ames files
-        using  Nappy. For now can only process NetCdf files to NASA/Ames FFI 1001 : 
-        variables can only be dependant to one independant variable at a time.
+        Convert currently open EGADS NetCDF file to one or more NASA Ames files.
+        For now can only process NetCdf files to NASA/Ames FFI 1001 : variables
+        can only be dependant to one independant variable at a time.
 
         :param string na_file:
             Optional - Name of output NASA Ames file. If none is provided, name of
             current NetCDF file is used and suffix changed to .na
-        :param int requested_ffi:
-            The NASA Ames File Format Index (FFI) you wish to write to. Options
-            are limited depending on the data structures found.
         :param string float_format:
-            Optional - The formatting string used for formatting floats when writing
-            to output file. Default - %g
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
         :param string delimiter:
             Optional - The delimiter desired for use between data items in the data
             file. Default - '    ' (four spaces).
@@ -754,96 +773,78 @@ class EgadsNetCdf(NetCdf):
             Default - False.
         """
         
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - '
-                      + ', requested_ffi ' + str(requested_ffi) + ', float_format ' + str(float_format)
-                      + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - float_format '
+                      + str(float_format) + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
         if not na_file:
-            filename, _ = os.path.splitext(self.filename)
-            na_file = filename + '.na'
-        
+            na_file = os.path.splitext(self.filename)[0] + '.na'
+
+        # read dimensions and variables, try to check if ffi = 1001
+        dim_list = self.get_dimension_list()
+        var_list = self.get_variable_list()
+        if len(dim_list) > 1:
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant '
+                              'process file with multiple dimensions, FFI is set to 1001')
+            raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
+                            'FFI is set to 1001')
+
         # create NASA/Ames dictionary
-        f = egads.input.NasaAmes()  # @UndefinedVariable
+        f = egads.input.NasaAmes()
         na_dict = f.create_na_dict()
         missing_attributes = []
         
-        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE
-        nlhead, ffi, org, oname, sname, mname, dx = -999, 1001, '', '', '', '', [0.0]
+        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE, DX, IVOL, NVOL
+        nlhead, ffi, org, oname, sname, mname, dx = -999, 1001, '', '', '', '', 0.0
+        ivol, nvol, date, niv = 1, 1, None, 0
         try:
             org = self.get_attribute_value('institution')
         except KeyError:
+            org = 'no institution'
             missing_attributes.append('institution')
         try:
             oname = self.get_attribute_value('authors')
         except KeyError:
-            missing_attributes.append('authors - replaced by institution')
-            oname = org
+            try:
+                oname = self.get_attribute_value('institution')
+                missing_attributes.append('authors - replaced by institution')
+            except KeyError:
+                oname = 'no author'
+                missing_attributes.append('authors')
         try:
             sname = self.get_attribute_value('source')
         except KeyError:
+            sname = 'no source'
             missing_attributes.append('source')
         try:
             mname = self.get_attribute_value('title')
         except KeyError:
+            mname = 'no title'
             missing_attributes.append('title')
         rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
-        
-        # read dimensions and variables, try to check if ffi = 1001
-        var_dims = self.get_dimension_list()
-        var_list = self.get_variable_list()
-        variables = []
-        for var in var_list:
-            if var not in var_dims.keys():
-                dims = self.get_dimension_list(var)
-                if len(dims) > 1:
-                    logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant '
-                                      'process data of multiple dimensions, FFI is set to 1001')
-                    raise Exception('the actual convert_to_nasa_ames cant process data of multiple dimensions, '
-                                    'FFI is set to 1001')
-                vvar = {}
-                value = self.read_variable(var).value.tolist()
-                attr_dict = {}
-                all_attr = self.get_attribute_list(var)
-                for attr in all_attr:
-                    attr_dict[attr] = self.get_attribute_value(attr, var)
-                vvar[var] = [value, list(dims.keys())[0], attr_dict]
-                variables.append(vvar)
-        
-        # read independant variables (actual dimensions) and populate XNAME
-        independant_variables = []
-        niv = 0
-        for key, _ in var_dims.items():
-            ivar = {}
-            try:
-                var = self.read_variable(key).value.tolist()
-                attr_dict = {}
-                all_attr = self.get_attribute_list(key)
-                for attr in all_attr:
-                    attr_dict[attr] = self.get_attribute_value(attr, key)
-                ivar[key] = [var, attr_dict]
-                independant_variables.append(ivar)
-                niv += 1
-            except KeyError:
-                ivar[key] = None
-                independant_variables.append(ivar)
-        
-        # populate DATE if time is in independant_variables
-        date = None
-        for ivar in independant_variables:
-            if 'time' in ivar.keys():
-                var = list(ivar.values())[0][0]
+
+        # read and write independant variables and set DATE
+        for ivar in dim_list:
+            data = self.read_variable(ivar)
+            f.write_variable(data, ivar, vartype='independant', na_dict=na_dict)
+            niv += 1
+            if 'time' in ivar:
+                units = data.metadata['units']
                 ref_time = None
                 try:
-                    index = list(ivar.values())[0][1]['units'].index(' since ')
-                    ref_time = list(ivar.values())[0][1]['units'][index + 7:]
+                    index = units.index(' since ')
+                    ref_time = units[index + 7:]
                 except (KeyError, ValueError):
                     pass
-                isotime = egads.algorithms.transforms.SecondsToIsotime().run([var[0]], ref_time)
-                y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
-                date = [y.value[0], m.value[0], d.value[0]]
-        if not date:
-            date = [999, 999, 999]
-        
-        # add global attributes to NA dict
+                try:
+                    ref_time = dateutil.parser.parse(ref_time).strftime("%Y%m%dT%H%M%S")
+                    isotime = egads.algorithms.transforms.SecondsToIsotime().run(data, ref_time)
+                    y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
+                    date = [y.value[0], m.value[0], d.value[0]]
+                    if not date:
+                        date = [999, 999, 999]
+                except Exception:
+                    date = [999, 999, 999]
+
+        # add first global metadata to na file
         f.write_attribute_value('NLHEAD', nlhead, na_dict=na_dict)
         f.write_attribute_value('FFI', ffi, na_dict=na_dict)
         f.write_attribute_value('ONAME', oname, na_dict=na_dict)
@@ -855,107 +856,57 @@ class EgadsNetCdf(NetCdf):
         f.write_attribute_value('RDATE', rdate, na_dict=na_dict)
         f.write_attribute_value('NIV', niv, na_dict=na_dict)
         f.write_attribute_value('DX', dx, na_dict=na_dict)
-        
-        # loop on the different independant variables and save
-        ivol = 0
-        nvol = len(var_dims)
-        for key, _ in reversed(sorted(var_dims.items(), key=operator.itemgetter(1))):
-        
-            # populate NVOL and filename
-            ivol += 1
-            if len(var_dims) > 1:
-                filename, extension = os.path.splitext(na_file)
-                na_file_out = filename + '_' + str(ivol) + extension
-            else:
-                na_file_out = na_file
-            
-            # populate NV, VMISS, VSCAL, VNAME, SCOM and V
-            nv = 0
-            vmiss = []
-            vscal = []
-            vname = []
-            v = []
-            xname = []
-            x = []
-            name_string = ''
-            scom = ['==== Special Comments follow ====',
-                    '=== Additional Variable Attributes defined in the source file ===',
-                    '== Variable attributes from source (NetCDF) file follow ==']
-            for var in variables:
-                if key == list(var.values())[0][1]:
-                    try:
-                        units = list(var.values())[0][2]['units']
-                    except KeyError:
-                        units = 'no units'
-                    name = list(var.keys())[0]
-                    try:
-                        miss = list(var.values())[0][2]['_FillValue']
-                    except KeyError:
-                        try:
-                            miss = list(var.values())[0][2]['missing_value']
-                        except KeyError:
-                            miss = None
-                    scom.append('  Variable ' + name + ':')
-                    attr_list = self.get_attribute_list(name)
-                    for attr in attr_list:
-                        if attr not in ['_FillValue', 'scale_factor', 'add_offset']:
-                            value = self.get_attribute_value(attr, name)
-                            scom.append('    ' + attr + ' = ' + str(value))     
-                    vmiss.append(miss)
-                    vscal.append(1)
-                    vname.append(name + ' (' + units + ')')
-                    v.append(list(var.values())[0][0])
-                    nv += 1
-            scom.append('== Variable attributes from source (NetCDF) file end ==')
-            scom.append('==== Special Comments end ====') 
-        
-            # populate NCOM
-            ncom = ['==== Normal Comments follow ====']
-            attr_list = self.get_attribute_list()
-            for attr in attr_list:
+        f.write_attribute_value('NVOL', nvol, na_dict=na_dict)
+        f.write_attribute_value('IVOL', ivol, na_dict=na_dict)
+
+        # prepare and set NCOM and SCOM
+        name_string = ''
+        ncom = ['==== Normal Comments follow ====']
+        ncom = ['The NA file has been converted from a NetCDF file by EGADS']
+        for attr in self.get_attribute_list():
+            if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
                 ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
-            ncom.append('==== Normal Comments end ====')
-            ncom.append('=== Data Section begins on the next line ===')
-            for name in xname:
-                if name in key:
-                    name_string += name + ','
-            for name in vname:
-                name_string += name + ','
-            name_string = name_string[:-1]
-            
-            # populate X and XNAME
-            for ivar in independant_variables:
-                if key == list(ivar.keys())[0]:
-                    try:
-                        x = list(ivar.values())[0][0]
-                    except TypeError:
-                        x = [0]
-                    try:
-                        units = list(ivar.values())[0][1]['units']
-                    except (KeyError, TypeError):
-                        units = 'no units'
-                    xname.append(key + ' (' + units + ')')
-                    name_string = key + ' (' + units + '),' + name_string
-            
-            # add attributes to NA dict and save
-            f.write_attribute_value('NVOL', nvol, na_dict=na_dict)
-            f.write_attribute_value('IVOL', ivol, na_dict=na_dict)
-            f.write_attribute_value('SCOM', scom, na_dict=na_dict)
-            f.write_attribute_value('NCOM', ncom, na_dict=na_dict)
-            f.write_attribute_value('NSCOML', len(scom), na_dict=na_dict)
-            f.write_attribute_value('NNCOML', len(ncom), na_dict=na_dict)
-            f.write_attribute_value('VMISS', vmiss, na_dict=na_dict)
-            f.write_attribute_value('VSCAL', vscal, na_dict=na_dict)
-            f.write_attribute_value('XNAME', xname, na_dict=na_dict)
-            f.write_attribute_value('VNAME', vname, na_dict=na_dict)
-            f.write_attribute_value('V', v, na_dict=na_dict)
-            f.write_attribute_value('X', x, na_dict=na_dict)
-            f.write_attribute_value('NV', nv, na_dict=na_dict)
-            f.save_na_file(na_file_out, na_dict, float_format, delimiter=delimiter, no_header=no_header)
-            logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
-                          + ' -> file conversion OK')
+        ncom.append('==== Normal Comments end ====')
+        ncom.append('=== Data Section begins on the next line ===')
+        for name in dim_list:
+            name_string += name + '    '
+        scom = ['==== Special Comments follow ====',
+                '=== Additional Variable Attributes defined in the source file ===',
+                '== Variable attributes from source (NetCDF) file follow ==']
+        for var in var_list:
+            if var not in dim_list:
+                data = self.read_variable(var)
+                f.write_variable(data, var, na_dict=na_dict)
+                first_line = True
+                for metadata in data.metadata:
+                    if metadata != '_FillValue' and metadata != 'scale_factor' and metadata != 'units' and metadata \
+                            != 'var_name':
+                        if first_line:
+                            first_line = False
+                            scom.append('  Variable ' + var + ':')
+                        try:
+                            scom.append('    ' + metadata + ' = ' + str(data.metadata[metadata]))
+                        except TypeError:
+                            logging.exception('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - an error '
+                                              + 'occurred when trying to add variable metadata in SCOM - metadata '
+                                              + str(metadata))
+                name_string += var + '    '
+        name_string = name_string[:-4]
+        ncom.append(name_string)
+        scom.append('== Variable attributes from source (NetCDF) file end ==')
+        scom.append('==== Special Comments end ====')
+        f.write_attribute_value('SCOM', scom, na_dict=na_dict)
+        f.write_attribute_value('NCOM', ncom, na_dict=na_dict)
+        f.write_attribute_value('NSCOML', len(scom), na_dict=na_dict)
+        f.write_attribute_value('NNCOML', len(ncom), na_dict=na_dict)
+
+        # write na file
+        f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
+        f.close()
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
+                      + ' -> file conversion OK')
       
-    def convert_to_csv(self, csv_file=None, float_format='%g', no_header=False):
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
         """
         Converts currently open NetCDF file to CSV file using Nappy API.
         
@@ -963,8 +914,8 @@ class EgadsNetCdf(NetCdf):
             Optional - Name of output CSV file. If none is provided, name of current
             NetCDF is used and suffix changed to .csv
         :param string float_format:
-            Optional - The formatting string used for formatting floats when writing
-            to output file. Default - %g
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
         :param bool no_header:
             Optional - If set to true, then only the data blocks are written to file.
             Default - False.
@@ -975,8 +926,7 @@ class EgadsNetCdf(NetCdf):
         if not csv_file:
             filename, _ = os.path.splitext(self.filename)
             csv_file = filename + '.csv'
-        self.convert_to_nasa_ames(na_file=csv_file, requested_ffi=1001, float_format=float_format, 
-                                  delimiter=',', no_header=no_header)
+        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
     

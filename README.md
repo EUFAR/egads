@@ -1,7 +1,7 @@
 Version:
 -------
 
-EGADS Lineage 0.9.3
+EGADS Lineage 0.9.4
 
 
 Developments:
@@ -46,7 +46,7 @@ Features:
 Installation:
 -------------
 
-Read INSTALL.txt to lear how to install EGADS Lineage.
+Read INSTALL.txt to learn how to install EGADS Lineage.
 
 
 Documentation:

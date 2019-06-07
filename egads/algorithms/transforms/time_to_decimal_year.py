@@ -67,7 +67,7 @@ class TimeToDecimalYear(egads_core.EgadsAlgorithm):
     def _algorithm(self, t, t_ref=None):
         t_ref_s = 0
         if t_ref:
-            t_ref_s = egads.algorithms.transforms.IsotimeToSeconds().run([t_ref], '19500101T000000')  # @UndefinedVariable
+            t_ref_s = egads.algorithms.transforms.IsotimeToSeconds().run([t_ref], '19500101T000000')
         t_s = t + egads.EgadsData(value=t_ref_s, units='s').rescale('year').value
         t_y = t_s + 1950
         return t_y

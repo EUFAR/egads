@@ -70,7 +70,6 @@ class SecondsToIsotime(egads_core.EgadsAlgorithm):
     def run(self, t_secs, t_ref=None, fmt=None):
         return egads_core.EgadsAlgorithm.run(self, t_secs, t_ref, fmt)
 
-
     def _algorithm(self, t_secs, t_ref, fmt):
         if fmt:
             fmt = str(fmt)

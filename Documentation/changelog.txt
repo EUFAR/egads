@@ -4,10 +4,36 @@ CHANGELOG | LINEAGE BRANCH
 
 To do list:
 -----------
-  - display a warning if a unit is not well recognized.
+  - modify NasaAmes class to ressemble the NetCdf and EgadsNetCdf classes. (v0.9.5)
+  - change the way to add new units. (v.0.9.5)
 
 To fix list:
 ------------
+
+June 7 2019, Release version 0.9.4
+==================================
+  MODIFIED:
+    - a doc string has been modified in netcdf_io.py to show that the add_attribute function accepts different type of value.
+	- when saving variables in a nasa ames files, if the user enter a name for each variable, it will be used instead of the standard_name or long_name of the EgadsData class.
+	- as the nasa_ames_io class is working only for FFI 1001, the independant variable is now stored directly in the na_dict and not in a list (as for usual variables).
+	- the save_na_file function has been modified to take into account integers and floats numbers. Now by default, floats numbers are saved will all decimal numbers if float_format is not entered.
+	- if an attribute is added to a variable in a new or an existing netcdf file, and if the attribute is a list, it is automatically converted to a string with the elements of the list separated by a ', '.
+	- values coming from a NASA Ames file and injected into an EgadsData class will have the right format (int32, float64, ...) and not only float.
+	- the documentation has been updated.
+	- the function convert_to_nasa_ames of the EgadsNetcdf and NetCdf classes has been modified to take into account improvements brought to the NasaAmes class.
+	- when reading a variable from a nasa ames files, data were stored in a list then in an EgadsData
+	
+  FIXED:
+    - old python2 code has been found and removed.
+	- the na_dict object wasn't well passed between functions in the nasa_ames_io class.
+	- in the nasa_ames_io class, if default value is used, integers (ex: 1) are now real integers in the file and not floats (ex: 1.0).
+	- few typos in the documentation.
+	- in the convert_to_nasa_ames function of the netcd_io classes, few metadata were embedded in lists. It has been fixed.
+  
+  ADDED:
+    - because of the limitation of Numpy with integers and NaN, an option has been introduce to let the user choose if data has to be read as float when reading a file.
+	- for NetCDF (EgadsNetCdf class) and NasaAmes (NasaAmes class) files, the option 'replace_fill_value' has been added to read variables. If the option 'replace_fill_value' is True, EGADS will replace automatically values set in '_FillValue' or 'missing_value' attributes by numpy.nan. By default the option is False.
+	- a _FillValue attribute is added to the algorithm output IF one of the inputs has a _FillValue or missing value attribute.
 
 
 May 9 2019, Release version 0.9.3

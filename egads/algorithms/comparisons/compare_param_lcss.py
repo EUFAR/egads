@@ -1,15 +1,15 @@
 __author__ = "mfreer"
 __date__ = "2013-02-17 18:01"
-__version__ = "1.7"
+__version__ = "1.8"
 __all__ = ['CompareParamLcss']
 
-import egads.core.egads_core as egads_core
+from egads.core.egads_core import EgadsAlgorithm
 import egads.core.metadata as egads_metadata
 import numpy
 import math
 
 
-class CompareParamLcss(egads_core.EgadsAlgorithm):
+class CompareParamLcss(EgadsAlgorithm):
 
     """
     
@@ -42,7 +42,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
     """
 
     def __init__(self, return_Egads=True):
-        egads_core.EgadsAlgorithm.__init__(self, return_Egads)
+        EgadsAlgorithm.__init__(self, return_Egads)
 
         self.output_metadata = egads_metadata.VariableMetadata({'units':'',
                                                                'long_name':'maximum common subsequence length',
@@ -72,7 +72,7 @@ class CompareParamLcss(egads_core.EgadsAlgorithm):
 
     def run(self, R, S, epsilon, norm=True):
         
-        return egads_core.EgadsAlgorithm.run(self, R, S, epsilon, norm)
+        return EgadsAlgorithm.run(self, R, S, epsilon, norm)
 
     def _algorithm(self, R, S, epsilon, norm):
         

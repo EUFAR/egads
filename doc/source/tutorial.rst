@@ -427,10 +427,10 @@ EGADS provides two classes to work with NetCDF files. The simplest, :class:`egad
 Opening
 --------
 
-To open a NetCDF file, simply create a :class:`.NetCdf()` instance and then use the ``open(pathname, permissions)`` command:
+To open a NetCDF file, simply create a :class:`.EgadsNetCdf()` instance and then use the ``open(pathname, permissions)`` command:
 
     >>> import egads
-    >>> f = egads.input.NetCdf()
+    >>> f = egads.input.EgadsNetCdf()
     >>> f.open('/pathname/filename.nc','r')
 
 Valid values for permissions are:
@@ -456,9 +456,9 @@ Reading data
 
 To read data from a file, use the ``read_variable()`` function:
 
-    >>> data = f.read_variable(var_name, input_range)
+    >>> data = f.read_variable(var_name, input_range, read_as_float, replace_fill_value)
 
-where ``var_name`` is the name of the variable to read in, and ``input_range`` (optional) is a list of min/max values.
+where ``var_name`` is the name of the variable to read in, and ``input_range`` (optional, by default ``None``) is a list of min/max values ; if ``read_as_float`` (optional, by default ``False``) is True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; if ``replace_fill_value`` (optional, by default ``False``) is True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan).
 
 If using the ``egads.input.NetCdf()`` class, an array of values contained in ``var_name`` will be returned. If using the ``egads.input.EgadsNetCdf()`` class, an instance of the :class:`~.EgadsData` class will be returned containing the values and attributes of ``var_name``.
 
@@ -477,22 +477,22 @@ Data can be output to variables using the ``write_variable()`` function as follo
 
 where ``var_name`` is a string for the variable name to output, ``dims`` is a tuple of dimension names (not needed if the variable already exists), and ``type`` is the data type of the variable. The default value is *double*, other valid options are *float*, *int*, *short*, *char* and *byte*. 
 
-If using :class:`~.NetCdf`, values for ``data`` passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well.
+If using :class:`~.NetCdf`, values for ``data`` passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
 
 Conversion from NetCDF to NASA/Ames file format
 ------------------------------------------------
 
-The conversion is only possible on opened NetCDF files. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. On the contrary, if multiple independant variables (or dimensions) exist, and if each variable depend on only one independant variable (e.g. ``data`` is only function of ``time``), the file will be converted and the function will generate one file per independant variable. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NASA/Ames instance and a NASA/Ames dictionary, by populating the dictionary and by saving the file.
+The conversion is only possible on opened NetCDF files. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion is 1001. Consequently, if more than one independant variables are present in the NetCDF file, the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NASA/Ames instance and a NASA/Ames dictionary, by populating the dictionary and by saving the file.
 
 To convert a NetCDF file, simply use:
 
 * ``f.convert_to_nasa_ames()`` -- convert the currently opened NetCDF file to NASA/Ames file format
-* ``f.convert_to_nasa_ames(na_file, requested_ffi, float_format, delimiter, no_header)`` -- ``na_file``, ``requested_ffi``, ``float_format``, ``delimiter`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``requested_ffi`` is not used actually, but will be functional in a next version of EGADS ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+* ``f.convert_to_nasa_ames(na_file, float_format, delimiter, no_header)`` -- ``na_file``, ``float_format``, ``delimiter`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``None`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
 
 To convert a NetCDF file to NASA/Ames CSV format, simply use:
 
 * ``f.convert_to_csv()`` -- convert the currently opened NetCDF file to NASA/Ames CSV format
-* ``f.convert_to_csv(csv_file, float_format, no_header)`` -- ``csv_file``, ``float_format`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``%g`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+* ``f.convert_to_csv(csv_file, float_format, no_header)`` -- ``csv_file``, ``float_format`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``None`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
     
 Other operations
 -----------------
@@ -604,9 +604,9 @@ Reading data
 
 To read data from a file, use the ``read_variable()`` function:
 
-    >>> data = f.read_variable(var_name)
+    >>> data = f.read_variable(var_name, na_dict, read_as_float, replace_fill_value)
 
-where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the :class:`~.EgadsData` class, containing the values and attributes of ``var_name``.
+where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the :class:`~.EgadsData` class, containing the values and attributes of ``var_name`` . By default equal to ``None`` and optional, ``na_dict`` will tell to EGADS in which Nasa Ames dictionary to read data, if ``None`` data are read in the opened file. If ``read_as_float`` (optional, by default ``None``) is True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; if ``replace_fill_value`` (optional, by default ``False``) is True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan).
 
 Writing data
 -------------
@@ -619,6 +619,8 @@ To write data to the current file or to a new file, the user must save a diction
 * ``f.write_variable(data, var_name)`` -- write or replace a variable ; the function will search if ``data`` is already in the dictionary by comparing ``varname`` with other variable names in the dictionary, if it is found, ``data`` will replace the old variable, if not ``data`` is considered as a new variable ; ``data`` can be an :class:`~.EgadsData` or a vector/matrix.
 * ``f.write_variable(data, var_name, var_type, attr_dict, na_dict)`` -- ``var_type``, ``attr_dict`` and ``na_dict`` are optional ; ``attr_dict`` (a dictionary of standard NASA/ames variable attributes: 'name', 'units', '_FillValue' and 'scale_factor') must be provided if ``data`` is not an :class:`~.EgadsData` (in that case, variable attributes are retrieve from the :class:`~.EgadsData`.metadata dictionary) ; if ``na_dict`` is provided, the function saves the variable in the NASA/Ames dictionary ``na_dict``
 
+If a :class:`~.EgadsData` is passed into the ``write_variable`` function, any attributes that are contained within the :class:`~.EgadsData` instance are automatically populated in the NASA Ames dictionary as well, those which are not mandatory are stored in the SCOM attribute. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
+
 Saving a file
 --------------
 
@@ -626,7 +628,7 @@ Once a dictionary is ready, use the ``save_na_file()`` function to save the file
 
     >>> data = f.save_na_file(file_name, na_dict, float_format):
 
-where ``file_name`` is the name of the new file or the name of the current file, ``na_dict`` the name of the dictionary to be saved (optional, if not provided, the current dictionary will be used), and ``float_format`` the format of the floating numbers in the file (by deffault, two decimal places).
+where ``file_name`` is the name of the new file or the name of the current file, ``na_dict`` the name of the dictionary to be saved (optional, if not provided, the current dictionary will be used), and ``float_format`` the format of the floating numbers in the file (by default, no round up).
 
 Conversion from NASA/Ames file format to NetCDF
 ------------------------------------------------

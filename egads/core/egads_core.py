@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-03-07 16:42"
-__version__ = "1.3"
+__version__ = "1.4"
 __all__ = ["EgadsData", "EgadsAlgorithm"]
 
 import logging
@@ -32,7 +32,7 @@ class EgadsData(pq.Quantity):
             units = variable_metadata.get('units', '')
             if not units:
                 units = variable_metadata.get('Units', '')
-        
+
         # quantities can't handle the CF time unit 'time since epoch'
         # to allow a proper operation of EGADS, a new attribute has been added,
         # transparent to the user, if the epoch is needed.
@@ -327,7 +327,26 @@ class EgadsAlgorithm(object):
                             metadata[key] = out_category
                 except KeyError:
                     pass
+
+        fillvalue_list = []
+        for arg in args:
+            if isinstance(arg, EgadsData):
+                try:
+                    fillvalue_list.append(arg.metadata['_FillValue'])
+                except KeyError:
+                    try:
+                        fillvalue_list.append(arg.metadata['missing_value'])
+                    except KeyError:
+                        pass
+                except AttributeError:
+                    pass
+
+        if fillvalue_list:
+            for i in range(len(self.output_metadata)):
+                self.output_metadata[i]['_FillValue'] = fillvalue_list[0]
+
         output = self._call_algorithm(*args)
+
         if len(self.metadata['Outputs']) > 1:
             result = []
             for i, value in enumerate(output):

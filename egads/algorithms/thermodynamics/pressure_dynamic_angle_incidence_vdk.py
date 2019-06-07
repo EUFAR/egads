@@ -104,7 +104,7 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
 
         print('Warning: the algorithm is still in beta phase and must be reviewed.')
 
-        P_tot =  (numpy.sqrt((1. / 125.) * ((delta_P_t + delta_P_r + delta_P_b + delta_P_l)**2 
+        P_tot = (numpy.sqrt((1. / 125.) * ((delta_P_t + delta_P_r + delta_P_b + delta_P_l)**2
                                       + (- 4 * delta_P_t + delta_P_r + delta_P_b + delta_P_l)**2
                                       + (delta_P_t - 4 * delta_P_r + delta_P_b + delta_P_l)**2 
                                       + (delta_P_t + delta_P_r - 4 * delta_P_b + delta_P_l)**2
@@ -114,9 +114,9 @@ class PressureAngleIncidenceVdk(egads_core.EgadsAlgorithm):
         k_b = (delta_P_r - delta_P_l) / P_tot
 
         sum_out = numpy.zeros((12, len(k_a)))
-        for i in range(0,12):
+        for i in range(0, 12):
             sum_in = numpy.zeros((12, len(k_b)))
-            for j in range(0,12):
+            for j in range(0, 12):
                 sum_in[j] = C_alpha[i][j] * (k_b ** j)
             sum_out[i] = (k_a**i) * numpy.sum(sum_in, axis = 0)
         alpha_cp = numpy.sum(sum_out, axis = 0)
