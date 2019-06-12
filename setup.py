@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads-lineage',
-      version='0.9.4',
+      version='0.9.5',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR, Olivier Henry',
@@ -56,6 +56,7 @@ setup(name='egads-lineage',
           'egads.algorithms.transforms',
           'egads.input',
           'egads.tests',
+          'egads.utils',
           'Documentation',
           'Documentation.EGADS Algorithm Handbook - LATEX',
           'Documentation.EGADS Algorithm Handbook - LATEX.algorithms',

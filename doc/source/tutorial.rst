@@ -72,7 +72,7 @@ The :class:`~.EgadsData` class takes four basic arguments:
    Units to assign to :class:`~.EgadsData` instance. Should be string representation of units, and can be a compound units type such as 'g/kg', 'm/s^2', 'feet/second', etc.
 
 * variable metadata
-   An instance of the :class:`~.VariableMetadata` type or dictionary, containing keywords and  values of any metadata to be associated with this :class:`~.EgadsData` instance.
+   An instance of the :class:`~.VariableMetadata` type or dictionary, containing keywords and values of any metadata to be associated with this :class:`~.EgadsData` instance.
 
 * other attributes
    Any other attributes added to the class are automatically stored in the :class:`~.VariableMetadata` instance associated with the :class:`~.EgadsData` instance.
@@ -122,7 +122,7 @@ If a particular :class:`~.VariableMetadata` object comes from a file or algorith
 Working with units
 -------------------
 
-:class:`~.EgadsData` subclasses Quantities, thus all of the latter's unit comprehension methods are available when using :class:`~.EgadsData`. This section will outline the basics of unit comprehension. A more detailed tutorial of the unit comprehension capabilities can be found at http://packages.python.org/quantities/
+:class:`~.EgadsData` subclasses Quantities, thus all of the latter's unit comprehension methods are available when using :class:`~.EgadsData`. This section will outline the basics of unit comprehension. A more detailed tutorial of the unit comprehension capabilities can be found at https://python-quantities.readthedocs.io/en/latest
 
 In general, units are assigned to :class:`~.EgadsData` instances when they are being created. 
 
@@ -166,14 +166,22 @@ EGADS provides the :class:`egads.input.text_file_io.EgadsFile` class as a simple
 Opening
 --------
 
-To open a text file the :class:`~.EgadsFile` class, use the :meth:`~.EgadsFile.open(filename, permissions)` method:
+To open a text file, simply create a :class:`~.EgadsFile` instance with the parameters *filename* and *perms*:
 
     >>> import egads
-    >>> f = egads.input.EgadsFile()
-    >>> f.open('/pathname/filename.txt','r')
+    >>> f = egads.input.EgadsFile('/pathname/filename.nc', 'r')
+
+.. function:: EgadsFile(filename[, perms='r'])
+
+   Open a text file.
+
+   :param filename: path and filename of a text file
+   :type filename: string
+   :param perms: permissions ; optional
+   :type perms: string
+   :rtype: text file
 
 Valid values for permissions are:
-
 
 * ``r`` -- Read: opens file for reading only. Default value if nothing is provided.
 * ``w`` -- Write: opens file for writing, and overwrites data in file.
@@ -185,10 +193,28 @@ File Manipulation
 
 The following methods are available to control the current position in the file and display more information about the file.
 
-* ``f.display_file()`` -- Prints contents of file out to standard output.
-* ``f.get_position()`` -- Returns current position in file as integer.
-* ``f.seek(location, from_where)`` -- Seeks to specified location in file. ``location`` is an integer specifying how far to seek. Valid options for ``from_where`` are ``b`` to seek from beginning of file, ``c`` to seek from current position in file and ``e`` to seek from the end of the file.
-* ``f.reset()`` -- Resets position to beginning of file.
+.. function:: f.display_file()
+
+   Prints contents of the file out to a standard output.
+
+.. function:: f.get_position()
+
+   Returns the current position in the file as an integer.
+
+.. function:: f.seek(location[, from_where='b'])
+
+   Seeks to a specified location in the text file.
+
+   :param location: it is an integer specifying how far to seek
+   :type location: int
+   :param from_where: it is an option to specify from where to seek, valid options for *from_where* are ``b`` to seek from beginning of file, ``c`` to seek from current position in file and ``e`` to seek from the end of the file ; optional
+   :type from_where: string
+   :rtype: position in the text file
+
+.. function:: f.reset()
+
+   Resets the position to the beginning of the file.
+
 
 Reading Data
 ----------------
@@ -287,11 +313,24 @@ Working with CSV files
 Opening
 ----------
 
-To open a text file the :class:`~.EgadsCsv` class, use the ``open(pathname, permissions, delimiter, quotechar)`` method:
+To open a csv file, simply create a :class:`~.EgadsCsv` instance with the parameters *filename*, *perms*, *delimiter* and *quotechar*:
 
     >>> import egads
-    >>> f = egads.input.EgadsCsv()
-    >>> f.open('/pathname/filename.txt','r',',','"')
+    >>> f = egads.input.EgadsCsv('/pathname/filename.nc', 'r', ',','"')
+
+.. function:: EgadsFile(filename[, perms='r', delimiter=',', quotechar='"'])
+
+   Open a text file.
+
+   :param filename: path and filename of a text file
+   :type filename: string
+   :param perms: permissions ; optional
+   :type perms: string
+   :param delimiter: a one-character string used to separate fields ; optional
+   :type delimiter: string
+   :param quotechar: a one-character string used to quote fields containing special characters ; optional
+   :type quotechar: string
+   :rtype: csv file
 
 Valid values for permissions are:
 
@@ -300,17 +339,33 @@ Valid values for permissions are:
 * ``a`` -- Append: opens file for appending data.
 * ``r+`` -- Read and write: opens file for both reading and writing.
 
-The ``delimiter`` argument is a one-character string specifying the character used to separate fields in the CSV file to be read; the default value is ``,``. The ``quotechar`` argument is a one-character string specifying the character used to quote fields containing special characters in the CSV file to to be read; the default value is ``"``.
 
 File Manipulation
 ------------------
 
 The following methods are available to control the current position in the file and display more information about the file.
 
-* ``f.display_file()`` -- Prints contents of file out to standard output.
-* ``f.get_position()`` -- Returns current position in file as integer.
-* ``f.seek(location, from_where)`` -- Seeks to specified location in file. ``location`` is an integer specifying how far to seek. Valid options for ``from_where`` are ``b`` to seek from beginning of file, ``c`` to seek from current position in file and ``e`` to seek from the end of the file.
-* ``f.reset()`` -- Resets position to beginning of file.
+.. function:: f.display_file()
+
+   Prints contents of the file out to a standard output.
+
+.. function:: f.get_position()
+
+   Returns the current position in the file as an integer.
+
+.. function:: f.seek(location[, from_where='b'])
+
+   Seeks to a specified location in the text file.
+
+   :param location: it is an integer specifying how far to seek
+   :type location: int
+   :param from_where: it is an option to specify from where to seek, valid options for *from_where* are ``b`` to seek from beginning of file, ``c`` to seek from current position in file and ``e`` to seek from the end of the file ; optional
+   :type from_where: string
+   :rtype: position in the text file
+
+.. function:: f.reset()
+
+   Resets the position to the beginning of the file.
 
 Reading Data
 ------------
@@ -323,8 +378,17 @@ Reading data is done using the ``read(lines, format)`` method on a file that has
     >>> single_line_as_list = f.read(1)
     >>> all_lines_as_list = f.read()
 
+.. function:: f.read([lines=None, format=None])
 
-``read(lines, format)`` returns a list of the items read in from the CSV file. The arguments ``lines`` and ``format`` are optional. If ``lines`` is provided, ``read(lines, format)`` will read in the specified number of lines, otherwise it will read the whole file. ``format`` is an optional list of characters used to decompose the elements read in from the CSV files to their proper types. Options are:
+   Returns a list of items read in from the CSV file.
+
+   :param lines: if it is provided, the function will read in the specified number of lines, otherwise it will read the whole file ; optional
+   :type lines: int
+   :param format: it is an optional list of characters used to decompose the elements read in from the CSV files to their proper types, options are  ; optional
+   :type format: string
+   :rtype: list of items read in from the CSV file
+
+Valid options for *format*:
 
 * ``i`` -- int
 * ``f`` -- float
@@ -422,16 +486,25 @@ This file has been created with the following commands:
 Working with NetCDF files
 **************************
 
-EGADS provides two classes to work with NetCDF files. The simplest, :class:`egads.input.netcdf.NetCdf`, allows simple read/write operations to NetCDF files. The other, :class:`egads.input.netcdf.EgadsNetCdf`, is designed to interface with NetCDF files conforming to the EUFAR Standards & Protocols data and metadata regulations. This class directly reads or writes NetCDF data using instances of the :class:`~.EgadsData` class.
+EGADS provides two classes to work with NetCDF files. The simplest, :class:`egads.input.netcdf_io.NetCdf`, allows simple read/write operations to NetCDF files. The other, :class:`egads.input.netcdf_io.EgadsNetCdf`, is designed to interface with NetCDF files conforming to the EUFAR Standards & Protocols data and metadata regulations. This class directly reads or writes NetCDF data using instances of the :class:`~.EgadsData` class.
 
 Opening
 --------
 
-To open a NetCDF file, simply create a :class:`.EgadsNetCdf()` instance and then use the ``open(pathname, permissions)`` command:
+To open a NetCDF file, simply create a :class:`~.EgadsNetCdf` instance or a :class:`~.NetCdf` instance with the parameters *filename* and *perms*:
 
     >>> import egads
-    >>> f = egads.input.EgadsNetCdf()
-    >>> f.open('/pathname/filename.nc','r')
+    >>> f = egads.input.EgadsNetCdf('/pathname/filename.nc', 'r')
+
+.. function:: EgadsNetCdf(filename[, perms='r'])
+
+   Open a NetCDF file conforming the the EUFAR Standards & Protocols data and metadata regulations.
+
+   :param filename: path and filename of a NetCDF file
+   :type filename: string
+   :param perms: permissions ; optional
+   :type perms: string
+   :rtype: NetCDF file.
 
 Valid values for permissions are:
 
@@ -443,63 +516,164 @@ Valid values for permissions are:
 Getting info
 -------------
 
-* ``f.get_dimension_list()`` -- returns a list of all dimensions and their sizes
-* ``f.get_dimension_list(var_name)`` -- ``var_name`` is optional and if provided, the function returns a list of all dimensions and their sizes attached to ``var_name``
-* ``f.get_attribute_list()`` -- returns a list of all top-level attributes
-* ``f.get_attribute_list(var_name)`` -- ``var_name`` is optional and if provided, the function returns a list of all attributes attached to ``var_name``
-* ``f.get_variable_list()`` -- returns list of all variables
-* ``f.get_filename()`` -- returns filename for currently opened file
-* ``f.get_perms()`` -- returns the current permissions on the file that is open
+.. function:: f.get_dimension_list([varname=None])
+
+   Returns a dictionary of all dimensions with their sizes. *varname* is optional and if provided, the function returns a dictionary of all dimensions and their sizes attached to *varname*.
+
+   :param varname: name of a variable ; optional
+   :type varname: string
+   :rtype: dictionary of dimensions
+
+.. function:: f.get_attribute_list([varname=None])
+
+   Returns a list of all top-level attributes. *varname* is optional and if provided, the function returns a dictionary of all attributes attached to *varname*.
+   
+   :param varname: name of a variable ; optional
+   :type varname: string
+   :rtype: dictionary of attributes
+
+.. function:: f.get_variable_list()
+
+   Returns a list of all variables.
+
+   :rtype: list of variables
+
+.. function:: f.get_filename()
+
+   Returns the filename for the currently opened file.
+
+   :rtype: filename
+   
+.. function:: f.get_perms()
+
+   Returns the current permissions on the file that is open.
+
+   :rtype: permissions
+
 
 Reading data
 -------------
 
 To read data from a file, use the ``read_variable()`` function:
 
-    >>> data = f.read_variable(var_name, input_range, read_as_float, replace_fill_value)
+    >>> data = f.read_variable(varname, input_range, read_as_float, replace_fill_value)
+	
+.. function:: f.read_variable(varname[, input_range=None, read_as_float=False, replace_fill_value=False])
 
-where ``var_name`` is the name of the variable to read in, and ``input_range`` (optional, by default ``None``) is a list of min/max values ; if ``read_as_float`` (optional, by default ``False``) is True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; if ``replace_fill_value`` (optional, by default ``False``) is True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan).
+   If using the :class:`~.NetCdf` class, an array of values contained in *varname* will be returned. If using the :class:`~.EgadsNetCdf` class, an instance of the :class:`~.EgadsData` class will be returned containing the values and attributes of *varname*.
 
-If using the ``egads.input.NetCdf()`` class, an array of values contained in ``var_name`` will be returned. If using the ``egads.input.EgadsNetCdf()`` class, an instance of the :class:`~.EgadsData` class will be returned containing the values and attributes of ``var_name``.
+   :param varname: name of a variable in the NetCDF file
+   :type varname: string
+   :param input_range: list of min/max values ; optional
+   :type input_range: list
+   :param read_as_float: if True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; optional
+   :type read_as_float: bool
+   :param replace_fill_value: if True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan) ; optional
+   :type replace_fill_value: bool
+   :rtype: data, :class:`~.EgadsData` or array
+
 
 Writing data
 ------------
 
 The following describe how to add dimensions or attributes to a file.
 
-* ``f.add_dim(dim_name, dim_size)`` -- add dimension to file
-* ``f.add_attribute(attr_name, attr_value)`` -- add attribute to file
-* ``f.add_attribute(attr_name, attr_value, var_name)`` -- ``var_name`` is optional and if provided, the function add attribute to ``var_name``
+.. function:: f.add_dim(name, size)
+
+   Add a dimension to the NetCDF file.
+
+   :param name: the name of the dimension
+   :type name: string
+   :param size: the size of the dimension
+   :type size: int
+
+.. function:: f.add_attribute(attrname, value[, varname=None])
+
+   Add an attribute to the NetCDF file. If *varname* is None, the attribute is a global attribute, and if not, the attribute is a variable attribute attached to *varname*.
+
+   :param attrname: the name of the attribute
+   :type attrname: string
+   :param value: the value of the attribute
+   :type value: string|float|int
+   :param varname: the name of the variable to which to attach the attribute ; optional
+   :type varname: string
 
 Data can be output to variables using the ``write_variable()`` function as follows:
 
-    >>> f.write_variable(data, var_name, dims, type)
+    >>> f.write_variable(data, varname, dims, ftype, fillvalue)
 
-where ``var_name`` is a string for the variable name to output, ``dims`` is a tuple of dimension names (not needed if the variable already exists), and ``type`` is the data type of the variable. The default value is *double*, other valid options are *float*, *int*, *short*, *char* and *byte*. 
+.. function:: f.write_variable(data, varname[, dims=None, ftype='double', fillvalue=None])
+   
+   Write the values contained in *data* in the variable *varname* in a NetCDF file. If using :class:`~.NetCdf`, values for *data* passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
 
-If using :class:`~.NetCdf`, values for ``data`` passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
+   :param data: values to be stored in the NetCDF file
+   :type data: EgadsData|array|vector|scalar
+   :param varname: the name of the variable in the NetCDF file
+   :type varname: string
+   :param dims: a tuple of dimension names for data (not needed if the variable already exists) ; optional
+   :type dims: tuple
+   :param ftype: the data type of the variable, the default value is *double*, other valid options are *float*, *int*, *short*, *char* and *byte* ; optional
+   :type ftype: string
+   :param fillvalue: if it is provided, it overrides the default NetCDF _FillValue ; optional, it doesn't exist if using :class:`~.EgadsNetCdf`
+   :type fillvalue: float|int
 
-Conversion from NetCDF to NASA/Ames file format
+
+Conversion from NetCDF to NASA Ames file format
 ------------------------------------------------
 
-The conversion is only possible on opened NetCDF files. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion is 1001. Consequently, if more than one independant variables are present in the NetCDF file, the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NASA/Ames instance and a NASA/Ames dictionary, by populating the dictionary and by saving the file.
+The conversion is only possible on opened NetCDF files. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion is 1001. Consequently, if more than one independant variables are present in the NetCDF file, the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NasaAmes instance and a NasaAmes dictionary, by populating the dictionary and by saving the file.
 
-To convert a NetCDF file, simply use:
+To convert a NetCDF file to NasaAmes file format, simply use:
 
-* ``f.convert_to_nasa_ames()`` -- convert the currently opened NetCDF file to NASA/Ames file format
-* ``f.convert_to_nasa_ames(na_file, float_format, delimiter, no_header)`` -- ``na_file``, ``float_format``, ``delimiter`` and ``no_header`` are optional parameters ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``None`` ; ``delimiter`` is a character or a sequence of character for use between data items in the data file, by default '    ' (four spaces) ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
+.. function:: f.convert_to_nasa_ames([na_file=None, float_format=None, delimiter='    ', no_header=False])
+   
+   Convert the opened NetCDF file to NasaAmes file.
 
-To convert a NetCDF file to NASA/Ames CSV format, simply use:
+   :param na_file: it is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na (*na_file* is None); optional
+   :type na_file: string
+   :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
+   :type float_format: string
+   :param delimiter: it is a character or a sequence of character to use between data items in the data file ; optional (by default '    ', 4 spaces)
+   :type delimiter: string
+   :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
+   :type no_header: bool
 
-* ``f.convert_to_csv()`` -- convert the currently opened NetCDF file to NASA/Ames CSV format
-* ``f.convert_to_csv(csv_file, float_format, no_header)`` -- ``csv_file``, ``float_format`` and ``no_header`` are optional parameters ; ``csv_file`` is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv ; ``float_format`` is the formatting string used for formatting floats when writing to output file, by default ``None`` ; if ``no_header`` is set to ``True``, then only the data blocks are written to file, by default ``False``
-    
+To convert a NetCDF file to NasaAmes CSV file format, simply use:
+
+.. function:: f.convert_to_csv([csv_file=None, float_format=None, no_header=False])
+   
+   Convert the opened NetCDF file to NasaAmes CSV file.
+
+   :param csv_file: it is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv (*csv_file* is None); optional
+   :type csv_file: string
+   :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
+   :type float_format: string
+   :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
+   :type no_header: bool
+
+
 Other operations
 -----------------
 
-* ``f.get_attribute_value(attr_name)`` -- returns the value of a global attribute
-* ``f.get_attribute_value(attr_name, var_name)`` -- ``var_name`` is optional and if provided, the function returns the value of an attribute attached to ``var_name``
-* ``f.change_variable_name(var_name, new_name)`` -- change the variable name in currently opened NetCDF file
+.. function:: f.get_attribute_value(attrname[, varname=None])
+   
+   Return the value of the global attribute *attrname*, or the value of the variable attribute *attrname* if *varname* is not None.
+
+   :param attrname: the name of the attribute
+   :type attrname: string
+   :param varname: the name of the variable to which the attribute is attached
+   :type varname: string
+   :rtype: value of the attribute
+
+.. function:: f.change_variable_name(varname, newname)
+   
+   Change a variable name in the currently opened NetCDF file..
+
+   :param attrname: the actual name of the variable
+   :type attrname: string
+   :param varname: the new name of the variable
+   :type varname: string
+
 
 Closing
 ---------
@@ -566,16 +740,25 @@ This file has been created with the following commands:
 Working with NASA Ames files
 *****************************
 
-To work with NASA Ames files, EGADS Lineage incorporates its own library. Thus, from EGADS, NASA Ames files can be accessed via the :class:`egads.input.nasa_ames_io.NasaAmes` class. Actually, only the FFI 1001 has been interfaced with EGADS.
+EGADS provides two classes to work with NASA Ames files. The simplest, :class:`egads.input.nasa_ames_io.NasaAmes`, allows simple read/write operations. The other, :class:`egads.input.nasa_ames_io.EgadsNasaAmes`, is designed to interface with NASA Ames files conforming to the EUFAR Standards & Protocols data and metadata regulations. This class directly reads or writes NASA Ames file using instances of the :class:`~.EgadsData` class. Actually, only the FFI 1001 has been interfaced with EGADS.
 
 Opening
 --------
 
-To open a NASA Ames file, simply create a :class:`.NasaAmes()` instance and then use the ``open(pathname, permissions)`` command:
+To open a NASA Ames file, simply create a :class:`.EgadsNasaAmes` instance with the parameters *pathname* and *permissions*:
 
     >>> import egads
-    >>> f = egads.input.NasaAmes()
-    >>> f.open('/pathname/filename.na','r')
+    >>> f = egads.input.EgadsNasaAmes('/pathname/filename.na','r')
+
+.. function:: EgadsNasaAmes(pathname[, permissions='r'])
+   
+   Open a NASA Ames file conforming the the EUFAR Standards & Protocols data and metadata regulations.
+
+   :param filename: path and filename of a NASA Ames file
+   :type filename: string
+   :param perms: permissions ; optional
+   :type perms: string
+   :rtype: NasaAmes file.
 
 Valid values for permissions are:
 
@@ -584,67 +767,183 @@ Valid values for permissions are:
 * ``a`` -- Append: opens file for appending data.
 * ``r+`` -- Same as ``a``.
 
-Once a file has been opened, a dictionary of NASA/Ames format elements is loaded into memory. That dictionary will be used to overwrite the file or to save to a new file.
+Once a file has been opened, a dictionary of NASA/Ames format elements is loaded into memory. That dictionary will be used to overwrite the file or to save a new file.
 
 Getting info
 ------------
 
-* ``f.get_attribute_list()`` -- returns a list of all top-level attributes
-* ``f.get_attribute_list(var_name, var_type, na_dict)`` -- ``var_name`` is optional and if provided, the function returns list of all attributes attached to ``var_name`` ; if ``var_type`` is provided the function will search in the variable type ``var_type`` by default ; ``na_dict`` is optional if provided, will return a list of all top-level attributes, or all ``var_name`` attributes, in the NASA/Ames dictionary ``na_dict``
-* ``f.get_attribute_value(attr_name)`` -- returns the value of a global attribute named ``attr_name`` 
-* ``f.get_attribute_value(attr_name, var_name, var_type, na_dict)`` -- ``var_name``, ``var_type`` and ``na_dict`` are optional ; if ``var_name`` is provided, returns the value of an attribute named ``attr_name`` attached to a variable named ``var_name`` ; if ``var_type`` is provided, the function will search in the variable type ``var_type`` by default ; if ``na_dict`` is provided, returns the attribute value from the NASA/Ames dictionary ``na_dict``
-* ``f.get_dimension_list()`` -- returns a list of all variable dimensions
-* ``f.get_dimension_list(na_dict, var_type)`` -- ``var_type`` is optional, if provided, the function returns a list of all variable dimensions based on the ``var_type`` by default ; ``na_dict`` is optional and will returns the dimension list from the NASA/Ames dictionary ``na_dict`` ; 
-* ``f.get_variable_list()`` -- returns list of all variables ;
-* ``f.get_variable_list(na_dict)`` -- ``na_dict`` is optional and if provided, will return a list of all variables in the NASA/Ames dictionary ``na_dict``
-* ``f.get_filename()`` -- returns filename for currently opened file
+.. function:: f.get_dimension_list([na_dict=None])
+
+   Returns a list of all variable dimensions.
+
+   :param na_dict: if provided, the function get dimensions from the NasaAmes dictionary *na_dict*, if not dimensions are from the opened file ; optional
+   :type na_dict: dict
+   :rtype: dictionary of dimensions
+
+.. function:: f.get_attribute_list([varname=None, vartype='main', na_dict=None])
+
+   Returns a dictionary of all top-level attributes.
+   
+   :param varname: name of a variable, if provided, the function returns a dictionary of all attributes attached to *varname* ; optional
+   :type varname: string
+   :param vartype: if provided and *varname* is not ``None``, the function will search in the variable type *vartype* by default ; optional
+   :type vartype: string
+   :param na_dict: if provided, it will return a list of all top-level attributes, or all *varname* attributes, from the NasaAmes dictionary *na_dict* ; optional
+   :type na_dict: dict
+   :rtype: dictionary of attributes
+
+.. function:: f.get_attribute_value(attrname[, varname=None, vartype='main', na_dict=None])
+
+   Returns the value of a top-level attribute named *attrname*.
+   
+   :param attrname: the name of the attribute
+   :type attrname: string
+   :param varname: name of a variable, if provided, the function returns the value of the attribute attached to *varname* ; optional
+   :type varname: string
+   :param vartype: if provided and *varname* is not ``None``, the function will search in the variable type *vartype* by default ; optional
+   :type vartype: string
+   :param na_dict: if provided, it will return the value of an attribute from the NasaAmes dictionary *na_dict* ; optional
+   :type na_dict: dict
+   :rtype: value of attribute
+
+.. function:: f.get_variable_list([na_dict=None])
+
+   Returns a list of all variables.
+
+   :param na_dict: if provided, it will return the list of all variables from the NasaAmes dictionary *na_dict* ; optional
+   :type na_dict: dict
+   :rtype: list of variables
+
+.. function:: f.get_filename()
+
+   Returns the filename for the currently opened file.
+
+   :rtype: filename
+   
+.. function:: f.get_perms()
+
+   Returns the current permissions on the file that is open.
+
+   :rtype: permissions
+
 
 Reading data
 ------------
 
 To read data from a file, use the ``read_variable()`` function:
 
-    >>> data = f.read_variable(var_name, na_dict, read_as_float, replace_fill_value)
+    >>> data = f.read_variable(varname, na_dict, read_as_float, replace_fill_value)
 
-where ``var_name`` is the name of the variable to read in. The data will be read in to an instance of the :class:`~.EgadsData` class, containing the values and attributes of ``var_name`` . By default equal to ``None`` and optional, ``na_dict`` will tell to EGADS in which Nasa Ames dictionary to read data, if ``None`` data are read in the opened file. If ``read_as_float`` (optional, by default ``None``) is True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; if ``replace_fill_value`` (optional, by default ``False``) is True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan).
+.. function:: f.read_variable(varname[, na_dict=None, read_as_float=False, replace_fill_value=False])
+
+   If using the :class:`~.NasaAmes` class, an array of values contained in *varname* will be returned. If using the :class:`~.EgadsNasaAmes` class, an instance of the :class:`~.EgadsData` class will be returned containing the values and attributes of *varname*.
+
+   :param varname: name of a variable in the NasaAmes file
+   :type varname: string
+   :param na_dict: it will tell to EGADS in which Nasa Ames dictionary to read data, if na_dict is ``None``, data are read in the opened file ; optional
+   :type na_dict: dict
+   :param read_as_float: if True, EGADS reads the data and convert them to float numbers, if False, the data type is the type of data in file ; optional
+   :type read_as_float: bool
+   :param replace_fill_value: if True, EGADS reads the data and replace ``_FillValue`` or ``missing_value`` (if one of the attributes exists) in data by NaN (numpy.nan) ; optional
+   :type replace_fill_value: bool
+   :rtype: data, :class:`~.EgadsData` or array
+
 
 Writing data
 -------------
 
-To write data to the current file or to a new file, the user must save a dictionary of NASA/Ames elements. Few functions are available to help him to prepare the dictionary:
+To write data to the current file or to a new file, the user must save a dictionary of NasaAmes elements. Few functions are available to help him to prepare the dictionary:
 
-* ``f.create_na_dict`` -- create a new dictionary populated with standard NASA/Ames keys.
-* ``f.write_attribute_value(attr_name, attr_value)`` -- write or replace a specific attribute (from the official NASA/Ames attribute list) in the currently opened dictionary
-* ``f.write_attribute_value(attr_name, attr_value, var_name, var_type, na_dict)`` -- ``var_name`` and ``var_type`` are optional, if provided, write or replace a specific attribute linked to the variable ``var_name`` (``var_type`` is by default equal to 'main') in the currently opened dictionary ; ccepted attributes for a variable are 'name', 'units', '_FillValue' and 'scale_factor', other attributes will be refused and should be passed as 'special comments' ; ``na_dict`` is optional and if provided the function will write the attribute in the NASA/Ames dictionary ``na_dict``
-* ``f.write_variable(data, var_name)`` -- write or replace a variable ; the function will search if ``data`` is already in the dictionary by comparing ``varname`` with other variable names in the dictionary, if it is found, ``data`` will replace the old variable, if not ``data`` is considered as a new variable ; ``data`` can be an :class:`~.EgadsData` or a vector/matrix.
-* ``f.write_variable(data, var_name, var_type, attr_dict, na_dict)`` -- ``var_type``, ``attr_dict`` and ``na_dict`` are optional ; ``attr_dict`` (a dictionary of standard NASA/ames variable attributes: 'name', 'units', '_FillValue' and 'scale_factor') must be provided if ``data`` is not an :class:`~.EgadsData` (in that case, variable attributes are retrieve from the :class:`~.EgadsData`.metadata dictionary) ; if ``na_dict`` is provided, the function saves the variable in the NASA/Ames dictionary ``na_dict``
+.. function:: f.create_na_dict()
 
-If a :class:`~.EgadsData` is passed into the ``write_variable`` function, any attributes that are contained within the :class:`~.EgadsData` instance are automatically populated in the NASA Ames dictionary as well, those which are not mandatory are stored in the SCOM attribute. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
+   Create a new dictionary populated with standard NasaAmes keys
+
+.. function:: f.write_attribute_value(attrname, attrvalue[, na_dict=None, varname=None, vartype='main'])
+
+   Write or replace a specific attribute (from the official NasaAmes attribute list) in the currently opened dictionary.
+
+   :param attrname: name of the attribute in the NasaAmes dictionary
+   :type attrname: string
+   :param attrvalue: value of the attribute
+   :type attrvalue: string|float|integer|list|array
+   :param na_dict: if provided the function will write the attribute in the NasaAmes dictionary *na_dict* ; optional
+   :type na_dict: dict
+   :param varname: if provided, write or replace a specific attribute linked to the variable *var_name* in the currently opened dictionary ; accepted attributes for a variable are 'name', 'units', '_FillValue' and 'scale_factor', other attributes will be refused and should be passed as 'special comments' ; optional
+   :type varname: string
+   :param vartype: if provided and *varname* is not ``None``, the function will search in the variable type *vartype* by default ; optional
+   :type vartype: string
+
+.. function:: f.write_variable(data[, varname=None, vartype='main', attrdict=None, na_dict=None])
+
+   Write or replace a variable in the currently opened dictionary. If using the :class:`~.NasaAmes` class, an array of values for *data* is asked. If using the :class:`~.EgadsNasaAmes` class, an instance of the :class:`~.EgadsData` class must be injected for *data*. If a :class:`~.EgadsData` is passed into the ``write_variable`` function, any attributes that are contained within the :class:`~.EgadsData` instance are automatically populated in the NASA Ames dictionary as well, those which are not mandatory are stored in the 'SCOM' attribute. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
+
+   :param data: values to be stored in the NasaAmes file
+   :type data: EgadsData|array|vector|scalar
+   :param varname: the name of the variable ; if data is an :class:`~.EgadsData`, mandatory if 'standard_name' or 'long_name' is not an attribute of *data* ; absolutely mandatory if *data* is not an :class:`~.EgadsData` ; optional
+   :type varname: string
+   :param vartype: the type of *data*, 'independant' or 'main', only mandatory if *data* must be stored as an independant variable (dimension) ; optional
+   :type vartype: string
+   :param attrdict: a dictionary containing mandatory attributes ('name', 'units', '_FillValue' and 'scale_factor'), only mandatory if *data* is not an :class:`~.EgadsData` ; optional
+   :type attrdict: dict
+   :param na_dict: if provided, the function stores the variable in the NasaAmes dictionary *na_dict*
+   :type na_dict: dict
+
 
 Saving a file
 --------------
 
 Once a dictionary is ready, use the ``save_na_file()`` function to save the file:
 
-    >>> data = f.save_na_file(file_name, na_dict, float_format):
+    >>> data = f.save_na_file(filename, na_dict, float_format, delimiter, no_header):
 
-where ``file_name`` is the name of the new file or the name of the current file, ``na_dict`` the name of the dictionary to be saved (optional, if not provided, the current dictionary will be used), and ``float_format`` the format of the floating numbers in the file (by default, no round up).
+.. function:: f.save_na_file([filename=None, na_dict=None, float_format=None, delimiter='    ', no_header=False])
+
+   Save the opened NasaAmes dictionary and file.
+
+   :param filename: is the name of the new file, if not provided, the name of the opened NasaAmes file is used ; optional
+   :type filename: string
+   :param na_dict: the name of the NasaAmes dictionary to be saved, if not provided, the opened dictionary will be used  ; optional
+   :type na_dict: dict
+   :param float_format: the format of the floating numbers in the file (by default, no round up) ; optional
+   :type float_format: string
+   :param delimiter: it is a character or a sequence of character to use between data items in the data file ; optional (by default '    ', 4 spaces)
+   :type delimiter: string
+   :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
+   :type no_header: bool
+
 
 Conversion from NASA/Ames file format to NetCDF
 ------------------------------------------------
 
-When a NASA/Ames file is opened, all metadata and data are read and stored in memory in a dedicated dictionary. The conversion will convert that dictionary to generate a NetCDF file. If modifications are made to the dictionary, the conversion will take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA/Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NetCDF instance and by populating the NetCDF files with NASA/Ames data and metadata.
+When a NASA/Ames file is opened, all metadata and data are read and stored in memory in a dedicated dictionary. The conversion will convert that dictionary to generate a NetCDF file. If modifications are made to the dictionary, the conversion will take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a NetCDF instance and by populating the NetCDF files with NASA/Ames data and metadata.
 
 To convert a NASA/Ames file, simply use:
 
-* ``f.convert_to_netcdf()`` -- convert the currently opened NASA/Ames file to NetCDF format.
-* ``f.convert_to_netcdf(nc_file)`` -- ``nc_file`` is an optional parameter ; ``na_file`` is the name of the output file once it has been converted, by default the name of the NASA/Ames file will be used with the extension .nc
+.. function:: f.convert_to_netcdf([nc_file=None, na_dict=None])
+
+   Convert the opened NasaAmes file to NetCDF file format.
+   
+   :param nc_file: if provided, the function will use *nc_file* for the path and name of the new_file, if not, the function will take the name and path of the opened NasaAmes file and replace the extension by '.nc' ; optional
+   :type nc_file: string
+   :param na_dict: the name of the NasaAmes dictionary to be converted, if not provided, the opened dictionary will be used  ; optional
+   :type na_dict: dict
+
 
 Other operations
 -----------------
 
-* ``f.read_na_dict()`` -- returns a deep copy of the current opened file dictionary
-* ``f.na_format_information()`` -- returns a text explaining the structure of a NASA/Ames file to help the user to modify or to create his own dictionary
+.. function:: f.read_na_dict()
+
+   Returns a deep copy of the current opened file dictionary
+   
+   :rtype: deep copy of a dictionary
+
+.. function:: egads.input.nasa_ames_io.na_format_information()
+
+   Returns a text explaining the structure of a NASA/Ames file to help the user to modify or to create his own dictionary
+   
+   :rtype: string
+
 
 Closing
 ---------
@@ -715,12 +1014,6 @@ This file has been created with the following commands:
 * and finally, save the dictionary to a NASA/Ames file:
 
     >>> f.save_na_file('na_example_file.na', na_dict)
-
-    
-Converting between file formats
-********************************
-
-Two functions have been introduced to allow a conversion from NetCDF to NASA/Ames format, and from NASA/Ames format to NetCDF. Please read the section about NetCDF and NASA/Ames file handling to learn how to convert between those formats.
 
 .. raw:: latex
 
@@ -793,7 +1086,7 @@ To call an algorithm, simply pass in the required arguments, in the order they a
 
 where the arguments ``T_s``, ``P_s``, ``dP``, etc are all assumed to be previously defined in the program scope. In this instance, the algorithm returns an :class:`~.EgadsData` instance to ``V_p``. To run the algorithm, but return a standard data type (scalar or array of doubles), set the ``return_Egads`` flag to ``false``.
 
-    >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=false).
+    >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=False).
         run(T_s, P_s, dP, cpa, Racpa)
 
 .. NOTE::
@@ -851,4 +1144,4 @@ Since September 2016, a Graphical User Interface is available at https://github.
 It will be available soon as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).
 
 .. NOTE::
-  As for EGADS, the Graphical User Interface is available from two branches: master and Lineage. The Lineage one is only compatible with Python 3 and the earlier versions of EGADS Lineage.
+  As for EGADS, the Graphical User Interface is available from two branches: master and Lineage (https://github.com/EUFAR/egads-gui/tree/Lineage). The Lineage one is only compatible with Python 3 and the earlier versions of EGADS Lineage.

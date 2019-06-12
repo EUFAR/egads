@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.6"
+__version__ = "1.7"
 
 import tempfile
 import unittest
@@ -15,7 +15,7 @@ import egads
 import egads.input as einput
 import netCDF4
 from numpy.random.mtrand import uniform
-from numpy.testing import assert_array_equal  # @UnresolvedImport
+from numpy.testing import assert_array_equal
 
 FILE_NAME = tempfile.mktemp('.nc')
 FILE_NAME_ALT = tempfile.mktemp('.nc')
@@ -47,7 +47,7 @@ Test001
 0
 Time_np (seconds after midnight)
 4
-1   1    1    1
+1    1    1    1
 -9900    -9900    -9900    -9900
 GPS LAT (degrees)
 GPS LON (degrees)
@@ -57,41 +57,58 @@ Time2 (seconds after midnight)
 This is a test file for verifying the status of the EGADS NASA Ames functionality.
 1
 TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2
-51143.42    48.0797    11.2809    584.3 51143.42
-51144.42    48.0792    11.2800    585.6 51144.42
-51145.42    48.0787    11.2793    587.8 51145.42
-51146.42    48.0782    11.2786    591.3 51146.42
-51147.42    48.0775    11.2778    596.0 51147.42'''
+51143.42    48.0797    11.2809    584.3    51143.42
+51144.42    48.0792    11.2800    585.6    51144.42
+51145.42    48.0787    11.2793    587.8    51145.42
+51146.42    48.0782    11.2786    591.3    51146.42
+51147.42    48.0775    11.2778    596.0    51147.42'''
 
 
-NA_DICT = {
-    "NLHEAD": 26,
-    "FFI": 1001,
-    "ONAME": "John Doe; email: john.doe@email.com",
-    "ORG": "ORGANIS",
-    "SNAME": "Test NASA Ames File",
-    "MNAME": "Test001",
-    "IVOL": 1,
-    "NVOL": 1,
-    "DATE": [2011, 8, 23],
-    "RDATE": [2011, 8, 24],
-    "DX": "0",
-    "NIV": 1,
-    "XNAME": "Time_np (seconds after midnight)",
-    "NV": 4,
-    "VSCAL": [1, 1, 1, 1],
-    "VMISS": [-9900, -9900, -9900, -9900],
-    "VNAME": ["GPS LAT (degrees)", "GPS LON (degrees)", "Height above sea level (m)", "Time2 (seconds after midnight)"],
-    "NSCOML": 1,
-    "SCOM": ["This is a test file for verifying the status of the EGADS NASA Ames functionality."],
-    "NNCOML": 1,
-    "NCOM": ["TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2"],
-    "X": [51143.42, 51144.42, 51145.42, 51146.42, 51147.42],
-    "V": [[48.0797, 48.0792, 48.0787, 48.0782, 48.0775],
-          [11.2809, 11.2800, 11.2793, 11.2786, 11.2778],
-          [584.3, 585.6, 587.8, 591.3, 596.0],
-          [51143.42, 51144.42, 51145.42, 51146.42, 51147.42]]
-    }
+NA_DICT = {"NLHEAD": 26, "FFI": 1001,
+           "ONAME": "John Doe; email: john.doe@email.com",
+           "ORG": "ORGANIS",
+           "SNAME": "Test NASA Ames File",
+           "MNAME": "Test001",
+           "IVOL": 1, "NVOL": 1,
+           "DATE": [2011, 8, 23], "RDATE": [2011, 8, 24],
+           "DX": "0",
+           "NIV": 1,
+           "XNAME": "Time_np (seconds after midnight)",
+           "NV": 4,
+           "VSCAL": [1, 1, 1, 1],
+           "VMISS": [-9900, -9900, -9900, -9900],
+           "VNAME": ["GPS LAT (degrees)", "GPS LON (degrees)", "Height above sea level (m)",
+                     "Time2 (seconds after midnight)"],
+           "NSCOML": 1,
+           "SCOM": ["This is a test file for verifying the status of the EGADS NASA Ames functionality."],
+           "NNCOML": 1,
+           "NCOM": ["TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2"],
+           "X": [51143.42, 51144.42, 51145.42, 51146.42, 51147.42],
+           "V": [[48.0797, 48.0792, 48.0787, 48.0782, 48.0775],
+                 [11.2809, 11.2800, 11.2793, 11.2786, 11.2778],
+                 [584.3, 585.6, 587.8, 591.3, 596.0],
+                 [51143.42, 51144.42, 51145.42, 51146.42, 51147.42]]}
+
+NA_DICT_2 = {"NLHEAD": 26, "FFI": 1001,
+             "ONAME": None,
+             "ORG": None,
+             "SNAME": "Test NASA Ames File",
+             "MNAME": "Test001",
+             "IVOL": 1, "NVOL": 1,
+             "DATE": [2011, 8, 23], "RDATE": [2011, 8, 24],
+             "DX": "0",
+             "NIV": 0,
+             "XNAME": [],
+             "NV": 0,
+             "VSCAL": [],
+             "VMISS": [],
+             "VNAME": [],
+             "NSCOML": 1,
+             "SCOM": ["This is a test file for verifying the status of the EGADS NASA Ames functionality."],
+             "NNCOML": 1,
+             "NCOM": ["TIME GPS_LAT_NP GPS_LON_NP GPS_ALT_NP TIME2"],
+             "X": [],
+             "V": []}
 
 random_data = uniform(size=DIM1_LEN)
 random_mult_data = uniform(size=(DIM1_LEN, DIM2_LEN))
@@ -258,7 +275,7 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
     def test_1d_variable_creation(self):
         """ Test creation of 1d variable in file """
 
-        f = netCDF4.Dataset(self.file, 'r')  # @UndefinedVariable
+        f = netCDF4.Dataset(self.file, 'r')
         varin = f.variables[VAR_NAME]
         self.assertEqual(varin.shape, (DIM1_LEN,), 'Variable dimensions dont match')
         self.assertEqual(varin.units, VAR_UNITS, 'Variable units dont match')
@@ -268,7 +285,7 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
     def test_2d_variable_creation(self):
         """ Test creation of 2d variable in file """
 
-        f = netCDF4.Dataset(self.file, 'r')  # @UndefinedVariable
+        f = netCDF4.Dataset(self.file, 'r')
         varin = f.variables[VAR_MULT_NAME]
         self.assertEqual(varin.shape, (DIM1_LEN, DIM2_LEN), 'Variable dimensions dont match')
         self.assertEqual(varin.units, VAR_MULT_UNITS, 'Variable units dont match')
@@ -509,43 +526,98 @@ class NAInputTestCase(unittest.TestCase):
         self.GPS_LON_max = 11.2778
         self.GPS_LON_min = 11.2809
 
-    def test_read_file(self):
-        """ Test reading data from NASA Ames file"""
+    def test_egadsnasaames_read_file(self):
+        """ Test reading data from NASA Ames file - EgadsNasaAmes class"""
         
-        f = einput.NasaAmes(self.filename)
+        f = einput.EgadsNasaAmes(self.filename)
         self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
         self.assertEqual(self.originator, f.file_metadata['Originator'], 'Originator values do not match')
         self.assertEqual(self.scom, f.file_metadata['SpecialComments'], 'Special comments do not match')
         var_names = f.get_variable_list()
         self.assertEqual(self.var_names, var_names, 'Variable names do not match')
         var1_intcall = f.read_variable(1)
-        text_string = 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1],
-                                                                                    var1_intcall.metadata['units'])
-        self.assertEqual(self.units[1], var1_intcall.metadata['units'], text_string)
+        self.assertEqual(self.units[1], var1_intcall.metadata['units'], 'Var 1 units do not match; ' + self.units[1]
+                         + ' expected, ' + var1_intcall.metadata['units'] + ' returned')
         self.assertEqual(self.miss_vals[1], var1_intcall.metadata['_FillValue'], 'Var 1 missing values do not match')
         self.assertEqual(self.GPS_LON_max, var1_intcall.value[-1], 'Var 1 max values do not match')
         self.assertEqual(self.GPS_LON_min, var1_intcall.value[0], 'Var 1 min values do not match')
         var1_namecall = f.read_variable(var_names[1])
-        self.assertEqual(self.units[1], var1_namecall.metadata['units'], 'Var 1 units do not match')
+        self.assertEqual(self.units[1], var1_intcall.metadata['units'], 'Var 1 units do not match; ' + self.units[1]
+                         + ' expected, ' + var1_intcall.metadata['units'] + ' returned')
         self.assertEqual(self.miss_vals[1], var1_namecall.metadata['_FillValue'], 'Var 1 missing values do not match')
         self.assertEqual(self.GPS_LON_max, var1_namecall.value[-1], 'Var 1 max values do not match')
         self.assertEqual(self.GPS_LON_min, var1_namecall.value[0], 'Var 1 min values do not match')
         f.close()
 
+    def test_nasaames_read_file(self):
+        """ Test reading data from NASA Ames file - NasaAmes class"""
+
+        f = einput.NasaAmes(self.filename)
+        self.assertEqual(self.org, f.get_attribute_value('ORG'), 'Organisation values do not match')
+        self.assertEqual(self.originator, f.get_attribute_value('ONAME'), 'Originator values do not match')
+        self.assertEqual(self.scom, f.get_attribute_value('SCOM'), 'Special comments do not match')
+        var_names = f.get_variable_list()
+        self.assertEqual(self.var_names, var_names, 'Variable names do not match')
+        var1_intcall = f.read_variable(1)
+        units = f.get_attribute_value('units', 1)
+        fill_value = f.get_attribute_value('_FillValue', 1)
+        self.assertEqual(self.units[1], units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_intcall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_intcall[0], 'Var 1 min values do not match')
+        var1_namecall = f.read_variable(var_names[1])
+        units = f.get_attribute_value('units', var_names[1])
+        fill_value = f.get_attribute_value('_FillValue', var_names[1])
+        self.assertEqual(self.units[1], units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_namecall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_namecall[0], 'Var 1 min values do not match')
+        f.close()
+
 
 class NAOutputTestCase(unittest.TestCase):
     """ Test writing of NASA Ames files. """
-    
+
     def setUp(self):
-        self.filename = tempfile.mktemp('.na')
+        attr_dict_i = {'units': 'seconds after midnight'}
+        attr_dict_1 = {'scale_factor': 1, '_FillValue': -9900, 'units': 'degrees'}
+        attr_dict_2 = {'scale_factor': 1, '_FillValue': -9900, 'units': 'm'}
+        attr_dict_3 = {'scale_factor': 1, '_FillValue': -9900, 'units': 'seconds after midnight'}
+        data_i = [51143.42, 51144.42, 51145.42, 51146.42, 51147.42]
+        data_1 = [48.0797, 48.0792, 48.0787, 48.0782, 48.0775]
+        data_2 = [11.2809, 11.2800, 11.2793, 11.2786, 11.2778]
+        data_3 = [584.3, 585.6, 587.8, 591.3, 596.0]
+        egads_data_i = egads.EgadsData(data_i, variable_metadata=attr_dict_i)
+        egads_data_1 = egads.EgadsData(data_1, variable_metadata=attr_dict_1)
+        egads_data_2 = egads.EgadsData(data_2, variable_metadata=attr_dict_1)
+        egads_data_3 = egads.EgadsData(data_3, variable_metadata=attr_dict_2)
+        self.filename_1 = tempfile.mktemp('.na')
         f = einput.NasaAmes()
-        f.save_na_file(self.filename, NA_DICT, float_format='%.4f')
+        f.write_attribute_value('ORG', 'ORGANIS', NA_DICT_2)
+        f.write_attribute_value('ONAME', 'John Doe; email: john.doe@email.com', NA_DICT_2)
+        f.write_variable(data_1, 'GPS LAT', attrdict=attr_dict_1, na_dict=NA_DICT_2)
+        f.write_variable(data_2, 'GPS LON', attrdict=attr_dict_1, na_dict=NA_DICT_2)
+        f.write_variable(data_3, 'Height above sea level', attrdict=attr_dict_2, na_dict=NA_DICT_2)
+        f.write_variable(data_i, 'Time_np', 'independant', attrdict=attr_dict_i, na_dict=NA_DICT_2)
+        f.save_na_file(self.filename_1, NA_DICT_2, float_format='%.4f')
+        f.close()
+        self.filename_2 = tempfile.mktemp('.na')
+        f = einput.EgadsNasaAmes()
+        f.write_attribute_value('ORG', 'ORGANIS', NA_DICT_2)
+        f.write_attribute_value('ONAME', 'John Doe; email: john.doe@email.com', NA_DICT_2)
+        f.write_variable(egads_data_1, 'GPS LAT', na_dict=NA_DICT_2)
+        f.write_variable(egads_data_2, 'GPS LON', na_dict=NA_DICT_2)
+        f.write_variable(egads_data_3, 'Height above sea level', na_dict=NA_DICT_2)
+        f.write_variable(egads_data_i, 'Time_np', 'independant', na_dict=NA_DICT_2)
+        f.save_na_file(self.filename_2, NA_DICT_2, float_format='%.4f')
         f.close()
         self.originator = 'John Doe; email: john.doe@email.com'
         self.new_originator = 'Jane Doe; email: jane.doe@email.net'
         self.org = 'ORGANIS'
         self.scom = 'This is a test file for verifying the status of the EGADS NASA Ames functionality.\n'
-        self.var_names = ['GPS LAT', 'GPS LON', 'Height above sea level', 'Time2']
+        self.var_names = ['GPS LAT', 'GPS LON', 'Height above sea level']
         self.units = ['degrees', 'degrees', 'm', 'seconds after midnight']
         self.miss_vals = [-9900.0, -9900.0, -9900.0, -9900.0]
         self.time_max = 51147.42
@@ -553,11 +625,66 @@ class NAOutputTestCase(unittest.TestCase):
         self.GPS_LON_max = 11.2778
         self.GPS_LON_min = 11.2809
         self.new_data = [61143.42, 61144.42, 61145.42, 61146.42, 61147.42]
-    
-    def test_read_file(self):
+        self.new_egads_data = egads.EgadsData(self.new_data, variable_metadata=attr_dict_3)
+
+    def test_nasaames_read_file_nasaames(self):
         """ Test reading data from NASA Ames file"""
-        
-        f = einput.NasaAmes(self.filename)
+
+        f = einput.NasaAmes(self.filename_1)
+        self.assertEqual(self.org, f.get_attribute_value('ORG'), 'Organisation values do not match')
+        self.assertEqual(self.originator, f.get_attribute_value('ONAME'), 'Originator values do not match')
+        self.assertEqual(self.scom, f.get_attribute_value('SCOM'), 'Special comments do not match')
+        var_names = f.get_variable_list()
+        self.assertEqual(self.var_names, var_names, 'Variable names do not match')
+        var1_intcall = f.read_variable(1)
+        units = f.get_attribute_value('units', 1)
+        fill_value = f.get_attribute_value('_FillValue', 1)
+        self.assertEqual(self.units[1],  units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_intcall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_intcall[0], 'Var 1 min values do not match')
+        var1_namecall = f.read_variable(var_names[1])
+        units = f.get_attribute_value('units', var_names[1])
+        fill_value = f.get_attribute_value('_FillValue', var_names[1])
+        self.assertEqual(self.units[1], units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_namecall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_namecall[0], 'Var 1 min values do not match')
+        f.close()
+
+    def test_nasaames_read_file_egadsnasaames(self):
+        """ Test reading data from NASA Ames file"""
+
+        f = einput.NasaAmes(self.filename_2)
+        self.assertEqual(self.org, f.get_attribute_value('ORG'), 'Organisation values do not match')
+        self.assertEqual(self.originator, f.get_attribute_value('ONAME'), 'Originator values do not match')
+        self.assertEqual(self.scom, f.get_attribute_value('SCOM'), 'Special comments do not match')
+        var_names = f.get_variable_list()
+        self.assertEqual(self.var_names, var_names, 'Variable names do not match')
+        var1_intcall = f.read_variable(1)
+        units = f.get_attribute_value('units', 1)
+        fill_value = f.get_attribute_value('_FillValue', 1)
+        self.assertEqual(self.units[1],  units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_intcall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_intcall[0], 'Var 1 min values do not match')
+        var1_namecall = f.read_variable(var_names[1])
+        units = f.get_attribute_value('units', var_names[1])
+        fill_value = f.get_attribute_value('_FillValue', var_names[1])
+        self.assertEqual(self.units[1], units, 'Var 1 units do not match; ' + self.units[1] + ' expected, ' + units
+                         + ' returned')
+        self.assertEqual(self.miss_vals[1], fill_value, 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_namecall[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_namecall[0], 'Var 1 min values do not match')
+        f.close()
+
+    def test_egadsnasaames_read_file_nasaames(self):
+        """ Test reading data from NASA Ames file"""
+
+        f = einput.EgadsNasaAmes(self.filename_1)
         self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
         self.assertEqual(self.originator, f.file_metadata['Originator'], 'Originator values do not match')
         self.assertEqual(self.scom, f.file_metadata['SpecialComments'], 'Special comments do not match')
@@ -576,19 +703,57 @@ class NAOutputTestCase(unittest.TestCase):
         self.assertEqual(self.GPS_LON_max, var1_namecall.value[-1], 'Var 1 max values do not match')
         self.assertEqual(self.GPS_LON_min, var1_namecall.value[0], 'Var 1 min values do not match')
         f.close()
-    
-    def test_replace_data_in_file(self):
-        """ Test replacing data in NASA Ames file"""
-        
-        f = einput.NasaAmes(self.filename)
-        f.write_attribute_value("ONAME", "Jane Doe; email: jane.doe@email.net")
-        f.write_variable(self.new_data, varname="Time2")
-        f.save_na_file(self.filename, float_format='%.4f')
+
+    def test_egadsnasaames_read_file_egadsnasaames(self):
+        """ Test reading data from NASA Ames file"""
+
+        f = einput.EgadsNasaAmes(self.filename_2)
+        self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
+        self.assertEqual(self.originator, f.file_metadata['Originator'], 'Originator values do not match')
+        self.assertEqual(self.scom, f.file_metadata['SpecialComments'], 'Special comments do not match')
+        var_names = f.get_variable_list()
+        self.assertEqual(self.var_names, var_names, 'Variable names do not match')
+        var1_intcall = f.read_variable(1)
+        text_string = 'Var 1 units do not match; {0} expected, {1} returned'.format(self.units[1],
+                                                                                    var1_intcall.metadata['units'])
+        self.assertEqual(self.units[1], var1_intcall.metadata['units'], text_string)
+        self.assertEqual(self.miss_vals[1], var1_intcall.metadata['_FillValue'], 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_intcall.value[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_intcall.value[0], 'Var 1 min values do not match')
+        var1_namecall = f.read_variable(var_names[1])
+        self.assertEqual(self.units[1], var1_namecall.metadata['units'], 'Var 1 units do not match')
+        self.assertEqual(self.miss_vals[1], var1_namecall.metadata['_FillValue'], 'Var 1 missing values do not match')
+        self.assertEqual(self.GPS_LON_max, var1_namecall.value[-1], 'Var 1 max values do not match')
+        self.assertEqual(self.GPS_LON_min, var1_namecall.value[0], 'Var 1 min values do not match')
         f.close()
-        g = einput.NasaAmes(self.filename)
+
+    def test_replace_data_in_file_nasaames(self):
+        """ Test replacing data in NASA Ames file"""
+
+        attr_dict = {'units': 'seconds after midnight', 'scale_factor': 1, '_FillValue': -9900}
+        f = einput.NasaAmes(self.filename_1)
+        f.write_attribute_value("ONAME", "Jane Doe; email: jane.doe@email.net")
+        f.write_variable(self.new_data, varname="Time2", attrdict=attr_dict)
+        f.save_na_file(self.filename_1, float_format='%.4f')
+        f.close()
+        g = einput.NasaAmes(self.filename_1)
+        self.assertEqual(self.new_originator, g.get_attribute_value('ONAME'), 'Originator values do not match')
+        var1_intcall = g.read_variable("Time2")
+        self.assertEqual(self.new_data[2], var1_intcall[2], 'Var do not match')
+        g.close()
+
+    def test_replace_data_in_file_egadsnasaames(self):
+        """ Test replacing data in NASA Ames file"""
+
+        f = einput.EgadsNasaAmes(self.filename_2)
+        f.write_attribute_value("ONAME", "Jane Doe; email: jane.doe@email.net")
+        f.write_variable(self.new_egads_data, varname="Time2")
+        f.save_na_file(self.filename_2, float_format='%.4f')
+        f.close()
+        g = einput.EgadsNasaAmes(self.filename_2)
         self.assertEqual(self.new_originator, g.file_metadata['Originator'], 'Originator values do not match')
         var1_intcall = g.read_variable("Time2")
-        self.assertEqual(self.new_data[2], var1_intcall.value.tolist()[2], 'Var do not match')
+        self.assertEqual(self.new_data[2], var1_intcall.value[2], 'Var do not match')
         g.close()
 
 
@@ -635,11 +800,11 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
         g = einput.NasaAmes(self.nafilename)
-        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not '
-                                                                                         'match')
-        self.assertEqual('computer', g.file_metadata['Source'], 'Source values do not match')
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('ONAME'), 'Originator values do not '
+                                                                                          'match')
+        self.assertEqual('computer', g.get_attribute_value('SNAME'), 'Source values do not match')
         data = g.read_variable('data')
-        self.assertListEqual(self.data1.value.tolist(), data.value.tolist(), 'data and data1 values do not match')
+        self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
         g.close()
 
     def test_convert_nc_to_na_egadsnetcdf(self):
@@ -649,11 +814,11 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
         g = einput.NasaAmes(self.nafilename)
-        self.assertEqual('John Doe (john.doe@email.com)', g.file_metadata['Originator'], 'Originator values do not '
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('ONAME'), 'Originator values do not '
                                                                                          'match')
-        self.assertEqual('computer', g.file_metadata['Source'], 'Source values do not match')
+        self.assertEqual('computer', g.get_attribute_value('SNAME'), 'Source values do not match')
         data = g.read_variable('data')
-        self.assertListEqual(self.data1.value.tolist(), data.value.tolist(), 'data and data1 values do not match')
+        self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
         g.close()
     
     def test_convert_nc_to_csv_netcdf(self):
@@ -718,10 +883,23 @@ class NAConvertFormatTestCase(unittest.TestCase):
                                     scale_factor=1.,
                                     standard_name='Time_np')
         
-    def test_convert_na_to_nc(self):
+    def test_convert_na_nasaames_to_nc(self):
         """ Test conversion of NASA Ames to NetCDF"""
 
         f = einput.NasaAmes(self.na_filename)
+        f.convert_to_netcdf(self.nc_filename)
+        g = einput.EgadsNetCdf(self.nc_filename, 'r')
+        author = g.get_attribute_value('authors')
+        special_com = g.get_attribute_value('special_comments')
+        time = g.read_variable('Time_np')
+        self.assertEqual(self.authors, author, 'Originator values do not match')
+        self.assertEqual(self.special_com, special_com, 'Special comments do not match')
+        self.assertListEqual(time.value.tolist(), time.value.tolist(), 'both time values do not match')
+
+    def test_convert_na_egadsnasaames_to_nc(self):
+        """ Test conversion of NASA Ames to NetCDF"""
+
+        f = einput.EgadsNasaAmes(self.na_filename)
         f.convert_to_netcdf(self.nc_filename)
         g = einput.EgadsNetCdf(self.nc_filename, 'r')
         author = g.get_attribute_value('authors')
@@ -744,8 +922,8 @@ def suite():
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
     nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
     return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, csv_in_suite,
-                               csv_out_suite,
-                               na_in_suite, na_out_suite, netcdf_convert_format_suite, nasa_ames_convert_format_suite])
+                               csv_out_suite, na_in_suite, na_out_suite, netcdf_convert_format_suite,
+                               nasa_ames_convert_format_suite])
 
 
 if __name__ == '__main__':

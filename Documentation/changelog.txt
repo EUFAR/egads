@@ -4,11 +4,24 @@ CHANGELOG | LINEAGE BRANCH
 
 To do list:
 -----------
-  - modify NasaAmes class to ressemble the NetCdf and EgadsNetCdf classes. (v0.9.5)
-  - change the way to add new units. (v.0.9.5)
 
 To fix list:
 ------------
+
+June 12 2019, Release version 0.9.5
+===================================
+In order to follow the EUFAR convention, and NetCDF classes examples, the NasaAmes class has been divided into two classes: NasaAmes and EgadsNasaAmes. EgadsNasaAmes class returns EgadsData instance when reading data, and it asks for EgadsData instance when writing data.
+
+  FIXED:
+    - when reading a NASA Ames file, the convention wasn't set correctly (str, but the class is asking for a list)
+	
+  MODIFIED:
+    - NasaAmes class has been divided into two classes: NasaAmes and EgadsNasaAmes classes.
+	- the documentation has been updated.
+  
+  ADDED:
+    - a new folder with functions to create user algorithm structure, logging system and options dictionary has been added.
+
 
 June 7 2019, Release version 0.9.4
 ==================================

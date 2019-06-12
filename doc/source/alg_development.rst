@@ -77,7 +77,7 @@ Within the file itself, there are one rule to respect and several elements in th
     The algorithm itself gets written in the _algorithm method and uses variables passed in by the user. The variables which arrive here are simply scalar or arrays, and if the source is an instance of EgadsData, the variables will be converted to the units you specified in the InputUnits of the algorithm metadata.
    
 7. Integration of the algorithm in EGADS
-    Once the algorithm file is ready, the user has to move it in the appropriate directory in the ``./egads/algorithms/user`` directory. Once it has been done, the ``__init__.py`` file has to be modified to declare the new algorithm. The following line can be added to the ``__init__.py`` file: ``from the_name_of_the_file import \*``.
+    Once the algorithm file is ready, the user has to move it in the appropriate directory in the ``./egads/algorithms/user`` directory. Once it has been done, the ``__init__.py`` file has to be modified to declare the new algorithm. The following line can be added to the ``__init__.py`` file: ``from the_name_of_the_file import *``.
     
     If the algorithm requires a new directory, the user has to create it in the ``user`` directory, move the file inside and create a ``__init__.py`` file to declare the new directory and the algoritm to EGADS. A template can be found in ``./egads/algorithms/user/file_templates/init_template.py`` and is shown below:
     

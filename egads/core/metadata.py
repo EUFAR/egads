@@ -266,11 +266,11 @@ class FileMetadata(Metadata):
             Dictionary object containing metadata names and values.
         :param string filename:
             Filename for origin of file metadata.
-        :param string conventions_keyword: Optional -
-            Keyword contained in metadata dictionary used to detect which metadata
-            conventions are used.
-        :param list conventions: Optional -
-            List of metadata conventions used in provided metadata dictionary.
+        :param string conventions_keyword:
+            Optional - Keyword contained in metadata dictionary used to detect which
+            metadata conventions are used.
+        :param list conventions:
+            Optional - List of metadata conventions used in provided metadata dictionary.
         """
         
         logging.debug('egads - metadata.py - FileMetadata - __init__ - conventions_keyword ' + 

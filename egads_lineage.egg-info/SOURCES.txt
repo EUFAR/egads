@@ -3,8 +3,8 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
-Documentation/EGADS Lineage Algorithm Handbook - v0.9.4.pdf
-Documentation/EGADS Lineage Documentation - v0.9.4.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v0.9.5.pdf
+Documentation/EGADS Lineage Documentation - v0.9.5.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -175,6 +175,8 @@ egads/tests/microphysics_tests.py
 egads/tests/radiation_tests.py
 egads/tests/test_all.py
 egads/tests/thermodynamics_tests.py
+egads/utils/__init__.py
+egads/utils/egads_utils.py
 egads_lineage.egg-info/PKG-INFO
 egads_lineage.egg-info/SOURCES.txt
 egads_lineage.egg-info/dependency_links.txt

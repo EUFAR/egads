@@ -120,7 +120,7 @@ class NetCdf(FileCore):
             logging.exception('egads - netcdf_io.py - NetCdf - get_perms - AttributeError, no file open')
             raise AttributeError('No file open')
 
-    def read_variable(self, varname, input_range=None, read_as_float=False):
+    def read_variable(self, varname, input_range=None, read_as_float=False, replace_fill_value=False):
         """
         Reads a variable from currently opened NetCDF file.
         
@@ -131,6 +131,10 @@ class NetCdf(FileCore):
         :param boolean read_as_float:
             Optional - if True, EGADS reads the data and convert them to float numbers. If False,
             the data type is the type of data in file.
+        :param boolean replace_fill_value:
+            Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN,
+            if one of those attributes exists in the NetCDF file.
+            ``False`` is the default value.
         """
         
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ', input_range '
@@ -155,6 +159,18 @@ class NetCdf(FileCore):
             value = varin[eval(obj)]
             if read_as_float:
                 value = [float(item) for item in value]
+        if replace_fill_value:
+            _fill_value = None
+            try:
+                _fill_value = self.get_attribute_value('_FillValue', varname)
+            except KeyError:
+                try:
+                    _fill_value = self.get_attribute_value('missing_value', varname)
+                except KeyError:
+                    logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname)
+                                  + ', no _FillValue or missing_value attribute found.')
+            if _fill_value is not None:
+                value[value == _fill_value] = numpy.nan
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return value
     
@@ -176,11 +192,11 @@ class NetCdf(FileCore):
             logging.error('egads - netcdf_io.py - NetCdf - .change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
 
-    def write_variable(self, value, varname, dims=None, ftype='double', fillvalue=None):
+    def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None):
         """
         Writes/creates variable in currently opened NetCDF file.
 
-        :param array value:
+        :param array data:
             Array of values to output to NetCDF file.
         :param string varname:
             Name of variable to create/write to.
@@ -202,7 +218,7 @@ class NetCdf(FileCore):
                 varout = self.f.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
             except KeyError:
                 varout = self.f.createVariable(varname, ftype, dims, fillvalue)
-            varout[:] = value
+            varout[:] = data
         else:
             logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
@@ -788,7 +804,7 @@ class EgadsNetCdf(NetCdf):
                             'FFI is set to 1001')
 
         # create NASA/Ames dictionary
-        f = egads.input.NasaAmes()
+        f = egads.input.EgadsNasaAmes()
         na_dict = f.create_na_dict()
         missing_attributes = []
         
