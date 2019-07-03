@@ -119,7 +119,7 @@ class NasaAmes(FileCore):
                 varnum = var_list.index(varname)
             values = np.array(na_dict['V'][varnum])
             if read_as_float:
-                values = [float(item) for item in values]
+                values = values.astype('float')
             try:
                 if replace_fill_value:
                     miss = self.get_attribute_value('_FillValue', varname)
@@ -809,7 +809,7 @@ class EgadsNasaAmes(NasaAmes):
             scale = na_dict['VSCAL'][varnum]
             values = np.array(na_dict['V'][varnum])
             if read_as_float:
-                values = [float(item) for item in values]
+                values = values.astype('float')
             try:
                 if replace_fill_value:
                     values[values == miss] = np.nan

@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads-lineage',
-      version='0.9.5',
+      version='0.9.6',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR, Olivier Henry',
@@ -94,6 +94,6 @@ setup(name='egads-lineage',
           'doc.source._static': ['*.*']
           },
       classifiers=filter(None, classifiers.split("\n")),
-      requires=['numpy (>=1.14)', 'scipy (>=1.00)', 'netCDF4 (>=1.3.0)', 'python_dateutil (>=2.6.1)', 'quantities (>=0.12.1)'],
-      install_requires=['numpy >= 1.14', 'scipy >=1.00', 'netCDF4 >= 1.3.0', 'python_dateutil >= 2.6.1', 'quantities >= 0.12.1'],
+      requires=['numpy (>=1.14)', 'netCDF4 (>=1.3.0)', 'python_dateutil (>=2.6.1)', 'quantities (>=0.12.1)'],
+      install_requires=['numpy >= 1.14', 'netCDF4 >= 1.3.0', 'python_dateutil >= 2.6.1', 'quantities >= 0.12.1'],
       )

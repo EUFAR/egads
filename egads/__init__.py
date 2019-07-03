@@ -15,7 +15,6 @@ from .utils.egads_utils import _create_option_dictionary
 from .utils.egads_utils import _create_log_system
 from xml.dom import minidom
 from numpy import __version__ as np_version
-from scipy import __version__ as sy_version
 from netCDF4 import __version__ as nc_version
 from dateutil import __version__ as du_version
 try:
@@ -37,7 +36,6 @@ logging.debug('egads - __init__.py - operating system: ' + system + ' ' + releas
 logging.debug('egads - __init__.py - python version: ' + str(platform.python_version()))
 logging.debug('egads - __init__.py - numpy version: ' + np_version)
 logging.debug('egads - __init__.py - quantities version: ' + quantities.__version__)
-logging.debug('egads - __init__.py - scipy version: ' + sy_version)
 logging.debug('egads - __init__.py - netcdf4 version: ' + nc_version)
 logging.debug('egads - __init__.py - python_dateutil version: ' + du_version)
 logging.debug('egads - __init__.py - requests version: ' + rq_version)

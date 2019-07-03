@@ -32,10 +32,6 @@ class EgadsData(pq.Quantity):
             units = variable_metadata.get('units', '')
             if not units:
                 units = variable_metadata.get('Units', '')
-
-        # quantities can't handle the CF time unit 'time since epoch'
-        # to allow a proper operation of EGADS, a new attribute has been added,
-        # transparent to the user, if the epoch is needed.
         true_units = None
         if ' since ' in units or 'after' in units:
             true_units = units

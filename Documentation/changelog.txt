@@ -4,9 +4,17 @@ CHANGELOG | LINEAGE BRANCH
 
 To do list:
 -----------
+  - check feasability of an online algorithm database.
 
 To fix list:
 ------------
+
+July 03 2019, Release version 0.9.6
+===================================
+  FIXED:
+    - requests was imported without a try: except: code in egads_update function. It has been fixed.
+	- when missing values exist in a netcdf or nasa ames file and if the option 'read_as_float' is True, it is not possible to convert those missing values to float (numpy masked array). It has been fixed.
+
 
 June 12 2019, Release version 0.9.5
 ===================================

@@ -157,8 +157,9 @@ class NetCdf(FileCore):
             for i in range(2, len(input_range), 2):
                 obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
             value = varin[eval(obj)]
-            if read_as_float:
-                value = [float(item) for item in value]
+        value = numpy.array(value)
+        if read_as_float:
+            value = value.astype('float')
         if replace_fill_value:
             _fill_value = None
             try:
@@ -696,10 +697,10 @@ class EgadsNetCdf(NetCdf):
             for i in range(2, len(input_range), 2):
                 obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
             value = varin[eval(obj)]
-        if read_as_float:
-            value = [float(item) for item in value]
         variable_attrs = self.get_attribute_list(varname)
         value = numpy.array(value)
+        if read_as_float:
+            value = value.astype('float')
         if replace_fill_value:
             if '_FillValue' in variable_attrs.keys():
                 _fill_value = variable_attrs['_FillValue']
