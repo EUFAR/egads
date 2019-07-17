@@ -14,5 +14,6 @@ try:
     from .seconds_to_isotime import *
     from .time_to_decimal_year import *
     logging.info('egads [transforms] algorithms have been loaded')
+    logging.debug('egads [transforms] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [transforms] algorithm')

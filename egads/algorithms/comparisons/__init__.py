@@ -10,5 +10,6 @@ import logging
 try:
     from .compare_param_lcss import *
     logging.info('egads [comparisons] algorithms have been loaded')
+    logging.debug('egads [comparisons] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [comparisons] algorithm')

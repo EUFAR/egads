@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2019-06-11 15:30"
-__version__ = "1.0"
+__version__ = "1.1"
 
 import logging
 import os
@@ -14,7 +14,7 @@ def _create_option_dictionary(main_path):
         ini_file = open(os.path.join(main_path, 'egads.ini'), 'w')
         config_dict.add_section('LOG')
         config_dict.add_section('OPTIONS')
-        config_dict.set('LOG', 'level', 'DEBUG')
+        config_dict.set('LOG', 'level', 'INFO')
         config_dict.set('LOG', 'path', main_path)
         config_dict.set('OPTIONS', 'check_update', 'False')
         config_dict.write(ini_file)
@@ -67,9 +67,9 @@ def _create_user_algorithms_structure(main_path):
                            + 'import logging\n\n'
                            + 'try:\n'
                            + "    logging.info('egads [user/" + folder + "] algorithms have been loaded')\n"
-                           + 'except Exception:\n'
+                           + 'except Exception as e:\n'
                            + "    logging.error('an error occured during the loading of a [user/" + folder
-                           + "] algorithm')\n")
+                           + "] algorithm: ' + str(e)\n")
             init_file = open(os.path.join(user_path, folder) + '/__init__.py', 'w')
             init_file.write(init_string)
             init_file.close()

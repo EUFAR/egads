@@ -9,6 +9,16 @@ To do list:
 To fix list:
 ------------
 
+July 17 2019, Release version 1.0.0
+===================================
+EGADS is now mature enough to leave the beta phase and be released as a stable module.
+
+  ADDED:
+    - if an error occurres during the loading of an algorithm, the reason is now displayed in the log file.
+	- an attribute has been added to inform if the module has been frozen by PyInstaller.
+	- if EGADS is frozen, the update system is disabled.
+
+
 July 03 2019, Release version 0.9.6
 ===================================
   FIXED:

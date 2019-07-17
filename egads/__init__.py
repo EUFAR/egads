@@ -8,6 +8,7 @@ import os
 import platform
 import quantities
 import configparser
+import sys
 from ._version import __version__
 from ._version import __branch__
 from .utils.egads_utils import _create_user_algorithms_structure
@@ -22,6 +23,10 @@ try:
 except ImportError:
     rq_version = 'requests is not available'
 
+if getattr(sys, 'frozen', False):
+    frozen = True
+else:
+    frozen = False
 
 path = os.path.abspath(os.path.dirname(__file__))
 _create_option_dictionary(path)
@@ -31,6 +36,7 @@ _create_log_system(config_dict)
 logging.info('*****************************************')
 logging.info('EGADS ' + __version__ + ' is starting ...')
 logging.info('*****************************************')
+logging.debug('egads - __init__.py - egads frozen ? ' + str(frozen))
 system, release, version = platform.system_alias(platform.system(), platform.release(), platform.version())
 logging.debug('egads - __init__.py - operating system: ' + system + ' ' + release + ' (' + version + ')')
 logging.debug('egads - __init__.py - python version: ' + str(platform.python_version()))
@@ -88,16 +94,22 @@ def print_options():
 
 
 def check_update():
-    logging.debug('egads - __init__.py - check_update - egads_version ' + __version__)
-    check_update_thread = CheckEgadsUpdate(__version__)
-    check_update_thread.start()
+    if not frozen:
+        logging.debug('egads - __init__.py - check_update - egads_version ' + __version__)
+        check_update_thread = CheckEgadsUpdate(__version__)
+        check_update_thread.start()
+    else:
+        logging.debug('egads - __init__.py - check_update - app is frozen, no update check')
 
 
 if rq_version != 'requests is not available':
-    if config_dict.getboolean('OPTIONS', 'check_update'):
-        check_update()
+    if not frozen:
+        if config_dict.getboolean('OPTIONS', 'check_update'):
+            check_update()
+        else:
+            logging.debug('egads - __init__.py - check_update on False, no update check')
     else:
-        logging.debug('egads - __init__.py - check_update on False, no update check')
+        logging.debug('egads - __init__.py - app is frozen, no update check')
 else:
     logging.debug('egads - __init__.py - no requests module, no update check')
 

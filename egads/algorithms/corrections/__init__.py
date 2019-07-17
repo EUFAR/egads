@@ -10,5 +10,6 @@ import logging
 try:
     from .correction_spike_simple_cnrm import *
     logging.info('egads [corrections] algorithms have been loaded')
+    logging.debug('egads [corrections] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [corrections] algorithm')

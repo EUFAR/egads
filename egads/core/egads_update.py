@@ -5,7 +5,7 @@ __all__ = ["CheckEgadsUpdate"]
 
 import logging
 try:
-    from requests import __version__ as rq_version
+    import requests
 except ImportError:
     print('requests is not available')
 from distutils.version import LooseVersion

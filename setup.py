@@ -16,7 +16,7 @@ except ImportError:
     from distutils.core import setup
 
 classifiers = """\
-Development Status :: 4 - Beta
+Development Status :: 5 - Production/Stable
 Environment :: Console
 Intended Audience :: Developers
 Intended Audience :: Education
@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads-lineage',
-      version='0.9.6',
+      version='1.0.0',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR, Olivier Henry',

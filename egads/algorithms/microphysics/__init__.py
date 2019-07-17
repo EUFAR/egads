@@ -21,5 +21,6 @@ try:
     from .sample_volume_general_raf import *
     from .surface_area_conc_dmt import *
     logging.info('egads [microphysics] algorithms have been loaded')
+    logging.debug('egads [microphysics] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [microphysics] algorithm')

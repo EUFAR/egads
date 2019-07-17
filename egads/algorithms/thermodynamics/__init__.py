@@ -23,5 +23,6 @@ try:
     from .velocity_tas_raf import *
     from .wind_vector_3d_raf import *
     logging.info('egads [thermodynamics] algorithms have been loaded')
+    logging.debug('egads [thermodynamics] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [thermodynamics] algorithm')

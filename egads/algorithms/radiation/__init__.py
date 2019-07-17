@@ -16,5 +16,6 @@ try:
     from .solar_vector_reda import *
     from .temp_blackbody import *
     logging.info('egads [radiation] algorithms have been loaded')
+    logging.debug('egads [radiation] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [radiation] algorithm')

@@ -11,5 +11,6 @@ try:
     from .derivative_wrt_time import *
     from .limit_angle_range import *
     logging.info('egads [mathematics] algorithms have been loaded')
+    logging.debug('egads [mathematics] path: ' + str(__path__))
 except Exception:
     logging.exception('an error occurred during the loading of a [mathematics] algorithm')
