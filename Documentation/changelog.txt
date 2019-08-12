@@ -9,6 +9,16 @@ To do list:
 To fix list:
 ------------
 
+
+August 12 2019, Release version 1.0.1
+=====================================
+  FIXED:
+    - if the path to the log is incorrectly set, it leads to a file not found error at startup. Now if the path is not valid, egads will use the default path and log a message.
+	
+  ADDED:
+    - logging message added to the EgadsNasaAmes class
+
+
 July 17 2019, Release version 1.0.0
 ===================================
 EGADS is now mature enough to leave the beta phase and be released as a stable module.

@@ -1057,6 +1057,8 @@ class EgadsNasaAmes(NasaAmes):
                               str(filename) + ' doesn''t exist')
             raise IOError("ERROR: File %s doesn't exist" % filename)
 
+    logging.info('egads - nasa_ames_io.py - EgadsNasaAmes has been loaded')
+
 
 def _attemptVarAndUnitsMatch(item):
     """

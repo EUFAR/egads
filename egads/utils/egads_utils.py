@@ -21,8 +21,13 @@ def _create_option_dictionary(main_path):
         ini_file.close()
 
 
-def _create_log_system(config_dict):
-    log_filename = os.path.join(config_dict.get('LOG', 'path'), 'egads.log')
+def _create_log_system(config_dict, default_path):
+    using_default_path = False
+    if pathlib.Path(config_dict.get('LOG', 'path')).exists():
+        log_filename = os.path.join(config_dict.get('LOG', 'path'), 'egads.log')
+    else:
+        using_default_path = True
+        log_filename = os.path.join(default_path, 'egads.log')
     logging.getLogger('').handlers = []
     logging.basicConfig(filename=log_filename,
                         level=getattr(logging, config_dict.get('LOG', 'level')),
@@ -33,6 +38,8 @@ def _create_log_system(config_dict):
     console.setLevel(logging.DEBUG)
     console.setFormatter(formatter)
     logging.getLogger('').addHandler(console)
+    if using_default_path:
+        logging.error('egads - logging system - path from ini file not found, using default path')
 
 
 def _create_user_algorithms_structure(main_path):
