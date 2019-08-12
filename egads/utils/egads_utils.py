@@ -1,11 +1,12 @@
 __author__ = "ohenry"
 __date__ = "2019-06-11 15:30"
-__version__ = "1.1"
+__version__ = "1.2"
 
 import logging
 import os
 import datetime
 import configparser
+import pathlib
 
 
 def _create_option_dictionary(main_path):
