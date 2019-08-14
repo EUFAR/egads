@@ -77,7 +77,7 @@ def _create_user_algorithms_structure(main_path):
                            + "    logging.info('egads [user/" + folder + "] algorithms have been loaded')\n"
                            + 'except Exception as e:\n'
                            + "    logging.error('an error occured during the loading of a [user/" + folder
-                           + "] algorithm: ' + str(e)\n")
+                           + "] algorithm: ' + str(e))\n")
             init_file = open(os.path.join(user_path, folder) + '/__init__.py', 'w')
             init_file.write(init_string)
             init_file.close()

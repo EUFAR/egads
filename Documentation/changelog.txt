@@ -10,6 +10,12 @@ To fix list:
 ------------
 
 
+August 14 2019, Release version 1.0.3
+=====================================
+  FIXED:
+    - a right parenthesis in a logging message was missing in the code to create the user algorithm structure and this could lead to an error.
+
+
 August 12 2019, Release version 1.0.2
 =====================================
   FIXED:
