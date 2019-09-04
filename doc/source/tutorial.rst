@@ -1022,7 +1022,7 @@ This file has been created with the following commands:
 Working with algorithms
 ************************
 
-Algorithms in EGADS are stored in the :mod:`egads.algorithms` module, and separated into sub-modules by category (microphysics, thermodynamics, radiation, etc). Each algorithm follows a standard naming scheme, using the algorithm's purpose and source:
+Algorithms in EGADS are stored in the :mod:`egads.algorithms` module for embedded algorithms and in :mod:`egads.user_algorithms` module for user-defined algorithms. They are separated into sub-modules by category (microphysics, thermodynamics, radiation, etc). Each algorithm follows a standard naming scheme, using the algorithm's purpose and source:
 
 ``{CalculatedParameter}{Detail}{Source}``
 
@@ -1082,12 +1082,17 @@ Algorithms in EGADS generally accept and return arguments of :class:`~.EgadsData
 To call an algorithm, simply pass in the required arguments, in the order they are described in the algorithm help function. An algorithm call, using the ``VelocityTasCnrm`` in the previous section as an example, would therefore be the following:
 
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm().run(T_s, P_s, dP, 
-        cpa, Racpa)	
+        cpa, Racpa)
 
 where the arguments ``T_s``, ``P_s``, ``dP``, etc are all assumed to be previously defined in the program scope. In this instance, the algorithm returns an :class:`~.EgadsData` instance to ``V_p``. To run the algorithm, but return a standard data type (scalar or array of doubles), set the ``return_Egads`` flag to ``false``.
 
     >>> V_p = egads.algorithms.thermodynamics.VelocityTasCnrm(return_Egads=False).
         run(T_s, P_s, dP, cpa, Racpa)
+
+If an algorithm has been created by a user and is not embedded by default in EGADS, it should be called like this:
+
+    >>> V_p = egads.user_algorithms.thermodynamics.VelocityTasCnrm().run(T_s, P_s, dP, 
+        cpa, Racpa)
 
 .. NOTE::
   When injecting a variable in an EgadsAlgorithm, the format of the variable should follow closely the documentation of the algorithm. If the variable is a scalar, and the algorithm needs a vector, the scalar should be surrounded by brackets: 52.123 -> [52.123].

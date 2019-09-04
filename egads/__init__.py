@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-03-05 10:59"
-__version__ = "1.4"
+__version__ = "1.5"
 
 
 import logging
@@ -9,6 +9,7 @@ import platform
 import quantities
 import configparser
 import sys
+import pathlib
 from ._version import __version__
 from ._version import __branch__
 from .utils.egads_utils import _create_user_algorithms_structure
@@ -28,11 +29,12 @@ if getattr(sys, 'frozen', False):
 else:
     frozen = False
 
-path = os.path.abspath(os.path.dirname(__file__))
-_create_option_dictionary(path)
+
+user_path = str(pathlib.Path.home().joinpath('.egads_lineage'))
+_create_option_dictionary(user_path)
 config_dict = configparser.ConfigParser()
-config_dict.read(os.path.join(path, 'egads.ini'))
-_create_log_system(config_dict, path)
+config_dict.read(os.path.join(user_path, 'egads.ini'))
+_create_log_system(config_dict, user_path)
 logging.info('*****************************************')
 logging.info('EGADS ' + __version__ + ' is starting ...')
 logging.info('*****************************************')
@@ -48,8 +50,10 @@ logging.debug('egads - __init__.py - requests version: ' + rq_version)
 
 import egads.core
 import egads.core.metadata
-_create_user_algorithms_structure(path)
+_create_user_algorithms_structure(user_path)
+sys.path.append(user_path)
 import egads.algorithms
+import user_algorithms
 from .input import get_file_list
 from .core.egads_core import *
 from .tests.test_all import test
@@ -77,7 +81,7 @@ def set_options(log_level=None, log_path=None, check_update=None):
     if check_update is not None:
         config_dict.set('OPTIONS', 'check_update', str(check_update))
     if log_level or log_path or check_update:
-        set_options_file = open(os.path.join(path, 'egads.ini'), 'w')
+        set_options_file = open(os.path.join(user_path, 'egads.ini'), 'w')
         config_dict.write(set_options_file)
         set_options_file.close()
 

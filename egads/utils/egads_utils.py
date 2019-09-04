@@ -9,14 +9,16 @@ import configparser
 import pathlib
 
 
-def _create_option_dictionary(main_path):
+def _create_option_dictionary(user_path):
     config_dict = configparser.ConfigParser()
-    if not os.path.exists(os.path.join(main_path, 'egads.ini')):
-        ini_file = open(os.path.join(main_path, 'egads.ini'), 'w')
+    if not pathlib.Path(pathlib.Path(user_path).joinpath('egads.ini')).is_file():
+        if not pathlib.Path(user_path).is_dir():
+            pathlib.Path(user_path).mkdir()
+        ini_file = open(os.path.join(user_path, 'egads.ini'), 'w')
         config_dict.add_section('LOG')
         config_dict.add_section('OPTIONS')
-        config_dict.set('LOG', 'level', 'INFO')
-        config_dict.set('LOG', 'path', main_path)
+        config_dict.set('LOG', 'level', 'DEBUG')
+        config_dict.set('LOG', 'path', user_path)
         config_dict.set('OPTIONS', 'check_update', 'False')
         config_dict.write(ini_file)
         ini_file.close()
@@ -43,42 +45,42 @@ def _create_log_system(config_dict, default_path):
         logging.error('egads - logging system - path from ini file not found, using default path')
 
 
-def _create_user_algorithms_structure(main_path):
-    logging.debug('egads - egads_utils.py - create_user_algorithms_structure - main_path ' + str(main_path))
-    user_path = os.path.join(main_path, 'algorithms/user/')
-    if not os.path.isdir(user_path):
+def _create_user_algorithms_structure(user_path):
+    logging.debug('egads - egads_utils.py - create_user_algorithms_structure - user_path ' + str(user_path))
+    algo_path = str(pathlib.Path(user_path).joinpath('user_algorithms'))
+    if not pathlib.Path(algo_path).is_dir():
         logging.debug('egads - egads_utils.py - create_user_algorithms_structure - no user folder detected, '
                       'creating user structure')
-        os.makedirs(user_path)
+        pathlib.Path(algo_path).mkdir()
         init_string = ('__author__ = "Olivier Henry"\n'
                        + '__date__ = "2019/05/06 11:45"\n'
                        + '__version__ = "1.0"\n\n'
-                       + 'import egads.algorithms.user.comparisons\n'
-                       + 'import egads.algorithms.user.corrections\n'
-                       + 'import egads.algorithms.user.mathematics\n'
-                       + 'import egads.algorithms.user.microphysics\n'
-                       + 'import egads.algorithms.user.thermodynamics\n'
-                       + 'import egads.algorithms.user.transforms\n'
-                       + 'import egads.algorithms.user.radiation\n')
-        init_file = open(user_path + '__init__.py', 'w')
+                       + 'import user_algorithms.comparisons\n'
+                       + 'import user_algorithms.corrections\n'
+                       + 'import user_algorithms.mathematics\n'
+                       + 'import user_algorithms.microphysics\n'
+                       + 'import user_algorithms.thermodynamics\n'
+                       + 'import user_algorithms.transforms\n'
+                       + 'import user_algorithms.radiation\n')
+        init_file = open(algo_path + '/__init__.py', 'w')
         init_file.write(init_string)
         init_file.close()
         user_folder = ['comparisons', 'corrections', 'mathematics', 'microphysics', 'thermodynamics', 'transforms',
                        'radiation']
         for folder in user_folder:
-            logging.debug('egads - egads_utils.py - create_user_algorithms_structure - creating [user/' + folder + '] '
-                          + 'folder')
-            os.makedirs(os.path.join(user_path, folder))
+            logging.debug('egads - egads_utils.py - create_user_algorithms_structure - creating [user_algorithms/'
+                          + folder + '] folder')
+            pathlib.Path(pathlib.Path(algo_path).joinpath(folder)).mkdir()
             init_string = ('__author__ = "Olivier Henry"\n'
                            + '__date__ = "2019/05/06 11:45"\n'
                            + '__version__ = "1.0"\n\n'
                            + 'import logging\n\n'
                            + 'try:\n'
-                           + "    logging.info('egads [user/" + folder + "] algorithms have been loaded')\n"
+                           + "    logging.info('egads [user_algorithms/" + folder + "] algorithms have been loaded')\n"
                            + 'except Exception as e:\n'
-                           + "    logging.error('an error occured during the loading of a [user/" + folder
+                           + "    logging.error('an error occured during the loading of a [user_algorithms/" + folder
                            + "] algorithm: ' + str(e))\n")
-            init_file = open(os.path.join(user_path, folder) + '/__init__.py', 'w')
+            init_file = open(str(pathlib.Path(algo_path).joinpath(folder)) + '/__init__.py', 'w')
             init_file.write(init_string)
             init_file.close()
     else:

@@ -10,6 +10,11 @@ To fix list:
 ------------
 
 
+September 4 2019, Release version 1.1.0
+=======================================
+The configuration file and user algorithm structure have been moved to a dedicated directory in the $HOME folder (Windows, Linux and MacOS), to avoid issues when Python is installed in a system folder. Read the documentation for more details.
+
+
 August 14 2019, Release version 1.0.3
 =====================================
   FIXED:
