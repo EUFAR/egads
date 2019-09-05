@@ -1,7 +1,7 @@
 Version:
 -------
 
-EGADS Lineage 1.1.0
+EGADS Lineage 1.1.1
 
 
 Developments:

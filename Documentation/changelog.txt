@@ -10,6 +10,12 @@ To fix list:
 ------------
 
 
+September 5 2019, Release version 1.1.1
+=======================================
+  MODIFIED:
+    - a new function has been introduced to reload all user-defined algorithms. It is not intended to be used directly in a script, but by the GUI when a user creates an algorithm via the dedicated window. The move of all files created by EGADS in the $HOME directory leads to difficulties with the GUI and this solution is now used until a better solution is found.
+
+
 September 4 2019, Release version 1.1.0
 =======================================
 The configuration file and user algorithm structure have been moved to a dedicated directory in the $HOME folder (Windows, Linux and MacOS), to avoid issues when Python is installed in a system folder. Read the documentation for more details.

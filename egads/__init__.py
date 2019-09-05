@@ -106,6 +106,16 @@ def check_update():
         logging.debug('egads - __init__.py - check_update - app is frozen, no update check')
 
 
+def _reload_user_algorithms():
+    """
+    function to reload algorithms created by a user. It is intended to be used by the GUI.
+    """
+
+    logging.debug('egads - __init__.py - _reload_user_algorithms')
+    import importlib
+    importlib.reload(user_algorithms)
+
+
 if rq_version != 'requests is not available':
     if not frozen:
         if config_dict.getboolean('OPTIONS', 'check_update'):
