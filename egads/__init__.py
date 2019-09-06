@@ -114,6 +114,10 @@ def _reload_user_algorithms():
     logging.debug('egads - __init__.py - _reload_user_algorithms')
     import importlib
     importlib.reload(user_algorithms)
+    rep_list = [item for item in dir(egads.user_algorithms) if '__' not in item]
+    rep_list.remove('user_algorithms')
+    for rep in rep_list:
+        importlib.reload(getattr(user_algorithms, rep))
 
 
 if rq_version != 'requests is not available':

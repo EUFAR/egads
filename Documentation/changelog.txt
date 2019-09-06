@@ -10,6 +10,12 @@ To fix list:
 ------------
 
 
+September 6 2019, Release version 1.1.2
+=======================================
+  MODIFIED:
+    - improved the function to reload user-defined algorithms.
+	
+
 September 5 2019, Release version 1.1.1
 =======================================
   MODIFIED:
