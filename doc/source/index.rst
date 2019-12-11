@@ -11,6 +11,6 @@ Welcome to EGADS's documentation!
 
    intro
    install
-   tutorial
+   tutorial-global
    alg_development
    egadsapi

@@ -23,6 +23,22 @@ class EgadsData(pq.Quantity):
     __refs__ = defaultdict(list)
 
     def __new__(cls, value, units='', variable_metadata={}, dtype=None, **attrs):
+        """
+        Constructor Variables
+
+        :param value:
+            Scalar or array of values to initialize EgadsData object.
+        :param string units:
+            Optional - String representation of units to be used for current EgadsData instance, e.g.
+            'm/s', 'kg', 'g/cm^3', etc.
+        :param VariableMetadata variable_metadata:
+            Optional - VariableMetadata dictionary object containing relevant metadata
+            for the current EgadsData instance.
+        :param **attrs:
+            Optional - Keyword/value pairs of additional metadata which will be added into
+            the existing variable_metadata object.
+        """
+
         logging.debug('egads - egads_core.py - EgadsData - __new__')
         if isinstance(units, metadata.VariableMetadata):
             if not variable_metadata:
@@ -262,8 +278,6 @@ class EgadsAlgorithm(object):
         """
         Initializes EgadsAlgorithm instance with None values for all standard
         attributes.
-
-        Constructor Variables
     
         :param bool return_Egads: Optional - 
             Flag used to configure which object type will be returned by the current
@@ -289,7 +303,7 @@ class EgadsAlgorithm(object):
         Basic run method. This method should be called from EgadsAlgorithm children,
         passing along the correct inputs to the _call_algorithm method.
         
-        :param *args:
+        :param args:
             Parameters to pass into algorithm in the order specified in algorithm metadata.
         """
         
@@ -459,6 +473,7 @@ class EgadsAlgorithm(object):
         """
         Indicate the algorithm used to produce the output variable
         """
+
         logging.debug('egads - egads_core.py - EgadsAlgorithm - processor')
         for output in self.output_metadata:
             output['Processor'] = self.metadata['Processor']

@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: egads-lineage
-Version: 1.1.2
+Version: 1.2.0
 Summary: EGADS: EUFAR General Airborne Data-processing Software
 Home-page: https://github.com/EUFAR/egads/tree/Lineage
 Author: EUFAR, Olivier Henry
@@ -35,3 +35,4 @@ Requires: numpy (>=1.14)
 Requires: netCDF4 (>=1.3.0)
 Requires: python_dateutil (>=2.6.1)
 Requires: quantities (>=0.12.1)
+Requires: h5py (>=2.10.0)

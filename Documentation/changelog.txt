@@ -10,6 +10,26 @@ To fix list:
 ------------
 
 
+December 11 2019, Release version 1.2.0
+=======================================
+EGADS can read and write HDF5 file format, following or not EUFAR convention.
+Group function has been added to the NetCdf and EgadsNetCdf classes. The conversion to NasaAmes from NetCdf using the dedicated function is not compatible with groups.
+
+  FIXED:
+    - during the conversion of a netcdf file to a nasa ames file, the normal comment wasn't created properly. It has been fixed in NetCdf and EgadsNetCdf classes.
+	- corrected few logging messages in the NetCdf and EgadsNetCdf classes.
+	- fixed few typos.
+	- corrected documentation of help part in all different classes.
+  
+  ADDED:
+    - Hdf and EgadsHdf classes have been implemented to read/write HDF5 files.
+	- Group has been implemented in NetCdf and EgadsNetCdf classes.
+	- tests has been added for Hdf and EgadsHdf.
+  
+  MODIFIED:
+    - the documentation has been updated.
+
+
 September 6 2019, Release version 1.1.2
 =======================================
   MODIFIED:

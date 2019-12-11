@@ -9,6 +9,8 @@ from .nasa_ames_io import NasaAmes
 from .nasa_ames_io import EgadsNasaAmes
 from .netcdf_io import NetCdf
 from .netcdf_io import EgadsNetCdf
+from .hdf_io import Hdf
+from .hdf_io import EgadsHdf
 from .text_file_io import EgadsFile
 from .text_file_io import EgadsCsv
 from .text_file_io import parse_string_array

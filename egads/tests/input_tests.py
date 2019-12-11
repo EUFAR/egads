@@ -14,11 +14,14 @@ import csv
 import egads
 import egads.input as einput
 import netCDF4
+import h5py
 from numpy.random.mtrand import uniform
 from numpy.testing import assert_array_equal
 
 FILE_NAME = tempfile.mktemp('.nc')
 FILE_NAME_ALT = tempfile.mktemp('.nc')
+HDF_FILE_NAME = tempfile.mktemp('.hdf5')
+HDF_FILE_NAME_ALT = tempfile.mktemp('.hdf5')
 VAR_NAME = 'test_var'
 VAR_UNITS = 's'
 VAR_LONG_NAME = 'test variable'
@@ -119,7 +122,7 @@ class NetCdfFileInputTestCase(unittest.TestCase):
     
     def setUp(self):
         self.file = FILE_NAME
-        f = netCDF4.Dataset(self.file, 'w')  # @UndefinedVariable
+        f = netCDF4.Dataset(self.file, 'w')
         f.attribute = GLOBAL_ATTRIBUTE
         f.Conventions = CONVENTIONS
         f.title = TITLE
@@ -224,7 +227,7 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         data = einput.NetCdf(self.file).read_variable(VAR_MULT_NAME, input_range=(None, None, 0, DIM1_LEN - 2))
         assert_array_equal(data, random_mult_data[:, :DIM1_LEN - 2])
 
-    def test_read_n6sp_data(self):
+    def test_read_egads_netcdf_data(self):
         """ Test reading in data using N6SP formatted NetCDF """
 
         infile = einput.EgadsNetCdf(self.file)
@@ -306,6 +309,212 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         self.assertEqual(varin.shape[0], len(self.data2), 'Variable dimensions dont match')
         self.assertEqual(varin.scale_factor, 1.0, 'Variable scale factor dont match')
         self.assertEqual(varin.long_name, 'a common data', 'Variable long name dont match')
+        f.close()
+
+
+class HdfFileInputTestCase(unittest.TestCase):
+    """ Test input from Hdf file """
+
+    def setUp(self):
+        self.file = HDF_FILE_NAME
+        self.data_len = 12
+        self.random_data1 = uniform(size=self.data_len)
+        self.random_data2 = uniform(size=self.data_len)
+        f = h5py.File(self.file, 'w')
+        f.attrs.create('Conventions', 'EUFAR')
+        f.attrs.create('title', 'test file')
+        f.attrs.create('source', 'John Doe (john.doe@email.com)')
+        f.attrs.create('institution', 'my institution')
+        f.attrs.create('project', 'my project')
+        grp = f.create_group('my_project/data/temperature')
+        grp.attrs.create('source', 'an instrument to measure the temperature')
+        dim1 = grp.create_dataset('time1', data=range(1, 13, 1), dtype='f8')
+        dim2 = f.create_dataset('time2', data=range(1, 13, 1), dtype='f8')
+        grp['time1'].make_scale('time1')
+        f['time2'].make_scale('time2')
+        var1 = grp.create_dataset('temp', data=self.random_data1, dtype='f8')
+        var2 = f.create_dataset('sun_light', data=self.random_data2, dtype='f8')
+        grp['temp'].dims[0].attach_scale(grp['time1'])
+        grp['temp'].dims[0].label = 'time1'
+        grp['time1'].dims[0].label = 'time1'
+        f['time2'].dims[0].label = 'time2'
+        f['sun_light'].dims[0].attach_scale(f['time2'])
+        f['sun_light'].dims[0].label = 'time2'
+        dim1.attrs.create('long_name', 'time')
+        dim1.attrs.create('standard_name', 'time')
+        dim1.attrs.create('units', 'hour')
+        dim2.attrs.create('standard_name', 'time')
+        dim2.attrs.create('long_name', 'time')
+        dim2.attrs.create('units', 'hour')
+        var1.attrs.create('long_name', 'temperature at 10m')
+        var1.attrs.create('standard_name', 'temperature')
+        var1.attrs.create('units', 'degC')
+        var2.attrs.create('long_name', 'sun light')
+        var2.attrs.create('standard_name', 'sun light')
+        var2.attrs.create('units', 'w/m2')
+        f.close()
+
+    def test_bad_file_name(self):
+        """ Test handling of missing file """
+
+        self.assertRaises((RuntimeError, IOError, OSError), einput.Hdf, 'test12345.hdf5')
+
+    def test_open_file(self):
+        """ Test opening of file using open method """
+
+        data = einput.Hdf()
+        data.open(self.file)
+        self.assertEqual(data.filename, self.file, 'file opening failed')
+        self.assertEqual(data.get_perms(), 'r', 'file permissions do not match')
+        data.close()
+        data_write = einput.Hdf()
+        data_write.open(self.file, 'w')
+        self.assertEqual(data_write.filename, self.file, 'file opening failed for write')
+        self.assertEqual(data_write.get_perms(), 'w', 'file permissions do not match')
+        data_write.close()
+
+    def test_bad_variable(self):
+        """ Test handling of missing variable name"""
+
+        data = einput.Hdf(self.file)
+        self.assertRaises(KeyError, data.read_variable, 'blah')
+        data.close()
+
+    def test_bad_attribute(self):
+        """ Test handling of bad attribute name"""
+
+        data = einput.Hdf(self.file)
+        self.assertRaises(KeyError, data.get_attribute_value, 'bad_attr')
+        self.assertRaises(KeyError, data.get_attribute_value, 'bad_attr', VAR_NAME)
+        data.close()
+
+    def test_read_attribute(self):
+        """ Test reading attribute from file """
+
+        data = einput.Hdf(self.file)
+        self.assertEqual(data.get_attribute_value('units', 'my_project/data/temperature/temp'), 'degC',
+                         'Variable attributes do not match')
+        self.assertEqual(data.get_attribute_value('project'), 'my project', 'Global attributes do not match')
+        self.assertEqual(data.get_attribute_value('source', 'my_project/data/temperature'),
+                         'an instrument to measure the temperature', 'Group attributes do not match')
+        data.close()
+
+    def test_read_dimensions(self):
+        """ Test reading dimensions from file """
+
+        data = einput.Hdf(self.file)
+        dimdict = {'time1': 12, 'time2': 12}
+        self.assertEqual(data.get_dimension_list(), dimdict, 'dimensions dictionary does not match')
+        vardimdict1 = {'time1': 12}
+        vardimdict2 = {'time2': 12}
+        self.assertEqual(data.get_dimension_list('my_project/data/temperature/temp'), vardimdict1,
+                         'variable dimensions do not match')
+        self.assertEqual(data.get_dimension_list('sun_light'), vardimdict2, 'variable dimensions do not match')
+        data.close()
+
+    def test_load_data(self):
+        """ Test reading hdf data"""
+
+        data1 = einput.Hdf(self.file).read_variable('sun_light')
+        self.assertEqual(len(data1), 12, "Input dimensions don't match")
+        assert_array_equal(data1, self.random_data2)
+        data2 = einput.Hdf(self.file).read_variable('my_project/data/temperature/temp')
+        self.assertEqual(len(data2), 12, "Input dimensions don't match")
+        assert_array_equal(data2, self.random_data1)
+
+    def test_read_range(self):
+        """ Test reading subset of data"""
+        data = einput.Hdf(self.file).read_variable('my_project/data/temperature/temp', input_range=(0, 4))
+        assert_array_equal(data, self.random_data1[0: 4])
+        data = einput.Hdf(self.file).read_variable('my_project/data/temperature/temp', input_range=(-1, 6))
+        assert_array_equal(data, self.random_data1[-1])
+        data = einput.Hdf(self.file).read_variable('my_project/data/temperature/temp', input_range=(None, 12))
+        assert_array_equal(data, self.random_data1)
+        data = einput.Hdf(self.file).read_variable('my_project/data/temperature/temp', input_range=(None, 13))
+        assert_array_equal(data, self.random_data1)
+
+    def test_read_egads_hdf_data(self):
+        """ Test reading in data using EgadsHdf """
+
+        infile = einput.EgadsHdf(self.file)
+        self.assertEqual(infile.file_metadata['title'], 'test file', 'Hdf title attribute doesnt match')
+        data = infile.read_variable('my_project/data/temperature/temp')
+        assert_array_equal(data.value, self.random_data1)
+        self.assertEqual(data.units, 'degC', 'EgadsData units attribute doesnt match')
+        self.assertEqual(data.metadata['units'], 'degC', 'EgadsData units attribute doesnt match')
+        self.assertEqual(data.metadata['long_name'], 'temperature at 10m', 'EgadsData long name attribute doesnt match')
+        self.assertEqual(data.metadata['standard_name'], 'temperature',
+                         'EgadsData standard name attribute doesnt match')
+        infile.close()
+
+
+class HdfFileOutputTestCase(unittest.TestCase):
+    """ Test output to Hdf file """
+
+    def setUp(self):
+        self.data_len = 12
+        self.random_data = uniform(size=self.data_len)
+        self.time_data = range(self.data_len)
+
+        self.data1 = egads.EgadsData(value=self.random_data,
+                                     units='mm',
+                                     long_name='a common data',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data2 = egads.EgadsData(value=self.time_data,
+                                     units='days since 20170101 00:00:00Z',
+                                     long_name='a common time vector',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.file = HDF_FILE_NAME_ALT
+        f = einput.Hdf(self.file, 'w')
+        f.add_group('my_project/data/temperature')
+        f.add_dim('my_project/data/temperature/time', self.time_data)
+        f.write_variable(self.random_data, 'my_project/data/temperature/data', ('time',), 'double')
+        f.add_attribute('units', 's', 'my_project/data/temperature/time')
+        f.add_attribute('units', 'm', 'my_project/data/temperature/data')
+        f.close()
+
+    def test_group_creation(self):
+        """ Test creation of group in file """
+        f = h5py.File(self.file, 'r')
+        grp = f['my_project/data/temperature']
+        self.assertIsInstance(grp, h5py.Group, 'Object my_project/data/temperature is not a group')
+        f.close()
+
+    def test_dimension_creation(self):
+        """ Test creation of dimensions in file """
+
+        f = h5py.File(self.file, 'r')
+        dim = f['my_project/data/temperature/time']
+        self.assertEqual(dim.name, '/my_project/data/temperature/time', 'Dim name not equal')
+        self.assertEqual(dim.shape[0], 12, 'Dim length not equal')
+        self.assertEqual(dim.dims[0].label, 'time', 'Dim not registered')
+        f.close()
+
+    def test_variable_creation(self):
+        """ Test creation of variable in file """
+
+        f = h5py.File(self.file, 'r')
+        varin = f['my_project/data/temperature/data']
+        self.assertEqual(varin.shape, (12,), 'Variable dimensions dont match')
+        self.assertEqual(varin.attrs['units'], 'm', 'Variable units dont match')
+        assert_array_equal(varin[:], self.random_data)
+        f.close()
+
+    def test_egadshdf_instance_creation(self):
+        """ Test creation of a hdf file via the EgadsHdf class """
+
+        filename = tempfile.mktemp('.hdf5')
+        g = einput.EgadsHdf(filename, 'w')
+        g.add_dim('time', self.data2)
+        g.write_variable(self.data1, 'data', ('time',), 'double')
+        g.close()
+        f = h5py.File(filename, 'r')
+        varin = f['data']
+        self.assertEqual(varin.shape[0], len(self.data2), 'Variable dimensions dont match')
+        self.assertEqual(varin.attrs['scale_factor'], 1.0, 'Variable scale factor dont match')
+        self.assertEqual(varin.attrs['long_name'], 'a common data', 'Variable long name dont match')
         f.close()
 
 
@@ -815,7 +1024,7 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         f.close()
         g = einput.NasaAmes(self.nafilename)
         self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('ONAME'), 'Originator values do not '
-                                                                                         'match')
+                                                                                          'match')
         self.assertEqual('computer', g.get_attribute_value('SNAME'), 'Source values do not match')
         data = g.read_variable('data')
         self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
@@ -913,6 +1122,8 @@ class NAConvertFormatTestCase(unittest.TestCase):
 def suite():
     netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
     netcdf_out_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileOutputTestCase)
+    hdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(HdfFileInputTestCase)
+    hdf_out_suite = unittest.TestLoader().loadTestsFromTestCase(HdfFileOutputTestCase)
     text_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileInputTestCase)
     text_out_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsFileOutputTestCase)
     csv_in_suite = unittest.TestLoader().loadTestsFromTestCase(EgadsCsvInputTestCase)
@@ -921,9 +1132,9 @@ def suite():
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
     nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
-    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, text_in_suite, text_out_suite, csv_in_suite,
-                               csv_out_suite, na_in_suite, na_out_suite, netcdf_convert_format_suite,
-                               nasa_ames_convert_format_suite])
+    return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, hdf_in_suite, hdf_out_suite, text_in_suite,
+                               text_out_suite, csv_in_suite, csv_out_suite, na_in_suite, na_out_suite,
+                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])
 
 
 if __name__ == '__main__':

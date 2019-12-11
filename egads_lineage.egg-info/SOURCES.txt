@@ -3,8 +3,8 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
-Documentation/EGADS Lineage Algorithm Handbook - v1.1.2.pdf
-Documentation/EGADS Lineage Documentation - v1.1.2.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v1.2.0.pdf
+Documentation/EGADS Lineage Documentation - v1.2.0.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -90,7 +90,13 @@ doc/source/egadsapi.rst
 doc/source/index.rst
 doc/source/install.rst
 doc/source/intro.rst
-doc/source/tutorial.rst
+doc/source/tutorial-csv.inc
+doc/source/tutorial-end.inc
+doc/source/tutorial-global.rst
+doc/source/tutorial-hdf.inc
+doc/source/tutorial-nasaames.inc
+doc/source/tutorial-netcdf.inc
+doc/source/tutorial-raw.inc
 doc/source/_static/layout.html
 doc/source/example_files/algorithm_template.py
 doc/source/example_files/example.py
@@ -99,7 +105,8 @@ doc/source/example_files/main_csv_file.csv
 doc/source/example_files/main_raw_file.dat
 doc/source/example_files/na_example_file.na
 doc/source/example_files/na_example_script.py
-doc/source/example_files/ncdump_example_file.txt
+doc/source/example_files/ncdump_hdf_example_file.txt
+doc/source/example_files/ncdump_nc_example_file.txt
 doc/source/example_files/temp_static_cnrm.tex
 doc/source/images/eufar_new_logo_white_bkgrd.png
 egads/__init__.py
@@ -161,6 +168,7 @@ egads/core/egads_core.py
 egads/core/egads_update.py
 egads/core/metadata.py
 egads/input/__init__.py
+egads/input/hdf_io.py
 egads/input/input_core.py
 egads/input/nasa_ames_io.py
 egads/input/netcdf_io.py

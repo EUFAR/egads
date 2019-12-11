@@ -10,7 +10,7 @@ import logging
 class FileCore(object):
     """
     Abstract class which holds basic file access methods and attributes.
-    Designed to be subclassed by NetCDF, NASA Ames and basic text file
+    Designed to be subclassed by NetCDF, Hdf, NASA Ames and basic text file
     classes.
 
     **Constructor Variables**
@@ -26,7 +26,7 @@ class FileCore(object):
         """
         Initializes file instance.
 
-        :param string filename: Optional -
+        :param string|list filename: Optional -
             Name of file to open.
         :param char perms: Optional -
             Permissions used to open file. Options are ``w`` for write (overwrites data in file),

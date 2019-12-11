@@ -1,0 +1,25 @@
+=> ncdump -h main_hdf_file.hdf5                                               
+   netcdf main_hdf_file {                                                          
+   dimensions:                                                                     
+           time = 5 ;                                                              
+   variables:                                                                      
+           double corrected_sea_level(time) ;                                      
+                   string corrected_sea_level:name = "corr sea level" ;            
+                   corrected_sea_level:scale_factor = 1. ;                         
+                   corrected_sea_level:_FillValue = -9999 ;                        
+                   string corrected_sea_level:units = "mm" ;                       
+           double sea_level(time) ;                                                
+                   string sea_level:name = "sea level" ;                           
+                   sea_level:scale_factor = 1. ;                                   
+                   sea_level:_FillValue = -9999 ;                                  
+                   string sea_level:units = "mm" ;                                 
+           double time(time) ;                                                     
+                   string time:name = "time" ;                                     
+                   string time:units = "seconds since 19700101T00:00:00" ;         
+                                                                                   
+   // global attributes:                                                           
+                   string :Conventions = "CF-1.0" ;                                
+                   string :history = "the hdf file has been created by EGADS" ;    
+                   string :comments = "no comments on the hdf file" ;              
+                   string :institution = "My institution" ;                        
+   }                                                                               

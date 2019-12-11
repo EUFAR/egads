@@ -1,7 +1,7 @@
 Version:
 -------
 
-EGADS Lineage 1.1.2
+EGADS Lineage 1.2.0
 
 
 Developments:
@@ -38,6 +38,7 @@ Features:
 * Fully documented algorithms
 * I/O routines for common file formats:
   * NetCDF
+  * Hdf
   * NASA Ames
   * CSV
   * ASCII

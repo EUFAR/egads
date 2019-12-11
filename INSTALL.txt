@@ -21,6 +21,8 @@ To use EGADS Lineage, the following packages must be installed:
 
  4. Python netCDF4 libraries 1.3.0 or newer
  
+ 5. H5py 2.10 or newer
+ 
  5. Quantities 0.12.1 or newer
 
  6. python_dateutil 2.6.1 or newer.

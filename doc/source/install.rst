@@ -12,6 +12,7 @@ Use of EGADS requires the following packages:
 * numpy 1.14 or newer. Available at http://numpy.scipy.org/
 * scipy 1.00 or newer. Available at http://www.scipy.org/
 * Python netCDF4 libraries 1.3.0 or newer. Available at https://pypi.python.org/pypi/netCDF4
+* h5py 2.10.0 or newer. Available at https://pypi.org/project/h5py
 * python_dateutil 2.6.1 or newer. Available at https://pypi.python.org/pypi/python-dateutil
 * quantities 0.12.1 or newer. Available at https://pypi.org/project/quantities
 * requests 2.18.4 or newer. Optional, only for update checking. Available at https://pypi.org/project/requests/
@@ -46,6 +47,8 @@ Actually, the number of option is limited and will probably incrase in the futur
 * ``level`` in ``LOG`` section: one of the items in the following list ``DEBUG``, ``INFO``, ``WARNING``, ``CRITICAL``, ``ERROR`` ; it is used to set the logging level when EGADS is imported.
 * ``path`` in ``LOG`` section: a string corresponding to an OS path ; it is used to set the directory path where the log file is saved.
 * ``check_update`` in ``OPTIONS`` section: True or False ; it is used to let EGADS check for an update automatically when it is imported.
+
+The file containing all options is now stored in the folder ``.egads_lineage`` in the user $HOME directory.
 
 
 Log
@@ -85,4 +88,4 @@ If the ``check_update`` option is set on True in the egads.ini file, EGADS will 
    >>> egads.set_options(check_update=True)
    >>> exit()
 
-The use of pip is still required to update EGADS package. The module Requests is optional for EGADS but is mandatory to check for an update.
+The module Requests is optional for EGADS but is mandatory to check for an update.

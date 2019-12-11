@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.18"
+__version__ = "1.20"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -9,9 +9,9 @@ import egads
 import datetime
 import operator
 import os
-import collections
 import dateutil
 import numpy
+import collections
 from egads.input import FileCore
 
 
@@ -56,29 +56,31 @@ class NetCdf(FileCore):
     def get_attribute_list(self, varname=None):
         """
         Returns a dictionary of attributes and values found in current NetCDF file
-        either globally, or attached to a given variable.
+        either globally, or attached to a given variable or to a given group.
 
         :param string varname:
-            Optional - Name of variable to get list of attributes from. If no variable name is
-            provided, the function returns top-level NetCDF attributes.
+            Optional - Name of variable or group to get list of attributes from. If no
+            variable name is provided, the function returns top-level NetCDF attributes.
+        :return: dictionary of attributes.
         """
-        
+
         logging.debug('egads - netcdf_io.py - NetCdf - get_attribute_list - varname ' + str(varname))
         return self._get_attribute_list(varname)
 
     def get_attribute_value(self, attrname, varname=None):
         """
-        Returns value of an attribute given its name. If a variable name is provided,
-        the attribute is returned from the variable specified, otherwise the global
-        attribute is examined.
+        Returns value of an attribute given its name. If a variable name or a group
+        name is provided, the attribute is returned from the variable or the group
+        specified, otherwise the global attribute is examined.
 
         :param string attrname:
             Name of attribute to examine
         :param string varname:
-            Optional - Name of variable attribute is attached to. If none specified, global
-            attributes are examined.
+            Optional - Name of variable or group attribute is attached to. If none
+            specified, global attributes are examined.
+        :return: value of an attribute.
         """
-        
+
         logging.debug('egads - netcdf_io.py - NetCdf - get_attribute_value - attrname ' + str(attrname)
                       + ', varname ' + str(varname))
         attrs = self._get_attribute_list(varname)
@@ -87,43 +89,62 @@ class NetCdf(FileCore):
     def get_dimension_list(self, varname=None):
         """
         Returns an ordered dictionary of dimensions and their sizes found in the current
-        NetCDF file. If a variable name is provided, the dimension names and
-        lengths associated with that variable are returned.
+        NetCDF file. If a variable name or a group name is provided, the dimension names
+        and lengths associated with that variable or group are returned.
 
         :param string varname:
-            Optional - Name of variable to get list of associated dimensions for. If no variable
-            name is provided, the function returns all dimensions in the NetCDF file.
+            Optional - Name of variable or group to get list of associated dimensions for.
+            If no variable name is provided, the function returns all dimensions in the
+            NetCDF file.
+        :return: ordered dictionary of dimensions.
         """
-        
+
         logging.debug('egads - netcdf_io.py - NetCdf - get_dimension_list - varname ' + str(varname))
         return self._get_dimension_list(varname)
 
-    def get_variable_list(self):
+    def get_variable_list(self, groupname=None, group_walk=False, details=False):
         """
-        Returns a list of variables found in the current NetCDF file.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - get_variable_list')
-        return self._get_variable_list()
+        Returns a list of variables found in the current NetCDF file. if a groupname is
+        provided, a list of variables found in the group is returned.
 
-    def get_perms(self):
+        :param string|list groupname:
+            Optional - the name of the group, or a list of folder as hierarchy, to get
+            the list from.
+        :param bool group_walk:
+            Optional - if True, the function visits all groups (if at least one exists)
+            to list all variables. False by default.
+        :param bool details:
+            Optional - if True, the function returns a list of dictionaries, with
+            variable name as key and variable path as value. False by default.
+        :return: list of variables.
         """
-        Returns the current permissions on the file that is open. Returns None if
-        no file is currently open. Options are ``w`` for write (overwrites
-        data in file),``a`` and ``r+`` for append, and ``r`` for read.
+
+        logging.debug('egads - netcdf_io.py - NetCdf - get_variable_list')
+        return self._get_variable_list(groupname, group_walk, details)
+
+    def get_group_list(self, groupname=None, details=False, ):
         """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - get_perms')
-        if self.f is not None:
-            return self.perms
-        else:
-            logging.exception('egads - netcdf_io.py - NetCdf - get_perms - AttributeError, no file open')
-            raise AttributeError('No file open')
+        Returns a list of groups found in the current NetCDF file.
+
+        :param string|list groupname:
+            Optional - the name of the group to get the list from. It should represent a path to
+            the group or a list of the groups in the hierarchy to get the list from.
+            None by default.
+        :param bool details:
+            If details is true, it will return a list of all groups in the NetCDF file, or from
+            groupname if groupname is not None, and their path. In that case, each element of
+            the list is a small dict containing as key/value the name of the group and the path
+            of the group in the file. False by default.
+        :return: list of groups.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - get_group_list')
+        return self._get_group_list(groupname, details)
 
     def read_variable(self, varname, input_range=None, read_as_float=False, replace_fill_value=False):
         """
-        Reads a variable from currently opened NetCDF file.
-        
+        Reads a variable from currently opened NetCDF file or from a group.
+
         :param string varname:
             Name of NetCDF variable to read in.
         :param vector input_range:
@@ -135,12 +156,513 @@ class NetCdf(FileCore):
             Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN,
             if one of those attributes exists in the NetCDF file.
             ``False`` is the default value.
+        :return: variable as a numpy array.
         """
-        
+
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ', input_range '
                       + str(input_range))
+        return self._read_variable(varname, input_range, read_as_float, replace_fill_value)
+
+    def change_variable_name(self, varname, newname, groupname=None):
+        """
+        Change the variable name in currently opened NetCDF file.
+
+        :param string varname:
+            Name of variable to rename.
+        :param string newname:
+            The new name.
+        :param string|list groupname:
+            Optional - if necessary, the group, or sequence of group, to which the variable
+            is attached. None by default.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - change_variable_name - varname ' + str(varname)
+                      + ', newname ' + str(newname))
+        self._change_variable_name(varname, newname, groupname)
+
+    def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None):
+        """
+        Writes/creates variable in currently opened NetCDF file.
+
+        :param array data:
+            Array of values to output to NetCDF file.
+        :param string varname:
+            Name of variable to create/write to. If path to a group is in the name, the variable
+            will be created/written in this group.
+        :param tuple dims:
+            Optional - Name(s) of dimensions to assign to variable. If variable already exists
+            in NetCDF file, this parameter is optional. For scalar variables, pass an empty tuple.
+        :param string ftype:
+            Optional - Data type of variable to write. Defaults to ``double``. If variable exists,
+            data type remains unchanged. Options for type are ``double``, ``float``, ``int``,
+            ``short``, ``char``, and ``byte``
+        :param float fillvalue:
+            Optional - Overrides default NetCDF _FillValue, if provided.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) +
+                      ', dims ' + str(dims) + ', ftype ' + str(ftype) + ', fillvalue ' + str(fillvalue))
+        self._write_variable(data, varname, dims, ftype, fillvalue)
+
+    def add_dim(self, name, size, groupname=None):
+        """
+        Adds dimension to currently open file or to a group.
+
+        :param string name:
+            Name of dimension to add
+        :param integer size:
+            Integer size of dimension to add.
+        :param string|list groupname:
+            Optional - the name of the group, or a list of name sequence, to which to add
+            the dimension. None by default.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ', size ' + str(size))
+        self._add_dim(name, size, groupname)
+
+    def add_attribute(self, attrname, value, objname=None):
+        """
+        Adds attribute to currently open file. If objname is included, attribute
+        is added to specified variable or group, otherwise it is added to global
+        file attributes.
+
+        :param string attrname:
+            Attribute name.
+        :param string|float|int value:
+            Value to assign to attribute name.
+        :param string objname:
+            Optional - If objname is provided, attribute name and value are added
+            to specified variable or group in the Hdf file.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - add_attribute - attrname ' + str(attrname) + ', varname '
+                      + str(objname))
+        self._add_attribute(attrname, value, objname)
+
+    def add_group(self, groupname):
+        """
+        Adds group to currently open file.
+
+        :param string|list groupname:
+            Group name, or path name, or sequence of groups.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - add_group - groupname ' + str(groupname))
+        self._add_group(groupname)
+
+    def delete_attribute(self, attrname, varname=None):
+        """
+        Deletes attribute to currently open file. If varname is included, attribute
+        is removed from specified variable, otherwise it is removed from global file
+        attributes.
+
+        :param string attrname:
+            Attribute name.
+        :param string varname:
+            Optional - If varname is provided, attribute removed from specified
+            variable in the NetCDF file.
+        """
+        
+        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname) + 
+                      ', varname ' + str(varname))
+        if self.f is not None:
+            if varname is not None:
+                delattr(self.f.variables[varname], attrname)
+            else:
+                delattr(self.f, attrname)
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - delete_attribute - AttributeError, no file open')
+            raise AttributeError('No file open')
+        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname)
+                      + ' -> attribute delete OK')
+
+    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
+        """
+        Convert currently open NetCDF file to one or more NASA Ames files.
+        For now can only process NetCdf files to NASA/Ames FFI 1001 :
+        only time as an independant variable.
+
+        :param string na_file:
+            Optional - Name of output NASA Ames file. If none is provided, name of
+            current NetCDF file is used and suffix changed to .na
+        :param string delimiter:
+            Optional - The delimiter desired for use between data items in the data
+            file. Default - Tab.
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param string delimiter:
+            Optional - The delimiter desired for use between data items in the data
+            file. Default - '    ' (four spaces).
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - float_format ' + str(float_format)
+                      + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+      
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
+        """
+        Converts currently open NetCDF file to CSV file using the NasaAmes class.
+        
+        :param string csv_file:
+            Optional - Name of output CSV file. If none is provided, name of current
+            NetCDF is used and suffix changed to .csv
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+        
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
+        if not csv_file:
+            csv_file = os.path.splitext(self.filename)[0] + '.csv'
+        
+        self._convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ' -> file conversion OK')
+
+    def _open_file(self, filename, perms):
+        """
+        Private method for opening NetCDF file.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _open_file')
+        self.close()
         try:
-            varin = self.f.variables[varname]
+            self.f = netCDF4.Dataset(filename, perms)
+            self.filename = filename
+            self.perms = perms
+        except RuntimeError:
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - RuntimeError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise RuntimeError("ERROR: File %s doesn't exist" % filename)
+        except IOError:
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - IOError, File ' +
+                              str(filename) + ' doesn''t exist')
+            raise IOError("ERROR: File %s doesn't exist" % filename)
+        except Exception:
+            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - Exception, Unexpected error')
+            raise Exception("ERROR: Unexpected error")
+
+    def _get_attribute_list(self, var=None):
+        """
+        Private method for getting attributes from a NetCDF file. Gets global
+        attributes if no variable name or group name is provided, otherwise
+        gets attributes attached to specified variable or group. Function
+        returns dictionary of values. If multiple white spaces exist, they
+        are removed.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_attribute_list - var ' + str(var))
+        if self.f is not None:
+            attr_dict = {}
+            if var is not None:
+                try:
+                    varin = self.f.variables[var]
+                except KeyError:
+                    if var[0] == '/':
+                        var = var[1:]
+                    if '/' in var:
+                        var = var.split('/')
+                    if isinstance(var, list):
+                        orig_group = self.f
+                        for group in var:
+                            try:
+                                orig_group = orig_group.groups[group]
+                            except KeyError:
+                                orig_group = orig_group[group]
+                        varin = orig_group
+                    else:
+                        varin = self.f.groups[var]
+                for key, value in varin.__dict__.items():
+                    if isinstance(value, str):
+                        value = " ".join(value.split())
+                    attr_dict[key] = value
+                return attr_dict
+            else:
+                for key, value in self.f.__dict__.items():
+                    if isinstance(value, str):
+                        value = " ".join(value.split())
+                    attr_dict[key] = value
+                return attr_dict
+        else:
+            logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
+            raise AttributeError('No file open')
+
+    def _get_dimension_list(self, var=None):
+        """
+        Private method for getting list of dimension names and lengths. If
+        variable name or group name is provided, method returns list of dimension
+        names attached to specified variable or group, if none, returns all
+        dimensions in the file.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_dimension_list - var ' + str(var))
+        dimdict = collections.OrderedDict()
+        if self.f is not None:
+            if var:
+                file_dims = None
+                try:
+                    varin = self.f.variables[var]
+                    file_dims = self.f.dimensions
+                except KeyError:
+                    if var[0] == '/':
+                        var = var[1:]
+                    if '/' in var:
+                        var = var.split('/')
+                    if isinstance(var, list):
+                        orig_group = self.f
+                        for group in var:
+                            try:
+                                orig_group = orig_group.groups[group]
+                                file_dims = orig_group.dimensions
+                            except KeyError:
+                                file_dims = orig_group.dimensions
+                                orig_group = orig_group[group]
+                        varin = orig_group
+                    else:
+                        varin = self.f.groups[var]
+                        file_dims = varin.dimensions
+                dims = varin.dimensions
+                for dimname in dims:
+                    dimobj = file_dims[dimname]
+                    dimdict[dimname] = len(dimobj)
+            else:
+                dims = self.f.dimensions
+                for dimname, dimobj in reversed(sorted(dims.items())):
+                    dimdict[dimname] = len(dimobj)
+            return dimdict
+        else:
+            logging.error('egads.input.NetCdf._get_dimension_list: AttributeError, No file open')
+            raise AttributeError('No file open')
+
+    def _get_variable_list(self, groupname, group_walk, details):
+        """
+        Private method for getting list of variable names associated to a file or to group.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
+        if self.f is not None:
+            orig_group = self.f
+
+            def set_folder(grouppath, base_group):
+                if isinstance(grouppath, str):
+                    if grouppath[0] == '/':
+                        grouppath = grouppath[1:]
+                    if '/' in grouppath:
+                        grouppath = grouppath.split('/')
+                    else:
+                        grouppath = [grouppath]
+                for item in grouppath:
+                    base_group = base_group.groups[item]
+                return base_group
+
+            if groupname is not None:
+                orig_group = set_folder(groupname, orig_group)
+            if group_walk:
+                var_list = []
+                if details:
+                    for var in list(orig_group.variables.keys()):
+                        if groupname[0] != '/':
+                            var_list.append({var: ('/' + groupname)})
+                        else:
+                            var_list.append({var: groupname})
+                else:
+                    var_list = var_list + list(orig_group.variables.keys())
+                group_list = self.get_group_list(groupname, True)
+                for group in group_list:
+                    if groupname:
+                        path = group['path'][1:].replace(groupname, '')
+                    else:
+                        path = group['path']
+                    group_obj = set_folder(path, orig_group)
+                    if list(group_obj.variables.keys()):
+                        if details:
+                            for var in list(group_obj.variables.keys()):
+                                var_list.append({var: group['path']})
+                        else:
+                            var_list = var_list + list(group_obj.variables.keys())
+                return var_list
+            else:
+                var_list = []
+                if details:
+                    for var in list(orig_group.variables.keys()):
+                        if groupname[0] != '/':
+                            var_list.append({var: ('/' + groupname)})
+                        else:
+                            var_list.append({var: groupname})
+                else:
+                    var_list = var_list + list(orig_group.variables.keys())
+                return var_list
+        else:
+            logging.error('egads.input.NetCdf._get_variable_list: AttributeError, No file open')
+            raise AttributeError('No file open')
+
+    def _get_group_list(self, groupname, details):
+        """
+        Private method for getting list of group names.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _get_group_list')
+        if self.f is not None:
+            orig_group = self.f
+            group_list = []
+            if groupname is not None:
+                if isinstance(groupname, str):
+                    if groupname[0] == '/':
+                        groupname = groupname[1:]
+                    if '/' in groupname:
+                        groupname = groupname.split('/')
+                for group in groupname:
+                    orig_group = orig_group.groups[group]
+
+            def _walktree(orig):
+                groups = orig.groups
+                for _, obj in groups.items():
+                    if details:
+                        group_list.append({'name': obj.name, 'path': obj.path})
+                    else:
+                        group_list.append(obj.name)
+                    _walktree(obj)
+
+            _walktree(orig_group)
+            return group_list
+        else:
+            logging.error('egads.input.NetCdf._get_group_list: AttributeError, No file open')
+            raise AttributeError('No file open')
+
+    def _add_group(self, groupname):
+        """
+        Private method for adding a group.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _add_group')
+        if self.f is not None:
+            if isinstance(groupname, list):
+                groupname = '/'.join(groupname)
+            if groupname[0] != '/':
+                groupname = '/' + groupname
+            self.f.createGroup(groupname)
+        else:
+            logging.error('egads.input.NetCdf._add_group: AttributeError, No file open')
+            raise AttributeError('No file open')
+
+    def _add_dim(self, name, size, groupname):
+        """
+        Private method to add dimension to currently open file or to a group.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _add_dim')
+        if self.f is not None:
+            if groupname is not None:
+                orig_group = self.f
+                if isinstance(groupname, str):
+                    if groupname[0] == '/':
+                        groupname = groupname[1:].split('/')
+                for group in groupname:
+                    orig_group = orig_group.groups[group]
+                orig_group.createDimension(name, size)
+            else:
+                self.f.createDimension(name, size)
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
+            raise AttributeError('No file open')
+        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ' -> dim add OK')
+
+    def _add_attribute(self, attrname, value, varname):
+        """
+        Private method to add attribute to currently open file.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _add_attribute')
+        if self.f is not None:
+            if isinstance(value, list):
+                tmp = ''
+                for item in value:
+                    tmp += item + ', '
+                value = tmp[:-2]
+            if varname is not None:
+                try:
+                    varin = self.f.variables[varname]
+                except KeyError:
+                    if varname[0] == '/':
+                        var = varname[1:]
+                    else:
+                        var = varname
+                    if '/' in var:
+                        var = var.split('/')
+                    if isinstance(var, list):
+                        orig_group = self.f
+                        for group in var:
+                            try:
+                                orig_group = orig_group.groups[group]
+                            except KeyError:
+                                orig_group = orig_group[group]
+                        varin = orig_group
+                    else:
+                        varin = self.f.groups[var]
+                setattr(varin, attrname, value)
+            else:
+                setattr(self.f, attrname, value)
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - _add_attribute - AttributeError, no file open')
+            raise AttributeError('No file open')
+        logging.debug('egads - netcdf_io.py - NetCdf - _add_attribute - attrname ' + str(attrname)
+                      + ' -> attribute add OK')
+
+    def _change_variable_name(self, varname, newname, groupname):
+        """
+        Private method to change the variable name in currently opened NetCDF file.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _change_variable_name')
+        if self.f is not None:
+            if groupname is not None:
+                orig_group = self.f
+                if isinstance(groupname, str):
+                    if groupname[0] == '/':
+                        groupname = groupname[1:].split('/')
+                for group in groupname:
+                    orig_group = orig_group.groups[group]
+                orig_group.renameVariable(varname, newname)
+            else:
+                self.f.renameVariable(varname, newname)
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - .change_variable_name - AttributeError, no file open')
+            raise AttributeError('No file open')
+
+    def _read_variable(self, varname, input_range, read_as_float, replace_fill_value):
+        """
+        Private method to read a variable from currently opened NetCDF file or from a group.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _read_variable')
+        try:
+            if varname[0] == '/':
+                varname = varname[1:]
+            if '/' in varname:
+                var = varname.split('/')
+                if isinstance(var, list):
+                    orig_group = self.f
+                    for group in var:
+                        try:
+                            orig_group = orig_group.groups[group]
+                        except KeyError:
+                            orig_group = orig_group[group]
+                    if isinstance(orig_group, netCDF4.Variable):
+                        varin = orig_group
+                    else:
+                        raise KeyError
+                else:
+                    varin = self.f.groups[var]
+            else:
+                varin = self.f.variables[varname]
         except KeyError:
             logging.exception('egads - netcdf_io.py - NetCdf - read_variable - KeyError, variable does not exist in '
                               'netcdf file')
@@ -174,160 +696,40 @@ class NetCdf(FileCore):
                 value[value == _fill_value] = numpy.nan
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return value
-    
-    def change_variable_name(self, varname, newname):
+
+    def _write_variable(self, data, varname, dims, ftype, fillvalue):
         """
-        Change the variable name in currently opened NetCDF file.
-        
-        :param string varname:
-            Name of variable to rename.
-        :param string newname:
-            The new name.
+        Private method to write/create variable in currently opened NetCDF file.
         """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - change_variable_name - varname ' + str(varname)
-                      + ', newname ' + str(newname))
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _write_variable')
         if self.f is not None:
-            self.f.renameVariable(varname, newname)
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - .change_variable_name - AttributeError, no file open')
-            raise AttributeError('No file open')
-
-    def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None):
-        """
-        Writes/creates variable in currently opened NetCDF file.
-
-        :param array data:
-            Array of values to output to NetCDF file.
-        :param string varname:
-            Name of variable to create/write to.
-        :param tuple dims:
-            Optional - Name(s) of dimensions to assign to variable. If variable already exists
-            in NetCDF file, this parameter is optional. For scalar variables, pass an empty tuple.
-        :param string ftype:
-            Optional - Data type of variable to write. Defaults to ``double``. If variable exists,
-            data type remains unchanged. Options for type are ``double``, ``float``, ``int``, 
-            ``short``, ``char``, and ``byte``
-        :param float fillvalue:
-            Optional - Overrides default NetCDF _FillValue, if provided.
-        """
-
-        logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) + 
-                      ', dims ' + str(dims) + ', ftype ' + str(ftype) + ', fillvalue ' + str(fillvalue))
-        if self.f is not None:
+            orig_group = self.f
+            if varname[0] == '/':
+                varname = varname[1:]
+            if '/' in varname:
+                var = varname.split('/')
+                for group in var:
+                    try:
+                        orig_group = orig_group.groups[group]
+                    except KeyError:
+                        varname = group
             try:
-                varout = self.f.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
+                varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
             except KeyError:
-                varout = self.f.createVariable(varname, ftype, dims, fillvalue)
+                varout = orig_group.createVariable(varname, ftype, dims, fillvalue)
             varout[:] = data
         else:
-            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
+            logging.error('egads - netcdf_io.py - NetCdf - _write_variable - AttributeError, no file open')
             raise AttributeError('No file open')
-        logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) + ' -> data write OK')
+        logging.debug('egads - netcdf_io.py - NetCdf - _write_variable - varname ' + str(varname) + ' -> data write OK')
 
-    def add_dim(self, name, size):
+    def _convert_to_nasa_ames(self, na_file, float_format, delimiter, no_header):
         """
-        Adds dimension to currently open file.
-
-        :param string name:
-            Name of dimension to add
-        :param integer size:
-            Integer size of dimension to add.
+        Private method to convert currently open NetCDF file to one or more NASA Ames files.
         """
 
-        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ', size ' + str(size))
-        if self.f is not None:
-            self.f.createDimension(name, size)
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
-            raise AttributeError('No file open')
-        logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ' -> dim add OK')
-
-    def add_attribute(self, attrname, value, varname=None):
-        """
-        Adds attribute to currently open file. If varname is included, attribute
-        is added to specified variable, otherwise it is added to global file
-        attributes.
-
-        :param string attrname:
-            Attribute name.
-        :param string|float|int value:
-            Value to assign to attribute name.
-        :param string varname:
-            Optional - If varname is provided, attribute name and value are added to specified
-            variable in the NetCDF file.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - add_attribute - attrname ' + str(attrname) + ', varname '
-                      + str(varname))
-        if self.f is not None:
-            if isinstance(value, list):
-                tmp = ''
-                for item in value:
-                    tmp += item + ', '
-                value = tmp[:-2]
-            if varname is not None:
-                varin = self.f.variables[varname]
-                setattr(varin, attrname, value)
-            else:
-                setattr(self.f, attrname, value)
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
-            raise AttributeError('No file open')
-        logging.debug('egads - netcdf_io.py - NetCdf - add_attribute - attrname ' + str(attrname)
-                      + ' -> attribute add OK')
-        
-    def delete_attribute(self, attrname, varname=None):
-        """
-        Deletes attribute to currently open file. If varname is included, attribute
-        is removed from specified variable, otherwise it is removed from global file
-        attributes.
-
-        :param string attrname:
-            Attribute name.
-        :param string varname:
-            Optional - If varname is provided, attribute removed from specified
-            variable in the NetCDF file.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname) + 
-                      ', varname ' + str(varname))
-        if self.f is not None:
-            if varname is not None:
-                delattr(self.f.variables[varname], attrname)
-            else:
-                delattr(self.f, attrname)
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - delete_attribute - AttributeError, no file open')
-            raise AttributeError('No file open')
-        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname)
-                      + ' -> attribute delete OK')
-
-    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
-        """
-        Convert currently open NetCDF file to one or more NASA Ames files.
-        For now can only process NetCdf files to NASA/Ames FFI 1001 : 
-        only time as an independant variable.
-
-        :param string na_file:
-            Optional - Name of output NASA Ames file. If none is provided, name of
-            current NetCDF file is used and suffix changed to .na
-        :param string delimiter:
-            Optional - The delimiter desired for use between data items in the data
-            file. Default - Tab.
-        :param string float_format:
-            Optional - The format of float numbers to be saved. If no string is entered, values are
-            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
-        :param string delimiter:
-            Optional - The delimiter desired for use between data items in the data
-            file. Default - '    ' (four spaces).
-        :param bool no_header:
-            Optional - If set to true, then only the data blocks are written to file.
-            Default - False.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - float_format ' + str(float_format)
-                      + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_nasa_ames')
 
         if not na_file:
             na_file = os.path.splitext(self.filename)[0] + '.na'
@@ -335,11 +737,16 @@ class NetCdf(FileCore):
         # read dimensions and variables, try to check if ffi = 1001
         dim_list = self.get_dimension_list()
         var_list = self.get_variable_list()
+
         if len(dim_list) > 1:
             logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant '
                               'process file with multiple dimensions, FFI is set to 1001')
             raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
                             'FFI is set to 1001')
+        elif len(dim_list) == 0:
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - there is no dimensions at the root of '
+                              'the opened netcdf file.')
+            raise Exception('there is no dimensions at the root of the opened netcdf file.')
 
         # create NASA/Ames dictionary
         f = egads.input.NasaAmes()
@@ -434,8 +841,7 @@ class NetCdf(FileCore):
 
         # prepare and set NCOM and SCOM
         name_string = ''
-        ncom = ['==== Normal Comments follow ====']
-        ncom = ['The NA file has been converted from a NetCDF file by EGADS']
+        ncom = ['==== Normal Comments follow ====', 'The NA file has been converted from a NetCDF file by EGADS']
         for attr in self.get_attribute_list():
             if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
                 ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
@@ -514,128 +920,8 @@ class NetCdf(FileCore):
         # write na file
         f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
         f.close()
-        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
+        logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_nasa_ames - na_file ' + str(na_file)
                       + ' -> file conversion OK')
-      
-    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
-        """
-        Converts currently open NetCDF file to CSV file using the NasaAmes class.
-        
-        :param string csv_file:
-            Optional - Name of output CSV file. If none is provided, name of current
-            NetCDF is used and suffix changed to .csv
-        :param string float_format:
-            Optional - The format of float numbers to be saved. If no string is entered, values are
-            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
-        :param bool no_header:
-            Optional - If set to true, then only the data blocks are written to file.
-            Default - False.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
-                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
-        if not csv_file:
-            csv_file = os.path.splitext(self.filename)[0] + '.csv'
-        
-        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format,delimiter=',', no_header=no_header)
-        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
-                      + ' -> file conversion OK')
-
-    def _open_file(self, filename, perms):
-        """
-        Private method for opening NetCDF file.
-
-        :param string filename:
-            Name of NetCDF file to open.
-        :param char perms:
-            Permissions used to open file. Options are ``w`` for write (overwrites data in file),
-            ``a`` and ``r+`` for append, and ``r`` for read.
-        """
-
-        logging.debug('egads - netcdf_io.py - NetCdf - _open_file')
-        self.close()
-        try:
-            self.f = netCDF4.Dataset(filename, perms)
-            self.filename = filename
-            self.perms = perms
-        except RuntimeError:
-            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - RuntimeError, File ' +
-                              str(filename) + ' doesn''t exist')
-            raise RuntimeError("ERROR: File %s doesn't exist" % filename)
-        except IOError:
-            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - IOError, File ' +
-                              str(filename) + ' doesn''t exist')
-            raise IOError("ERROR: File %s doesn't exist" % filename)
-        except Exception:
-            logging.exception('egads - netcdf_io.py - NetCdf - _open_file - Exception, Unexpected error')
-            raise Exception("ERROR: Unexpected error")
-
-    def _get_attribute_list(self, var=None):
-        """
-        Private method for getting attributes from a NetCDF file. Gets global
-        attributes if no variable name is provided, otherwise gets attributes
-        attached to specified variable. Function returns dictionary of values.
-        If multiple white spaces exist, they are removed.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - _get_attribute_list - var ' + str(var))
-        if self.f is not None:
-            if var is not None:
-                attr_dict = {}
-                varin = self.f.variables[var]
-                for key, value in varin.__dict__.items():
-                    if isinstance(value, str):
-                        value = " ".join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
-            else:
-                attr_dict = {}
-                for key, value in self.f.__dict__.items():
-                    if isinstance(value, str):
-                        value = " ".join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - _get_attribute_list - AttributeError, No file open')
-            raise AttributeError('No file open')
-
-    def _get_dimension_list(self, var=None):
-        """
-        Private method for getting list of dimension names and lengths. If
-        variable name is provided, method returns list of dimension names
-        attached to specified variable, if none, returns all dimensions in the file.
-        """
-        
-        logging.debug('egads - netcdf_io.py - NetCdf - _get_dimension_list - var ' + str(var))
-        dimdict = collections.OrderedDict()
-        if self.f is not None:
-            file_dims = self.f.dimensions
-            if var:
-                varin = self.f.variables[var]
-                dims = varin.dimensions
-                for dimname in dims:
-                    dimobj = file_dims[dimname]
-                    dimdict[dimname] = len(dimobj)
-            else:
-                dims = file_dims
-                for dimname, dimobj in reversed(sorted(dims.items())):
-                    dimdict[dimname] = len(dimobj)
-            return dimdict
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - _get_attribute_list - AttributeError, No file open')
-            raise AttributeError('No file open')
-
-    def _get_variable_list(self):
-        """
-        Private method for getting list of variable names.
-        """
-
-        logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
-        if self.f is not None:
-            return list(self.f.variables.keys())
-        else:
-            logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
-            raise AttributeError('No file open')
 
     logging.info('egads - netcdf_io.py - NetCdf has been loaded')
 
@@ -664,8 +950,8 @@ class EgadsNetCdf(NetCdf):
 
     def read_variable(self, varname, input_range=None, read_as_float=False, replace_fill_value=False):
         """
-        Reads in a variable from currently opened NetCDF file and maps the NetCDF
-        attributies to an :class:`~egads.core.EgadsData` instance.
+        Reads in a variable from currently opened NetCDF file or from a group, and maps the NetCDF
+        attributes to an :class:`~egads.core.EgadsData` instance.
 
         :param string varname:
             Name of NetCDF variable to read in.
@@ -676,47 +962,13 @@ class EgadsNetCdf(NetCdf):
             the data type is the type of data in file. ``False`` is the default value.
         :param boolean replace_fill_value:
             Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN.
-            ``False`` is the default value.
+            False is the default value.
+        :return: variable in a EgadsData instance.
         """
-        
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname) + 
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname) +
                       ', input_range ' + str(input_range))
-        try:
-            varin = self.f.variables[varname]
-        except KeyError:
-            logging.exception('egads - netcdf_io.py - EgadsNetCdf - read_variable - KeyError, variable does not exist'
-                              ' in netcdf file')
-            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        except Exception:
-            logging.exception('egads - netcdf_io.py - EgadsNetCdf - read_variable - Exception, unexpected error')
-            raise Exception("Error: Unexpected error")
-        if input_range is None:
-            value = varin[:]
-        else:
-            obj = 'slice(input_range[0], input_range[1])'
-            for i in range(2, len(input_range), 2):
-                obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
-            value = varin[eval(obj)]
-        variable_attrs = self.get_attribute_list(varname)
-        value = numpy.array(value)
-        if read_as_float:
-            value = value.astype('float')
-        if replace_fill_value:
-            if '_FillValue' in variable_attrs.keys():
-                _fill_value = variable_attrs['_FillValue']
-                value[value == _fill_value] = numpy.nan
-            else:
-                if 'missing_value' in variable_attrs.keys():
-                    _fill_value = variable_attrs['missing_value']
-                    value[value == _fill_value] = numpy.nan
-                else:
-                    logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname)
-                                  + ', no _FillValue or missing_value attribute found.')
-        variable_metadata = egads.core.metadata.VariableMetadata(variable_attrs, self.file_metadata)
-        data = egads.EgadsData(value, variable_metadata=variable_metadata)
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - read_variable - varname ' + str(varname)
-                      + ' -> data read OK')
-        return data
+        return self._read_variable(varname, input_range, read_as_float, replace_fill_value)
 
     def write_variable(self, data, varname=None, dims=None, ftype='double'):
         """
@@ -727,49 +979,23 @@ class EgadsNetCdf(NetCdf):
             All data and attributes will be written out to the file.
         :param string varname:
             Optional - Name of variable to create/write to. If no varname is provided,
-            and if cdf_name attribute in EgadsData object is defined, then the variable will be 
-            written to cdf_name.
+            and if cdf_name attribute in EgadsData object is defined, then the variable will be
+            written to cdf_name. If path to a group is in varname, the variable will be
+            created in this group. In that case, varname is mandatory as the function will
+            not take into account path in varname metadata of the EgadsData instance.
         :param tuple dims:
             Optional - Name(s) of dimensions to assign to variable. If variable already exists
             in NetCDF file, this parameter is optional. For scalar variables, pass an empty tuple.
         :param string ftype:
             Optional - Data type of variable to write. Defaults to ``double``. If variable exists,
-            data type remains unchanged. Options for type are ``double``, ``float``, ``int``, 
+            data type remains unchanged. Options for type are ``double``, ``float``, ``int``,
             ``short``, ``char``, and ``byte``
         """
 
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname) + 
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname) +
                       ', dims ' + str(dims) + ', ftype ' + str(ftype))
-        fillvalue = None
-        if self.f is not None:
-            try:
-                varout = self.f.variables[varname]
-            except KeyError:
-                try:
-                    fillvalue = data.metadata['_FillValue']
-                except KeyError:
-                    try:
-                        fillvalue = data.metadata['missing_value']
-                    except KeyError:
-                        pass
-                varout = self.f.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
-            if fillvalue is not None:
-                varout[:] = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
-            else:
-                varout[:] = data.value
-            for key, val in data.metadata.items():
-                if key != '_FillValue':
-                    if val:
-                        if isinstance(val, list):
-                            tmp = ''
-                            for item in val:
-                                tmp += item + ', '
-                            setattr(varout, str(key), tmp[:-2])
-                        else:
-                            setattr(varout, str(key), val)
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - write_variable - varname ' + str(varname)
-                      + ' -> data write OK')
-        
+        self._write_variable(data, varname, dims, ftype)
+
     def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
         """
         Convert currently open EGADS NetCDF file to one or more NASA Ames files.
@@ -789,9 +1015,43 @@ class EgadsNetCdf(NetCdf):
             Optional - If set to true, then only the data blocks are written to file.
             Default - False.
         """
-        
+
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - float_format '
                       + str(float_format) + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
+        """
+        Converts currently open NetCDF file to CSV file using Nappy API.
+
+        :param string csv_file:
+            Optional - Name of output CSV file. If none is provided, name of current
+            NetCDF is used and suffix changed to .csv
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
+        if not csv_file:
+            filename, _ = os.path.splitext(self.filename)
+            csv_file = filename + '.csv'
+        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ' -> file conversion OK')
+
+    def _convert_to_nasa_ames(self, na_file, float_format, delimiter, no_header):
+        """
+        Private method to convert currently open EGADS NetCDF file to one or more NASA
+        Ames files. For now can only process NetCdf files to NASA/Ames FFI 1001:
+        variables can only be dependant to one independant variable at a time.
+        """
+        
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _convert_to_nasa_ames')
         if not na_file:
             na_file = os.path.splitext(self.filename)[0] + '.na'
 
@@ -878,8 +1138,7 @@ class EgadsNetCdf(NetCdf):
 
         # prepare and set NCOM and SCOM
         name_string = ''
-        ncom = ['==== Normal Comments follow ====']
-        ncom = ['The NA file has been converted from a NetCDF file by EGADS']
+        ncom = ['==== Normal Comments follow ====', 'The NA file has been converted from a NetCDF file by EGADS']
         for attr in self.get_attribute_list():
             if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
                 ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
@@ -922,44 +1181,13 @@ class EgadsNetCdf(NetCdf):
         f.close()
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
                       + ' -> file conversion OK')
-      
-    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
-        """
-        Converts currently open NetCDF file to CSV file using Nappy API.
-        
-        :param string csv_file:
-            Optional - Name of output CSV file. If none is provided, name of current
-            NetCDF is used and suffix changed to .csv
-        :param string float_format:
-            Optional - The format of float numbers to be saved. If no string is entered, values are
-            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
-        :param bool no_header:
-            Optional - If set to true, then only the data blocks are written to file.
-            Default - False.
-        """
-        
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
-                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
-        if not csv_file:
-            filename, _ = os.path.splitext(self.filename)
-            csv_file = filename + '.csv'
-        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
-                      + ' -> file conversion OK')
     
     def _open_file(self, filename, perms):
         """
         Private method for opening NetCDF file.
-
-        :param string filename:
-            Name of NetCDF file to open.
-        :param char perms:
-            Permissions used to open file. Options are ``w`` for write (overwrites data in file),
-            ``a`` and ``r+`` for append, and ``r`` for read.
         """
         
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _open_file - filename ' + str(filename) + 
-                      ', perms ' + str(perms))
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _open_file')
         self.close()
         try:
             self.f = netCDF4.Dataset(filename, perms)
@@ -978,5 +1206,128 @@ class EgadsNetCdf(NetCdf):
         except Exception:
             logging.exception('egads - netcdf_io.py - EgadsNetCdf - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
-        
+
+    def _read_variable(self, varname, input_range, read_as_float, replace_fill_value):
+        """
+        Private method to read in a variable from currently opened NetCDF file or from a group,
+        and maps the NetCDF attributes to an :class:`~egads.core.EgadsData` instance.
+
+        :param string varname:
+            Name of NetCDF variable to read in. If path to a group is in varname, the variable is
+            read in the group.
+        :param vector input_range:
+            Optional - Range of values in each dimension to input. ``None`` is the default value.
+        :param boolean read_as_float:
+            Optional - if True, EGADS reads the data and convert them to float numbers. If False,
+            the data type is the type of data in file. ``False`` is the default value.
+        :param boolean replace_fill_value:
+            Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN.
+            False is the default value.
+        :return: variable in a EgadsData instance.
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable')
+        try:
+            if varname[0] == '/':
+                varname = varname[1:]
+            if '/' in varname:
+                var = varname.split('/')
+                if isinstance(var, list):
+                    orig_group = self.f
+                    for group in var:
+                        try:
+                            orig_group = orig_group.groups[group]
+                        except KeyError:
+                            orig_group = orig_group[group]
+                    if isinstance(orig_group, netCDF4.Variable):
+                        varin = orig_group
+                    else:
+                        raise KeyError
+                else:
+                    varin = self.f.groups[var]
+            else:
+                varin = self.f.variables[varname]
+
+        except KeyError:
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _read_variable - KeyError, variable does not exist'
+                              ' in netcdf file')
+            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
+        except Exception:
+            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _read_variable - Exception, unexpected error')
+            raise Exception("Error: Unexpected error")
+        if input_range is None:
+            value = varin[:]
+        else:
+            obj = 'slice(input_range[0], input_range[1])'
+            for i in range(2, len(input_range), 2):
+                obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
+            value = varin[eval(obj)]
+        variable_attrs = self.get_attribute_list(varname)
+        value = numpy.array(value)
+        if read_as_float:
+            value = value.astype('float')
+        if replace_fill_value:
+            if '_FillValue' in variable_attrs.keys():
+                _fill_value = variable_attrs['_FillValue']
+                value[value == _fill_value] = numpy.nan
+            else:
+                if 'missing_value' in variable_attrs.keys():
+                    _fill_value = variable_attrs['missing_value']
+                    value[value == _fill_value] = numpy.nan
+                else:
+                    logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable - varname ' + str(varname)
+                                  + ', no _FillValue or missing_value attribute found.')
+        variable_metadata = egads.core.metadata.VariableMetadata(variable_attrs, self.file_metadata)
+        data = egads.EgadsData(value, variable_metadata=variable_metadata)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable - varname ' + str(varname)
+                      + ' -> data read OK')
+        return data
+
+    def _write_variable(self, data, varname, dims, ftype):
+        """
+        Private method to write/create variable in currently opened NetCDF file or in group.
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _write_variable')
+        fillvalue = None
+        if self.f is not None:
+            orig_group = self.f
+            if varname is not None:
+                if varname[0] == '/':
+                    varname = varname[1:]
+                if '/' in varname:
+                    var = varname.split('/')
+                    for group in var:
+                        try:
+                            orig_group = orig_group.groups[group]
+                        except KeyError:
+                            varname = group
+            try:
+                varout = orig_group.variables[varname]
+            except KeyError:
+                try:
+                    fillvalue = data.metadata['_FillValue']
+                except KeyError:
+                    try:
+                        fillvalue = data.metadata['missing_value']
+                    except KeyError:
+                        pass
+                varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
+            if fillvalue is not None:
+                varout[:] = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
+            else:
+                varout[:] = data.value
+            for key, val in data.metadata.items():
+                if key != '_FillValue':
+                    if val:
+                        if isinstance(val, list):
+                            tmp = ''
+                            for item in val:
+                                tmp += item + ', '
+                            setattr(varout, str(key), tmp[:-2])
+                        else:
+                            setattr(varout, str(key), val)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - _write_variable - varname ' + str(varname)
+                      + ' -> data write OK')
+
     logging.info('egads - netcdf_io.py - EgadsNetCdf has been loaded')
