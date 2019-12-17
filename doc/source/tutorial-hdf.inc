@@ -246,6 +246,21 @@ To close a file, simply use the ``close()`` method:
     >>> f.close()
 
 
+Dataset with compound data
+--------------------------
+
+Dataset with compound data are not specifically handled by EGADS. When a dataset is read and contains compound data, it is possible to access the different fields in this way:
+
+    >>> temperature = f.read_variable('temperature')
+    >>> date_field = temperature['date']
+
+Obviously, if the user declared an EgadsHdf instance to read the file, the compound data is still an EgadsData instance, with the same metadata and units. If the user declared an Hdf instance to read the file, the compound data is a Numpy ndarray instance.
+In EGADS, units are handled automatically. Thus, with compound data and multiple data in the same dataset, it is highly likely that units won't be handled properly, and will be set to dimensionless most of the time.
+
+.. NOTE::
+  With the instance EgadsHdf, an attribute has been added to the EgadsData instance, ``compound_data``, which informs the user about the dataset type. If the dataset contains compound data, the attribute ``compound_data`` is set to ``True`` ; if not it is set to ``False``. Then it is the responsability of the user to explore the different fields in the dataset.
+
+
 Tutorial
 ---------
 

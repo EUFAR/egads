@@ -10,6 +10,15 @@ To fix list:
 ------------
 
 
+December 17 2019, Release version 1.2.1
+=======================================
+  ADDED:
+    - an attribute has been added to EgadsData object when reading a variable in a HDF5 file including compound data. Read the documentation for more details.
+	
+  MODIFIED:
+    - the documentation has been updated to take into account the specificity of compound data in HDF dataset.
+
+
 December 11 2019, Release version 1.2.0
 =======================================
 EGADS can read and write HDF5 file format, following or not EUFAR convention.

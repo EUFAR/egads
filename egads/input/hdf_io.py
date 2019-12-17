@@ -767,6 +767,10 @@ class EgadsHdf(Hdf):
 
             variable_metadata = egads.core.metadata.VariableMetadata(var_attrs, self.file_metadata)
             data = egads.EgadsData(var, variable_metadata=variable_metadata)
+            if len(var.dtype) > 1:
+                data.compound_data = True
+            else:
+                data.compound_data = False
             logging.debug('egads - hdf_io.py - EgadsHdf - _read_variable - varname ' + str(varname)
                           + ' -> data read OK')
             return data
