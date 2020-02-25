@@ -30,6 +30,8 @@ To test EGADS after it is installed, from Python terminal, run the following com
    >>> import egads
    >>> egads.test()
 
+On Linux, if issues occure with NetCDF4 or H5py, please check the last section of this chapter for a possible solution.
+
 
 Options
 *******
@@ -79,7 +81,7 @@ Since version 0.8.6, EGADS can check for an update on GitHub. The check system i
 
    >>> import egads
    >>> egads.check_update()
-   EGADS Lineage vx.x.x is available on GitHub. You can update EGADS Lineage by using pip (pip install egads-lineage --upgrade)
+   EGADS Lineage vx.x.x is available on GitHub. You can update EGADS Lineage by using pip (``pip install egads-lineage --upgrade``)
    or by using the following link: https://github.com/eufarn7sp/egads/releases/download/x.x.x/egads-x.x.x.tar.gz
 
 If the ``check_update`` option is set on True in the egads.ini file, EGADS will check automatically for an update each time it is imported. By default, the option is set on False. The user can modify the option this way:
@@ -89,3 +91,14 @@ If the ``check_update`` option is set on True in the egads.ini file, EGADS will 
    >>> exit()
 
 The module Requests is optional for EGADS but is mandatory to check for an update.
+
+
+Issues with NetCDF4 and/or H5py on a Linux distribution
+*******************************************************
+If NetCDF4 and H5py libraries are installed through Pypi, a crash can occure when trying to read/write a netcdf or an hdf file. Here are the different steps to fix that particular issue:
+
+#. Uninstall entirely NetCDF4
+#. Download NetCDF4 sources corresponding to the version installed with Pypi
+#. Unzip the package, launch a terminal and build NetCDF4 module -> ``python setup.py build``
+#. Finally install NetCDF4 moudle -> ``python setup.py install``
+#. Check NetCDF4 integration into EGADS with EGADS test function

@@ -10,6 +10,12 @@ To fix list:
 ------------
 
 
+February 25 2020, Release version 1.2.2
+=======================================
+  MODIFIED:
+    - the documentation has been updated for a possible conflict between NetCDF4 and H5Py for Python and for a possible solution.
+
+
 December 17 2019, Release version 1.2.1
 =======================================
   ADDED:

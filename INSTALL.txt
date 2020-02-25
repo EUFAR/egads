@@ -62,6 +62,8 @@ To test the EGADS installation, from within Python, run the following commands:
 
   >>> import egads
   >>> egads.test()
+  
+On Linux, if issues occure with NetCDF4 or H5py, please check the last section of this file for a possible solution.
 
 
 Uninstallation
@@ -71,3 +73,14 @@ Just run the following command from your terminal:
   pip uninstall egads-lineage
 or
   remove manually all folders in you Python site-packages folder containing egads name.
+
+
+Issues with NetCDF4 and/or H5py on a Linux distribution
+=======================================================
+If NetCDF4 and H5py libraries are installed through Pypi, a crash can occure when trying to read/write a netcdf or an hdf file. Here are the different steps to fix that particular issue:
+
+ 1. Uninstall entirely NetCDF4
+ 2. Download NetCDF4 sources corresponding to the same version
+ 3. Unzip the package, launch a terminal and build NetCDF4 module -> python setup.py build
+ 4. Finally install NetCDF4 moudle -> python setup.py install
+ 5. Check NetCDF4 integration into EGADS with EGADS test function
