@@ -10,7 +10,7 @@ Use of EGADS requires the following packages:
 
 * Python 3.5.4 or newer. Available at https://www.python.org/
 * numpy 1.14 or newer. Available at http://numpy.scipy.org/
-* scipy 1.00 or newer. Available at http://www.scipy.org/
+* scipy 1.0 or newer. Available at http://www.scipy.org/
 * Python netCDF4 libraries 1.3.0 or newer. Available at https://pypi.python.org/pypi/netCDF4
 * h5py 2.10.0 or newer. Available at https://pypi.org/project/h5py
 * python_dateutil 2.6.1 or newer. Available at https://pypi.python.org/pypi/python-dateutil
@@ -20,7 +20,7 @@ Use of EGADS requires the following packages:
 
 Installation
 ************
-Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file ``setup.py``, type ``python setup.py install`` or ``pip install egads-lineage`` from the command line. To install to a user-specified location, type ``python setup.py install --prefix=$MYDIR``. To avoid the installation of dependencies, use the option ``--no-depts``. On Linux systems, the installation of EGADS in the user home directory is encouraged to ensure the proper operation of the EGADS logging system and of the new Graphical User Interface algorithm creation system.
+Since EGADS is a pure Python distribution, it does not need to be built. However, to use it, it must be installed to a location on the Python path. To install EGADS, first download and decompress the file. From the directory containing the file ``setup.py``, type ``python setup.py install`` or ``pip install egads-lineage`` from the command line. To install to a user-specified location, type ``python setup.py install --prefix=$MYDIR``. To avoid the installation of dependencies, use the option ``--no-depts``.
 
 
 Testing
@@ -55,7 +55,7 @@ The file containing all options is now stored in the folder ``.egads_lineage`` i
 
 Log
 ***
-A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the 'Python local site-packages/egads' directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
+A logging system has been introduced in EGADS since the version 0.7.0. By default, the output file is available in the ``.egads_lineage`` directory and the logging level has been set to INFO. Both options for logging level and logging location have been set in a config file. Both options can be changed through EGADS using the ``egads.set_log_options()`` function, by passing a dictionary of option keys and values:
 
    >>> import egads
    >>> egads.set_options(log_level='INFO', log_path='/path/to/log/directory/')
@@ -100,5 +100,5 @@ If NetCDF4 and H5py libraries are installed through Pypi, a crash can occure whe
 #. Uninstall entirely NetCDF4
 #. Download NetCDF4 sources corresponding to the version installed with Pypi
 #. Unzip the package, launch a terminal and build NetCDF4 module -> ``python setup.py build``
-#. Finally install NetCDF4 moudle -> ``python setup.py install``
+#. Finally install NetCDF4 module -> ``python setup.py install``
 #. Check NetCDF4 integration into EGADS with EGADS test function

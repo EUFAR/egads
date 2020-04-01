@@ -104,12 +104,11 @@ Metadata
 
 The metadata object used by :class:`~.EgadsData` is an instance of :class:`~.VariableMetadata`, a dictionary object containing methods to recognize, convert and validate known metadata types. It can reference parent metadata objects, such as those from an algorithm or data file, to enable users to track the source of a particular variable. 
 
-When reading in data from a supported file type (NetCDF, NASA Ames), or doing calculations with an EGADS algorithm, EGADS will automatically populate the associated metadata and assign it to the output variable. However, when creating an :class:`~.EgadsData` instance manually, the metadata must be user-defined.
+When reading in data from a supported file type (NetCDF, NASA Ames, Hdf), or doing calculations with an EGADS algorithm, EGADS will automatically populate the associated metadata and assign it to the output variable. However, when creating an :class:`~.EgadsData` instance manually, the metadata must be user-defined.
 
 As mentioned, :class:`~.VariableMetadata` is a dictionary object, thus all metadata are stored as keyword:value pairs. To create metadata manually, simply pass in a dictionary object containing the desired metadata:
 
-   >>> var_metadata_dict = {'long_name':'test metadata object',
-                            '_FillValue':-9999}
+   >>> var_metadata_dict = {'long_name':'test metadata object', '_FillValue':-9999}
    >>> var_metadata = egads.core.metadata.VariableMetadata(var_metadata_dict)
 
 To take advantage of its metadata recognition capabilities, a ``conventions`` keyword can be passed with the variable metadata to give a context to these metadata. 

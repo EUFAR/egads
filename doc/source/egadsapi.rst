@@ -33,6 +33,10 @@ File Classes
 	:members:
 	:show-inheritance:
 
+.. automodule:: egads.input.hdf_io
+	:members:
+	:show-inheritance:
+
 .. automodule:: egads.input.text_file_io
 	:members:
 	:show-inheritance:

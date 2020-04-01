@@ -110,7 +110,7 @@ Python differs from C++ and Fortran in how loops or nested statements are signif
 
 	x = 0
 	for i in range(1,10):
-	    x = x + i
+	    x += i
 	    print i
 	print x
 
@@ -121,11 +121,20 @@ Python differs from C++ and Fortran in how loops or nested statements are signif
 Using the GUI
 **************
 
-Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply/create algorithms, display and plot data. Still in beta state, the user will have the possibility in the future to work on a batch of file. For now, EGADS GUI comes as a simple python script and need to be launch from the terminal, if EGADS is installed, and once in the EGADS GUI directory:
+Since September 2016, a Graphical User Interface is available at https://github.com/eufarn7sp/egads-gui. It gives the user the possibility to explore data, apply/create algorithms, display and plot data. 
+
+.. image:: images/EGADS_GUI_005.png
+   :width: 936px
+   :height: 647px
+   :scale: 45 %
+   :align: center
+
+EGADS GUI can be launched as a simple python script from the terminal, if EGADS is installed, and once in the EGADS GUI directory:
 
     >>> python egads_gui.py
 
-It will be available soon as a stand alone (imbedding a version of EGADS CORE or using an already installed EGADS package).
+Since version 1.0.0, a stand-alone package is available for those who wants to use the GUI without a Python installation. In that case, look for ``EGADS Lineage GUI STA`` in the release part of the repository. For Windows (from Windows 7 32), donwload the .msi package and launch the installation, it should be installed outside ProgramFiles to avoid issues with admin rights, then the GUI can be run by double clicking on egads_gui.exe or from the shortcut in the Startup menu. A .zip package is also available for those who don't want to install it. For Linux (from Linux 4.15), download the tar.gz package somewhere on your hard drive (preferably in your home directory), extract it and run egads_gui.
+The stand-alone versions for Linux and Windows have been created with PyInstaller, Windows 7 and Ubuntu 18.04.
 
 .. NOTE::
   As for EGADS, the Graphical User Interface is available from two branches: master and Lineage (https://github.com/EUFAR/egads-gui/tree/Lineage). The Lineage one is only compatible with Python 3 and the earlier versions of EGADS Lineage.

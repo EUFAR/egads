@@ -190,6 +190,23 @@ To convert a NASA/Ames file, simply use:
    :type na_dict: dict
 
 
+Conversion from NASA/Ames file format to Hdf5
+------------------------------------------------
+
+When a NASA/Ames file is opened, all metadata and data are read and stored in memory in a dedicated dictionary. The conversion will convert that dictionary to generate a Hdf file. If modifications are made to the dictionary, the conversion will take into account those modifications. Actually, the only File Format Index supported by the conversion in the NASA Ames format is 1001. Consequently, if variables depend on multiple independant variables (e.g. ``data`` is function of ``time``, ``longitude`` and ``latitude``), the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, the conversion should be done manually by creating a Hdf instance and by populating the Hdf files with NASA/Ames data and metadata.
+
+To convert a NASA/Ames file, simply use:
+
+.. function:: f.convert_to_hdf([hdf_file=None, na_dict=None])
+
+   Convert the opened NasaAmes file to Hdf file format.
+   
+   :param hdf_file: if provided, the function will use *hdf_file* for the path and name of the new_file, if not, the function will take the name and path of the opened NasaAmes file and replace the extension by '.h5' ; optional
+   :type hdf_file: string
+   :param na_dict: the name of the NasaAmes dictionary to be converted, if not provided, the opened dictionary will be used  ; optional
+   :type na_dict: dict
+
+
 Other operations
 -----------------
 

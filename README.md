@@ -1,13 +1,13 @@
 Version:
 -------
 
-EGADS Lineage 1.2.2
+EGADS Lineage 1.2.3
 
 
 Developments:
 -------------
 
-As the EUFAR project ended the 31st of January 2018, developments involving EGADS are now done in a new branch and the current version of EGADS is called EGADS Lineage. It is developed and maintained by Olivier and is not developed under the scope of EUFAR. Merging of the Master and Lineage branch can happen in the next EUFAR project.
+As the EUFAR project ended the 31st of January 2018, developments involving EGADS are now done in a new branch and the current version of EGADS is called EGADS Lineage. It is developed and maintained by Olivier Henry (https://github.com/olivierpascalhenry) and is not developed under the scope of EUFAR. Merging of the Master and Lineage branch can happen in the next EUFAR project.
 
 
 Project Overview:
@@ -53,4 +53,4 @@ Read INSTALL.txt to learn how to install EGADS Lineage.
 Documentation:
 --------------
 
-The documentation of EGADS Lineage is available as a PDF in the Documentation folder and on Read The Docs (https://egads.readthedocs.io/en/lineage/index.html)
+The documentation of EGADS Lineage is available as a PDF in the Documentation folder and on Read The Docs (https://egads.readthedocs.io/en/lineage/)

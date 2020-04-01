@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.20"
+__version__ = "1.23"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -23,12 +23,8 @@ class NetCdf(FileCore):
     library to the EGADS file-access methods.
     """
 
-    TYPE_DICT = {'char': 'c',
-                 'byte': 'b',
-                 'short': 'i2',
-                 'int': 'i4',
-                 'float': 'f4',
-                 'double': 'f8'}
+    TYPE_DICT = {'char': 'c', 'byte': 'b', 'short': 'i2', 'int': 'i4', 'float': 'f4', 'double': 'f8', 'int16': 'i2',
+                 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
 
     def __del__(self):
         """
@@ -86,7 +82,7 @@ class NetCdf(FileCore):
         attrs = self._get_attribute_list(varname)
         return attrs[attrname]
 
-    def get_dimension_list(self, varname=None):
+    def get_dimension_list(self, varname=None, group_walk=False, details=False):
         """
         Returns an ordered dictionary of dimensions and their sizes found in the current
         NetCDF file. If a variable name or a group name is provided, the dimension names
@@ -94,22 +90,26 @@ class NetCdf(FileCore):
 
         :param string varname:
             Optional - Name of variable or group to get list of associated dimensions for.
-            If no variable name is provided, the function returns all dimensions in the
-            NetCDF file.
+            If no variable name is provided, the function returns all dimensions at the
+            root of the NetCDF file.
+        :param bool group_walk:
+            Optional - if True, the function visits all groups (if at least one exists)
+            to list all dimensions. False by default.
+        :param bool details:
+            Optional - if True, dimension path is provided in the dictionary. False by default.
         :return: ordered dictionary of dimensions.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - get_dimension_list - varname ' + str(varname))
-        return self._get_dimension_list(varname)
+        return self._get_dimension_list(varname, group_walk, details)
 
     def get_variable_list(self, groupname=None, group_walk=False, details=False):
         """
         Returns a list of variables found in the current NetCDF file. if a groupname is
         provided, a list of variables found in the group is returned.
 
-        :param string|list groupname:
-            Optional - the name of the group, or a list of folder as hierarchy, to get
-            the list from.
+        :param string groupname:
+            Optional - the name of the group to get the list from.
         :param bool group_walk:
             Optional - if True, the function visits all groups (if at least one exists)
             to list all variables. False by default.
@@ -122,14 +122,13 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - get_variable_list')
         return self._get_variable_list(groupname, group_walk, details)
 
-    def get_group_list(self, groupname=None, details=False, ):
+    def get_group_list(self, groupname=None, details=False):
         """
         Returns a list of groups found in the current NetCDF file.
 
-        :param string|list groupname:
+        :param string groupname:
             Optional - the name of the group to get the list from. It should represent a path to
-            the group or a list of the groups in the hierarchy to get the list from.
-            None by default.
+            the group. None by default.
         :param bool details:
             If details is true, it will return a list of all groups in the NetCDF file, or from
             groupname if groupname is not None, and their path. In that case, each element of
@@ -146,7 +145,8 @@ class NetCdf(FileCore):
         Reads a variable from currently opened NetCDF file or from a group.
 
         :param string varname:
-            Name of NetCDF variable to read in.
+            Name of NetCDF variable to read in. If the variable is in a group, varname must include
+            the path + the variable.
         :param vector input_range:
             Optional - Range of values in each dimension to input.
         :param boolean read_as_float:
@@ -163,28 +163,26 @@ class NetCdf(FileCore):
                       + str(input_range))
         return self._read_variable(varname, input_range, read_as_float, replace_fill_value)
 
-    def change_variable_name(self, varname, newname, groupname=None):
+    def change_variable_name(self, varname, newname):
         """
-        Change the variable name in currently opened NetCDF file.
+        Change the variable name in currently opened NetCDF file or in a group.
 
         :param string varname:
-            Name of variable to rename.
+            Name of variable to rename. If the variable is in a group, varname must include
+            the path + the variable.
         :param string newname:
-            The new name.
-        :param string|list groupname:
-            Optional - if necessary, the group, or sequence of group, to which the variable
-            is attached. None by default.
+            The new name. The path of the group is not necessary here.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - change_variable_name - varname ' + str(varname)
                       + ', newname ' + str(newname))
-        self._change_variable_name(varname, newname, groupname)
+        self._change_variable_name(varname, newname)
 
     def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None):
         """
         Writes/creates variable in currently opened NetCDF file.
 
-        :param array data:
+        :param array|ndarray data:
             Array of values to output to NetCDF file.
         :param string varname:
             Name of variable to create/write to. If path to a group is in the name, the variable
@@ -204,21 +202,19 @@ class NetCdf(FileCore):
                       ', dims ' + str(dims) + ', ftype ' + str(ftype) + ', fillvalue ' + str(fillvalue))
         self._write_variable(data, varname, dims, ftype, fillvalue)
 
-    def add_dim(self, name, size, groupname=None):
+    def add_dim(self, name, size):
         """
         Adds dimension to currently open file or to a group.
 
         :param string name:
-            Name of dimension to add
+            Name of dimension to add. If path to a group is included, the dimension is
+            added to the group.
         :param integer size:
             Integer size of dimension to add.
-        :param string|list groupname:
-            Optional - the name of the group, or a list of name sequence, to which to add
-            the dimension. None by default.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - add_dim - name ' + str(name) + ', size ' + str(size))
-        self._add_dim(name, size, groupname)
+        self._add_dim(name, size)
 
     def add_attribute(self, attrname, value, objname=None):
         """
@@ -243,8 +239,8 @@ class NetCdf(FileCore):
         """
         Adds group to currently open file.
 
-        :param string|list groupname:
-            Group name, or path name, or sequence of groups.
+        :param string groupname:
+            Group name, or path + group name.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - add_group - groupname ' + str(groupname))
@@ -253,28 +249,19 @@ class NetCdf(FileCore):
     def delete_attribute(self, attrname, varname=None):
         """
         Deletes attribute to currently open file. If varname is included, attribute
-        is removed from specified variable, otherwise it is removed from global file
+        is removed from specified variable or group, otherwise it is removed from global file
         attributes.
 
         :param string attrname:
             Attribute name.
         :param string varname:
             Optional - If varname is provided, attribute removed from specified
-            variable in the NetCDF file.
+            variable or group in the NetCDF file.
         """
         
         logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname) + 
                       ', varname ' + str(varname))
-        if self.f is not None:
-            if varname is not None:
-                delattr(self.f.variables[varname], attrname)
-            else:
-                delattr(self.f, attrname)
-        else:
-            logging.error('egads - netcdf_io.py - NetCdf - delete_attribute - AttributeError, no file open')
-            raise AttributeError('No file open')
-        logging.debug('egads - netcdf_io.py - NetCdf - delete_attribute - attrname ' + str(attrname)
-                      + ' -> attribute delete OK')
+        self._delete_attribute(attrname, varname)
 
     def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
         """
@@ -302,6 +289,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - float_format ' + str(float_format)
                       + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
         self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames -> file conversion OK')
       
     def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
         """
@@ -322,10 +310,21 @@ class NetCdf(FileCore):
                       + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
         if not csv_file:
             csv_file = os.path.splitext(self.filename)[0] + '.csv'
-        
         self._convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
         logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
+
+    def convert_to_hdf(self, hdf_file=None):
+        """
+        Convert currently open NetCDF file to Hdf5 file format.
+
+        :param string hdf_file:
+            Optional - Name of output Hdf5 file. If none is provided, name of
+            current NetCDF file is used and suffix changed to .h5
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - convert_to_hdf')
+        self._convert_to_hdf(hdf_file)
 
     def _open_file(self, filename, perms):
         """
@@ -350,52 +349,32 @@ class NetCdf(FileCore):
             logging.exception('egads - netcdf_io.py - NetCdf - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
 
-    def _get_attribute_list(self, var=None):
+    def _get_attribute_list(self, var):
         """
-        Private method for getting attributes from a NetCDF file. Gets global
-        attributes if no variable name or group name is provided, otherwise
-        gets attributes attached to specified variable or group. Function
-        returns dictionary of values. If multiple white spaces exist, they
-        are removed.
+        Private method for getting attributes from a NetCDF file.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - _get_attribute_list - var ' + str(var))
         if self.f is not None:
             attr_dict = {}
+            orig_group = self.f
             if var is not None:
-                try:
-                    varin = self.f.variables[var]
-                except KeyError:
-                    if var[0] == '/':
-                        var = var[1:]
-                    if '/' in var:
-                        var = var.split('/')
-                    if isinstance(var, list):
-                        orig_group = self.f
-                        for group in var:
-                            try:
-                                orig_group = orig_group.groups[group]
-                            except KeyError:
-                                orig_group = orig_group[group]
-                        varin = orig_group
-                    else:
-                        varin = self.f.groups[var]
-                for key, value in varin.__dict__.items():
-                    if isinstance(value, str):
-                        value = " ".join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
-            else:
-                for key, value in self.f.__dict__.items():
-                    if isinstance(value, str):
-                        value = " ".join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
+                if var[0] == '/':
+                    var = var[1:]
+                if var[-1] == '/':
+                    var = var[:-1]
+                for group in var.split('/'):
+                    orig_group = orig_group[group]
+            for key, value in orig_group.__dict__.items():
+                if isinstance(value, str):
+                    value = ' '.join(value.split())
+                attr_dict[key] = value
+            return attr_dict
         else:
             logging.error('egads.input.NetCdf._get_attribute_list: AttributeError, No file open')
             raise AttributeError('No file open')
 
-    def _get_dimension_list(self, var=None):
+    def _get_dimension_list(self, var, group_walk, details):
         """
         Private method for getting list of dimension names and lengths. If
         variable name or group name is provided, method returns list of dimension
@@ -406,37 +385,79 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - _get_dimension_list - var ' + str(var))
         dimdict = collections.OrderedDict()
         if self.f is not None:
-            if var:
-                file_dims = None
-                try:
-                    varin = self.f.variables[var]
-                    file_dims = self.f.dimensions
-                except KeyError:
-                    if var[0] == '/':
-                        var = var[1:]
-                    if '/' in var:
-                        var = var.split('/')
-                    if isinstance(var, list):
+            if var is None:
+                if not group_walk:
+                    for dimname, dimobj in reversed(sorted(self.f.dimensions.items())):
+                        if details:
+                            dimdict[dimname] = (len(dimobj), '')
+                        else:
+                            dimdict[dimname] = len(dimobj)
+                else:
+                    dim_list = []
+                    for dimname, dimobj in reversed(sorted(self.f.dimensions.items())):
+                        dim_list.append([dimname, len(dimobj), ''])
+                    group_list = self.get_group_list(details=True)
+                    for group in group_list:
                         orig_group = self.f
-                        for group in var:
-                            try:
-                                orig_group = orig_group.groups[group]
-                                file_dims = orig_group.dimensions
-                            except KeyError:
-                                file_dims = orig_group.dimensions
-                                orig_group = orig_group[group]
-                        varin = orig_group
-                    else:
-                        varin = self.f.groups[var]
-                        file_dims = varin.dimensions
-                dims = varin.dimensions
-                for dimname in dims:
-                    dimobj = file_dims[dimname]
-                    dimdict[dimname] = len(dimobj)
+                        group_path = group['path']
+                        if group_path[0] == '/':
+                            group_items = group_path[1:].split('/')
+                        else:
+                            group_items = group_path.split('/')
+                        for item in group_items:
+                            orig_group = orig_group[item]
+                        if orig_group.dimensions:
+                            for dimname, dimobj in reversed(sorted(orig_group.dimensions.items())):
+                                dim_list.append([dimname, len(dimobj), group_path])
+                    not_unique = [r for r in [item[0] for item in dim_list]
+                                  if [item[0] for item in dim_list].count(r) > 1]
+                    for dim in dim_list:
+                        if dim[0] in not_unique:
+                            if details:
+                                dimdict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                            else:
+                                dimdict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                        else:
+                            if details:
+                                dimdict[dim[0]] = (dim[1], dim[2])
+                            else:
+                                dimdict[dim[0]] = dim[1]
             else:
-                dims = self.f.dimensions
-                for dimname, dimobj in reversed(sorted(dims.items())):
-                    dimdict[dimname] = len(dimobj)
+                if var[0] == '/':
+                    var = var[1:]
+                if var[-1] == '/':
+                    var = var[:-1]
+                orig_group = self.f
+                group_items = var.split('/')
+                dim_list = []
+                var_name = ''
+                group_path = ''
+                for item in group_items:
+                    try:
+                        if isinstance(orig_group[item], netCDF4.Group):
+                            orig_group = orig_group[item]
+                            group_path += '/' + item
+                        else:
+                            var_name = item
+                            break
+                    except IndexError:
+                        var_name = item
+                        break
+                for dimname, dimobj in reversed(sorted(orig_group.dimensions.items())):
+                    dim_list.append([dimname, len(dimobj), group_path])
+                if var_name:
+                    for dimname in orig_group[var_name].dimensions:
+                        idx = [sublist[0] for sublist in dim_list].index(dimname)
+                        if details:
+                            dimdict[dim_list[idx][0]] = (dim_list[idx][1], dim_list[idx][2])
+                        else:
+                            dimdict[dim_list[idx][0]] = dim_list[idx][1]
+                else:
+                    for sublist in dim_list:
+                        if details:
+                            dimdict[sublist[0]] = (sublist[1], sublist[2])
+                        else:
+                            dimdict[sublist[0]] = sublist[1]
             return dimdict
         else:
             logging.error('egads.input.NetCdf._get_dimension_list: AttributeError, No file open')
@@ -449,39 +470,39 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
         if self.f is not None:
-            orig_group = self.f
+            # orig_group = self.f
 
             def set_folder(grouppath, base_group):
                 if isinstance(grouppath, str):
                     if grouppath[0] == '/':
                         grouppath = grouppath[1:]
-                    if '/' in grouppath:
-                        grouppath = grouppath.split('/')
-                    else:
-                        grouppath = [grouppath]
+                    if grouppath[-1] == '/':
+                        grouppath = grouppath[:-1]
+                    grouppath = grouppath.split('/')
                 for item in grouppath:
                     base_group = base_group.groups[item]
                 return base_group
 
             if groupname is not None:
-                orig_group = set_folder(groupname, orig_group)
+                if groupname[0] != '/':
+                    groupname = '/' + groupname
+                orig_group = set_folder(groupname, self.f)
+            else:
+                orig_group = self.f
             if group_walk:
                 var_list = []
                 if details:
                     for var in list(orig_group.variables.keys()):
-                        if groupname[0] != '/':
-                            var_list.append({var: ('/' + groupname)})
-                        else:
+                        if groupname is not None:
                             var_list.append({var: groupname})
+                        else:
+                            var_list.append({var: ''})
                 else:
                     var_list = var_list + list(orig_group.variables.keys())
                 group_list = self.get_group_list(groupname, True)
                 for group in group_list:
-                    if groupname:
-                        path = group['path'][1:].replace(groupname, '')
-                    else:
-                        path = group['path']
-                    group_obj = set_folder(path, orig_group)
+                    path = group['path']
+                    group_obj = set_folder(path, self.f)
                     if list(group_obj.variables.keys()):
                         if details:
                             for var in list(group_obj.variables.keys()):
@@ -493,10 +514,13 @@ class NetCdf(FileCore):
                 var_list = []
                 if details:
                     for var in list(orig_group.variables.keys()):
-                        if groupname[0] != '/':
-                            var_list.append({var: ('/' + groupname)})
+                        if groupname is not None:
+                            if groupname[0] != '/':
+                                var_list.append({var: ('/' + groupname)})
+                            else:
+                                var_list.append({var: groupname})
                         else:
-                            var_list.append({var: groupname})
+                            var_list.append({var: ''})
                 else:
                     var_list = var_list + list(orig_group.variables.keys())
                 return var_list
@@ -517,8 +541,9 @@ class NetCdf(FileCore):
                 if isinstance(groupname, str):
                     if groupname[0] == '/':
                         groupname = groupname[1:]
-                    if '/' in groupname:
-                        groupname = groupname.split('/')
+                    if groupname[-1] == '/':
+                        groupname = groupname[:-1]
+                    groupname = groupname.split('/')
                 for group in groupname:
                     orig_group = orig_group.groups[group]
 
@@ -544,8 +569,6 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _add_group')
         if self.f is not None:
-            if isinstance(groupname, list):
-                groupname = '/'.join(groupname)
             if groupname[0] != '/':
                 groupname = '/' + groupname
             self.f.createGroup(groupname)
@@ -553,23 +576,27 @@ class NetCdf(FileCore):
             logging.error('egads.input.NetCdf._add_group: AttributeError, No file open')
             raise AttributeError('No file open')
 
-    def _add_dim(self, name, size, groupname):
+    def _add_dim(self, name, size):
         """
         Private method to add dimension to currently open file or to a group.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - _add_dim')
         if self.f is not None:
-            if groupname is not None:
-                orig_group = self.f
-                if isinstance(groupname, str):
-                    if groupname[0] == '/':
-                        groupname = groupname[1:].split('/')
-                for group in groupname:
-                    orig_group = orig_group.groups[group]
-                orig_group.createDimension(name, size)
-            else:
-                self.f.createDimension(name, size)
+            orig_group = self.f
+            if name[0] == '/':
+                name = name[1:]
+            if name[-1] == '/':
+                name = name[:-1]
+            for group in name.split('/'):
+                try:
+                    if isinstance(orig_group[group], netCDF4.Group):
+                        orig_group = orig_group[group]
+                    else:
+                        name = group
+                except IndexError:
+                    name = group
+            orig_group.createDimension(name, size)
         else:
             logging.error('egads - netcdf_io.py - NetCdf - change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
@@ -582,57 +609,66 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _add_attribute')
         if self.f is not None:
+            orig_group = self.f
             if isinstance(value, list):
                 tmp = ''
                 for item in value:
                     tmp += item + ', '
                 value = tmp[:-2]
             if varname is not None:
-                try:
-                    varin = self.f.variables[varname]
-                except KeyError:
-                    if varname[0] == '/':
-                        var = varname[1:]
-                    else:
-                        var = varname
-                    if '/' in var:
-                        var = var.split('/')
-                    if isinstance(var, list):
-                        orig_group = self.f
-                        for group in var:
-                            try:
-                                orig_group = orig_group.groups[group]
-                            except KeyError:
-                                orig_group = orig_group[group]
-                        varin = orig_group
-                    else:
-                        varin = self.f.groups[var]
-                setattr(varin, attrname, value)
-            else:
-                setattr(self.f, attrname, value)
+                if varname[0] == '/':
+                    varname = varname[1:]
+                if varname[-1] == '/':
+                    varname = varname[:-1]
+                for group in varname.split('/'):
+                    orig_group = orig_group[group]
+            setattr(orig_group, attrname, value)
         else:
             logging.error('egads - netcdf_io.py - NetCdf - _add_attribute - AttributeError, no file open')
             raise AttributeError('No file open')
         logging.debug('egads - netcdf_io.py - NetCdf - _add_attribute - attrname ' + str(attrname)
                       + ' -> attribute add OK')
 
-    def _change_variable_name(self, varname, newname, groupname):
+    def _delete_attribute(self, attrname, varname):
+        """
+        Private method to delete attribute in currently open file.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _delete_attribute')
+        if self.f is not None:
+            orig_group = self.f
+            if varname is not None:
+                if varname[0] == '/':
+                    varname = varname[1:]
+                if varname[-1] == '/':
+                    varname = varname[:-1]
+                for group in varname.split('/'):
+                    orig_group = orig_group[group]
+            delattr(orig_group, attrname)
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - _delete_attribute - AttributeError, no file open')
+            raise AttributeError('No file open')
+        logging.debug('egads - netcdf_io.py - NetCdf - _delete_attribute - attrname ' + str(attrname)
+                      + ' -> attribute delete OK')
+
+    def _change_variable_name(self, varname, newname):
         """
         Private method to change the variable name in currently opened NetCDF file.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - _change_variable_name')
         if self.f is not None:
-            if groupname is not None:
-                orig_group = self.f
-                if isinstance(groupname, str):
-                    if groupname[0] == '/':
-                        groupname = groupname[1:].split('/')
-                for group in groupname:
-                    orig_group = orig_group.groups[group]
-                orig_group.renameVariable(varname, newname)
-            else:
-                self.f.renameVariable(varname, newname)
+            orig_group = self.f
+            if varname[0] == '/':
+                varname = varname[1:]
+            if varname[-1] == '/':
+                varname = varname[:-1]
+            for group in varname.split('/'):
+                if isinstance(orig_group[group], netCDF4.Group):
+                    orig_group = orig_group[group]
+                else:
+                    varname = group
+            orig_group.renameVariable(varname, newname)
         else:
             logging.error('egads - netcdf_io.py - NetCdf - .change_variable_name - AttributeError, no file open')
             raise AttributeError('No file open')
@@ -644,32 +680,16 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _read_variable')
         try:
+            orig_group = self.f
             if varname[0] == '/':
                 varname = varname[1:]
-            if '/' in varname:
-                var = varname.split('/')
-                if isinstance(var, list):
-                    orig_group = self.f
-                    for group in var:
-                        try:
-                            orig_group = orig_group.groups[group]
-                        except KeyError:
-                            orig_group = orig_group[group]
-                    if isinstance(orig_group, netCDF4.Variable):
-                        varin = orig_group
-                    else:
-                        raise KeyError
-                else:
-                    varin = self.f.groups[var]
-            else:
-                varin = self.f.variables[varname]
-        except KeyError:
+            for group in varname.split('/'):
+                orig_group = orig_group[group]
+            varin = orig_group
+        except (KeyError, IndexError):
             logging.exception('egads - netcdf_io.py - NetCdf - read_variable - KeyError, variable does not exist in '
                               'netcdf file')
             raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        except Exception:
-            logging.exception('egads - netcdf_io.py - NetCdf - read_variable - Exception, unexpected error')
-            raise Exception("Error: Unexpected error")
         if input_range is None:
             value = varin[:]
             if read_as_float:
@@ -717,7 +737,7 @@ class NetCdf(FileCore):
             try:
                 varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
             except KeyError:
-                varout = orig_group.createVariable(varname, ftype, dims, fillvalue)
+                varout = orig_group.createVariable(varname, ftype, dims, fill_value=fillvalue)
             varout[:] = data
         else:
             logging.error('egads - netcdf_io.py - NetCdf - _write_variable - AttributeError, no file open')
@@ -739,12 +759,12 @@ class NetCdf(FileCore):
         var_list = self.get_variable_list()
 
         if len(dim_list) > 1:
-            logging.exception('egads - netcdf_io.py - EgadsNetCdf - the actual convert_to_nasa_ames cant '
+            logging.exception('egads - netcdf_io.py - NetCdf - the actual convert_to_nasa_ames cant '
                               'process file with multiple dimensions, FFI is set to 1001')
             raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
                             'FFI is set to 1001')
         elif len(dim_list) == 0:
-            logging.exception('egads - netcdf_io.py - EgadsNetCdf - there is no dimensions at the root of '
+            logging.exception('egads - netcdf_io.py - NetCdf - there is no dimensions at the root of '
                               'the opened netcdf file.')
             raise Exception('there is no dimensions at the root of the opened netcdf file.')
 
@@ -864,7 +884,7 @@ class NetCdf(FileCore):
                         try:
                             scom.append('    ' + metadata + ' = ' + str(var[3][metadata]))
                         except TypeError:
-                            logging.exception('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - an error '
+                            logging.exception('egads - netcdf_io.py - NetCdf - convert_to_nasa_ames - an error '
                                               + 'occurred when trying to add variable metadata in SCOM - metadata '
                                               + str(metadata))
                 name_string += var[0] + '    '
@@ -920,8 +940,115 @@ class NetCdf(FileCore):
         # write na file
         f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
         f.close()
-        logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_nasa_ames - na_file ' + str(na_file)
-                      + ' -> file conversion OK')
+
+    def _convert_to_hdf(self, hdf_file):
+        """
+        Private method to convert currently open NetCDF file to Hdf5 file format.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_hdf')
+        if self.f is not None:
+            if hdf_file is None:
+                hdf_file = os.path.splitext(self.filename)[0] + '.h5'
+
+            # get groups
+            group_list = self.get_group_list(details=True)
+
+            # get global attributes
+            global_attributes = self.get_attribute_list()
+
+            # get dimensions
+            dimension_list = self.get_dimension_list(group_walk=True, details=True)
+
+            # get variables
+            variable_list = self.get_variable_list(group_walk=True, details=True)
+            var_dim_list = {}
+            for item in variable_list:
+                var = list(item.keys())[0]
+                path = item[var]
+                if path:
+                    full_var = path + '/' + var
+                else:
+                    full_var = var
+                var_dim_list[full_var] = self.get_dimension_list(full_var)
+
+            # get variables and groups attributes
+            variable_attributes = {}
+            group_attributes = {}
+            for item in variable_list:
+                var = list(item.keys())[0]
+                path = item[var]
+                if path:
+                    full_var = path + '/' + var
+                else:
+                    full_var = var
+                variable_attributes[full_var] = self.get_attribute_list(varname=full_var)
+            for item in group_list:
+                path = item['path']
+                group_attributes[path] = self.get_attribute_list(varname=path)
+
+            # create hdf file
+            f = egads.input.Hdf(hdf_file, 'w')
+
+            # add global attributes
+            add_history = False
+            dt = datetime.datetime.now()
+            for key, value in global_attributes.items():
+                if key == 'history':
+                    add_history = True
+                    value += ' ; converted to Hdf by EGADS, ' + str(dt)
+                f.add_attribute(key, value)
+            if not add_history:
+                f.add_attribute('history', 'converted to Hdf by EGADS, ' + str(dt))
+
+            # add groups
+            for item in group_list:
+                path = item['path']
+                f.add_group(path)
+
+            # add dimensions
+            dim_list = []
+            for name, (size, path) in dimension_list.items():
+                if '(' in name:
+                    name = name[: name.find('(') - 1]
+                if path:
+                    full_name = path + '/' + name
+                else:
+                    full_name = name
+                dim_list.append(full_name)
+                data = self.read_variable(full_name)
+                ftype = str(data.dtype)
+                f.add_dim(full_name, data, ftype)
+
+            # add variables
+            for item in variable_list:
+                var = list(item.keys())[0]
+                path = item[var]
+                if path:
+                    full_var = path + '/' + var
+                else:
+                    full_var = var
+                if full_var not in dim_list:
+                    data = self.read_variable(full_var)
+                    dims = tuple([key for key, _ in var_dim_list[full_var].items()])
+                    ftype = str(data.dtype)
+                    f.write_variable(data, full_var, dims, ftype)
+
+            # add variables and groups attributes
+            for var, metadata in variable_attributes.items():
+                if metadata:
+                    for attr_name, attr_value in metadata.items():
+                        f.add_attribute(attr_name, attr_value, var)
+            for group, metadata in group_attributes.items():
+                if metadata:
+                    for attr_name, attr_value in metadata.items():
+                        f.add_attribute(attr_name, attr_value, group)
+
+            f.close()
+            logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_hdf -> file conversion OK')
+        else:
+            logging.error('egads - netcdf_io.py - NetCdf - _convert_to_hdf - AttributeError, no file open')
+            raise AttributeError('No file open')
 
     logging.info('egads - netcdf_io.py - NetCdf has been loaded')
 
@@ -1019,10 +1146,11 @@ class EgadsNetCdf(NetCdf):
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - float_format '
                       + str(float_format) + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
         self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames -> file conversion OK')
 
     def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
         """
-        Converts currently open NetCDF file to CSV file using Nappy API.
+        Converts currently open NetCDF file to Nasa Ames CSV file.
 
         :param string csv_file:
             Optional - Name of output CSV file. If none is provided, name of current
@@ -1043,6 +1171,18 @@ class EgadsNetCdf(NetCdf):
         self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
                       + ' -> file conversion OK')
+
+    def convert_to_hdf(self, hdf_file=None):
+        """
+        Convert currently open NetCDF file to Hdf5 file format.
+
+        :param string hdf_file:
+            Optional - Name of output Hdf5 file. If none is provided, name of
+            current NetCDF file is used and suffix changed to .h5
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_hdf')
+        self._convert_to_hdf(hdf_file)
 
     def _convert_to_nasa_ames(self, na_file, float_format, delimiter, no_header):
         """
@@ -1179,8 +1319,6 @@ class EgadsNetCdf(NetCdf):
         # write na file
         f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
         f.close()
-        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - na_file ' + str(na_file)
-                      + ' -> file conversion OK')
     
     def _open_file(self, filename, perms):
         """
@@ -1228,33 +1366,16 @@ class EgadsNetCdf(NetCdf):
 
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable')
         try:
+            orig_group = self.f
             if varname[0] == '/':
                 varname = varname[1:]
-            if '/' in varname:
-                var = varname.split('/')
-                if isinstance(var, list):
-                    orig_group = self.f
-                    for group in var:
-                        try:
-                            orig_group = orig_group.groups[group]
-                        except KeyError:
-                            orig_group = orig_group[group]
-                    if isinstance(orig_group, netCDF4.Variable):
-                        varin = orig_group
-                    else:
-                        raise KeyError
-                else:
-                    varin = self.f.groups[var]
-            else:
-                varin = self.f.variables[varname]
-
+            for group in varname.split('/'):
+                orig_group = orig_group[group]
+            varin = orig_group
         except KeyError:
             logging.exception('egads - netcdf_io.py - EgadsNetCdf - _read_variable - KeyError, variable does not exist'
                               ' in netcdf file')
             raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        except Exception:
-            logging.exception('egads - netcdf_io.py - EgadsNetCdf - _read_variable - Exception, unexpected error')
-            raise Exception("Error: Unexpected error")
         if input_range is None:
             value = varin[:]
         else:
@@ -1318,7 +1439,7 @@ class EgadsNetCdf(NetCdf):
             else:
                 varout[:] = data.value
             for key, val in data.metadata.items():
-                if key != '_FillValue':
+                if key not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST', '_FillValue']:
                     if val:
                         if isinstance(val, list):
                             tmp = ''
@@ -1329,5 +1450,99 @@ class EgadsNetCdf(NetCdf):
                             setattr(varout, str(key), val)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _write_variable - varname ' + str(varname)
                       + ' -> data write OK')
+
+    def _convert_to_hdf(self, hdf_file):
+        """
+        Private method to convert currently open NetCDF file to Hdf5 file format.
+        """
+
+        logging.debug('egads - netcdf_io.py - NetCdf - _convert_to_hdf')
+        if self.f is not None:
+            if hdf_file is None:
+                hdf_file = os.path.splitext(self.filename)[0] + '.h5'
+
+            # get groups
+            group_list = self.get_group_list(details=True)
+
+            # get global attributes
+            global_attributes = self.get_attribute_list()
+
+            # get dimensions
+            dimension_list = self.get_dimension_list(group_walk=True, details=True)
+
+            # get variables
+            variable_list = self.get_variable_list(group_walk=True, details=True)
+            var_dim_list = {}
+            for item in variable_list:
+                var = list(item.keys())[0]
+                path = item[var]
+                if path:
+                    full_var = path + '/' + var
+                else:
+                    full_var = var
+                var_dim_list[full_var] = self.get_dimension_list(full_var)
+
+            # get groups attributes
+            group_attributes = {}
+            for item in group_list:
+                path = item['path']
+                group_attributes[path] = self.get_attribute_list(varname=path)
+
+            # create hdf file
+            f = egads.input.EgadsHdf(hdf_file, 'w')
+
+            # add global attributes
+            add_history = False
+            dt = datetime.datetime.now()
+            for key, value in global_attributes.items():
+                if key == 'history':
+                    add_history = True
+                    value += ' ; converted to Hdf by EGADS, ' + str(dt)
+                f.add_attribute(key, value)
+            if not add_history:
+                f.add_attribute('history', 'converted to Hdf by EGADS, ' + str(dt))
+
+            # add groups
+            for item in group_list:
+                path = item['path']
+                f.add_group(path)
+                metadata = group_attributes[path]
+                if metadata:
+                    for attr_name, attr_value in metadata.items():
+                        f.add_attribute(attr_name, attr_value, path)
+
+            # add dimensions
+            dim_list = []
+            for name, (size, path) in dimension_list.items():
+                if '(' in name:
+                    name = name[: name.find('(') - 1]
+                if path:
+                    full_name = path + '/' + name
+                else:
+                    full_name = name
+                dim_list.append(full_name)
+                data = self.read_variable(full_name)
+                ftype = str(data.dtype)
+                f.add_dim(full_name, data, ftype)
+
+            # add variables
+            for item in variable_list:
+                var = list(item.keys())[0]
+                path = item[var]
+                if path:
+                    full_var = path + '/' + var
+                else:
+                    full_var = var
+                if full_var not in dim_list:
+                    data = self.read_variable(full_var)
+                    dims = tuple([key for key, _ in var_dim_list[full_var].items()])
+                    ftype = str(data.dtype)
+                    f.write_variable(data, full_var, dims, ftype)
+
+            f.close()
+            logging.debug('egads - netcdf_io.py - EgadsNetCdf - _convert_to_hdf -> file conversion OK')
+        else:
+            logging.error('egads - netcdf_io.py - EgadsNetCdf - _convert_to_hdf - AttributeError, no file open')
+            raise AttributeError('No file open')
 
     logging.info('egads - netcdf_io.py - EgadsNetCdf has been loaded')

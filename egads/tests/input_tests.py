@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.7"
+__version__ = "1.9"
 
 import tempfile
 import unittest
@@ -404,7 +404,7 @@ class HdfFileInputTestCase(unittest.TestCase):
 
         data = einput.Hdf(self.file)
         dimdict = {'time1': 12, 'time2': 12}
-        self.assertEqual(data.get_dimension_list(), dimdict, 'dimensions dictionary does not match')
+        self.assertEqual(data.get_dimension_list(group_walk=True), dimdict, 'dimensions dictionary does not match')
         vardimdict1 = {'time1': 12}
         vardimdict2 = {'time2': 12}
         self.assertEqual(data.get_dimension_list('my_project/data/temperature/temp'), vardimdict1,
@@ -967,7 +967,7 @@ class NAOutputTestCase(unittest.TestCase):
 
 
 class NetCdfConvertFormatTestCase(unittest.TestCase):
-    """ Test conversion between formats using nappy toolbox """
+    """ Test conversion from NetCdf format """
 
     def setUp(self):
         self.data1 = egads.EgadsData(value=[0.5, 2.3, 6.2, 8.1, 4.],
@@ -983,6 +983,7 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         self.ncfilename = tempfile.mktemp('.nc')
         self.nafilename = tempfile.mktemp('.na')
         self.csvfilename = tempfile.mktemp('.csv')
+        self.h5filename = tempfile.mktemp('.h5')
         f = einput.EgadsNetCdf(self.ncfilename, 'w')
         f.add_attribute('Conventions', 'CF-1.0')
         f.add_attribute('history', 'the netcdf file has been created by EGADS')
@@ -1074,13 +1075,204 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         self.assertListEqual(self.data1.value.tolist(), data, 'data and data1 values do not match')
         self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match') 
 
+    def test_convert_nc_to_hdf_netcdf(self):
+        """ Test conversion of NetCDF to Hdf, using the NetCdf class """
+
+        f = einput.NetCdf(self.ncfilename)
+        f.convert_to_hdf(self.h5filename)
+        f.close()
+        g = einput.Hdf(self.h5filename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('authors'),
+                         'Originator values do not match')
+        self.assertEqual('computer', g.get_attribute_value('source'), 'Source values do not match')
+        data1 = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data1.tolist(), 'data1 and data1 values do not match')
+        data2 = g.read_variable('time')
+        self.assertListEqual(self.data2.value.tolist(), data2.tolist(), 'data2 and data2 values do not match')
+        g.close()
+
+    def test_convert_nc_to_hdf_egadsnetcdf(self):
+        """ Test conversion of NetCDF to Hdf, using the EgadsNetCdf class """
+
+        f = einput.EgadsNetCdf(self.ncfilename)
+        f.convert_to_hdf(self.h5filename)
+        f.close()
+        g = einput.Hdf(self.h5filename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('authors'),
+                         'Originator values do not match')
+        self.assertEqual('computer', g.get_attribute_value('source'), 'Source values do not match')
+        data1 = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data1.tolist(), 'data1 and data1 values do not match')
+        data2 = g.read_variable('time')
+        self.assertListEqual(self.data2.value.tolist(), data2.tolist(), 'data2 and data2 values do not match')
+        g.close()
+
+
+class HdfConvertFormatTestCase(unittest.TestCase):
+    """ Test conversion from Hdf format """
+
+    def setUp(self):
+        self.data1 = egads.EgadsData(value=[0.5, 2.3, 6.2, 8.1, 4.],
+                                     units='mm',
+                                     long_name='a common data',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data2 = egads.EgadsData(value=[0., 1., 2., 3., 4.],
+                                     units='days since 20170101 00:00:00Z',
+                                     long_name='a common time vector',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data3 = egads.EgadsData(value=[0.3, 2.5, 4.2, 7.1, 3.6],
+                                     units='mm',
+                                     long_name='another common data',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.data4 = egads.EgadsData(value=[0., 1., 2., 3., 4.],
+                                     units='days since 20170101 00:00:00Z',
+                                     long_name='a common time vector',
+                                     scale_factor=1.,
+                                     _FillValue=-999)
+        self.ncfilename = tempfile.mktemp('.nc')
+        self.nafilename = tempfile.mktemp('.na')
+        self.csvfilename = tempfile.mktemp('.csv')
+        self.h5filename = tempfile.mktemp('.h5')
+        f = einput.EgadsHdf(self.h5filename, 'w')
+        f.add_attribute('Conventions', 'CF-1.0')
+        f.add_attribute('history', 'the netcdf file has been created by EGADS')
+        f.add_attribute('comments', 'no comments on the netcdf file')
+        f.add_attribute('institution', 'EUFAR')
+        f.add_attribute('source', 'computer')
+        f.add_attribute('title', 'a test file')
+        f.add_attribute('authors', 'John Doe (john.doe@email.com)')
+        f.add_dim('time', self.data2, 'double')
+        f.add_group('my_project')
+        f.add_group('my_project/info')
+        f.add_attribute('purpose', 'information about project', 'my_project/info')
+        f.add_dim('my_project/time', self.data4, 'double')
+        f.write_variable(self.data1, 'data', ('time',), 'double')
+        f.write_variable(self.data3, 'my_project/data', ('time',), 'double')
+        f.close()
+
+    def test_convert_hdf_to_nc_hdf(self):
+        """ Test conversion of NetCDF to NASA Ames, using the NetCdf class """
+
+        f = einput.Hdf(self.h5filename)
+        f.convert_to_netcdf(self.ncfilename)
+        f.close()
+        g = einput.NetCdf(self.ncfilename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('authors'),
+                         'Originator values do not match')
+        self.assertEqual('computer', g.get_attribute_value('source'), 'Source values do not match')
+        self.assertEqual('information about project', g.get_attribute_value('purpose', 'my_project/info'),
+                         'Source values do not match')
+        data1 = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data1.tolist(), 'data1 and data1 values do not match')
+        data2 = g.read_variable('time')
+        self.assertListEqual(self.data2.value.tolist(), data2.tolist(), 'data2 and data2 values do not match')
+        data3 = g.read_variable('my_project/data')
+        self.assertListEqual(self.data3.value.tolist(), data3.tolist(), 'data3 and data3 values do not match')
+        g.close()
+
+    def test_convert_hdf_to_nc_egadshdf(self):
+        """ Test conversion of NetCDF to NASA Ames, using the EgadsNetCdf class """
+
+        f = einput.EgadsHdf(self.h5filename)
+        f.convert_to_netcdf(self.ncfilename)
+        f.close()
+        g = einput.NetCdf(self.ncfilename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('authors'),
+                         'Originator values do not match')
+        self.assertEqual('computer', g.get_attribute_value('source'), 'Source values do not match')
+        self.assertEqual('information about project', g.get_attribute_value('purpose', 'my_project/info'),
+                         'Source values do not match')
+        data1 = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data1.tolist(), 'data1 and data1 values do not match')
+        data2 = g.read_variable('time')
+        self.assertListEqual(self.data2.value.tolist(), data2.tolist(), 'data2 and data2 values do not match')
+        data3 = g.read_variable('my_project/data')
+        self.assertListEqual(self.data3.value.tolist(), data3.tolist(), 'data3 and data3 values do not match')
+        g.close()
+
+    def test_convert_hdf_to_na_hdf(self):
+        """ Test conversion of NetCDF to NASA Ames, using the NetCdf class """
+
+        f = einput.Hdf(self.h5filename)
+        f.convert_to_nasa_ames(self.nafilename)
+        f.close()
+        g = einput.NasaAmes(self.nafilename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('ONAME'), 'Originator values do not '
+                                                                                          'match')
+        self.assertEqual('computer', g.get_attribute_value('SNAME'), 'Source values do not match')
+        data = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
+        g.close()
+
+    def test_convert_hdf_to_na_egadshdf(self):
+        """ Test conversion of NetCDF to NASA Ames, using the EgadsNetCdf class """
+
+        f = einput.EgadsHdf(self.h5filename)
+        f.convert_to_nasa_ames(self.nafilename)
+        f.close()
+        g = einput.NasaAmes(self.nafilename)
+        self.assertEqual('John Doe (john.doe@email.com)', g.get_attribute_value('ONAME'), 'Originator values do not '
+                                                                                          'match')
+        self.assertEqual('computer', g.get_attribute_value('SNAME'), 'Source values do not match')
+        data = g.read_variable('data')
+        self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
+        g.close()
+
+    def test_convert_hdf_to_csv_hdf(self):
+        """ Test conversion of NetCDF to Nasa/Ames CSV, using the NetCdf class """
+
+        f = einput.Hdf(self.h5filename)
+        f.convert_to_csv(self.csvfilename)
+        f.close()
+        g = einput.EgadsCsv()
+        g.open(self.csvfilename, 'r')
+        lines = g.read()
+        author = lines[1][0]
+        computer = lines[3][0]
+        raw = lines[-5:]
+        time = []
+        data = []
+        for i in raw:
+            time.append(float(i[0]))
+            data.append(float(i[1]))
+        self.assertEqual('John Doe (john.doe@email.com)', author, 'Originator values do not match')
+        self.assertEqual('computer', computer, 'Source values do not match')
+        self.assertListEqual(self.data1.value.tolist(), data, 'data and data1 values do not match')
+        self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match')
+
+    def test_convert_hdf_to_csv_egadshdf(self):
+        """ Test conversion of NetCDF to Nasa/Ames CSV, using the EgadsNetCdf class """
+
+        f = einput.EgadsHdf(self.h5filename)
+        f.convert_to_csv(self.csvfilename)
+        f.close()
+        g = einput.EgadsCsv()
+        g.open(self.csvfilename, 'r')
+        lines = g.read()
+        author = lines[1][0]
+        computer = lines[3][0]
+        raw = lines[-5:]
+        time = []
+        data = []
+        for i in raw:
+            time.append(float(i[0]))
+            data.append(float(i[1]))
+        self.assertEqual('John Doe (john.doe@email.com)', author, 'Originator values do not match')
+        self.assertEqual('computer', computer, 'Source values do not match')
+        self.assertListEqual(self.data1.value.tolist(), data, 'data and data1 values do not match')
+        self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match')
+
 
 class NAConvertFormatTestCase(unittest.TestCase):
-    """ Test conversion between formats using nappy toolbox """
+    """ Test conversion from Nasa Ames format """
 
     def setUp(self):
         self.na_filename = tempfile.mktemp('.na')
         self.nc_filename = tempfile.mktemp('.nc')
+        self.h5_filename = tempfile.mktemp('.h5')
         f = einput.NasaAmes()
         f.save_na_file(self.na_filename, NA_DICT, float_format='%.4f')
         f.close()
@@ -1117,7 +1309,33 @@ class NAConvertFormatTestCase(unittest.TestCase):
         self.assertEqual(self.authors, author, 'Originator values do not match')
         self.assertEqual(self.special_com, special_com, 'Special comments do not match')
         self.assertListEqual(time.value.tolist(), time.value.tolist(), 'both time values do not match')
-        
+
+    def test_convert_na_nasaames_to_hdf(self):
+        """ Test conversion of NASA Ames to NetCDF"""
+
+        f = einput.NasaAmes(self.na_filename)
+        f.convert_to_hdf(self.h5_filename)
+        g = einput.EgadsHdf(self.h5_filename, 'r')
+        author = g.get_attribute_value('authors')
+        special_com = g.get_attribute_value('special_comments')
+        time = g.read_variable('Time_np')
+        self.assertEqual(self.authors, author, 'Originator values do not match')
+        self.assertEqual(self.special_com, special_com, 'Special comments do not match')
+        self.assertListEqual(time.value.tolist(), time.value.tolist(), 'both time values do not match')
+
+    def test_convert_na_egadsnasaames_to_hdf(self):
+        """ Test conversion of NASA Ames to NetCDF"""
+
+        f = einput.EgadsNasaAmes(self.na_filename)
+        f.convert_to_hdf(self.h5_filename)
+        g = einput.EgadsHdf(self.h5_filename, 'r')
+        author = g.get_attribute_value('authors')
+        special_com = g.get_attribute_value('special_comments')
+        time = g.read_variable('Time_np')
+        self.assertEqual(self.authors, author, 'Originator values do not match')
+        self.assertEqual(self.special_com, special_com, 'Special comments do not match')
+        self.assertListEqual(time.value.tolist(), time.value.tolist(), 'both time values do not match')
+
 
 def suite():
     netcdf_in_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfFileInputTestCase)
@@ -1131,11 +1349,11 @@ def suite():
     na_in_suite = unittest.TestLoader().loadTestsFromTestCase(NAInputTestCase)
     na_out_suite = unittest.TestLoader().loadTestsFromTestCase(NAOutputTestCase)
     netcdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NetCdfConvertFormatTestCase)
+    hdf_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(HdfConvertFormatTestCase)
     nasa_ames_convert_format_suite = unittest.TestLoader().loadTestsFromTestCase(NAConvertFormatTestCase)
     return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, hdf_in_suite, hdf_out_suite, text_in_suite,
                                text_out_suite, csv_in_suite, csv_out_suite, na_in_suite, na_out_suite,
-                               netcdf_convert_format_suite, nasa_ames_convert_format_suite])
-
+                               netcdf_convert_format_suite, hdf_convert_format_suite, nasa_ames_convert_format_suite])
 
 if __name__ == '__main__':
     unittest.TextTestRunner(verbosity=5).run(suite())

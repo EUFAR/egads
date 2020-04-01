@@ -4,7 +4,8 @@ README.md
 setup.cfg
 setup.py
 Documentation/EGADS Lineage Algorithm Handbook - v1.2.2.pdf
-Documentation/EGADS Lineage Documentation - v1.2.2.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v1.2.3.pdf
+Documentation/EGADS Lineage Documentation - v1.2.3.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py
@@ -108,6 +109,7 @@ doc/source/example_files/na_example_script.py
 doc/source/example_files/ncdump_hdf_example_file.txt
 doc/source/example_files/ncdump_nc_example_file.txt
 doc/source/example_files/temp_static_cnrm.tex
+doc/source/images/EGADS_GUI_005.png
 doc/source/images/eufar_new_logo_white_bkgrd.png
 egads/__init__.py
 egads/_version.py

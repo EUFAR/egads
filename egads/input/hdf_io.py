@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2019-11-22 07:09"
-__version__ = "0.8"
+__version__ = "0.9"
 __all__ = ["Hdf", "EgadsHdf"]
 
 
@@ -11,6 +11,7 @@ import itertools
 import numpy
 import egads
 import os
+import datetime
 from egads.input import FileCore
 
 
@@ -22,7 +23,8 @@ class Hdf(FileCore):
     library to the EGADS file-access methods.
     """
 
-    TYPE_DICT = {'char': 'c', 'byte': 'b', 'short': 'i2', 'int': 'i4', 'float': 'f4', 'double': 'f8'}
+    TYPE_DICT = {'char': 'c', 'byte': 'b', 'short': 'i2', 'int': 'i4', 'float': 'f4', 'double': 'f8', 'int16': 'i2',
+                 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
 
     def __del__(self):
         """
@@ -50,22 +52,30 @@ class Hdf(FileCore):
     def get_file_structure(self):
         """
         Returns a view of the file structure, groups and datasets.
+
+        :return: file structure.
         """
 
         return self._get_file_structure()
 
-    def get_variable_list(self, details=True):
+    def get_variable_list(self, groupname=None, group_walk=False, details=False):
         """
         Returns a list of variables found in the current Hdf file.
 
+        :param string groupname:
+            Optional - the name of the group to get the list from.
+        :param bool group_walk:
+            Optional - if True, the function visits all groups (if at least one exists)
+            to list all variables. False by default.
         :param bool details:
-            By default, True. if True, returns a list of dictionary with the name
-            of the dataset and the path of the dataset in the Hdf file. If False,
-            returns a list of string.
+            Optional - if True, the function returns a list of dictionaries, with
+            variable name as key and variable path as value. False by default, returns a
+            list of string.
+        :return: list of variables.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - get_variable_list')
-        return self._get_variable_list(details)
+        return self._get_variable_list(groupname, group_walk, details)
 
     def get_attribute_list(self, objectname=None):
         """
@@ -75,6 +85,7 @@ class Hdf(FileCore):
         :param string objectname:
             Optional - Name of object to get list of attributes from. If no object name is
             provided, the function returns top-level Hdf attributes.
+        :return: list of attribute.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - get_attribute_list - objectname ' + str(objectname))
@@ -91,6 +102,7 @@ class Hdf(FileCore):
         :param string objectname:
             Optional - Name of object attribute is attached to. If none specified, global
             attributes are examined.
+        :return: attribute value.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - get_attribute_value - attrname ' + str(attrname)
@@ -98,19 +110,25 @@ class Hdf(FileCore):
         attrs = self._get_attribute_list(objectname)
         return attrs[attrname]
 
-    def get_dimension_list(self, varname=None):
+    def get_dimension_list(self, varname=None, group_walk=False, details=False):
         """
         Returns an ordered dictionary of dimensions and their sizes found in the current
         Hdf file. If an object name is provided, the dimension names and lengths associated
         with that object are returned.
 
         :param string varname:
-            Name of variable to get list of associated dimensions for. If no variable
-            name is provided, the function returns all dimensions in the Hdf file.
+            Name of variable or group to get list of associated dimensions for. If no variable
+            name is provided, the function returns all dimensions at the root of the Hdf file.
+        :param bool group_walk:
+            Optional - if True, the function visits all groups (if at least one exists)
+            to list all dimensions. False by default.
+        :param bool details:
+            Optional - if True, dimension path is provided in the dictionary. False by default.
+        :return: list of dimension.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - get_dimension_list - varname ' + str(varname))
-        return self._get_dimension_list(varname)
+        return self._get_dimension_list(varname, group_walk, details)
 
     def read_variable(self, varname, input_range=None, read_as_float=False, replace_fill_value=False):
         """
@@ -126,6 +144,7 @@ class Hdf(FileCore):
         :param boolean replace_fill_value:
             Optional - if True, EGADS reads the data and replaces _FillValue (or missing_value) to NaN,
             if one of those attributes exists in the Hdf file. False is the default value.
+        :return: variable.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - read_variable - varname ' + str(varname) + ', input_range '
@@ -201,22 +220,22 @@ class Hdf(FileCore):
                       ', dims ' + str(dims) + ', ftype ' + str(ftype))
         self._write_variable(data, varname, dims, ftype)
 
-    def delete_attribute(self, attrname, varname=None):
+    def delete_attribute(self, attrname, objectname=None):
         """
-        Deletes attribute to currently open file. If varname is included, attribute
+        Deletes attribute to currently open file. If objectname is included, attribute
         is removed from specified variable or group, otherwise it is removed from global file
         attributes.
 
         :param string attrname:
             Attribute name.
-        :param string varname:
-            Optional - If varname is provided, attribute removed from specified
+        :param string objectname:
+            Optional - If objectname is provided, attribute removed from specified
             variable or group in the Hdf file.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - delete_attribute - attrname ' + str(attrname) +
-                      ', varname ' + str(varname))
-        self._delete_attribute(attrname, varname)
+                      ', objectname ' + str(objectname))
+        self._delete_attribute(attrname, objectname)
 
     def delete_group(self, groupname):
         """
@@ -240,72 +259,67 @@ class Hdf(FileCore):
         logging.debug('egads - hdf_io.py - Hdf - delete_variable - varname ' + str(varname))
         self._delete_variable(varname)
 
-    # def convert_to_netcdf(self, filename=None):
-    #     """
-    #     Converts the opened HDF file to Hdf format following the EUFAR and EGADS
-    #     convention. If groups exist, they are preserved in the new Hdf file.
-    #
-    #     :param string filename:
-    #         Optional - if only a name is given, a Hdf file named ``filename`` is
-    #         created in the HDF file folder ; if a path and a name are given, a Hdf
-    #         file named ``name`` is created in the folder ``path``.
-    #     """
-    #
-    #     logging.debug('egads - hdf_io.py - Hdf - convert_to_netcdf - filename ' + str(filename))
-    #     print('No function to convert to Hdf.')
-    #     self._convert_to_netcdf(filename)
+    def convert_to_netcdf(self, filename=None):
+        """
+        Converts the opened Hdf file to NetCdf format following the EUFAR and EGADS
+        convention. If groups exist, they are preserved in the new NetCDF file.
 
-    # def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
-    #     """
-    #     Convert currently open Hdf file to one or more NASA Ames files. For now can
-    #     only process Hdf files to NASA/Ames FFI 1001: only time as an independant
-    #     variable. Groups are not handle by the function and will lead to an error.
-    #
-    #     :param string na_file:
-    #         Optional - Name of output NASA Ames file. If none is provided, name of
-    #         current Hdf file is used and suffix changed to .na
-    #     :param string delimiter:
-    #         Optional - The delimiter desired for use between data items in the data
-    #         file. Default - Tab.
-    #     :param string float_format:
-    #         Optional - The format of float numbers to be saved. If no string is entered, values are
-    #         not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
-    #     :param string delimiter:
-    #         Optional - The delimiter desired for use between data items in the data
-    #         file. Default - '    ' (four spaces).
-    #     :param bool no_header:
-    #         Optional - If set to true, then only the data blocks are written to file.
-    #         Default - False.
-    #     """
-    #
-    #     logging.debug('egads - hdf_io.py - Hdf - convert_to_nasa_ames - float_format ' + str(float_format)
-    #                   + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
-    #     print('No function to convert to NasaAmes.')
+        :param string filename:
+            Optional - if only a name is given, a NetCDF file named ``filename`` is
+            created in the HDF file folder ; if a path and a name are given, a NetCDF
+            file named ``name`` is created in the folder ``path``.
+        """
 
-    # def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
-    #     """
-    #     Converts currently open Hdf file to CSV file using the NasaAmes class. Limitations
-    #     are the same than in the ``convert_to_nasa_ames`` function.
-    #
-    #     :param string csv_file:
-    #         Optional - Name of output CSV file. If none is provided, name of current
-    #         Hdf is used and suffix changed to .csv
-    #     :param string float_format:
-    #         Optional - The format of float numbers to be saved. If no string is entered, values are
-    #         not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
-    #     :param bool no_header:
-    #         Optional - If set to true, then only the data blocks are written to file.
-    #         Default - False.
-    #     """
-    #     logging.debug('egads - hdf_io.py - Hdf - convert_to_csv - csv_file ' + str(csv_file)
-    #                   + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
-    #     print('No function to convert to NasaAmes.')
-    #     if not csv_file:
-    #         csv_file = os.path.splitext(self.filename)[0] + '.csv'
-    #
-    #     self._convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
-    #     logging.debug('egads - netcdf_io.py - NetCdf - convert_to_csv - csv_file ' + str(csv_file)
-    #                   + ' -> file conversion OK')
+        logging.debug('egads - hdf_io.py - Hdf - convert_to_netcdf - filename ' + str(filename))
+        self._convert_to_netcdf(filename)
+
+    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
+        """
+        Convert currently open Hdf file to one or more NASA Ames files.
+        For now can only process Hdf files to NASA/Ames FFI 1001 :
+        only time as an independant variable. If groups exist, they are not converted to NA file.
+
+        :param string na_file:
+            Optional - Name of output NASA Ames file. If none is provided, name of
+            current NetCDF file is used and suffix changed to .na
+        :param string delimiter:
+            Optional - The delimiter desired for use between data items in the data
+            file. Default - Tab.
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param string delimiter:
+            Optional - The delimiter desired for use between data items in the data
+            file. Default - '    ' (four spaces).
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - convert_to_nasa_ames - float_format ' + str(float_format)
+                      + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
+        """
+        Converts currently open Hdf file to CSV file using the NasaAmes class.
+
+        :param string csv_file:
+            Optional - Name of output CSV file. If none is provided, name of current
+            NetCDF is used and suffix changed to .csv
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
+        if not csv_file:
+            csv_file = os.path.splitext(self.filename)[0] + '.csv'
+        self._convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
 
     def _open_file(self, filename, perms):
         """
@@ -349,24 +363,42 @@ class Hdf(FileCore):
         self.f.visititems(_h5py_get_file_structure)
         return file_structure
 
-    def _get_variable_list(self, details=True):
+    def _get_variable_list(self, groupname, group_walk, details):
         """
         Private method for getting list of dataset names.
         """
 
         logging.debug('egads - hdf_io.py - Hdf - _get_variable_list')
         if self.f is not None:
+            orig_group = self.f
+            if groupname is not None:
+                if groupname[0] != '/':
+                    groupname = '/' + groupname
+                orig_group = orig_group[groupname]
+            else:
+                groupname = ''
             var_list = []
 
             def _h5py_get_file_structure(name, obj):
                 if isinstance(obj, h5py.Dataset):
                     var_path, var_name = os.path.split(name)
                     if details:
-                        var_list.append({var_name: var_path})
+                        if len(var_path) > 0:
+                            if var_path[0] != '/':
+                                var_path = '/' + var_path
+                        var_list.append({var_name: groupname + var_path})
                     else:
                         var_list.append(var_name)
 
-            self.f.visititems(_h5py_get_file_structure)
+            if group_walk:
+                orig_group.visititems(_h5py_get_file_structure)
+            else:
+                for name in orig_group:
+                    if isinstance(orig_group[name], h5py.Dataset):
+                        if details:
+                            var_list.append({name: groupname})
+                        else:
+                            var_list.append(name)
             return var_list
         else:
             logging.error('egads.input.Hdf._get_variable_list: AttributeError, No file open')
@@ -382,71 +414,124 @@ class Hdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - Hdf - _get_attribute_list')
         if self.f is not None:
+            attr_dict = {}
+            orig_group = self.f
             if obj is not None:
-                attr_dict = {}
-                for key, value in self.f[obj].attrs.items():
-                    if isinstance(value, bytes):
-                        value = value.decode('utf-8')
-                    if isinstance(value, str):
-                        value = ' '.join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
-            else:
-                attr_dict = {}
-                for key, value in self.f.attrs.items():
-                    if isinstance(value, bytes):
-                        value = value.decode('utf-8')
-                    if isinstance(value, str):
-                        value = ' '.join(value.split())
-                    attr_dict[key] = value
-                return attr_dict
+                orig_group = orig_group[obj]
+            for key, value in orig_group.attrs.items():
+                if isinstance(value, bytes):
+                    value = value.decode('utf-8')
+                if isinstance(value, str):
+                    value = ' '.join(value.split())
+                attr_dict[key] = value
+            return attr_dict
         else:
             logging.error('egads.input.Hdf._get_attribute_list: AttributeError, No file open')
             raise AttributeError('No file open')
 
-    def _get_dimension_list(self, varname):
+    def _get_dimension_list(self, varname, group_walk, details):
         """
         Private method to get an ordered dictionary of dimensions and their sizes found in the current
         Hdf file.
         """
 
         dim_dict = collections.OrderedDict()
-        if varname is None:
-            var_list = self._get_variable_list(True)
-            dim_list = []
-            for var in var_list:
-                var, path = list(var.keys())[0], var[list(var.keys())[0]]
-                var_dim = [dim.label for dim in self.f[path + '/' + var].dims]
-                dim_shp = self.f[path + '/' + var].shape
-                for i, dim in enumerate(var_dim):
-                    if dim:
-                        dim_list.append([dim, dim_shp[i]])
-            for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
-                dim_dict[dim[0]] = dim[1]
+        orig_group = self.f
+        if group_walk:
+            if varname is None:
+                var_list = self.get_variable_list(group_walk=True, details=True)
+                dim_list = []
+                for item in var_list:
+                    name = list(item.keys())[0]
+                    path = item[name]
+                    for dim in orig_group[path + '/' + name].dims:
+                        dim_list.append([dim.label, orig_group[path + '/' + dim.label].shape[0], path])
+                unique_data = [list(x) for x in set(tuple(x) for x in dim_list)]
+                not_unique = [r for r in [item[0] for item in unique_data]
+                              if [item[0] for item in unique_data].count(r) > 1]
+                for dim in unique_data:
+                    if dim[0] in not_unique:
+                        if details:
+                            dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                        else:
+                            dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                    else:
+                        if details:
+                            dim_dict[dim[0]] = (dim[1], dim[2])
+                        else:
+                            dim_dict[dim[0]] = dim[1]
+            else:
+                var = orig_group[varname]
+                if isinstance(var, h5py.Dataset):
+                    parent = var.parent.name
+                    dim_shape = var.shape
+                    for i, dim in enumerate(orig_group[varname].dims):
+                        if details:
+                            dim_dict[dim.label] = (dim_shape[i], parent)
+                        else:
+                            dim_dict[dim.label] = dim_shape[i]
+                else:
+                    var_list = self.get_variable_list(groupname=varname, group_walk=True, details=True)
+                    dim_list = []
+                    for item in var_list:
+                        name = list(item.keys())[0]
+                        path = item[name]
+                        for dim in orig_group[path + '/' + name].dims:
+                            dim_list.append([dim.label, orig_group[path + '/' + dim.label].shape[0], path])
+                    unique_data = [list(x) for x in set(tuple(x) for x in dim_list)]
+                    not_unique = [r for r in [item[0] for item in unique_data]
+                                  if [item[0] for item in unique_data].count(r) > 1]
+                    for dim in unique_data:
+                        if dim[0] in not_unique:
+                            if details:
+                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                            else:
+                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                        else:
+                            if details:
+                                dim_dict[dim[0]] = (dim[1], dim[2])
+                            else:
+                                dim_dict[dim[0]] = dim[1]
         else:
-            dim_shape = self.f[varname].shape
-            for i, dim in enumerate(self.f[varname].dims):
-                dim_dict[dim.label] = dim_shape[i]
+            if varname is None:
+                var_list = self.get_variable_list()
+                dim_list = []
+                for item in var_list:
+                    for dim in orig_group[item].dims:
+                        dim_list.append([dim.label, orig_group[dim.label].shape[0]])
+                for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
+                    if details:
+                        dim_dict[dim[0]] = (dim[1], '')
+                    else:
+                        dim_dict[dim[0]] = dim[1]
+            else:
+                var = orig_group[varname]
+                if isinstance(var, h5py.Dataset):
+                    parent = var.parent.name
+                    dim_shape = var.shape
+                    for i, dim in enumerate(orig_group[varname].dims):
+                        if details:
+                            dim_dict[dim.label] = (dim_shape[i], parent)
+                        else:
+                            dim_dict[dim.label] = dim_shape[i]
+                else:
+                    var_list = self.get_variable_list(groupname=varname)
+                    dim_list = []
+                    for item in var_list:
+                        for dim in var[item].dims:
+                            dim_list.append([dim.label, var[dim.label].shape[0]])
+                    for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
+                        if details:
+                            dim_dict[dim[0]] = (dim[1], varname)
+                        else:
+                            dim_dict[dim[0]] = dim[1]
         return dim_dict
 
     def _read_variable(self, varname, input_range, read_as_float, replace_fill_value):
         """
         Private method to read a variable from currently opened Hdf file.
         """
-
-        var_list = self._get_variable_list(True)
-        path, var = os.path.split(varname)
-        exist = False
-        for item in var_list:
-            if var == list(item.keys())[0] and path == item[list(item.keys())[0]]:
-                exist = True
-        if not exist:
-            logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
-                              'hdf file')
-            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        else:
-            # var_path = self._get_variable_list()[var_list.index(varname)][varname] + '/' + varname
-            # var_path = path + var
+        try:
             if input_range is None:
                 var = numpy.array(self.f[varname])
             else:
@@ -454,25 +539,29 @@ class Hdf(FileCore):
                 for i in range(2, len(input_range), 2):
                     obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
                 var = numpy.array(self.f[varname][eval(obj)])
-            if read_as_float:
-                var = var.astype(float)
-            if replace_fill_value:
-                _fill_value = None
-                var_attrs = self._get_attribute_list(varname)
-                if '_FillValue' in var_attrs:
-                    _fill_value = var_attrs['_FillValue']
-                elif 'missing_value' in var_attrs:
-                    _fill_value = var_attrs['missing_value']
-                elif 'fill_value' in var_attrs:
-                    _fill_value = var_attrs['fill_value']
-                else:
-                    logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, no missing value metadata '
-                                      + 'has been found for the variable ' + varname)
-                    raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
-                if _fill_value is not None:
-                    var[var == _fill_value] = numpy.nan
-            logging.debug('egads - hdf_io.py - Hdf - _read_variable - varname ' + str(varname) + ' -> data read OK')
-            return var
+        except KeyError:
+            logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
+                              'hdf file')
+            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
+        if read_as_float:
+            var = var.astype(float)
+        if replace_fill_value:
+            _fill_value = None
+            var_attrs = self._get_attribute_list(varname)
+            if '_FillValue' in var_attrs:
+                _fill_value = var_attrs['_FillValue']
+            elif 'missing_value' in var_attrs:
+                _fill_value = var_attrs['missing_value']
+            elif 'fill_value' in var_attrs:
+                _fill_value = var_attrs['fill_value']
+            else:
+                logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, no missing value metadata '
+                                  + 'has been found for the variable ' + varname)
+                raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
+            if _fill_value is not None:
+                var[var == _fill_value] = numpy.nan
+        logging.debug('egads - hdf_io.py - Hdf - _read_variable - varname ' + str(varname) + ' -> data read OK')
+        return var
 
     def _add_group(self, groupname):
         """
@@ -546,15 +635,15 @@ class Hdf(FileCore):
             raise AttributeError('No file open')
         logging.debug('egads - hdf_io.py - Hdf - _write_variable - varname ' + str(varname) + ' -> data write OK')
 
-    def _delete_attribute(self, attrname, varname):
+    def _delete_attribute(self, attrname, objectname):
         """
         Private method to delete attribute to currently open file.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - _delete_attribute')
         if self.f is not None:
-            if varname is not None:
-                obj = self.f[varname]
+            if objectname is not None:
+                obj = self.f[objectname]
             else:
                 obj = self.f
             obj.attrs.__delitem__(attrname)
@@ -596,18 +685,327 @@ class Hdf(FileCore):
         logging.debug('egads - hdf_io.py - Hdf - _delete_variable - varname ' + str(varname)
                       + ' -> group delete OK')
 
-    # def _convert_to_netcdf(self, filename):
-    #     """
-    #     Private method to convert the opened HDF file to Hdf format.
-    #     """
-    #
-    #     logging.debug('egads - hdf_io.py - Hdf - _convert_to_netcdf')
-    #
-    #     if self.f is not None:
-    #         pass
-    #     else:
-    #         logging.error('egads - hdf_io.py - Hdf - _delete_variable - AttributeError, no file open')
-    #         raise AttributeError('No file open')
+    def _convert_to_netcdf(self, nc_file):
+        """
+        Private method to convert the opened HDF file to NetCDF format.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - _convert_to_netcdf')
+        if self.f is not None:
+            if nc_file is None:
+                nc_file = os.path.splitext(self.filename)[0] + '.nc'
+            file_struct = {'groups': [], 'variables': [],
+                           'dimensions': collections.OrderedDict(), 'attributes': collections.OrderedDict(),
+                           'global_attributes': collections.OrderedDict()}
+
+            # read variables and groups structure
+            group_struct = self.get_file_structure()
+            for key, value in group_struct.items():
+                if isinstance(value['object'], h5py.Group):
+                    file_struct['groups'].append(key)
+                if isinstance(value['object'], h5py.Dataset):
+                    name = value['object'].name[len(value['object'].parent.name):]
+                    if name[0] == '/':
+                        name = name[1:]
+                    dim_list = self.get_dimension_list(value['object'].parent.name + '/' + name, details=True)
+                    file_struct['variables'].append([name, value['object'].parent.name, dim_list])
+
+            # read dimensions
+            file_struct['dimensions'] = self.get_dimension_list(group_walk=True, details=True)
+
+            # read global attributes
+            for attr in self.get_attribute_list():
+                file_struct['global_attributes'][attr] = self.get_attribute_value(attr)
+
+            # read variables and groups metadata
+            for key, _ in group_struct.items():
+                tmp = {}
+                for attr in self.get_attribute_list(key):
+                    if attr not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']:
+                        tmp[attr] = self.get_attribute_value(attr, key)
+                file_struct['attributes'][key] = tmp
+
+            # netcdf file creation
+            f = egads.input.NetCdf(nc_file, 'w')
+
+            # add global attributes
+            add_history = False
+            dt = datetime.datetime.now()
+            for key, value in file_struct['global_attributes'].items():
+                if key == 'history':
+                    add_history = True
+                    value += ' ; converted to NetCdf by EGADS, ' + str(dt)
+                f.add_attribute(key, value)
+            if not add_history:
+                f.add_attribute('history', 'converted to NetCdf by EGADS, ' + str(dt))
+
+            # add groups
+            for group in file_struct['groups']:
+                f.add_group(group)
+
+            # add dimensions
+            for key, value in file_struct['dimensions'].items():
+                if '(' in key:
+                    idx = key.find('(')
+                    key = key[: idx - 1]
+                size, path = value
+                f.add_dim(path + '/' + key, size)
+
+            # add variables
+            type_dict = {'char': 'c', 'byte': 'b', 'int16': 'i2', 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
+            for sublist in file_struct['variables']:
+                name = sublist[0]
+                path = sublist[1]
+                dim = tuple(sublist[2].keys())
+                if path[0] == '/':
+                    path = path[1:]
+                data = self.read_variable('/' + path + '/' + name)
+                try:
+                    dtype = type_dict[str(data.dtype)]
+                except KeyError:
+                    try:
+                        dtype = self.TYPE_DICT[str(data.dtype)]
+                    except KeyError:
+                        dtype = str(data.dtype)
+                if not path:
+                    path_name = name
+                else:
+                    path_name = path + '/' + name
+                metadata = file_struct['attributes'][path_name]
+                try:
+                    fillvalue = metadata['_FillValue']
+                except KeyError:
+                    try:
+                        fillvalue = metadata['missing_value']
+                    except KeyError:
+                        fillvalue = None
+                f.write_variable(data, path_name, dims=dim, ftype=dtype, fillvalue=fillvalue)
+
+            # add metadata for variables and groups
+            for item in file_struct['groups']:
+                metadata = file_struct['attributes'][item]
+                if metadata:
+                    for key, value in metadata.items():
+                        f.add_attribute(key, value, item)
+            for sublist in file_struct['variables']:
+                name = sublist[0]
+                path = sublist[1]
+                if path[0] == '/':
+                    path = path[1:]
+                if not path:
+                    path_name = name
+                else:
+                    path_name = path + '/' + name
+                metadata = file_struct['attributes'][path_name]
+                if metadata:
+                    for key, value in metadata.items():
+                        if key != '_FillValue':
+                            f.add_attribute(key, value, path_name)
+            f.close()
+            logging.debug('egads - hdf_io.py - Hdf - _convert_to_netcdf -> file conversion OK')
+        else:
+            logging.error('egads - hdf_io.py - Hdf - _convert_to_netcdf - AttributeError, no file open')
+            raise AttributeError('No file open')
+
+    def _convert_to_nasa_ames(self, na_file, float_format, delimiter, no_header):
+        """
+        Private method to convert currently open Hdf file to one or more NASA Ames files.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - _convert_to_nasa_ames')
+
+        if not na_file:
+            na_file = os.path.splitext(self.filename)[0] + '.na'
+
+        # read dimensions and variables, try to check if ffi = 1001
+        dim_list = self.get_dimension_list()
+        var_list = self.get_variable_list()
+
+        if len(dim_list) > 1:
+            logging.exception('egads - hdf_io.py - Hdf - the actual convert_to_nasa_ames cant '
+                              'process file with multiple dimensions, FFI is set to 1001')
+            raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
+                            'FFI is set to 1001')
+        elif len(dim_list) == 0:
+            logging.exception('egads - hdf_io.py - Hdf - there is no dimensions at the root of '
+                              'the opened netcdf file.')
+            raise Exception('there is no dimensions at the root of the opened hdf file.')
+
+        # create NASA/Ames dictionary
+        f = egads.input.NasaAmes()
+        na_dict = f.create_na_dict()
+        missing_attributes = []
+
+        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE, DX, IVOL, NVOL
+        nlhead, ffi, org, oname, sname, mname, dx = -999, 1001, '', '', '', '', 0.0
+        ivol, nvol, date, niv, nv = 1, 1, None, 0, 0
+        try:
+            org = self.get_attribute_value('institution')
+        except KeyError:
+            org = 'no institution'
+            missing_attributes.append('institution')
+        try:
+            oname = self.get_attribute_value('authors')
+        except KeyError:
+            try:
+                oname = self.get_attribute_value('institution')
+                missing_attributes.append('authors - replaced by institution')
+            except KeyError:
+                oname = 'no author'
+                missing_attributes.append('authors')
+        try:
+            sname = self.get_attribute_value('source')
+        except KeyError:
+            sname = 'no source'
+            missing_attributes.append('source')
+        try:
+            mname = self.get_attribute_value('title')
+        except KeyError:
+            mname = 'no title'
+            missing_attributes.append('title')
+        rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
+
+        # read independant variables
+        independant_variables = []
+        for key in dim_list:
+            try:
+                var = self.read_variable(key).tolist()
+                attr_dict = {}
+                for attr in self.get_attribute_list(key):
+                    attr_dict[attr] = self.get_attribute_value(attr, key)
+                independant_variables.append([key, var, attr_dict])
+                niv += 1
+            except KeyError:
+                independant_variables.append([key, None, None])
+
+        # populate DATE if time is in independant_variables
+        for sublist in independant_variables:
+            if 'time' in sublist[0]:
+                try:
+                    index = sublist[2]['units'].index(' since ')
+                    ref_time = dateutil.parser.parse(sublist[2]['units'][index + 7:]).strftime("%Y%m%dT%H%M%S")
+                    isotime = egads.algorithms.transforms.SecondsToIsotime().run(sublist[1], ref_time)
+                    y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
+                    date = [y.value[0], m.value[0], d.value[0]]
+                except Exception:
+                    date = [999, 999, 999]
+        if not date:
+            date = [999, 999, 999]
+
+        # add first global metadata to na file
+        f.write_attribute_value('NLHEAD', nlhead, na_dict=na_dict)
+        f.write_attribute_value('FFI', ffi, na_dict=na_dict)
+        f.write_attribute_value('ONAME', oname, na_dict=na_dict)
+        f.write_attribute_value('ONAME', oname, na_dict=na_dict)
+        f.write_attribute_value('ORG', org, na_dict=na_dict)
+        f.write_attribute_value('SNAME', sname, na_dict=na_dict)
+        f.write_attribute_value('MNAME', mname, na_dict=na_dict)
+        f.write_attribute_value('DATE', date, na_dict=na_dict)
+        f.write_attribute_value('RDATE', rdate, na_dict=na_dict)
+        f.write_attribute_value('NIV', niv, na_dict=na_dict)
+        f.write_attribute_value('DX', dx, na_dict=na_dict)
+        f.write_attribute_value('NVOL', nvol, na_dict=na_dict)
+        f.write_attribute_value('IVOL', ivol, na_dict=na_dict)
+
+        # read variables
+        variables = []
+        for var in var_list:
+            if var not in dim_list:
+                dim = self.get_dimension_list(var)
+                value = self.read_variable(var).tolist()
+                attr_dict = {}
+                all_attr = self.get_attribute_list(var)
+                for index, item in enumerate(value):
+                    if item is None:
+                        value[index] = all_attr['_FillValue']
+                for attr in all_attr:
+                    attr_dict[attr] = self.get_attribute_value(attr, var)
+                variables.append([var, value, dim, attr_dict])
+
+        # prepare and set NCOM and SCOM
+        name_string = ''
+        ncom = ['==== Normal Comments follow ====', 'The NA file has been converted from a Hdf file by EGADS']
+        for attr in self.get_attribute_list():
+            if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
+                ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
+        ncom.append('==== Normal Comments end ====')
+        ncom.append('=== Data Section begins on the next line ===')
+        for name in dim_list:
+            name_string += name + '    '
+        scom = ['==== Special Comments follow ====',
+                '=== Additional Variable Attributes defined in the source file ===',
+                '== Variable attributes from source (Hdf) file follow ==']
+        for var in variables:
+            if var[0] not in dim_list:
+                first_line = True
+                for metadata in var[3]:
+                    no_metadata = ['_FillValue', 'scale_factor', 'units', 'var_name', 'DIMENSION_LABELS', 'NAME',
+                                   'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']
+                    if metadata not in no_metadata:
+                        if first_line:
+                            first_line = False
+                            scom.append('  Variable ' + var[0] + ':')
+                        try:
+                            scom.append('    ' + metadata + ' = ' + str(var[3][metadata]))
+                        except TypeError:
+                            logging.exception('egads - hdf_io.py - Hdf - convert_to_nasa_ames - an error '
+                                              + 'occurred when trying to add variable metadata in SCOM - metadata '
+                                              + str(metadata))
+                name_string += var[0] + '    '
+        name_string = name_string[:-4]
+        ncom.append(name_string)
+        scom.append('== Variable attributes from source (Hdf) file end ==')
+        scom.append('==== Special Comments end ====')
+        f.write_attribute_value('SCOM', scom, na_dict=na_dict)
+        f.write_attribute_value('NCOM', ncom, na_dict=na_dict)
+        f.write_attribute_value('NSCOML', len(scom), na_dict=na_dict)
+        f.write_attribute_value('NNCOML', len(ncom), na_dict=na_dict)
+
+        # write independant variable
+        xname, x = None, None
+        for ivar in independant_variables:
+            x = ivar[1]
+            try:
+                units = ivar[2]['units']
+            except KeyError:
+                units = 'no units'
+            xname = ivar[0] + ' (' + units + ')'
+        f.write_attribute_value('XNAME', xname, na_dict=na_dict)
+        f.write_attribute_value('X', x, na_dict=na_dict)
+
+        # write main variables
+        vmiss, vscal, vname, v = [], [], [], []
+        for var in variables:
+            try:
+                units = var[3]['units']
+            except KeyError:
+                units = ''
+            try:
+                miss = var[3]['_FillValue']
+            except KeyError:
+                try:
+                    miss = var[3]['missing_value']
+                except KeyError:
+                    miss = None
+            vmiss.append(miss)
+            vscal.append(1)
+            vname.append(var[0] + ' (' + units + ')')
+            v.append(var[1])
+            nv += 1
+
+        f.write_attribute_value('VMISS', vmiss, na_dict=na_dict)
+        f.write_attribute_value('VSCAL', vscal, na_dict=na_dict)
+        f.write_attribute_value('XNAME', xname, na_dict=na_dict)
+        f.write_attribute_value('VNAME', vname, na_dict=na_dict)
+        f.write_attribute_value('V', v, na_dict=na_dict)
+        f.write_attribute_value('X', x, na_dict=na_dict)
+        f.write_attribute_value('NV', nv, na_dict=na_dict)
+
+        # write na file
+        f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
+        f.close()
+        logging.debug('egads - hdf_io.py - Hdf - _convert_to_nasa_ames - na_file ' + str(na_file)
+                      + ' -> file conversion OK')
 
     logging.info('egads - hdf_io.py - Hdf has been loaded')
 
@@ -699,6 +1097,69 @@ class EgadsHdf(Hdf):
                       ', dims ' + str(dims) + ', ftype ' + str(ftype))
         self._write_variable(data, varname, dims, ftype)
 
+    def convert_to_nasa_ames(self, na_file=None, float_format=None, delimiter='    ', no_header=False):
+        """
+        Convert currently open EGADS NetCDF file to one or more NASA Ames files.
+        For now can only process NetCdf files to NASA/Ames FFI 1001 : variables
+        can only be dependant to one independant variable at a time.
+
+        :param string na_file:
+            Optional - Name of output NASA Ames file. If none is provided, name of
+            current NetCDF file is used and suffix changed to .na
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param string delimiter:
+            Optional - The delimiter desired for use between data items in the data
+            file. Default - '    ' (four spaces).
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames - float_format '
+                      + str(float_format) + ', delimiter ' + str(delimiter) + ', no_header ' + str(no_header))
+        self._convert_to_nasa_ames(na_file, float_format, delimiter, no_header)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_nasa_ames -> file conversion OK')
+
+    def convert_to_csv(self, csv_file=None, float_format=None, no_header=False):
+        """
+        Converts currently open NetCDF file to Nasa Ames CSV file.
+
+        :param string csv_file:
+            Optional - Name of output CSV file. If none is provided, name of current
+            NetCDF is used and suffix changed to .csv
+        :param string float_format:
+            Optional - The format of float numbers to be saved. If no string is entered, values are
+            not round up. Ex: '%.4f' to round up to 4 decimals. Default - None
+        :param bool no_header:
+            Optional - If set to true, then only the data blocks are written to file.
+            Default - False.
+        """
+
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ', float_format ' + str(float_format) + ', no_header ' + str(no_header))
+        if not csv_file:
+            filename, _ = os.path.splitext(self.filename)
+            csv_file = filename + '.csv'
+        self.convert_to_nasa_ames(na_file=csv_file, float_format=float_format, delimiter=',', no_header=no_header)
+        logging.debug('egads - netcdf_io.py - EgadsNetCdf - convert_to_csv - csv_file ' + str(csv_file)
+                      + ' -> file conversion OK')
+
+    def convert_to_netcdf(self, filename=None):
+        """
+        Converts the opened Hdf file to NetCdf format following the EUFAR and EGADS
+        convention. If groups exist, they are preserved in the new NetCDF file.
+
+        :param string filename:
+            Optional - if only a name is given, a NetCDF file named ``filename`` is
+            created in the HDF file folder ; if a path and a name are given, a NetCDF
+            file named ``name`` is created in the folder ``path``.
+        """
+
+        logging.debug('egads - hdf_io.py - EgadsHdf - convert_to_netcdf - filename ' + str(filename))
+        self._convert_to_netcdf(filename)
+
     def _open_file(self, filename, perms):
         """
         Private method for opening Hdf file.
@@ -729,17 +1190,19 @@ class EgadsHdf(Hdf):
         Private method to read a variable from currently opened Hdf file.
         """
 
-        var_list = self._get_variable_list(True)
-        path, var = os.path.split(varname)
-        exist = False
-        for item in var_list:
-            if var == list(item.keys())[0] and path == item[list(item.keys())[0]]:
-                exist = True
-        if not exist:
-            logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
-                              'hdf file')
-            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        else:
+        # var_list = self._get_variable_list(True)
+        # path, var = os.path.split(varname)
+        # exist = False
+        # for item in var_list:
+        #     if var == list(item.keys())[0] and path == item[list(item.keys())[0]]:
+        #         exist = True
+        # if not exist:
+        #     logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
+        #                       'hdf file')
+        #     raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
+        # else:
+
+        try:
             if input_range is None:
                 var = numpy.array(self.f[varname])
             else:
@@ -747,33 +1210,45 @@ class EgadsHdf(Hdf):
                 for i in range(2, len(input_range), 2):
                     obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
                 var = numpy.array(self.f[varname][eval(obj)])
-            if read_as_float:
-                var = var.astype(float)
-            var_attrs = self._get_attribute_list(varname)
-            if replace_fill_value:
-                _fill_value = None
-                if '_FillValue' in var_attrs:
-                    _fill_value = var_attrs['_FillValue']
-                elif 'missing_value' in var_attrs:
-                    _fill_value = var_attrs['missing_value']
-                elif 'fill_value' in var_attrs:
-                    _fill_value = var_attrs['fill_value']
-                else:
-                    logging.exception('egads - hdf_io.py - EgadsHdf - _read_variable - KeyError, no missing value '
-                                      'metadata has been found for the variable ' + varname)
-                    raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
-                if _fill_value is not None:
-                    var[var == _fill_value] = numpy.nan
+        except KeyError:
+            logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
+                              'hdf file')
+            raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
 
-            variable_metadata = egads.core.metadata.VariableMetadata(var_attrs, self.file_metadata)
-            data = egads.EgadsData(var, variable_metadata=variable_metadata)
-            if len(var.dtype) > 1:
-                data.compound_data = True
+        # if input_range is None:
+        #     var = numpy.array(self.f[varname])
+        # else:
+        #     obj = 'slice(input_range[0], input_range[1])'
+        #     for i in range(2, len(input_range), 2):
+        #         obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
+        #     var = numpy.array(self.f[varname][eval(obj)])
+        if read_as_float:
+            var = var.astype(float)
+        var_attrs = self._get_attribute_list(varname)
+        if replace_fill_value:
+            _fill_value = None
+            if '_FillValue' in var_attrs:
+                _fill_value = var_attrs['_FillValue']
+            elif 'missing_value' in var_attrs:
+                _fill_value = var_attrs['missing_value']
+            elif 'fill_value' in var_attrs:
+                _fill_value = var_attrs['fill_value']
             else:
-                data.compound_data = False
-            logging.debug('egads - hdf_io.py - EgadsHdf - _read_variable - varname ' + str(varname)
-                          + ' -> data read OK')
-            return data
+                logging.exception('egads - hdf_io.py - EgadsHdf - _read_variable - KeyError, no missing value '
+                                  'metadata has been found for the variable ' + varname)
+                raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
+            if _fill_value is not None:
+                var[var == _fill_value] = numpy.nan
+
+        variable_metadata = egads.core.metadata.VariableMetadata(var_attrs, self.file_metadata)
+        data = egads.EgadsData(var, variable_metadata=variable_metadata)
+        if len(var.dtype) > 1:
+            data.compound_data = True
+        else:
+            data.compound_data = False
+        logging.debug('egads - hdf_io.py - EgadsHdf - _read_variable - varname ' + str(varname)
+                      + ' -> data read OK')
+        return data
 
     def _add_dim(self, name, data, ftype):
         """
@@ -857,5 +1332,236 @@ class EgadsHdf(Hdf):
             logging.error('egads - hdf_io.py - EgadsHdf - _write_variable - AttributeError, no file open')
             raise AttributeError('No file open')
         logging.debug('egads - hdf_io.py - EgadsHdf - _write_variable - varname ' + str(varname) + ' -> data write OK')
+
+    def _convert_to_netcdf(self, nc_file):
+        """
+        Private method to convert the opened HDF file to NetCDF format.
+        """
+
+        logging.debug('egads - hdf_io.py - EgadsHdf - _convert_to_netcdf')
+        if self.f is not None:
+            if nc_file is None:
+                nc_file = os.path.splitext(self.filename)[0] + '.nc'
+            file_struct = {'groups': [], 'variables': [],
+                           'dimensions': collections.OrderedDict(), 'attributes': collections.OrderedDict(),
+                           'global_attributes': collections.OrderedDict()}
+
+            # read variables and groups structure
+            group_struct = self.get_file_structure()
+            for key, value in group_struct.items():
+                if isinstance(value['object'], h5py.Group):
+                    file_struct['groups'].append(key)
+                if isinstance(value['object'], h5py.Dataset):
+                    name = value['object'].name[len(value['object'].parent.name):]
+                    if name[0] == '/':
+                        name = name[1:]
+                    dim_list = self.get_dimension_list(value['object'].parent.name + '/' + name, details=True)
+                    file_struct['variables'].append([name, value['object'].parent.name, dim_list])
+
+            # read dimensions
+            file_struct['dimensions'] = self.get_dimension_list(group_walk=True, details=True)
+
+            # read global attributes
+            for attr in self.get_attribute_list():
+                file_struct['global_attributes'][attr] = self.get_attribute_value(attr)
+
+            # read variables and groups metadata
+            for key, _ in group_struct.items():
+                tmp = {}
+                for attr in self.get_attribute_list(key):
+                    if attr not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']:
+                        tmp[attr] = self.get_attribute_value(attr, key)
+                file_struct['attributes'][key] = tmp
+
+            # netcdf file creation
+            f = egads.input.EgadsNetCdf(nc_file, 'w')
+
+            # add global attributes
+            add_history = False
+            dt = datetime.datetime.now()
+            for key, value in file_struct['global_attributes'].items():
+                if key == 'history':
+                    add_history = True
+                    value += ' ; converted to NetCdf by EGADS, ' + str(dt)
+                f.add_attribute(key, value)
+            if not add_history:
+                f.add_attribute('history', 'converted to NetCdf by EGADS, ' + str(dt))
+
+            # add groups
+            for group in file_struct['groups']:
+                f.add_group(group)
+
+            # add dimensions
+            for key, value in file_struct['dimensions'].items():
+                if '(' in key:
+                    idx = key.find('(')
+                    key = key[: idx - 1]
+                size, path = value
+                f.add_dim(path + '/' + key, size)
+
+            # add variables
+            type_dict = {'char': 'c', 'byte': 'b', 'int16': 'i2', 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
+            for sublist in file_struct['variables']:
+                name = sublist[0]
+                path = sublist[1]
+                dim = tuple(sublist[2].keys())
+                if path[0] == '/':
+                    path = path[1:]
+                data = self.read_variable('/' + path + '/' + name)
+                if not path:
+                    path_name = name
+                else:
+                    path_name = path + '/' + name
+                f.write_variable(data, path_name, dims=dim, ftype=str(data.dtype))
+
+            # add metadata for groups
+            for item in file_struct['groups']:
+                metadata = file_struct['attributes'][item]
+                if metadata:
+                    for key, value in metadata.items():
+                        f.add_attribute(key, value, item)
+            f.close()
+            logging.debug('egads - hdf_io.py - EgadsHdf - _convert_to_netcdf -> file conversion OK')
+        else:
+            logging.error('egads - hdf_io.py - EgadsHdf - _convert_to_netcdf - AttributeError, no file open')
+            raise AttributeError('No file open')
+
+    def _convert_to_nasa_ames(self, na_file, float_format, delimiter, no_header):
+        """
+        Private method to convert currently open EGADS Hdf file to one or more NASA
+        Ames files. For now can only process Hdf files to NASA/Ames FFI 1001:
+        variables can only be dependant to one independant variable at a time. Groups,
+        if exist, are not converted to NA file format.
+        """
+
+        logging.debug('egads - hdf_io.py - EgadsHdf - _convert_to_nasa_ames')
+        if not na_file:
+            na_file = os.path.splitext(self.filename)[0] + '.na'
+
+        # read dimensions and variables, try to check if ffi = 1001
+        dim_list = self.get_dimension_list()
+        var_list = self.get_variable_list()
+        if len(dim_list) > 1:
+            logging.exception('egads - hdf_io.py - EgadsHdf - the actual convert_to_nasa_ames cant '
+                              'process file with multiple dimensions, FFI is set to 1001')
+            raise Exception('the actual convert_to_nasa_ames cant process file with multiple dimensions, '
+                            'FFI is set to 1001')
+
+        # create NASA/Ames dictionary
+        f = egads.input.EgadsNasaAmes()
+        na_dict = f.create_na_dict()
+        missing_attributes = []
+
+        # populate NLHEAD, FFI, ONAME, ORG, SNAME, MNAME, RDATE, DX, IVOL, NVOL
+        nlhead, ffi, org, oname, sname, mname, dx = -999, 1001, '', '', '', '', 0.0
+        ivol, nvol, date, niv = 1, 1, None, 0
+        try:
+            org = self.get_attribute_value('institution')
+        except KeyError:
+            org = 'no institution'
+            missing_attributes.append('institution')
+        try:
+            oname = self.get_attribute_value('authors')
+        except KeyError:
+            try:
+                oname = self.get_attribute_value('institution')
+                missing_attributes.append('authors - replaced by institution')
+            except KeyError:
+                oname = 'no author'
+                missing_attributes.append('authors')
+        try:
+            sname = self.get_attribute_value('source')
+        except KeyError:
+            sname = 'no source'
+            missing_attributes.append('source')
+        try:
+            mname = self.get_attribute_value('title')
+        except KeyError:
+            mname = 'no title'
+            missing_attributes.append('title')
+        rdate = [datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day]
+
+        # read and write independant variables and set DATE
+        for ivar in dim_list:
+            data = self.read_variable(ivar)
+            f.write_variable(data, ivar, vartype='independant', na_dict=na_dict)
+            niv += 1
+            if 'time' in ivar:
+                units = data.metadata['units']
+                ref_time = None
+                try:
+                    index = units.index(' since ')
+                    ref_time = units[index + 7:]
+                except (KeyError, ValueError):
+                    pass
+                try:
+                    ref_time = dateutil.parser.parse(ref_time).strftime("%Y%m%dT%H%M%S")
+                    isotime = egads.algorithms.transforms.SecondsToIsotime().run(data, ref_time)
+                    y, m, d, _, _, _ = egads.algorithms.transforms.IsotimeToElements().run(isotime)
+                    date = [y.value[0], m.value[0], d.value[0]]
+                    if not date:
+                        date = [999, 999, 999]
+                except Exception:
+                    date = [999, 999, 999]
+
+        # add first global metadata to na file
+        f.write_attribute_value('NLHEAD', nlhead, na_dict=na_dict)
+        f.write_attribute_value('FFI', ffi, na_dict=na_dict)
+        f.write_attribute_value('ONAME', oname, na_dict=na_dict)
+        f.write_attribute_value('ONAME', oname, na_dict=na_dict)
+        f.write_attribute_value('ORG', org, na_dict=na_dict)
+        f.write_attribute_value('SNAME', sname, na_dict=na_dict)
+        f.write_attribute_value('MNAME', mname, na_dict=na_dict)
+        f.write_attribute_value('DATE', date, na_dict=na_dict)
+        f.write_attribute_value('RDATE', rdate, na_dict=na_dict)
+        f.write_attribute_value('NIV', niv, na_dict=na_dict)
+        f.write_attribute_value('DX', dx, na_dict=na_dict)
+        f.write_attribute_value('NVOL', nvol, na_dict=na_dict)
+        f.write_attribute_value('IVOL', ivol, na_dict=na_dict)
+
+        # prepare and set NCOM and SCOM
+        name_string = ''
+        ncom = ['==== Normal Comments follow ====', 'The NA file has been converted from a Hdf file by EGADS']
+        for attr in self.get_attribute_list():
+            if attr != 'institution' and attr != 'authors' and attr != 'source' and attr != 'title':
+                ncom.append(attr + ': ' + str(self.get_attribute_value(attr)))
+        ncom.append('==== Normal Comments end ====')
+        ncom.append('=== Data Section begins on the next line ===')
+        for name in dim_list:
+            name_string += name + '    '
+        scom = ['==== Special Comments follow ====',
+                '=== Additional Variable Attributes defined in the source file ===',
+                '== Variable attributes from source (Hdf) file follow ==']
+        for var in var_list:
+            if var not in dim_list:
+                data = self.read_variable(var)
+                f.write_variable(data, var, na_dict=na_dict)
+                first_line = True
+                for metadata in data.metadata:
+                    no_metadata = ['_FillValue', 'scale_factor', 'units', 'var_name', 'DIMENSION_LABELS', 'NAME',
+                                   'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']
+                    if metadata not in no_metadata:
+                        if first_line:
+                            first_line = False
+                            scom.append('  Variable ' + var + ':')
+                        try:
+                            scom.append('    ' + metadata + ' = ' + str(data.metadata[metadata]))
+                        except TypeError:
+                            logging.exception('egads - hdf_io.py - EgadsHdf - convert_to_nasa_ames - an error '
+                                              + 'occurred when trying to add variable metadata in SCOM - metadata '
+                                              + str(metadata))
+                name_string += var + '    '
+        name_string = name_string[:-4]
+        ncom.append(name_string)
+        scom.append('== Variable attributes from source (Hdf) file end ==')
+        scom.append('==== Special Comments end ====')
+        f.write_attribute_value('SCOM', scom, na_dict=na_dict)
+        f.write_attribute_value('NCOM', ncom, na_dict=na_dict)
+        f.write_attribute_value('NSCOML', len(scom), na_dict=na_dict)
+        f.write_attribute_value('NNCOML', len(ncom), na_dict=na_dict)
+
+        # write na file
+        f.save_na_file(na_file, na_dict=na_dict, float_format=float_format, delimiter=delimiter, no_header=no_header)
+        f.close()
 
     logging.info('egads - hdf_io.py - EgadsHdf has been loaded')

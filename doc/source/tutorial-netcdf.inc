@@ -32,23 +32,27 @@ Valid values for permissions are:
 Getting info
 -------------
 
-.. function:: f.get_dimension_list([varname=None])
+.. function:: f.get_dimension_list([varname=None, group_walk=False, details=False])
 
-   Returns a dictionary of all dimensions with their sizes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns a dictionary of all dimensions and their sizes attached to *varname* at the root of the NetCDF file ; *varname* is a path to a group + a variable name, the function returns a dictionary of all dimensions and their sizes attached to *varname* in the specified group ; *varname* is a path to group + a group name, the function returns a dictionary of all dimensions and their sizes in the specified group. 
+   Returns a dictionary of all dimensions with their sizes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns a dictionary of all dimensions and their sizes attached to *varname* at the root of the NetCDF file ; *varname* is a path to a group + a variable name, the function returns a dictionary of all dimensions and their sizes attached to *varname* in the specified group ; *varname* is a path to group + a group name, the function returns a dictionary of all dimensions and their sizes in the specified group. *group_walk* is optional and if True, the function will explore the entire file is *varname* is None, or from a specified group if *varname* is a group path. *details* is optional, and if True, the path of each dimension is included in the final dictionary.
 
-   :param varname: name of a variable / group ; optional
+   :param varname: Name of variable or group to get the list of associated dimensions from. If no variable name is provided, the function returns all dimensions at the root of the NetCDF file ; optional
    :type varname: string
-   :rtype: dictionary of dimensions
+   :param bool group_walk: if True, the function visits all groups (if at least one exists) to list all dimensions. False by default ; optional
+   :type group_walk: bool
+   :param bool details: if True, dimension path is provided in the dictionary. False by default ; optional
+   :type details: bool
+   :rtype: ordered dictionary of dimensions
    
    >>> print(f.get_dimension_list('temperature'))
-   >>> print(f.get_dimension_list('test1/data/temperature'))
-   >>> print(f.get_dimension_list('test1/data'))
+   >>> print(f.get_dimension_list('test1/data/temperature', details=True))
+   >>> print(f.get_dimension_list('test1/data', group_walk=True))
 
 .. function:: f.get_attribute_list([varname=None])
 
    Returns a list of all top-level attributes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns all attributes and their values attached to *varname* at the root of the NetCDF file ; *varname* is a path to a group + a variable name, the function returns all attributes and their values attached to *varname* in the specified group ; *varname* is a path to group + a group name, the function returns all attributes and their values attached to the specified group.
    
-   :param varname: name of a variable / group ; optional
+   :param varname: Name of variable or group to get the list of attributes from. If no variable name is provided, the function returns top-level NetCDF attributes ; optional
    :type varname: string
    :rtype: dictionary of attributes
    
@@ -60,7 +64,7 @@ Getting info
 
    Returns a list of all variables at the root of the NetCDF file. If *groupname* is provided, the function will list all variables located at *groupname*. If group_walk is True, the function will list all variables in the NetCDF file from root, or from *groupname* if *groupname* is provided, to the last folder. If details is True, the function returns a list of dictionary containing the name of the variable and its path in the NetCDF file. By default, details is False and the function returns a simple list of variable names.
 	
-   :param groupname: name of a group where to get the variable list ; optional
+   :param groupname: the name of the group to get the variable list from ; optional
    :type groupname: string
    :param group_walk: if True, the function lists all variables from the root of the file, or from *groupname* if provided, to the last group ; optional
    :type group_walk: bool
@@ -128,16 +132,15 @@ Writing data
 
 The following describe how to add dimensions or attributes to a file.
 
-.. function:: f.add_dim(name, size[, groupname=None])
+.. function:: f.add_dim(name, size)
 
-   Add a dimension to the NetCDF file. If *groupname* is provided, the dimension is attached to the group. In that case, the group has to be created before.
+   Add a dimension to the NetCDF file. If a path to a group plus the dimension name is included in *name*, the dimension is
+            added to the group. In that case, the group has to be created before.
 
    :param name: the name of the dimension
    :type name: string
    :param size: the size of the dimension
    :type size: int
-   :param groupname: the name of the group, the path of the group plus the name of the group, or a sequence of group name
-   :type groupname: string|list
    
    >>> f.add_dim('time', len(time))
    >>> f.add_dim('time', len(time), 'test1/data')
@@ -193,7 +196,7 @@ To convert a NetCDF file to NasaAmes file format, simply use:
    
    Convert the opened NetCDF file to NasaAmes file.
 
-   :param na_file: it is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .na (*na_file* is None); optional
+   :param na_file: it is the name of the output file once it has been converted, by default, *na_file* is None, and the name of the NetCDF file will be used with the extension .na ; optional
    :type na_file: string
    :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
    :type float_format: string
@@ -210,12 +213,25 @@ To convert a NetCDF file to NasaAmes CSV file format, simply use:
    
    Convert the opened NetCDF file to NasaAmes CSV file.
 
-   :param csv_file: it is the name of the output file once it has been converted, by default the name of the NetCDF file will be used with the extension .csv (*csv_file* is None); optional
+   :param csv_file: it is the name of the output file once it has been converted, by default, *na_file* is None, and the name of the NetCDF file will be used with the extension .csv ; optional
    :type csv_file: string
    :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
    :type float_format: string
    :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
    :type no_header: bool
+
+
+Conversion from NetCDF to Hdf5 file format
+-------------------------------------------
+
+EGADS Lineage offers a direct possibility to convert a full NetCDF file to Hdf file format. In the case of complexe NetCdf files, a manual Hdf file creation and editing is still possible.
+
+.. function:: f.convert_to_hdf([filename=None])
+
+	Converts the opened NetCdf file to Hdf format following the EUFAR and EGADS convention. If groups exist, they are preserved in the new Hdf file.
+	
+	:param filename: if only a name is given, a Hdf file named ``filename`` is created in the NetCdf file folder ; if a path and a name are given, a Hdf file named ``name`` is created in the folder ``path`` ; optional
+	:type filename: string
 
 
 Other operations

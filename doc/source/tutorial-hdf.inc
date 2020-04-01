@@ -32,34 +32,42 @@ Valid values for permissions are:
 Getting info
 -------------
 
-.. function:: f.get_dimension_list([varname=None])
+.. function:: f.get_dimension_list([varname=None, group_walk=False, details=False])
 
-   Returns a dictionary of all dimensions with their sizes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns a dictionary of all dimensions and their sizes attached to *varname* at the root of the Hdf file ; *varname* is a path to a group + a variable name, the function returns a dictionary of all dimensions and their sizes attached to *varname* in the specified group ; *varname* is a path to a group + a group name, the function returns a dictionary of all dimensions and their sizes in the specified group. 
+   Returns a dictionary of all dimensions with their sizes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns a dictionary of all dimensions and their sizes attached to *varname* at the root of the Hdf file ; *varname* is a path to a group + a variable name, the function returns a dictionary of all dimensions and their sizes attached to *varname* in the specified group ; *varname* is a path to a group + a group name, the function returns a dictionary of all dimensions and their sizes in the specified group. *group_walk* is optional and if True, the function will explore the entire file is *varname* is None, or from a specified group if *varname* is a group path. *details* is optional, and if True, the path of each dimension is included in the final dictionary.
 
-   :param varname: name of a variable / group ; optional
+   :param varname: Name of variable or group to get the list of associated dimensions from. If no variable name is provided, the function returns all dimensions at the root of the Hdf file ; optional
    :type varname: string
-   :rtype: dictionary of dimensions
+   :param bool group_walk: if True, the function visits all groups (if at least one exists) to list all dimensions. False by default ; optional
+   :type group_walk: bool
+   :param bool details: if True, dimension path is provided in the dictionary. False by default ; optional
+   :type details: bool
+   :rtype: ordered dictionary of dimensions
    
    >>> print(f.get_dimension_list('temperature'))
    >>> print(f.get_dimension_list('test1/data/temperature'))
    >>> print(f.get_dimension_list('test1/data'))
 
-.. function:: f.get_attribute_list([varname=None])
+.. function:: f.get_attribute_list([objectname=None])
 
-   Returns a list of all top-level attributes. *varname* is optional and can take three different forms: *varname* is a variable name, and in that case the function returns all attributes and their values attached to *varname* at the root of the Hdf file ; *varname* is a path to a group + a variable name, the function returns all attributes and their values attached to *varname* in the specified group ; *varname* is a path to a group + a group name, the function returns all attributes and their values attached to the specified group.
+   Returns a list of all top-level attributes. *varname* is optional and can take three different forms: *objectname* is a variable name, and in that case the function returns all attributes and their values attached to *objectname* at the root of the Hdf file ; *objectname* is a path to a group + a variable name, the function returns all attributes and their values attached to *objectname* in the specified group ; *objectname* is a path to a group + a group name, the function returns all attributes and their values attached to the specified group.
    
-   :param varname: name of a variable / group ; optional
-   :type varname: string
+   :param objectname: name of a variable / group ; optional
+   :type objectname: string
    :rtype: dictionary of attributes
    
    >>> print(f.get_attribute_list('temperature'))
    >>> print(f.get_attribute_list('test1/data/temperature'))
    >>> print(f.get_attribute_list('test1/data'))
 
-.. function:: f.get_variable_list([details=False])
+.. function:: f.get_variable_list([groupname=None, group_walk=False, details=False])
 
-   Returns a list of all variables in the Hdf file. If *details* is True, the function returns a list of dictionary containing the name of the variable and its path in the Hdf file. By default, details is False and the function returns a simple list of variable names.
-	
+   Returns a list of all variables at the root of the Hdf file if *groupname* is None, otherwise a list of all variables in the group *groupname*. If *groupwalk* is True, the the function will explore all the file or from *groupname* if *groupname* is provided. If *details* is True, the function returns a list of dictionary containing the name of the variable and its path in the Hdf file. By default, details is False and the function returns a simple list of variable names.
+   
+   :param groupname: the name of the group to get the list from ; optional
+   :type groupname: string
+   :param group_walk: if True, the function visits all groups (if at least one exists) to list all variables. False by default ; optional
+   :type group_walk: bool
    :param details: if True, the function returns a list of dictionary in which the key is the name of the variable, and the value is the path of the variable in the Hdf file ; optional
    :type details: bool
    :rtype: list of variables
@@ -67,13 +75,13 @@ Getting info
    >>> print(f.get_variable_list())
    >>> print(f.get_variable_list(details=True))
 
-.. function:: f.get_file_structure([groupname=None, details=False])
+.. function:: f.get_file_structure()
 
    Returns a view of the file structure, groups and datasets.
    
-   :rtype: list of strings
+   :rtype: list of strings and Hdf objects
    
-   >>> print(f.get_group_list())
+   >>> print(f.get_file_structure())
 
 .. function:: f.get_filename()
 
@@ -169,23 +177,66 @@ Data can be output to variables using the ``write_variable()`` function as follo
    >>> f.write_variable(data, 'test1/data/particle_size', ('time', ))
 
 
-Conversion from Hdf to NASA Ames file format
+Conversion from Hdf5 to NASA Ames file format
 ------------------------------------------------
 
-The conversion to other formats will be available in the next version.
+The conversion is only possible on opened Hdf files and with variables at the root of the Hdf file. If modifications have been made and haven't been saved, the conversion won't take into account those modifications. Actually, the only File Format Index supported by the conversion is 1001. Consequently, if more than one independant variables are present in the Hdf file, the file won't be converted and the function will raise an exception. If the user needs to convert a complex file with variables depending on multiple independant variables, and with the presence of groups, the conversion should be done manually by creating a NasaAmes instance and a NasaAmes dictionary, by populating the dictionary and by saving the file.
+
+To convert a Hdf file to NasaAmes file format, simply use:
+
+.. function:: f.convert_to_nasa_ames([na_file=None, float_format=None, delimiter='    ', no_header=False])
+   
+   Convert the opened NetCDF file to NasaAmes file.
+
+   :param na_file: it is the name of the output file once it has been converted, by default, *na_file* is None, and the name of the Hdf file will be used with the extension .na ; optional
+   :type na_file: string
+   :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
+   :type float_format: string
+   :param delimiter: it is a character or a sequence of character to use between data items in the data file ; optional (by default '    ', 4 spaces)
+   :type delimiter: string
+   :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
+   :type no_header: bool
+   
+   >>> f.convert_to_nasa_ames(na_file='nc_converted_to_na.na', float_format='%.8f', delimiter=';', no_header=False)
+
+To convert a Hdf file to NasaAmes CSV file format, simply use:
+
+.. function:: f.convert_to_csv([csv_file=None, float_format=None, no_header=False])
+   
+   Convert the opened Hdf file to NasaAmes CSV file.
+
+   :param csv_file: it is the name of the output file once it has been converted, by default, *na_file* is None, and the name of the Hdf file will be used with the extension .csv ; optional
+   :type csv_file: string
+   :param float_format: it is the formatting string used for formatting floats when writing to output file ; optional
+   :type float_format: string
+   :param no_header: if it is set to ``True``, then only the data blocks are written to file ; optional
+   :type no_header: bool
+
+
+Conversion from Hdf5 to NetCDF file format
+------------------------------------------
+
+EGADS Lineage offers a direct possibility to convert a full Hdf file to NetCDF file format. In the case of complexe Hdf5 files, a manual NetCDF file creation and editing is still possible.
+
+.. function:: f.convert_to_netcdf([filename=None])
+
+	Converts the opened Hdf file to NetCdf format following the EUFAR and EGADS convention. If groups exist, they are preserved in the new NetCDF file.
+	
+	:param filename: if only a name is given, a NetCDF file named ``filename`` is created in the HDF file folder ; if a path and a name are given, a NetCDF file named ``name`` is created in the folder ``path`` ; optional
+	:type filename: string
 
 
 Other operations
 -----------------
 
-.. function:: f.get_attribute_value(attrname[, varname=None])
+.. function:: f.get_attribute_value(attrname[, objectname=None])
    
-   Return the value of the global attribute *attrname*, or the value of the variable attribute *attrname* if *varname* is not None. If *varname* contains a path to a group + a variable name, the function returns the attribute value attached to the variable in the specified group. If *varname* is simple path of group, the functions returns the attribute value attached to the group.
+   Return the value of the global attribute *attrname*, or the value of the variable attribute *attrname* if *objectname* is not None. If *objectname* contains a path to a group + a variable name, the function returns the attribute value attached to the variable in the specified group. If *objectname* is simple path of group, the functions returns the attribute value attached to the group.
 
    :param attrname: the name of the attribute
    :type attrname: string
-   :param varname: the name of the variable | group to which the attribute is attached
-   :type varname: string
+   :param objectname: the name of the variable | group to which the attribute is attached
+   :type objectname: string
    :rtype: value of the attribute
    
    >>> print(f.get_attribute_value('project'))
@@ -203,14 +254,14 @@ Other operations
    >>> f.add_group('MSL/north_atlantic/data')
    >>> f.add_group(['MSL', 'north_atlantic', 'data'])
 
-.. function:: f.delete_attribute(attrname[, varname=None])
+.. function:: f.delete_attribute(attrname[, objectname=None])
    
-   Delete the attribute *attrname* at the root of the Hdf file if *varname* is None, or attached to *varname*. *varname* can be the name of a variable or a group, or a path to a group plus the name of a variable or a group.
+   Delete the attribute *attrname* at the root of the Hdf file if *objectname* is None, or attached to *objectname*. *objectname* can be the name of a variable or a group, or a path to a group plus the name of a variable or a group.
    
    :param attrname: the name of the attribute
    :type attrname: string
-   :param varname: the name of the variable | group to which the attribute is attached
-   :type varname: string
+   :param objectname: the name of the variable | group to which the attribute is attached
+   :type objectname: string
    
    >>> f.delete_attribute('long_name')
    >>> f.delete_attribute('long_name', 'temperature')

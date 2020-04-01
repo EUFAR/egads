@@ -5,10 +5,31 @@ CHANGELOG | LINEAGE BRANCH
 To do list:
 -----------
   - check feasability of an online algorithm database.
+  - add function to create algorithm template.
 
 To fix list:
 ------------
 
+
+April 1 2020, Release version 1.2.3
+===================================
+  FIXED:
+    - fixed an issue with variables at the root of the netcdf file if the function get_variable_list is used with options group_walk and details as True.
+	- fixed an issue with leading / when adding dim with dim name in netcdf file.
+
+  MODIFIED:
+    - the documentation has been updated.
+	- the function _get_dimension_list has been reworked to take into account file root, root variables, groups and variables in groups in class NetCdf.
+	- the function _add_attribute has been reworked in class NetCdf.
+	- the function _delete_attribute has been reworked in class NetCdf.
+	- the function _get_dimension_list has been reworked in class Hdf.
+
+  ADDED:
+    - a function to convert from Hdf5 to netcdf has been added to Hdf and EgadsHdf classes.
+	- a function to convert from Hdf5 to Nasa Ames format has been added to Hdf and EgadsHdf classes.
+	- a function to convert from Nasa Ames to Hdf5 format has been added to NasaAmes and EgadsNasaAmes classes.
+	- a function to convert from NetCdf to Hdf5 has been added to NetCdf and EgadsNetCdf classes.
+	
 
 February 25 2020, Release version 1.2.2
 =======================================
@@ -144,7 +165,7 @@ June 7 2019, Release version 0.9.4
 May 9 2019, Release version 0.9.3
 =================================
   MODIFIED:
-    - the documentation of an algorithm has been modified for better understanding in the EGADS GUI.
+    - the documentation of an algorithm has been modified for better understanding in EGADS GUI.
 	- the code has been cleaned thanks to PyCharm.
 	- few logging messages have been modified.
 	- egads functions to set and read options have been modified for better handling.

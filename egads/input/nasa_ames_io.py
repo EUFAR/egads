@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-7-21 14:52"
-__version__ = "1.5"
+__version__ = "1.6"
 __all__ = ["NasaAmes", "EgadsNasaAmes"]
 
 import logging
@@ -43,8 +43,9 @@ class NasaAmes(FileCore):
         
         logging.debug('egads - nasa_ames_io.py - NasaAmes - read_na_dict')
         return copy.deepcopy(self.na_dict)
-    
-    def create_na_dict(self):
+
+    @staticmethod
+    def create_na_dict():
         """
         Create a typical NASA/Ames dictionary. It is intended to be saved in a new file. The user
         will have to populate the dictionary with other functions.
@@ -646,7 +647,97 @@ class NasaAmes(FileCore):
         g.close()
         logging.debug('egads - nasa_ames_io.py - NasaAmes - convert_to_netcdf - nc_file ' + str(nc_file)
                       + ' -> file conversion OK')
-    
+
+    def convert_to_hdf(self, hdf_file=None, na_dict=None):
+        """
+        Convert a NASA/Ames dictionary to a Hdf file.
+
+        :param string hdf_file:
+            Optional - String name of the hdf file to be written. If no filename is passed,
+            the function will used the name of the actually opened NASA/Ames file.
+        :param dict na_dict:
+            Optional - The NASA/Ames dictionary to be converted. If no dictionary is entered,
+            the dictionary currently opened during the open file process will be converted.
+        """
+
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - convert_to_netcdf - hdf_file ' + str(hdf_file))
+        if not na_dict:
+            na_dict = self.na_dict
+        if not hdf_file:
+            filename, _ = os.path.splitext(self.filename)
+            hdf_file = filename + '.h5'
+        nlhead = int(self.get_attribute_value('NLHEAD', na_dict=na_dict))
+        ffi = int(self.get_attribute_value('FFI', na_dict=na_dict))
+        title = self.get_attribute_value('MNAME', na_dict=na_dict)
+        source = self.get_attribute_value('SNAME', na_dict=na_dict)
+        institution = self.get_attribute_value('ORG', na_dict=na_dict)
+        authors = self.get_attribute_value('ONAME', na_dict=na_dict)
+        history = (str(datetime.datetime.now().year) + '-' + str(datetime.datetime.now().month) + '-'
+                   + str(datetime.datetime.now().day) + ' ' + str(datetime.datetime.now().hour) + ':'
+                   + str(datetime.datetime.now().minute) + ':' + str(datetime.datetime.now().second)
+                   + ' - Converted to NetCDF format using EGADS and NASA Ames class.')
+        first_date = (str(self.get_attribute_value('DATE', na_dict=na_dict)[0]) + '-' +
+                      str(self.get_attribute_value('DATE', na_dict=na_dict)[1]) + '-' +
+                      str(self.get_attribute_value('DATE', na_dict=na_dict)[2]))
+        file_number = int(self.get_attribute_value('IVOL', na_dict=na_dict))
+        total_files = int(self.get_attribute_value('NVOL', na_dict=na_dict))
+        scom = ''
+        ncom = ''
+        if isinstance(self.get_attribute_value('SCOM', na_dict=na_dict), list):
+            for i in self.get_attribute_value('SCOM', na_dict=na_dict):
+                scom += i + '\n'
+            scom = scom[:-1]
+        else:
+            scom = self.get_attribute_value('SCOM', na_dict=na_dict)
+            if scom[-1:] == '\n':
+                scom = scom[:-1]
+        if isinstance(self.get_attribute_value('NCOM', na_dict=na_dict), list):
+            for i in self.get_attribute_value('NCOM', na_dict=na_dict):
+                ncom += i + '\n'
+            ncom = ncom[:-1]
+        else:
+            ncom = self.get_attribute_value('NCOM', na_dict=na_dict)
+            if ncom[-1:] == '\n':
+                ncom = ncom[:-1]
+        variable_list = self.get_variable_list(vartype='main', na_dict=na_dict)
+        ind_variable_list = self.get_variable_list(vartype='independant', na_dict=na_dict)
+        ind_dimension_list = self.get_dimension_list(na_dict=na_dict)
+        g = egads.input.EgadsHdf(hdf_file, 'w')
+        g.add_attribute('Conventions', 'CF-1.0')
+        g.add_attribute('no_of_nasa_ames_header_lines', nlhead)
+        g.add_attribute('file_format_index', ffi)
+        g.add_attribute('title', title)
+        g.add_attribute('source', source)
+        g.add_attribute('special_comments', scom)
+        g.add_attribute('normal_comments', ncom)
+        g.add_attribute('institution', institution)
+        g.add_attribute('authors', authors)
+        g.add_attribute('history', history)
+        g.add_attribute('first_valid_date_of_data', first_date)
+        g.add_attribute('file_number_in_set', file_number)
+        g.add_attribute('total_files_in_set', total_files)
+        dim_list = []
+        for key, _ in ind_dimension_list.items():
+            dim_list.append(str(key))
+        dim_tuple = tuple(dim_list)
+        for var in ind_variable_list:
+            var_data = self.read_variable(var, na_dict=na_dict)
+            attr_dict = {}
+            for attr in self.get_attribute_list(var, 'independant', na_dict=na_dict):
+                attr_dict[attr] = self.get_attribute_value(attr, var, 'independant', na_dict=na_dict)
+            egads_data = egads.EgadsData(var_data, variable_metadata=attr_dict)
+            g.add_dim(var, egads_data)
+        for var in variable_list:
+            var_data = self.read_variable(var, na_dict=na_dict)
+            attr_dict = {}
+            for attr in self.get_attribute_list(var, na_dict=na_dict):
+                attr_dict[attr] = self.get_attribute_value(attr, var, na_dict=na_dict)
+            egads_data = egads.EgadsData(var_data, variable_metadata=attr_dict)
+            g.write_variable(egads_data, var, dim_tuple)
+        g.close()
+        logging.debug('egads - nasa_ames_io.py - NasaAmes - convert_to_hdf - hdf_file ' + str(hdf_file)
+                      + ' -> file conversion OK')
+
     def _open_file(self, filename, perms):
         """
         Private method for opening NASA Ames file.
@@ -1016,6 +1107,86 @@ class EgadsNasaAmes(NasaAmes):
             g.write_variable(self.read_variable(var, na_dict=na_dict), var, dim_tuple)
         g.close()
         logging.debug('egads - nasa_ames_io.py - EgadsNasaAmes - convert_to_netcdf - nc_file ' + str(nc_file)
+                      + ' -> file conversion OK')
+
+    def convert_to_hdf(self, hdf_file=None, na_dict=None):
+        """
+        Convert a NASA/Ames dictionary to a Hdf file.
+
+        :param string hdf_file:
+            Optional - String name of the hdf file to be written. If no filename is passed,
+            the function will used the name of the actually opened NASA/Ames file.
+        :param dict na_dict:
+            Optional - The NASA/Ames dictionary to be converted. If no dictionary is entered,
+            the dictionary currently opened during the open file process will be converted.
+        """
+
+        logging.debug('egads - nasa_ames_io.py - EgadsNasaAmes - convert_to_hdf - hdf_file ' + str(hdf_file))
+        if not na_dict:
+            na_dict = self.na_dict
+        if not hdf_file:
+            filename, _ = os.path.splitext(self.filename)
+            hdf_file = filename + '.h5'
+        nlhead = int(self.get_attribute_value('NLHEAD', na_dict=na_dict))
+        ffi = int(self.get_attribute_value('FFI', na_dict=na_dict))
+        title = self.get_attribute_value('MNAME', na_dict=na_dict)
+        source = self.get_attribute_value('SNAME', na_dict=na_dict)
+        institution = self.get_attribute_value('ORG', na_dict=na_dict)
+        authors = self.get_attribute_value('ONAME', na_dict=na_dict)
+        history = (str(datetime.datetime.now().year) + '-' + str(datetime.datetime.now().month) + '-'
+                   + str(datetime.datetime.now().day) + ' ' + str(datetime.datetime.now().hour) + ':'
+                   + str(datetime.datetime.now().minute) + ':' + str(datetime.datetime.now().second)
+                   + ' - Converted to NetCDF format using EGADS and NASA Ames class.')
+        first_date = (str(self.get_attribute_value('DATE', na_dict=na_dict)[0]) + '-' +
+                      str(self.get_attribute_value('DATE', na_dict=na_dict)[1]) + '-' +
+                      str(self.get_attribute_value('DATE', na_dict=na_dict)[2]))
+        file_number = int(self.get_attribute_value('IVOL', na_dict=na_dict))
+        total_files = int(self.get_attribute_value('NVOL', na_dict=na_dict))
+        scom = ''
+        ncom = ''
+        if isinstance(self.get_attribute_value('SCOM', na_dict=na_dict), list):
+            for i in self.get_attribute_value('SCOM', na_dict=na_dict):
+                scom += i + '\n'
+            scom = scom[:-1]
+        else:
+            scom = self.get_attribute_value('SCOM', na_dict=na_dict)
+            if scom[-1:] == '\n':
+                scom = scom[:-1]
+        if isinstance(self.get_attribute_value('NCOM', na_dict=na_dict), list):
+            for i in self.get_attribute_value('NCOM', na_dict=na_dict):
+                ncom += i + '\n'
+            ncom = ncom[:-1]
+        else:
+            ncom = self.get_attribute_value('NCOM', na_dict=na_dict)
+            if ncom[-1:] == '\n':
+                ncom = ncom[:-1]
+        variable_list = self.get_variable_list(vartype='main', na_dict=na_dict)
+        ind_variable_list = self.get_variable_list(vartype='independant', na_dict=na_dict)
+        ind_dimension_list = self.get_dimension_list(na_dict=na_dict)
+        g = egads.input.EgadsHdf(hdf_file, 'w')
+        g.add_attribute('Conventions', 'CF-1.0')
+        g.add_attribute('no_of_nasa_ames_header_lines', nlhead)
+        g.add_attribute('file_format_index', ffi)
+        g.add_attribute('title', title)
+        g.add_attribute('source', source)
+        g.add_attribute('special_comments', scom)
+        g.add_attribute('normal_comments', ncom)
+        g.add_attribute('institution', institution)
+        g.add_attribute('authors', authors)
+        g.add_attribute('history', history)
+        g.add_attribute('first_valid_date_of_data', first_date)
+        g.add_attribute('file_number_in_set', file_number)
+        g.add_attribute('total_files_in_set', total_files)
+        dim_list = []
+        for key, _ in ind_dimension_list.items():
+            dim_list.append(str(key))
+        dim_tuple = tuple(dim_list)
+        for var in ind_variable_list:
+            g.add_dim(var, self.read_variable(var, na_dict=na_dict))
+        for var in variable_list:
+            g.write_variable(self.read_variable(var, na_dict=na_dict), var, dim_tuple)
+        g.close()
+        logging.debug('egads - nasa_ames_io.py - EgadsNasaAmes - convert_to_hdf - hdf_file ' + str(hdf_file)
                       + ' -> file conversion OK')
 
     def _open_file(self, filename, perms):
