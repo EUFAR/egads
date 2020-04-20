@@ -88,9 +88,9 @@ If, during the call to :class:`~.EgadsData`, no units are provided, but a variab
 
    >>> x_metadata = egads.core.metadata.VariableMetadata({'units':'m', 'long_name':'Test Variable'})
    >>> x = egads.EgadsData([1,2,3], x_metadata)
-   >>> print x.units
+   >>> print(x.units)
    m
-   >>> print x.metadata
+   >>> print(x.metadata)
    {'units': 'm', 'long_name': 'Test Variable'}
    
 The :class:`~.EgadsData` is a subclass of the Quantities and Numpy packages. Thus it allows different kind of operations like addition, substraction, slicing, and many more. For each of those operations, a new :class:`~.EgadsData` class is created with all their attributes. 
@@ -132,7 +132,7 @@ Once a unit type has been assigned to an :class:`~.EgadsData` instance, it will 
 
    >>> a = egads.EgadsData([1,2,3], 'm')
    >>> a_km = a.rescale('km')
-   >>> print a_km
+   >>> print(a_km)
    ['EgadsData', array([0.001, 0.002, 0.003]), 'km']
    >>> a_grams = a.rescale('g')
    ValueError: Unable to convert between units of "m" and "g"
