@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2019-11-22 07:09"
-__version__ = "0.9"
+__version__ = "1.0"
 __all__ = ["Hdf", "EgadsHdf"]
 
 
@@ -49,14 +49,34 @@ class Hdf(FileCore):
         logging.debug('egads - hdf_io.py - Hdf - open')
         FileCore.open(self, filename, perms)
 
-    def get_file_structure(self):
+    def get_file_structure(self, from_group=None):
         """
         Returns a view of the file structure, groups and datasets.
 
+        :param str from_group:
+            if from_group is provided, returs file structure from the group from_group.
         :return: file structure.
         """
 
-        return self._get_file_structure()
+        return self._get_file_structure(from_group=from_group)
+
+    def get_group_list(self, groupname=None, details=False):
+        """
+        Returns a list of groups found in the current Hdf file.
+
+        :param string groupname:
+            Optional - the name of the group to get the list from. It should represent a path to
+            the group. None by default.
+        :param bool details:
+            If details is true, it will return a list of all groups in the Hdf file, or from
+            groupname if groupname is not None, and their path. In that case, each element of
+            the list is a small dict containing as key/value the name of the group and the path
+            of the group in the file. False by default.
+        :return: list of groups.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - get_group_list')
+        return self._get_group_list(groupname, details)
 
     def get_variable_list(self, groupname=None, group_walk=False, details=False):
         """
@@ -350,18 +370,41 @@ class Hdf(FileCore):
             logging.exception('egads - hdf_io.py - Hdf - _open_file - Exception, Unexpected error')
             raise Exception("ERROR: Unexpected error")
 
-    def _get_file_structure(self):
+    def _get_file_structure(self, from_group):
         """
         Private method for getting a view of the file structure, groups and datasets.
         """
 
+        logging.debug('egads - hdf_io.py - Hdf - _get_file_structure')
         file_structure = collections.OrderedDict()
 
         def _h5py_get_file_structure(name, obj):
             file_structure[name] = {'object': obj, 'type': type(obj)}
 
-        self.f.visititems(_h5py_get_file_structure)
+        if from_group is None:
+            self.f.visititems(_h5py_get_file_structure)
+        else:
+            self.f[from_group].visititems(_h5py_get_file_structure)
         return file_structure
+
+    def _get_group_list(self, groupname, details):
+        """
+        Private method for getting list of group names.
+        """
+
+        logging.debug('egads - hdf_io.py - Hdf - _get_group_list')
+        if self.f is not None:
+            group_list = []
+            for key, value in self._get_file_structure(from_group=groupname).items():
+                if isinstance(value['object'], h5py.Group):
+                    if details:
+                        group_list.append({'name': os.path.basename(key), 'path': '/' + key})
+                    else:
+                        group_list.append(os.path.basename(key))
+            return group_list
+        else:
+            logging.error('egads.input.Hdf._get_group_list: AttributeError, No file open')
+            raise AttributeError('No file open')
 
     def _get_variable_list(self, groupname, group_walk, details):
         """
@@ -550,16 +593,17 @@ class Hdf(FileCore):
             var_attrs = self._get_attribute_list(varname)
             if '_FillValue' in var_attrs:
                 _fill_value = var_attrs['_FillValue']
+                var[var == _fill_value] = numpy.nan
             elif 'missing_value' in var_attrs:
                 _fill_value = var_attrs['missing_value']
+                var[var == _fill_value] = numpy.nan
             elif 'fill_value' in var_attrs:
                 _fill_value = var_attrs['fill_value']
-            else:
-                logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, no missing value metadata '
-                                  + 'has been found for the variable ' + varname)
-                raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
-            if _fill_value is not None:
                 var[var == _fill_value] = numpy.nan
+            else:
+                logging.warning('egads - hdf_io.py - Hdf - _read_variable - KeyError, no missing value '
+                                + 'attribute has been found for the variable ' + varname + '. Missing value not '
+                                + 'replaced by NaN.')
         logging.debug('egads - hdf_io.py - Hdf - _read_variable - varname ' + str(varname) + ' -> data read OK')
         return var
 
@@ -1229,16 +1273,17 @@ class EgadsHdf(Hdf):
             _fill_value = None
             if '_FillValue' in var_attrs:
                 _fill_value = var_attrs['_FillValue']
+                var[var == _fill_value] = numpy.nan
             elif 'missing_value' in var_attrs:
                 _fill_value = var_attrs['missing_value']
+                var[var == _fill_value] = numpy.nan
             elif 'fill_value' in var_attrs:
                 _fill_value = var_attrs['fill_value']
-            else:
-                logging.exception('egads - hdf_io.py - EgadsHdf - _read_variable - KeyError, no missing value '
-                                  'metadata has been found for the variable ' + varname)
-                raise KeyError("ERROR: no missing value exists for Variable %s in %s" % (varname, self.filename))
-            if _fill_value is not None:
                 var[var == _fill_value] = numpy.nan
+            else:
+                logging.warning('egads - hdf_io.py - EgadsHdf - _read_variable - KeyError, no missing value '
+                                + 'attribute has been found for the variable ' + varname + '. Missing value not '
+                                + 'replaced by NaN.')
 
         variable_metadata = egads.core.metadata.VariableMetadata(var_attrs, self.file_metadata)
         data = egads.EgadsData(var, variable_metadata=variable_metadata)

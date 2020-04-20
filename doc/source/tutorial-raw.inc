@@ -106,12 +106,12 @@ This file has been created with the following commands:
     
 * create two main variables, following the official EGADS convention:
 
-    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', name='sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
-    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', name='corr sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    >>> data1 = egads.EgadsData(value=[5.0,2.0,-2.0,0.5,4.0], units='mm', standard_name='sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
+    >>> data2 = egads.EgadsData(value=[1.0,3.0,-1.0,2.5,6.0], units='mm', standard_name='corr sea level', scale_factor=1., add_offset=0., _FillValue=-9999)
     
 * create an independant variable, still by following the official EGADS convention:
 
-    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', name='time')
+    >>> time = egads.EgadsData(value=[1.0,2.0,3.0,4.0,5.0], units='seconds since 19700101T00:00:00', standard_name='time')
     
 * create a new EgadsFile instance:
 
@@ -124,7 +124,7 @@ This file has been created with the following commands:
 * prepare the headers if necessary:
 
     >>> headers = '# The current file has been created with EGADS\n# Institution: My Institution\n# Author(s): John Doe\n'
-    >>> headers += time.metadata["long_name"] + '    ' + data1.metadata["long_name"] + '    ' + data2.metadata["long_name"] + '\n''My institution')
+    >>> headers += time.metadata["standard_name"] + '    ' + data1.metadata["standard_name"] + '    ' + data2.metadata["standard_name"])
 
 * prepare an object to receive all data:
 

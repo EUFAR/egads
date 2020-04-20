@@ -1396,8 +1396,9 @@ class EgadsNetCdf(NetCdf):
                     _fill_value = variable_attrs['missing_value']
                     value[value == _fill_value] = numpy.nan
                 else:
-                    logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable - varname ' + str(varname)
-                                  + ', no _FillValue or missing_value attribute found.')
+                    logging.warning('egads - netcdf_io.py - EgadsNetCdf - _read_variable - varname ' + str(varname)
+                                    + ', no _FillValue or missing_value attribute found. Fill value not replaced by '
+                                    + 'NaN.')
         variable_metadata = egads.core.metadata.VariableMetadata(variable_attrs, self.file_metadata)
         data = egads.EgadsData(value, variable_metadata=variable_metadata)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable - varname ' + str(varname)

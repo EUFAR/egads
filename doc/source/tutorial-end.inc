@@ -24,7 +24,7 @@ Within Python, usage information on each algorithm can be found using the ``help
 	class VelocityTasCnrm(egads.core.egads_core.EgadsAlgorithm)
 	 |  FILE        velocity_tas_cnrm.py
 	 | 
-	 |  VERSION     $Revision: 104 $
+	 |  VERSION     Revision: 1.02
 	 |  
 	 |  CATEGORY    Thermodynamics
 	 |  

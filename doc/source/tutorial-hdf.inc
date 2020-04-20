@@ -83,6 +83,19 @@ Getting info
    
    >>> print(f.get_file_structure())
 
+.. function:: f.get_group_list([groupname=None, details=False])
+
+   Returns a list of groups found in the Hdf file. If *groupname* is provided, the function returns all groups from *groupname* to the last group in *groupname*. The function returns a list of string if details is False. If details is True, it returns a list of dictionary in which the key is the name of the group and the value its path in the Hdf file.
+   
+   :param groupname: name of a group where to get the group list ; optional
+   :type groupname: string
+   :param details: if True, the function returns a list of dictionary in which the key is the name of the group and the value its path in the Hdf file ; optional
+   :type details: bool
+   :rtype: list of strings or list of dictionary
+   
+   >>> print(f.get_group_list())
+   >>> print(f.get_group_list('test1', True))
+
 .. function:: f.get_filename()
 
    Returns the filename for the currently opened file.

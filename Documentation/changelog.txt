@@ -6,9 +6,22 @@ To do list:
 -----------
   - check feasability of an online algorithm database.
   - add function to create algorithm template.
+  - add function to add a folder, somewhere on the hard drive, to the list of algorithms.
 
 To fix list:
 ------------
+
+
+April 20 2020, Release version 1.2.4
+====================================
+  FIXED:
+    - corrected mistakes in the documentation (mostly python 2 old code).
+	
+  MODIFIED:
+    - the read_variable function in hdf_io.py has been modified, now if a missing value attribute is missing, a warning is displayed in the log, but no exception is raised.
+	
+  ADDED:
+    - the get_group_list function has been added to hdf_io.py
 
 
 April 1 2020, Release version 1.2.3
