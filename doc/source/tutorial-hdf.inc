@@ -62,7 +62,7 @@ Getting info
 
 .. function:: f.get_variable_list([groupname=None, group_walk=False, details=False])
 
-   Returns a list of all variables at the root of the Hdf file if *groupname* is None, otherwise a list of all variables in the group *groupname*. If *groupwalk* is True, the the function will explore all the file or from *groupname* if *groupname* is provided. If *details* is True, the function returns a list of dictionary containing the name of the variable and its path in the Hdf file. By default, details is False and the function returns a simple list of variable names.
+   Returns a list of all variables at the root of the Hdf file if *groupname* is None, otherwise a list of all variables in the group *groupname*. If *group_walk* is True, the the function will explore all the file or from *groupname* if *groupname* is provided. If *details* is True, the function returns a list of dictionary containing the name of the variable and its path in the Hdf file. By default, details is False and the function returns a simple list of variable names.
    
    :param groupname: the name of the group to get the list from ; optional
    :type groupname: string

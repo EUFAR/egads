@@ -12,6 +12,15 @@ To fix list:
 ------------
 
 
+May 6 2020, Release version 1.2.5
+=================================
+  MODIFIED:
+	- consistency was improved between get_dimension_list() function in NetCdf and Hdf classes.
+  
+  FIXED:
+    - few mistakes in the documentation.
+
+
 April 20 2020, Release version 1.2.4
 ====================================
   FIXED:

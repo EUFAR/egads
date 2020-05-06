@@ -389,7 +389,7 @@ class NetCdf(FileCore):
                 if not group_walk:
                     for dimname, dimobj in reversed(sorted(self.f.dimensions.items())):
                         if details:
-                            dimdict[dimname] = (len(dimobj), '')
+                            dimdict[dimname] = (len(dimobj), '/')
                         else:
                             dimdict[dimname] = len(dimobj)
                 else:
@@ -414,12 +414,21 @@ class NetCdf(FileCore):
                     for dim in dim_list:
                         if dim[0] in not_unique:
                             if details:
-                                dimdict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                                if not dim[2]:
+                                    dimdict[dim[0] + ' (/)'] = (dim[1], '/')
+                                else:
+                                    dimdict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
                             else:
-                                dimdict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                                if not dim[2]:
+                                    dimdict[dim[0] + ' (/)'] = dim[1]
+                                else:
+                                    dimdict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
                         else:
                             if details:
-                                dimdict[dim[0]] = (dim[1], dim[2])
+                                if not dim[2]:
+                                    dimdict[dim[0]] = (dim[1], '/')
+                                else:
+                                    dimdict[dim[0]] = (dim[1], dim[2])
                             else:
                                 dimdict[dim[0]] = dim[1]
             else:
@@ -449,7 +458,10 @@ class NetCdf(FileCore):
                     for dimname in orig_group[var_name].dimensions:
                         idx = [sublist[0] for sublist in dim_list].index(dimname)
                         if details:
-                            dimdict[dim_list[idx][0]] = (dim_list[idx][1], dim_list[idx][2])
+                            if not dim_list[idx][2]:
+                                dimdict[dim_list[idx][0]] = (dim_list[idx][1], '/')
+                            else:
+                                dimdict[dim_list[idx][0]] = (dim_list[idx][1], dim_list[idx][2])
                         else:
                             dimdict[dim_list[idx][0]] = dim_list[idx][1]
                 else:

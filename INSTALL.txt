@@ -74,6 +74,8 @@ Just run the following command from your terminal:
 or
   remove manually all folders in you Python site-packages folder containing egads name.
 
+In the $HOME directory, delete .egads_lineage directory if you don't want to keep options and logs of EGADS Lineage.
+
 
 Issues with NetCDF4 and/or H5py on a Linux distribution
 =======================================================
@@ -82,5 +84,5 @@ If NetCDF4 and H5py libraries are installed through Pypi, a crash can occure whe
  1. Uninstall entirely NetCDF4
  2. Download NetCDF4 sources corresponding to the same version
  3. Unzip the package, launch a terminal and build NetCDF4 module -> python setup.py build
- 4. Finally install NetCDF4 moudle -> python setup.py install
+ 4. Finally install NetCDF4 module -> python setup.py install
  5. Check NetCDF4 integration into EGADS with EGADS test function

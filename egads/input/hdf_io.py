@@ -415,6 +415,8 @@ class Hdf(FileCore):
         if self.f is not None:
             orig_group = self.f
             if groupname is not None:
+                if groupname[-1] == '/':
+                    groupname = groupname[: -1]
                 if groupname[0] != '/':
                     groupname = '/' + groupname
                 orig_group = orig_group[groupname]
@@ -495,12 +497,21 @@ class Hdf(FileCore):
                 for dim in unique_data:
                     if dim[0] in not_unique:
                         if details:
-                            dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                            if not dim[2]:
+                                dim_dict[dim[0] + ' (/)'] = (dim[1], '/')
+                            else:
+                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
                         else:
-                            dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                            if not dim[2]:
+                                dim_dict[dim[0] + ' (/)'] = dim[1]
+                            else:
+                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
                     else:
                         if details:
-                            dim_dict[dim[0]] = (dim[1], dim[2])
+                            if not dim[2]:
+                                dim_dict[dim[0]] = (dim[1], '/')
+                            else:
+                                dim_dict[dim[0]] = (dim[1], dim[2])
                         else:
                             dim_dict[dim[0]] = dim[1]
             else:
@@ -544,7 +555,7 @@ class Hdf(FileCore):
                         dim_list.append([dim.label, orig_group[dim.label].shape[0]])
                 for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
                     if details:
-                        dim_dict[dim[0]] = (dim[1], '')
+                        dim_dict[dim[0]] = (dim[1], '/')
                     else:
                         dim_dict[dim[0]] = dim[1]
             else:
@@ -565,6 +576,11 @@ class Hdf(FileCore):
                             dim_list.append([dim.label, var[dim.label].shape[0]])
                     for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
                         if details:
+
+                            if varname[0] != '/':
+                                varname = '/' + varname
+                            # print(varname)
+
                             dim_dict[dim[0]] = (dim[1], varname)
                         else:
                             dim_dict[dim[0]] = dim[1]

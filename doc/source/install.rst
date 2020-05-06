@@ -93,6 +93,17 @@ If the ``check_update`` option is set on True in the egads.ini file, EGADS will 
 The module Requests is optional for EGADS but is mandatory to check for an update.
 
 
+Uninstallation
+**************
+Just run the following command from your terminal:
+
+   >>> pip uninstall egads-lineage
+or
+  remove manually all folders in your Python site-packages folder containing egads name.
+
+In the $HOME directory, delete .egads_lineage directory if you don't want to keep options and logs of EGADS Lineage.
+
+
 Issues with NetCDF4 and/or H5py on a Linux distribution
 *******************************************************
 If NetCDF4 and H5py libraries are installed through Pypi, a crash can occure when trying to read/write a netcdf or an hdf file. Here are the different steps to fix that particular issue:

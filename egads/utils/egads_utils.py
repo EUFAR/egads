@@ -17,7 +17,7 @@ def _create_option_dictionary(user_path):
         ini_file = open(os.path.join(user_path, 'egads.ini'), 'w')
         config_dict.add_section('LOG')
         config_dict.add_section('OPTIONS')
-        config_dict.set('LOG', 'level', 'DEBUG')
+        config_dict.set('LOG', 'level', 'WARNING')
         config_dict.set('LOG', 'path', user_path)
         config_dict.set('OPTIONS', 'check_update', 'False')
         config_dict.write(ini_file)
