@@ -1373,7 +1373,10 @@ class EgadsHdf(Hdf):
                 except KeyError:
                     pass
             if fillvalue is not None:
-                var = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
+                if isinstance(fillvalue, int) and fillvalue > 1000000000000000000 or fillvalue < 1000000000000000000:
+                    fillvalue = float(fillvalue)
+                var = data.value
+                var[var == numpy.nan] = fillvalue
             else:
                 var = data.value
             self.f.create_dataset(varname, data=var, dtype=dtype)
@@ -1388,7 +1391,16 @@ class EgadsHdf(Hdf):
                             tmp += item + ', '
                         self.add_attribute(str(key), tmp[:-2], varname)
                     else:
-                        self.add_attribute(str(key), val, varname)
+                        if key == '_FillValue' or key == 'missing_value':
+                            if key == '_FillValue':
+                                fillvalue = data.metadata['_FillValue']
+                            if key == 'missing_value':
+                                fillvalue = data.metadata['missing_value']
+                            if fillvalue > 1000000000000000000 or fillvalue < 1000000000000000000:
+                                fillvalue = float(fillvalue)
+                            self.add_attribute(str(key), fillvalue, varname)
+                        else:
+                            self.add_attribute(str(key), val, varname)
         else:
             logging.error('egads - hdf_io.py - EgadsHdf - _write_variable - AttributeError, no file open')
             raise AttributeError('No file open')

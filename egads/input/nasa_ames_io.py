@@ -901,6 +901,9 @@ class EgadsNasaAmes(NasaAmes):
             values = np.array(na_dict['V'][varnum])
             if read_as_float:
                 values = values.astype('float')
+
+            # print(type(values[0]))
+
             try:
                 if replace_fill_value:
                     values[values == miss] = np.nan
