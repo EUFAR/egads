@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2019-11-22 07:09"
-__version__ = "1.0"
+__version__ = "1.2"
 __all__ = ["Hdf", "EgadsHdf"]
 
 
@@ -398,7 +398,7 @@ class Hdf(FileCore):
             for key, value in self._get_file_structure(from_group=groupname).items():
                 if isinstance(value['object'], h5py.Group):
                     if details:
-                        group_list.append({'name': os.path.basename(key), 'path': '/' + key})
+                        group_list.append('/' + key)
                     else:
                         group_list.append(os.path.basename(key))
             return group_list
@@ -415,8 +415,7 @@ class Hdf(FileCore):
         if self.f is not None:
             orig_group = self.f
             if groupname is not None:
-                if groupname[-1] == '/':
-                    groupname = groupname[: -1]
+                groupname = groupname.rstrip('/')
                 if groupname[0] != '/':
                     groupname = '/' + groupname
                 orig_group = orig_group[groupname]
@@ -428,10 +427,11 @@ class Hdf(FileCore):
                 if isinstance(obj, h5py.Dataset):
                     var_path, var_name = os.path.split(name)
                     if details:
-                        if len(var_path) > 0:
-                            if var_path[0] != '/':
-                                var_path = '/' + var_path
-                        var_list.append({var_name: groupname + var_path})
+                        if var_path:
+                            var_path = groupname + '/' + var_path + '/'
+                        else:
+                            var_path = groupname + '/'
+                        var_list.append(var_path + var_name)
                     else:
                         var_list.append(var_name)
 
@@ -441,7 +441,7 @@ class Hdf(FileCore):
                 for name in orig_group:
                     if isinstance(orig_group[name], h5py.Dataset):
                         if details:
-                            var_list.append({name: groupname})
+                            var_list.append(groupname + '/' + name)
                         else:
                             var_list.append(name)
             return var_list
@@ -486,76 +486,16 @@ class Hdf(FileCore):
             if varname is None:
                 var_list = self.get_variable_list(group_walk=True, details=True)
                 dim_list = []
-                for item in var_list:
-                    name = list(item.keys())[0]
-                    path = item[name]
-                    for dim in orig_group[path + '/' + name].dims:
-                        dim_list.append([dim.label, orig_group[path + '/' + dim.label].shape[0], path])
-                unique_data = [list(x) for x in set(tuple(x) for x in dim_list)]
-                not_unique = [r for r in [item[0] for item in unique_data]
-                              if [item[0] for item in unique_data].count(r) > 1]
-                for dim in unique_data:
-                    if dim[0] in not_unique:
-                        if details:
-                            if not dim[2]:
-                                dim_dict[dim[0] + ' (/)'] = (dim[1], '/')
-                            else:
-                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
-                        else:
-                            if not dim[2]:
-                                dim_dict[dim[0] + ' (/)'] = dim[1]
-                            else:
-                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
-                    else:
-                        if details:
-                            if not dim[2]:
-                                dim_dict[dim[0]] = (dim[1], '/')
-                            else:
-                                dim_dict[dim[0]] = (dim[1], dim[2])
-                        else:
-                            dim_dict[dim[0]] = dim[1]
-            else:
-                var = orig_group[varname]
-                if isinstance(var, h5py.Dataset):
-                    parent = var.parent.name
-                    dim_shape = var.shape
-                    for i, dim in enumerate(orig_group[varname].dims):
-                        if details:
-                            dim_dict[dim.label] = (dim_shape[i], parent)
-                        else:
-                            dim_dict[dim.label] = dim_shape[i]
-                else:
-                    var_list = self.get_variable_list(groupname=varname, group_walk=True, details=True)
-                    dim_list = []
-                    for item in var_list:
-                        name = list(item.keys())[0]
-                        path = item[name]
-                        for dim in orig_group[path + '/' + name].dims:
-                            dim_list.append([dim.label, orig_group[path + '/' + dim.label].shape[0], path])
-                    unique_data = [list(x) for x in set(tuple(x) for x in dim_list)]
-                    not_unique = [r for r in [item[0] for item in unique_data]
-                                  if [item[0] for item in unique_data].count(r) > 1]
-                    for dim in unique_data:
-                        if dim[0] in not_unique:
-                            if details:
-                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
-                            else:
-                                dim_dict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
-                        else:
-                            if details:
-                                dim_dict[dim[0]] = (dim[1], dim[2])
-                            else:
-                                dim_dict[dim[0]] = dim[1]
-        else:
-            if varname is None:
-                var_list = self.get_variable_list()
-                dim_list = []
-                for item in var_list:
-                    for dim in orig_group[item].dims:
-                        dim_list.append([dim.label, orig_group[dim.label].shape[0]])
-                for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
+                for var_path in var_list:
+                    for dim in orig_group[var_path].dims:
+                        dim_path = os.path.dirname(var_path)
+                        dim_list.append([dim.label, orig_group[dim_path + '/' + dim.label].shape[0], dim_path])
+                for dim in [list(x) for x in set(tuple(x) for x in dim_list)]:
                     if details:
-                        dim_dict[dim[0]] = (dim[1], '/')
+                        if dim[2] == '/':
+                            dim_dict['/' + dim[0]] = dim[1]
+                        else:
+                            dim_dict[dim[2] + '/' + dim[0]] = dim[1]
                     else:
                         dim_dict[dim[0]] = dim[1]
             else:
@@ -565,7 +505,44 @@ class Hdf(FileCore):
                     dim_shape = var.shape
                     for i, dim in enumerate(orig_group[varname].dims):
                         if details:
-                            dim_dict[dim.label] = (dim_shape[i], parent)
+                            dim_dict[parent + dim.label] = dim_shape[i]
+                        else:
+                            dim_dict[dim.label] = dim_shape[i]
+                else:
+                    var_list = self.get_variable_list(groupname=varname, group_walk=True, details=True)
+                    dim_list = []
+                    for var_path in var_list:
+                        dim_path = os.path.dirname(var_path)
+                        for dim in orig_group[var_path].dims:
+                            dim_list.append([dim.label, orig_group[dim_path + '/' + dim.label].shape[0], dim_path])
+                    for dim in [list(x) for x in set(tuple(x) for x in dim_list)]:
+                        if details:
+                            dim_dict[dim[2] + '/' + dim[0]] = dim[1]
+                        else:
+                            dim_dict[dim[0]] = dim[1]
+        else:
+            if varname is None:
+                var_list = self.get_variable_list()
+                dim_list = []
+                for item in var_list:
+                    for dim in orig_group[item].dims:
+                        dim_list.append([dim.label, orig_group[dim.label].shape[0]])
+                for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
+                    if details:
+                        dim_dict['/' + dim[0]] = dim[1]
+                    else:
+                        dim_dict[dim[0]] = dim[1]
+            else:
+                var = orig_group[varname]
+                if isinstance(var, h5py.Dataset):
+                    parent = var.parent.name
+                    dim_shape = var.shape
+                    for i, dim in enumerate(orig_group[varname].dims):
+                        if details:
+                            if parent != '/':
+                                dim_dict[parent + '/' + dim.label] = dim_shape[i]
+                            else:
+                                dim_dict['/' + dim.label] = dim_shape[i]
                         else:
                             dim_dict[dim.label] = dim_shape[i]
                 else:
@@ -576,12 +553,9 @@ class Hdf(FileCore):
                             dim_list.append([dim.label, var[dim.label].shape[0]])
                     for dim in [sublist for sublist, _ in itertools.groupby(dim_list)]:
                         if details:
-
                             if varname[0] != '/':
                                 varname = '/' + varname
-                            # print(varname)
-
-                            dim_dict[dim[0]] = (dim[1], varname)
+                            dim_dict[varname + '/' + dim[0]] = dim[1]
                         else:
                             dim_dict[dim[0]] = dim[1]
         return dim_dict
@@ -630,8 +604,6 @@ class Hdf(FileCore):
 
         logging.debug('egads - hdf_io.py - Hdf - _add_group')
         if self.f is not None:
-            if isinstance(groupname, list):
-                groupname = '/'.join(groupname)
             self.f.create_group(groupname)
         else:
             logging.error('egads.input.Hdf._add_group: AttributeError, No file open')
@@ -681,7 +653,10 @@ class Hdf(FileCore):
             if dims is not None:
                 for dim in dims:
                     try:
-                        self.f[path + '/' + dim]
+                        if path != '/':
+                            self.f[path + '/' + dim]
+                        else:
+                            self.f[dim]
                     except KeyError:
                         logging.error("egads - hdf_io.py - Hdf - _write_variable - KeyError, the following "
                                       "dimension '" + dim + "' can\'t be found in the Hdf file")
@@ -754,36 +729,6 @@ class Hdf(FileCore):
         if self.f is not None:
             if nc_file is None:
                 nc_file = os.path.splitext(self.filename)[0] + '.nc'
-            file_struct = {'groups': [], 'variables': [],
-                           'dimensions': collections.OrderedDict(), 'attributes': collections.OrderedDict(),
-                           'global_attributes': collections.OrderedDict()}
-
-            # read variables and groups structure
-            group_struct = self.get_file_structure()
-            for key, value in group_struct.items():
-                if isinstance(value['object'], h5py.Group):
-                    file_struct['groups'].append(key)
-                if isinstance(value['object'], h5py.Dataset):
-                    name = value['object'].name[len(value['object'].parent.name):]
-                    if name[0] == '/':
-                        name = name[1:]
-                    dim_list = self.get_dimension_list(value['object'].parent.name + '/' + name, details=True)
-                    file_struct['variables'].append([name, value['object'].parent.name, dim_list])
-
-            # read dimensions
-            file_struct['dimensions'] = self.get_dimension_list(group_walk=True, details=True)
-
-            # read global attributes
-            for attr in self.get_attribute_list():
-                file_struct['global_attributes'][attr] = self.get_attribute_value(attr)
-
-            # read variables and groups metadata
-            for key, _ in group_struct.items():
-                tmp = {}
-                for attr in self.get_attribute_list(key):
-                    if attr not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']:
-                        tmp[attr] = self.get_attribute_value(attr, key)
-                file_struct['attributes'][key] = tmp
 
             # netcdf file creation
             f = egads.input.NetCdf(nc_file, 'w')
@@ -791,7 +736,7 @@ class Hdf(FileCore):
             # add global attributes
             add_history = False
             dt = datetime.datetime.now()
-            for key, value in file_struct['global_attributes'].items():
+            for key, value in self.get_attribute_list().items():
                 if key == 'history':
                     add_history = True
                     value += ' ; converted to NetCdf by EGADS, ' + str(dt)
@@ -800,26 +745,21 @@ class Hdf(FileCore):
                 f.add_attribute('history', 'converted to NetCdf by EGADS, ' + str(dt))
 
             # add groups
-            for group in file_struct['groups']:
+            for group in self.get_group_list(details=True):
                 f.add_group(group)
+                attrs = self.get_attribute_list(group)
+                for attr_name, attr_val in attrs.items():
+                    f.add_attribute(attr_name, attr_val, group)
 
             # add dimensions
-            for key, value in file_struct['dimensions'].items():
-                if '(' in key:
-                    idx = key.find('(')
-                    key = key[: idx - 1]
-                size, path = value
-                f.add_dim(path + '/' + key, size)
+            for dim_path, dim_size in self.get_dimension_list(group_walk=True, details=True).items():
+                f.add_dim(dim_path, dim_size)
 
             # add variables
             type_dict = {'char': 'c', 'byte': 'b', 'int16': 'i2', 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
-            for sublist in file_struct['variables']:
-                name = sublist[0]
-                path = sublist[1]
-                dim = tuple(sublist[2].keys())
-                if path[0] == '/':
-                    path = path[1:]
-                data = self.read_variable('/' + path + '/' + name)
+            for var_path in self.get_variable_list(group_walk=True, details=True):
+                dim_tuple = tuple([dim for dim in self.get_dimension_list(var_path)])
+                data = self.read_variable(var_path)
                 try:
                     dtype = type_dict[str(data.dtype)]
                 except KeyError:
@@ -827,40 +767,20 @@ class Hdf(FileCore):
                         dtype = self.TYPE_DICT[str(data.dtype)]
                     except KeyError:
                         dtype = str(data.dtype)
-                if not path:
-                    path_name = name
-                else:
-                    path_name = path + '/' + name
-                metadata = file_struct['attributes'][path_name]
+                attrs = self.get_attribute_list(var_path)
                 try:
-                    fillvalue = metadata['_FillValue']
+                    fillvalue = attrs['_FillValue']
                 except KeyError:
                     try:
-                        fillvalue = metadata['missing_value']
+                        fillvalue = attrs['missing_value']
                     except KeyError:
                         fillvalue = None
-                f.write_variable(data, path_name, dims=dim, ftype=dtype, fillvalue=fillvalue)
+                f.write_variable(data, var_path, dims=dim_tuple, ftype=dtype, fillvalue=fillvalue)
+                no_metadata = ['_FillValue', 'DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']
+                for attr_name, attr_val in attrs.items():
+                    if attr_name not in no_metadata:
+                        f.add_attribute(attr_name, attr_val, var_path)
 
-            # add metadata for variables and groups
-            for item in file_struct['groups']:
-                metadata = file_struct['attributes'][item]
-                if metadata:
-                    for key, value in metadata.items():
-                        f.add_attribute(key, value, item)
-            for sublist in file_struct['variables']:
-                name = sublist[0]
-                path = sublist[1]
-                if path[0] == '/':
-                    path = path[1:]
-                if not path:
-                    path_name = name
-                else:
-                    path_name = path + '/' + name
-                metadata = file_struct['attributes'][path_name]
-                if metadata:
-                    for key, value in metadata.items():
-                        if key != '_FillValue':
-                            f.add_attribute(key, value, path_name)
             f.close()
             logging.debug('egads - hdf_io.py - Hdf - _convert_to_netcdf -> file conversion OK')
         else:
@@ -1250,18 +1170,6 @@ class EgadsHdf(Hdf):
         Private method to read a variable from currently opened Hdf file.
         """
 
-        # var_list = self._get_variable_list(True)
-        # path, var = os.path.split(varname)
-        # exist = False
-        # for item in var_list:
-        #     if var == list(item.keys())[0] and path == item[list(item.keys())[0]]:
-        #         exist = True
-        # if not exist:
-        #     logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
-        #                       'hdf file')
-        #     raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-        # else:
-
         try:
             if input_range is None:
                 var = numpy.array(self.f[varname])
@@ -1274,14 +1182,6 @@ class EgadsHdf(Hdf):
             logging.exception('egads - hdf_io.py - Hdf - _read_variable - KeyError, variable does not exist in '
                               'hdf file')
             raise KeyError("ERROR: Variable %s does not exist in %s" % (varname, self.filename))
-
-        # if input_range is None:
-        #     var = numpy.array(self.f[varname])
-        # else:
-        #     obj = 'slice(input_range[0], input_range[1])'
-        #     for i in range(2, len(input_range), 2):
-        #         obj = obj + ', slice(input_range[%i], input_range[%i])' % (i, i + 1)
-        #     var = numpy.array(self.f[varname][eval(obj)])
         if read_as_float:
             var = var.astype(float)
         var_attrs = self._get_attribute_list(varname)
@@ -1300,6 +1200,12 @@ class EgadsHdf(Hdf):
                 logging.warning('egads - hdf_io.py - EgadsHdf - _read_variable - KeyError, no missing value '
                                 + 'attribute has been found for the variable ' + varname + '. Missing value not '
                                 + 'replaced by NaN.')
+
+        for attr in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']:
+            try:
+                del var_attrs[attr]
+            except KeyError:
+                pass
 
         variable_metadata = egads.core.metadata.VariableMetadata(var_attrs, self.file_metadata)
         data = egads.EgadsData(var, variable_metadata=variable_metadata)
@@ -1356,7 +1262,7 @@ class EgadsHdf(Hdf):
         if self.f is not None:
             fillvalue = None
             dtype = self.TYPE_DICT[ftype]
-            path, _ = os.path.split(varname)
+            path = os.path.dirname(varname)
             if dims is not None:
                 for dim in dims:
                     try:
@@ -1384,23 +1290,22 @@ class EgadsHdf(Hdf):
                 self.f[varname].dims[i].attach_scale(self.f[path + '/' + dim])
                 self.f[varname].dims[i].label = dim
             for key, val in data.metadata.items():
-                if val:
-                    if isinstance(val, list):
-                        tmp = ''
-                        for item in val:
-                            tmp += item + ', '
-                        self.add_attribute(str(key), tmp[:-2], varname)
+                if isinstance(val, list):
+                    tmp = ''
+                    for item in val:
+                        tmp += item + ', '
+                    self.add_attribute(str(key), tmp[:-2], varname)
+                else:
+                    if key == '_FillValue' or key == 'missing_value':
+                        if key == '_FillValue':
+                            fillvalue = data.metadata['_FillValue']
+                        if key == 'missing_value':
+                            fillvalue = data.metadata['missing_value']
+                        if fillvalue > 1000000000000000000 or fillvalue < 1000000000000000000:
+                            fillvalue = float(fillvalue)
+                        self.add_attribute(str(key), fillvalue, varname)
                     else:
-                        if key == '_FillValue' or key == 'missing_value':
-                            if key == '_FillValue':
-                                fillvalue = data.metadata['_FillValue']
-                            if key == 'missing_value':
-                                fillvalue = data.metadata['missing_value']
-                            if fillvalue > 1000000000000000000 or fillvalue < 1000000000000000000:
-                                fillvalue = float(fillvalue)
-                            self.add_attribute(str(key), fillvalue, varname)
-                        else:
-                            self.add_attribute(str(key), val, varname)
+                        self.add_attribute(str(key), val, varname)
         else:
             logging.error('egads - hdf_io.py - EgadsHdf - _write_variable - AttributeError, no file open')
             raise AttributeError('No file open')
@@ -1415,44 +1320,14 @@ class EgadsHdf(Hdf):
         if self.f is not None:
             if nc_file is None:
                 nc_file = os.path.splitext(self.filename)[0] + '.nc'
-            file_struct = {'groups': [], 'variables': [],
-                           'dimensions': collections.OrderedDict(), 'attributes': collections.OrderedDict(),
-                           'global_attributes': collections.OrderedDict()}
-
-            # read variables and groups structure
-            group_struct = self.get_file_structure()
-            for key, value in group_struct.items():
-                if isinstance(value['object'], h5py.Group):
-                    file_struct['groups'].append(key)
-                if isinstance(value['object'], h5py.Dataset):
-                    name = value['object'].name[len(value['object'].parent.name):]
-                    if name[0] == '/':
-                        name = name[1:]
-                    dim_list = self.get_dimension_list(value['object'].parent.name + '/' + name, details=True)
-                    file_struct['variables'].append([name, value['object'].parent.name, dim_list])
-
-            # read dimensions
-            file_struct['dimensions'] = self.get_dimension_list(group_walk=True, details=True)
-
-            # read global attributes
-            for attr in self.get_attribute_list():
-                file_struct['global_attributes'][attr] = self.get_attribute_value(attr)
-
-            # read variables and groups metadata
-            for key, _ in group_struct.items():
-                tmp = {}
-                for attr in self.get_attribute_list(key):
-                    if attr not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST']:
-                        tmp[attr] = self.get_attribute_value(attr, key)
-                file_struct['attributes'][key] = tmp
 
             # netcdf file creation
-            f = egads.input.EgadsNetCdf(nc_file, 'w')
+            f = egads.input.NetCdf(nc_file, 'w')
 
             # add global attributes
             add_history = False
             dt = datetime.datetime.now()
-            for key, value in file_struct['global_attributes'].items():
+            for key, value in self.get_attribute_list().items():
                 if key == 'history':
                     add_history = True
                     value += ' ; converted to NetCdf by EGADS, ' + str(dt)
@@ -1461,38 +1336,22 @@ class EgadsHdf(Hdf):
                 f.add_attribute('history', 'converted to NetCdf by EGADS, ' + str(dt))
 
             # add groups
-            for group in file_struct['groups']:
+            for group in self.get_group_list(details=True):
                 f.add_group(group)
+                attrs = self.get_attribute_list(group)
+                for attr_name, attr_val in attrs.items():
+                    f.add_attribute(attr_name, attr_val, group)
 
             # add dimensions
-            for key, value in file_struct['dimensions'].items():
-                if '(' in key:
-                    idx = key.find('(')
-                    key = key[: idx - 1]
-                size, path = value
-                f.add_dim(path + '/' + key, size)
+            for dim_path, dim_size in self.get_dimension_list(group_walk=True, details=True).items():
+                f.add_dim(dim_path, dim_size)
 
             # add variables
-            type_dict = {'char': 'c', 'byte': 'b', 'int16': 'i2', 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
-            for sublist in file_struct['variables']:
-                name = sublist[0]
-                path = sublist[1]
-                dim = tuple(sublist[2].keys())
-                if path[0] == '/':
-                    path = path[1:]
-                data = self.read_variable('/' + path + '/' + name)
-                if not path:
-                    path_name = name
-                else:
-                    path_name = path + '/' + name
-                f.write_variable(data, path_name, dims=dim, ftype=str(data.dtype))
+            for var_path in self.get_variable_list(group_walk=True, details=True):
+                dim_tuple = tuple([dim for dim in self.get_dimension_list(var_path)])
+                data = self.read_variable(var_path)
+                f.write_variable(data, var_path, dims=dim_tuple, ftype=str(data.dtype))
 
-            # add metadata for groups
-            for item in file_struct['groups']:
-                metadata = file_struct['attributes'][item]
-                if metadata:
-                    for key, value in metadata.items():
-                        f.add_attribute(key, value, item)
             f.close()
             logging.debug('egads - hdf_io.py - EgadsHdf - _convert_to_netcdf -> file conversion OK')
         else:

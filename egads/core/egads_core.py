@@ -34,6 +34,8 @@ class EgadsData(pq.Quantity):
         :param VariableMetadata variable_metadata:
             Optional - VariableMetadata dictionary object containing relevant metadata
             for the current EgadsData instance.
+        :param string dtype:
+            Optional - String representation of the data format.
         :param **attrs:
             Optional - Keyword/value pairs of additional metadata which will be added into
             the existing variable_metadata object.
@@ -78,9 +80,11 @@ class EgadsData(pq.Quantity):
         :param string units:
             Optional - String representation of units to be used for current EgadsData instance, e.g.
             'm/s', 'kg', 'g/cm^3', etc.            
-        :param VariableMetadata variable_metadata: 
+        :param VariableMetadata variable_metadata:
             Optional - VariableMetadata dictionary object containing relevant metadata
             for the current EgadsData instance.
+        :param string dtype:
+            Optional - String representation of the data format.
         :param **attrs:
             Optional - Keyword/value pairs of additional metadata which will be added into
             the existing variable_metadata object.

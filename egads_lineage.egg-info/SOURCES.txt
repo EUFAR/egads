@@ -3,8 +3,8 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
-Documentation/EGADS Lineage Algorithm Handbook - v1.2.6.pdf
-Documentation/EGADS Lineage Documentation - v1.2.6.pdf
+Documentation/EGADS Lineage Algorithm Handbook - v1.2.7.pdf
+Documentation/EGADS Lineage Documentation - v1.2.7.pdf
 Documentation/changelog.txt
 Documentation/EGADS Algorithm Handbook - LATEX/EGADS_alg_doc.tex
 Documentation/EGADS Algorithm Handbook - LATEX/example.py

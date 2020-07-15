@@ -1,6 +1,6 @@
 __author__ = "ohenry"
 __date__ = "2018-7-21 14:52"
-__version__ = "1.6"
+__version__ = "1.7"
 __all__ = ["NasaAmes", "EgadsNasaAmes"]
 
 import logging
@@ -901,32 +901,23 @@ class EgadsNasaAmes(NasaAmes):
             values = np.array(na_dict['V'][varnum])
             if read_as_float:
                 values = values.astype('float')
-
-            # print(type(values[0]))
-
             try:
                 if replace_fill_value:
                     values[values == miss] = np.nan
             except ValueError:
                 raise Exception('cannot convert float NaN to integer')
+            var_metadata = {'standard_name': variable, 'units': units, 'scale_factor': scale, '_FillValue': miss}
         except ValueError:
             variable, units = _attemptVarAndUnitsMatch(na_dict['XNAME'])
-            miss, scale = None, None
+            var_metadata = {'standard_name': variable, 'units': units}
             values = np.array(na_dict['X'])
             if read_as_float:
                 values = [float(item) for item in values]
         if file_metadata is not None:
-            variable_metadata = egads.core.metadata.VariableMetadata({'standard_name': variable,
-                                                                      'units': units,
-                                                                      '_FillValue': miss,
-                                                                      'scale_factor': scale},
-                                                                     self.file_metadata)
+            variable_metadata = egads.core.metadata.VariableMetadata(var_metadata, self.file_metadata)
         else:
-            variable_metadata = egads.core.metadata.VariableMetadata({'standard_name': variable,
-                                                                      'units': units,
-                                                                      '_FillValue': miss,
-                                                                      'scale_factor': scale})
-        data = egads.EgadsData(values, variable_metadata)
+            variable_metadata = egads.core.metadata.VariableMetadata(var_metadata)
+        data = egads.EgadsData(values, variable_metadata=variable_metadata)
         logging.debug('egads - nasa_ames_io.py - EgadsNasaAmes - read_variable - varname ' + str(varname)
                       + ' -> data read OK')
         return data

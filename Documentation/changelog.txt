@@ -7,9 +7,28 @@ To do list:
   - check feasability of an online algorithm database.
   - add function to create algorithm template.
   - add function to add a folder, somewhere on the hard drive, to the list of algorithms.
+  - add new tests to test each function of each class
 
 To fix list:
 ------------
+
+
+July 15 2020, Release version 1.2.7
+==================================
+The results of the following functions get_variable_list(), get_group_list() and get_dimension_list() for Hdf and NetCdf classes is the same type whatever the option used in each function. Now if details = True, get_variable_list() and get_group_list() return a list of string, each string is composed of the path to the group/variable + group/variable name. get_dimension_list() returns a dictionary of keys, composed of the path to the dimension + the dimension name, and values composed of the size of the dimension. It is the same schema than the one before 1.2.0.
+
+
+  MODIFIED:
+	- if an attribute is empty but exist in a file, it is now kept in EgadsData, and it can be written to a new file.
+	- in NasaAmes class, scale_factor and missing value have been removed from EgadsData metadata as they don't exist in NA file.
+	- get_variable_list() in Hdf and NetCdf classes returns a list of string. If details = True, each string is composed of the path to the variable + the variable name.
+	- get_group_list() in Hdf and NetCdf classes returns a list of string. If details = True, each string is composed of the path to the group + the group name.
+	- get_dimension_list() in Hdf and NetCdf classes returns a dictionary with keys as dimension name and values as dimension size. If details = True, each key is composed of the path to the dimension + the dimension name.
+
+  FIXED:
+    - in Hdf file, attribute created by H5py ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST'] were transfered to EgadsData. It has been fixed.
+	- with Hdf file, variables at the root of the file have a path equal to '/', like netcdf file.
+	- test units have been fixed.
 
 
 May 7 2020, Release version 1.2.6

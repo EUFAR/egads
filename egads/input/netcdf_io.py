@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.23"
+__version__ = "1.25"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -96,7 +96,8 @@ class NetCdf(FileCore):
             Optional - if True, the function visits all groups (if at least one exists)
             to list all dimensions. False by default.
         :param bool details:
-            Optional - if True, dimension path is provided in the dictionary. False by default.
+            Optional - if True, the dimension name is given with their respective path.
+            False by default.
         :return: ordered dictionary of dimensions.
         """
 
@@ -114,8 +115,8 @@ class NetCdf(FileCore):
             Optional - if True, the function visits all groups (if at least one exists)
             to list all variables. False by default.
         :param bool details:
-            Optional - if True, the function returns a list of dictionaries, with
-            variable name as key and variable path as value. False by default.
+            Optional - if True, the name of the variable is given with their respective path.
+            False by default.
         :return: list of variables.
         """
 
@@ -130,10 +131,8 @@ class NetCdf(FileCore):
             Optional - the name of the group to get the list from. It should represent a path to
             the group. None by default.
         :param bool details:
-            If details is true, it will return a list of all groups in the NetCDF file, or from
-            groupname if groupname is not None, and their path. In that case, each element of
-            the list is a small dict containing as key/value the name of the group and the path
-            of the group in the file. False by default.
+            Optional - if details is True, the name of each group is given with their respective path.
+            False by default.
         :return: list of groups.
         """
 
@@ -359,11 +358,7 @@ class NetCdf(FileCore):
             attr_dict = {}
             orig_group = self.f
             if var is not None:
-                if var[0] == '/':
-                    var = var[1:]
-                if var[-1] == '/':
-                    var = var[:-1]
-                for group in var.split('/'):
+                for group in var.rstrip('/').lstrip('/').split('/'):
                     orig_group = orig_group[group]
             for key, value in orig_group.__dict__.items():
                 if isinstance(value, str):
@@ -389,7 +384,7 @@ class NetCdf(FileCore):
                 if not group_walk:
                     for dimname, dimobj in reversed(sorted(self.f.dimensions.items())):
                         if details:
-                            dimdict[dimname] = (len(dimobj), '/')
+                            dimdict['/' + dimname] = len(dimobj)
                         else:
                             dimdict[dimname] = len(dimobj)
                 else:
@@ -397,51 +392,27 @@ class NetCdf(FileCore):
                     for dimname, dimobj in reversed(sorted(self.f.dimensions.items())):
                         dim_list.append([dimname, len(dimobj), ''])
                     group_list = self.get_group_list(details=True)
-                    for group in group_list:
+                    for group_path in group_list:
                         orig_group = self.f
-                        group_path = group['path']
-                        if group_path[0] == '/':
-                            group_items = group_path[1:].split('/')
-                        else:
-                            group_items = group_path.split('/')
-                        for item in group_items:
+                        for item in group_path.lstrip('/').split('/'):
                             orig_group = orig_group[item]
                         if orig_group.dimensions:
                             for dimname, dimobj in reversed(sorted(orig_group.dimensions.items())):
                                 dim_list.append([dimname, len(dimobj), group_path])
-                    not_unique = [r for r in [item[0] for item in dim_list]
-                                  if [item[0] for item in dim_list].count(r) > 1]
                     for dim in dim_list:
-                        if dim[0] in not_unique:
-                            if details:
-                                if not dim[2]:
-                                    dimdict[dim[0] + ' (/)'] = (dim[1], '/')
-                                else:
-                                    dimdict[dim[0] + ' (' + dim[2] + ')'] = (dim[1], dim[2])
+                        if details:
+                            if not dim[2]:
+                                dimdict['/' + dim[0]] = dim[1]
                             else:
-                                if not dim[2]:
-                                    dimdict[dim[0] + ' (/)'] = dim[1]
-                                else:
-                                    dimdict[dim[0] + ' (' + dim[2] + ')'] = dim[1]
+                                dimdict[dim[2] + '/' + dim[0]] = dim[1]
                         else:
-                            if details:
-                                if not dim[2]:
-                                    dimdict[dim[0]] = (dim[1], '/')
-                                else:
-                                    dimdict[dim[0]] = (dim[1], dim[2])
-                            else:
-                                dimdict[dim[0]] = dim[1]
+                            dimdict[dim[0]] = dim[1]
             else:
-                if var[0] == '/':
-                    var = var[1:]
-                if var[-1] == '/':
-                    var = var[:-1]
                 orig_group = self.f
-                group_items = var.split('/')
                 dim_list = []
                 var_name = ''
                 group_path = ''
-                for item in group_items:
+                for item in var.lstrip('/').rstrip('/').split('/'):
                     try:
                         if isinstance(orig_group[item], netCDF4.Group):
                             orig_group = orig_group[item]
@@ -454,20 +425,26 @@ class NetCdf(FileCore):
                         break
                 for dimname, dimobj in reversed(sorted(orig_group.dimensions.items())):
                     dim_list.append([dimname, len(dimobj), group_path])
+                if group_walk:
+                    group_list = self.get_group_list(group_path, details=True)
+                    for group_path in group_list:
+                        group = self.f
+                        for item in group_path.lstrip('/').split('/'):
+                            group = group[item]
+                        if group.dimensions:
+                            for dimname, dimobj in reversed(sorted(group.dimensions.items())):
+                                dim_list.append([dimname, len(dimobj), group_path])
                 if var_name:
                     for dimname in orig_group[var_name].dimensions:
                         idx = [sublist[0] for sublist in dim_list].index(dimname)
                         if details:
-                            if not dim_list[idx][2]:
-                                dimdict[dim_list[idx][0]] = (dim_list[idx][1], '/')
-                            else:
-                                dimdict[dim_list[idx][0]] = (dim_list[idx][1], dim_list[idx][2])
+                            dimdict[dim_list[idx][2] + '/' + dim_list[idx][0]] = dim_list[idx][1]
                         else:
                             dimdict[dim_list[idx][0]] = dim_list[idx][1]
                 else:
                     for sublist in dim_list:
                         if details:
-                            dimdict[sublist[0]] = (sublist[1], sublist[2])
+                            dimdict[sublist[2] + '/' + sublist[0]] = sublist[1]
                         else:
                             dimdict[sublist[0]] = sublist[1]
             return dimdict
@@ -482,16 +459,9 @@ class NetCdf(FileCore):
 
         logging.debug('egads - netcdf_io.py - NetCdf - _get_variable_list')
         if self.f is not None:
-            # orig_group = self.f
 
             def set_folder(grouppath, base_group):
-                if isinstance(grouppath, str):
-                    if grouppath[0] == '/':
-                        grouppath = grouppath[1:]
-                    if grouppath[-1] == '/':
-                        grouppath = grouppath[:-1]
-                    grouppath = grouppath.split('/')
-                for item in grouppath:
+                for item in grouppath.lstrip('/').rstrip('/').split('/'):
                     base_group = base_group.groups[item]
                 return base_group
 
@@ -506,19 +476,18 @@ class NetCdf(FileCore):
                 if details:
                     for var in list(orig_group.variables.keys()):
                         if groupname is not None:
-                            var_list.append({var: groupname})
+                            var_list.append(groupname + '/' + var)
                         else:
-                            var_list.append({var: ''})
+                            var_list.append('/' + var)
                 else:
                     var_list = var_list + list(orig_group.variables.keys())
                 group_list = self.get_group_list(groupname, True)
-                for group in group_list:
-                    path = group['path']
+                for path in group_list:
                     group_obj = set_folder(path, self.f)
                     if list(group_obj.variables.keys()):
                         if details:
                             for var in list(group_obj.variables.keys()):
-                                var_list.append({var: group['path']})
+                                var_list.append(path + '/' + var)
                         else:
                             var_list = var_list + list(group_obj.variables.keys())
                 return var_list
@@ -527,12 +496,12 @@ class NetCdf(FileCore):
                 if details:
                     for var in list(orig_group.variables.keys()):
                         if groupname is not None:
-                            if groupname[0] != '/':
-                                var_list.append({var: ('/' + groupname)})
+                            if groupname != '/':
+                                var_list.append(groupname + '/' + var)
                             else:
-                                var_list.append({var: groupname})
+                                var_list.append(groupname + var)
                         else:
-                            var_list.append({var: ''})
+                            var_list.append('/' + var)
                 else:
                     var_list = var_list + list(orig_group.variables.keys())
                 return var_list
@@ -550,20 +519,14 @@ class NetCdf(FileCore):
             orig_group = self.f
             group_list = []
             if groupname is not None:
-                if isinstance(groupname, str):
-                    if groupname[0] == '/':
-                        groupname = groupname[1:]
-                    if groupname[-1] == '/':
-                        groupname = groupname[:-1]
-                    groupname = groupname.split('/')
-                for group in groupname:
+                for group in groupname.rstrip('/').lstrip('/').split('/'):
                     orig_group = orig_group.groups[group]
 
             def _walktree(orig):
                 groups = orig.groups
                 for _, obj in groups.items():
                     if details:
-                        group_list.append({'name': obj.name, 'path': obj.path})
+                        group_list.append(obj.path)
                     else:
                         group_list.append(obj.name)
                     _walktree(obj)
@@ -596,11 +559,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - _add_dim')
         if self.f is not None:
             orig_group = self.f
-            if name[0] == '/':
-                name = name[1:]
-            if name[-1] == '/':
-                name = name[:-1]
-            for group in name.split('/'):
+            for group in name.rstrip('/').lstrip('/').split('/'):
                 try:
                     if isinstance(orig_group[group], netCDF4.Group):
                         orig_group = orig_group[group]
@@ -628,11 +587,7 @@ class NetCdf(FileCore):
                     tmp += item + ', '
                 value = tmp[:-2]
             if varname is not None:
-                if varname[0] == '/':
-                    varname = varname[1:]
-                if varname[-1] == '/':
-                    varname = varname[:-1]
-                for group in varname.split('/'):
+                for group in varname.rstrip('/').lstrip('/').split('/'):
                     orig_group = orig_group[group]
             setattr(orig_group, attrname, value)
         else:
@@ -650,11 +605,7 @@ class NetCdf(FileCore):
         if self.f is not None:
             orig_group = self.f
             if varname is not None:
-                if varname[0] == '/':
-                    varname = varname[1:]
-                if varname[-1] == '/':
-                    varname = varname[:-1]
-                for group in varname.split('/'):
+                for group in varname.rstrip('/').lstrip('/').split('/'):
                     orig_group = orig_group[group]
             delattr(orig_group, attrname)
         else:
@@ -671,11 +622,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - _change_variable_name')
         if self.f is not None:
             orig_group = self.f
-            if varname[0] == '/':
-                varname = varname[1:]
-            if varname[-1] == '/':
-                varname = varname[:-1]
-            for group in varname.split('/'):
+            for group in varname.rstrip('/').lstrip('/').split('/'):
                 if isinstance(orig_group[group], netCDF4.Group):
                     orig_group = orig_group[group]
                 else:
@@ -693,9 +640,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - _read_variable')
         try:
             orig_group = self.f
-            if varname[0] == '/':
-                varname = varname[1:]
-            for group in varname.split('/'):
+            for group in varname.lstrip('/').split('/'):
                 orig_group = orig_group[group]
             varin = orig_group
         except (KeyError, IndexError):
@@ -737,9 +682,8 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - _write_variable')
         if self.f is not None:
             orig_group = self.f
-            if varname[0] == '/':
-                varname = varname[1:]
-            if '/' in varname:
+            varname = varname.rstrip('/')
+            if '/' in varname.lstrip('/'):
                 var = varname.split('/')
                 for group in var:
                     try:
@@ -975,28 +919,15 @@ class NetCdf(FileCore):
             # get variables
             variable_list = self.get_variable_list(group_walk=True, details=True)
             var_dim_list = {}
-            for item in variable_list:
-                var = list(item.keys())[0]
-                path = item[var]
-                if path:
-                    full_var = path + '/' + var
-                else:
-                    full_var = var
-                var_dim_list[full_var] = self.get_dimension_list(full_var)
+            for path in variable_list:
+                var_dim_list[path] = self.get_dimension_list(path)
 
             # get variables and groups attributes
             variable_attributes = {}
             group_attributes = {}
-            for item in variable_list:
-                var = list(item.keys())[0]
-                path = item[var]
-                if path:
-                    full_var = path + '/' + var
-                else:
-                    full_var = var
-                variable_attributes[full_var] = self.get_attribute_list(varname=full_var)
-            for item in group_list:
-                path = item['path']
+            for path in variable_list:
+                variable_attributes[path] = self.get_attribute_list(varname=path)
+            for path in group_list:
                 group_attributes[path] = self.get_attribute_list(varname=path)
 
             # create hdf file
@@ -1014,32 +945,19 @@ class NetCdf(FileCore):
                 f.add_attribute('history', 'converted to Hdf by EGADS, ' + str(dt))
 
             # add groups
-            for item in group_list:
-                path = item['path']
+            for path in group_list:
                 f.add_group(path)
 
             # add dimensions
             dim_list = []
-            for name, (size, path) in dimension_list.items():
-                if '(' in name:
-                    name = name[: name.find('(') - 1]
-                if path:
-                    full_name = path + '/' + name
-                else:
-                    full_name = name
-                dim_list.append(full_name)
-                data = self.read_variable(full_name)
+            for dim_path, _ in dimension_list.items():
+                dim_list.append(dim_path)
+                data = self.read_variable(dim_path)
                 ftype = str(data.dtype)
-                f.add_dim(full_name, data, ftype)
+                f.add_dim(dim_path, data, ftype)
 
             # add variables
-            for item in variable_list:
-                var = list(item.keys())[0]
-                path = item[var]
-                if path:
-                    full_var = path + '/' + var
-                else:
-                    full_var = var
+            for full_var in variable_list:
                 if full_var not in dim_list:
                     data = self.read_variable(full_var)
                     dims = tuple([key for key, _ in var_dim_list[full_var].items()])
@@ -1379,9 +1297,7 @@ class EgadsNetCdf(NetCdf):
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _read_variable')
         try:
             orig_group = self.f
-            if varname[0] == '/':
-                varname = varname[1:]
-            for group in varname.split('/'):
+            for group in varname.lstrip('/').split('/'):
                 orig_group = orig_group[group]
             varin = orig_group
         except KeyError:
@@ -1427,8 +1343,7 @@ class EgadsNetCdf(NetCdf):
         if self.f is not None:
             orig_group = self.f
             if varname is not None:
-                if varname[0] == '/':
-                    varname = varname[1:]
+                varname = varname.lstrip('/').rstrip('/')
                 if '/' in varname:
                     var = varname.split('/')
                     for group in var:
@@ -1452,15 +1367,14 @@ class EgadsNetCdf(NetCdf):
             else:
                 varout[:] = data.value
             for key, val in data.metadata.items():
-                if key not in ['DIMENSION_LABELS', 'NAME', 'CLASS', 'REFERENCE_LIST', 'DIMENSION_LIST', '_FillValue']:
-                    if val:
-                        if isinstance(val, list):
-                            tmp = ''
-                            for item in val:
-                                tmp += item + ', '
-                            setattr(varout, str(key), tmp[:-2])
-                        else:
-                            setattr(varout, str(key), val)
+                if key != '_FillValue':
+                    if isinstance(val, list):
+                        tmp = ''
+                        for item in val:
+                            tmp += item + ', '
+                        setattr(varout, str(key), tmp[:-2])
+                    else:
+                        setattr(varout, str(key), val)
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _write_variable - varname ' + str(varname)
                       + ' -> data write OK')
 
@@ -1486,19 +1400,12 @@ class EgadsNetCdf(NetCdf):
             # get variables
             variable_list = self.get_variable_list(group_walk=True, details=True)
             var_dim_list = {}
-            for item in variable_list:
-                var = list(item.keys())[0]
-                path = item[var]
-                if path:
-                    full_var = path + '/' + var
-                else:
-                    full_var = var
+            for full_var in variable_list:
                 var_dim_list[full_var] = self.get_dimension_list(full_var)
 
             # get groups attributes
             group_attributes = {}
-            for item in group_list:
-                path = item['path']
+            for path in group_list:
                 group_attributes[path] = self.get_attribute_list(varname=path)
 
             # create hdf file
@@ -1516,8 +1423,7 @@ class EgadsNetCdf(NetCdf):
                 f.add_attribute('history', 'converted to Hdf by EGADS, ' + str(dt))
 
             # add groups
-            for item in group_list:
-                path = item['path']
+            for path in group_list:
                 f.add_group(path)
                 metadata = group_attributes[path]
                 if metadata:
@@ -1526,31 +1432,18 @@ class EgadsNetCdf(NetCdf):
 
             # add dimensions
             dim_list = []
-            for name, (size, path) in dimension_list.items():
-                if '(' in name:
-                    name = name[: name.find('(') - 1]
-                if path:
-                    full_name = path + '/' + name
-                else:
-                    full_name = name
-                dim_list.append(full_name)
-                data = self.read_variable(full_name)
-                ftype = str(data.dtype)
-                f.add_dim(full_name, data, ftype)
+            for dim_path, dim_size in dimension_list.items():
+                dim_list.append(dim_path)
+                data = self.read_variable(dim_path)
+                f.add_dim(dim_path, data, str(data.dtype))
 
             # add variables
-            for item in variable_list:
-                var = list(item.keys())[0]
-                path = item[var]
-                if path:
-                    full_var = path + '/' + var
-                else:
-                    full_var = var
-                if full_var not in dim_list:
-                    data = self.read_variable(full_var)
-                    dims = tuple([key for key, _ in var_dim_list[full_var].items()])
+            for path in variable_list:
+                if path not in dim_list:
+                    data = self.read_variable(path)
+                    dims = tuple([key for key, _ in var_dim_list[path].items()])
                     ftype = str(data.dtype)
-                    f.write_variable(data, full_var, dims, ftype)
+                    f.write_variable(data, path, dims, ftype)
 
             f.close()
             logging.debug('egads - netcdf_io.py - EgadsNetCdf - _convert_to_hdf -> file conversion OK')

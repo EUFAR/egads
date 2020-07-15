@@ -6,7 +6,7 @@ NetCDF library (based on NetCDF4).
 
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 09:37"
-__version__ = "1.9"
+__version__ = "1.10"
 
 import tempfile
 import unittest
@@ -31,6 +31,9 @@ VAR_MULT_NAME = 'test_mult_var'
 VAR_MULT_UNITS = 'm'
 GLOBAL_ATTRIBUTE = 'test_file'
 CONVENTIONS = 'EUFAR'
+GRP_NAME_1 = 'forecasts'
+GRP_NAME_2 = 'analysis'
+GRP_PURPOSE = 'to test group'
 TITLE = 'Test file'
 SOURCE = 'Generated for testing purposes'
 INSTITUTION = 'EUFAR'
@@ -119,7 +122,7 @@ random_mult_data = uniform(size=(DIM1_LEN, DIM2_LEN))
 
 class NetCdfFileInputTestCase(unittest.TestCase):
     """ Test input from NetCDF file """
-    
+
     def setUp(self):
         self.file = FILE_NAME
         f = netCDF4.Dataset(self.file, 'w')
@@ -129,6 +132,9 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         f.source = SOURCE
         f.institution = INSTITUTION
         f.project = PROJECT
+        grp_1 = f.createGroup(GRP_NAME_1)
+        grp_2 = grp_1.createGroup(GRP_NAME_2)
+        grp_2.purpose = GRP_PURPOSE
         f.createDimension(DIM1_NAME, DIM1_LEN)
         f.createDimension(DIM2_NAME, DIM2_LEN)
         v1 = f.createVariable(VAR_NAME, 'f8', DIM1_NAME)
@@ -140,11 +146,18 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         v1.Category = CATEGORY
         v1[:] = random_data
         v2[:] = random_mult_data
+        grp_2.createDimension(DIM1_NAME, DIM1_LEN)
+        v3 = grp_2.createVariable(VAR_NAME, 'f8', DIM1_NAME)
+        v3.units = VAR_UNITS
+        v3.long_name = VAR_LONG_NAME
+        v3.standard_name = VAR_STD_NAME
+        v3.Category = CATEGORY
+        v3[:] = random_data
         f.close()
 
     def test_bad_file_name(self):
         """ Test handling of missing file """
-        
+
         self.assertRaises((RuntimeError, IOError), einput.NetCdf, 'test12345.nc')
 
     def test_open_file(self):
@@ -240,10 +253,48 @@ class NetCdfFileInputTestCase(unittest.TestCase):
         self.assertEqual(data.metadata['standard_name'], VAR_STD_NAME, 'EgadsData standard name attribute doesnt match')
         infile.close()
 
+    def test_group_list(self):
+        """ Test reading group list in NetCDF """
+
+        f = einput.NetCdf(self.file)
+        self.assertListEqual(f.get_group_list(), ['forecasts', 'analysis'], 'NetCDF group list doesnt match')
+        self.assertListEqual(f.get_group_list(details=True), ['/forecasts', '/forecasts/analysis'],
+                             'NetCDF group list doesnt match')
+        f.close()
+
+    def test_read_group_attributes(self):
+        f = einput.NetCdf(self.file)
+        self.assertEqual(f.get_attribute_value('purpose', '/forecasts/analysis'), 'to test group',
+                         'Group attributes do not match')
+        self.assertEqual(f.get_attribute_value('purpose', 'forecasts/analysis'), 'to test group',
+                         'Group attributes do not match')
+        self.assertEqual(f.get_attribute_value('purpose', 'forecasts/analysis/'), 'to test group',
+                         'Group attributes do not match')
+        f.close()
+
+    def test_read_group_dimensions(self):
+        """ Test reading dimensions from file """
+
+        data = einput.NetCdf(self.file)
+        dimdict_1 = {DIM1_NAME: DIM1_LEN}
+        dimdict_2 = {'/forecasts/analysis/' + DIM1_NAME: DIM1_LEN}
+        self.assertEqual(data.get_dimension_list('/forecasts/analysis'), dimdict_1,
+                         'dimensions dictionary does not match')
+        self.assertEqual(data.get_dimension_list('/forecasts/analysis', details=True), dimdict_2,
+                         'dimensions dictionary does not match')
+        data.close()
+
+    def test_load_group_data_1d(self):
+        """ Test reading 1D netcdf data"""
+
+        data = einput.NetCdf(self.file).read_variable('/forecasts/analysis/' + VAR_NAME)
+        self.assertEqual(len(data), DIM1_LEN, "Input dimensions don't match")
+        assert_array_equal(data, random_data)
+
 
 class NetCdfFileOutputTestCase(unittest.TestCase):
     """ Test output to NetCDF file """
-    
+
     def setUp(self):
         self.data1 = egads.EgadsData(value=[0.5, 2.3, 6.2, 8.1, 4.],
                                      units='mm',
@@ -294,10 +345,10 @@ class NetCdfFileOutputTestCase(unittest.TestCase):
         self.assertEqual(varin.units, VAR_MULT_UNITS, 'Variable units dont match')
         assert_array_equal(varin[:], random_mult_data)
         f.close()
-        
+
     def test_egadsnetcdf_instance_creation(self):
         """ Test creation of a netcdf file via the EgadsNetCdf class """
-        
+
         filename = tempfile.mktemp('.nc')
         g = einput.EgadsNetCdf(filename, 'w')
         g.add_dim('time', len(self.data2))
@@ -520,7 +571,7 @@ class HdfFileOutputTestCase(unittest.TestCase):
 
 class EgadsFileInputTestCase(unittest.TestCase):
     """ Test input from text file"""
-    
+
     def setUp(self):
         self.filename = tempfile.mktemp('.txt')
         self.strdata1ln = 'testtesttest\n'
@@ -696,10 +747,10 @@ class EgadsCsvOutputTestCase(unittest.TestCase):
         f.writerows(self.data)
         f.close()
         self.f = einput.EgadsCsv(self.filename)
-        
+
     def tearDown(self):
         self.f.close()
-    
+
     def test_read_data_from_EGADS_created_csv(self):
         """ Test reading data from csv file."""
 
@@ -737,7 +788,7 @@ class NAInputTestCase(unittest.TestCase):
 
     def test_egadsnasaames_read_file(self):
         """ Test reading data from NASA Ames file - EgadsNasaAmes class"""
-        
+
         f = einput.EgadsNasaAmes(self.filename)
         self.assertEqual(self.org, f.file_metadata['Organisation'], 'Organisation values do not match')
         self.assertEqual(self.originator, f.file_metadata['Originator'], 'Originator values do not match')
@@ -1005,7 +1056,7 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
 
     def test_convert_nc_to_na_netcdf(self):
         """ Test conversion of NetCDF to NASA Ames, using the NetCdf class """
-        
+
         f = einput.NetCdf(self.ncfilename)
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
@@ -1019,7 +1070,7 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
 
     def test_convert_nc_to_na_egadsnetcdf(self):
         """ Test conversion of NetCDF to NASA Ames, using the EgadsNetCdf class """
-        
+
         f = einput.EgadsNetCdf(self.ncfilename)
         f.convert_to_nasa_ames(self.nafilename)
         f.close()
@@ -1030,10 +1081,10 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         data = g.read_variable('data')
         self.assertListEqual(self.data1.value.tolist(), data.tolist(), 'data and data1 values do not match')
         g.close()
-    
+
     def test_convert_nc_to_csv_netcdf(self):
         """ Test conversion of NetCDF to Nasa/Ames CSV, using the NetCdf class """
-        
+
         f = einput.NetCdf(self.ncfilename)
         f.convert_to_csv(self.csvfilename)
         f.close()
@@ -1052,10 +1103,10 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         self.assertEqual('computer', computer, 'Source values do not match')
         self.assertListEqual(self.data1.value.tolist(), data, 'data and data1 values do not match')
         self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match')
-    
+
     def test_convert_nc_to_csv_egadsnetcdf(self):
         """ Test conversion of NetCDF to Nasa/Ames CSV, using the EgadsNetCdf class """
-        
+
         f = einput.EgadsNetCdf(self.ncfilename)
         f.convert_to_csv(self.csvfilename)
         f.close()
@@ -1073,7 +1124,7 @@ class NetCdfConvertFormatTestCase(unittest.TestCase):
         self.assertEqual('John Doe (john.doe@email.com)', author, 'Originator values do not match')
         self.assertEqual('computer', computer, 'Source values do not match')
         self.assertListEqual(self.data1.value.tolist(), data, 'data and data1 values do not match')
-        self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match') 
+        self.assertListEqual(self.data2.value.tolist(), time, 'time and data2 values do not match')
 
     def test_convert_nc_to_hdf_netcdf(self):
         """ Test conversion of NetCDF to Hdf, using the NetCdf class """
@@ -1283,7 +1334,7 @@ class NAConvertFormatTestCase(unittest.TestCase):
                                     _FillValue=-9900.,
                                     scale_factor=1.,
                                     standard_name='Time_np')
-        
+
     def test_convert_na_nasaames_to_nc(self):
         """ Test conversion of NASA Ames to NetCDF"""
 
@@ -1354,6 +1405,7 @@ def suite():
     return unittest.TestSuite([netcdf_in_suite, netcdf_out_suite, hdf_in_suite, hdf_out_suite, text_in_suite,
                                text_out_suite, csv_in_suite, csv_out_suite, na_in_suite, na_out_suite,
                                netcdf_convert_format_suite, hdf_convert_format_suite, nasa_ames_convert_format_suite])
+
 
 if __name__ == '__main__':
     unittest.TextTestRunner(verbosity=5).run(suite())

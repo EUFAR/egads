@@ -30,7 +30,7 @@ Topic :: Scientific/Engineering :: Atmospheric Science
 doclines = __doc__.split('\n')
 
 setup(name='egads-lineage',
-      version='1.2.6',
+      version='1.2.7',
       description=doclines[0],
       long_description='\n'.join(doclines[2:]),
       author='EUFAR, Olivier Henry',
