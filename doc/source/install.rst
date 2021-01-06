@@ -98,6 +98,7 @@ Uninstallation
 Just run the following command from your terminal:
 
    >>> pip uninstall egads-lineage
+
 or
   remove manually all folders in your Python site-packages folder containing egads name.
 

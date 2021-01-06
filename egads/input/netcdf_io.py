@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.25"
+__version__ = "1.26"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -177,7 +177,8 @@ class NetCdf(FileCore):
                       + ', newname ' + str(newname))
         self._change_variable_name(varname, newname)
 
-    def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None):
+    def write_variable(self, data, varname, dims=None, ftype='double', fillvalue=None, scale_factor=None,
+                       add_offset=None):
         """
         Writes/creates variable in currently opened NetCDF file.
 
@@ -195,11 +196,15 @@ class NetCdf(FileCore):
             ``short``, ``char``, and ``byte``
         :param float fillvalue:
             Optional - Overrides default NetCDF _FillValue, if provided.
+        :param float scale_factor:
+            Optional - If data must be scaled, use this parameter.
+        :param float add_offset:
+            Optional - If an offset must be added to data, use this parameter.
         """
 
         logging.debug('egads - netcdf_io.py - NetCdf - write_variable - varname ' + str(varname) +
                       ', dims ' + str(dims) + ', ftype ' + str(ftype) + ', fillvalue ' + str(fillvalue))
-        self._write_variable(data, varname, dims, ftype, fillvalue)
+        self._write_variable(data, varname, dims, ftype, fillvalue, scale_factor, add_offset)
 
     def add_dim(self, name, size):
         """
@@ -674,7 +679,7 @@ class NetCdf(FileCore):
         logging.debug('egads - netcdf_io.py - NetCdf - read_variable - varname ' + str(varname) + ' -> data read OK')
         return value
 
-    def _write_variable(self, data, varname, dims, ftype, fillvalue):
+    def _write_variable(self, data, varname, dims, ftype, fillvalue, scale_factor, add_offset):
         """
         Private method to write/create variable in currently opened NetCDF file.
         """
@@ -694,6 +699,12 @@ class NetCdf(FileCore):
                 varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
             except KeyError:
                 varout = orig_group.createVariable(varname, ftype, dims, fill_value=fillvalue)
+
+            if scale_factor is not None:
+                setattr(varout, 'scale_factor', scale_factor)
+            if add_offset is not None:
+                setattr(varout, 'add_offset', add_offset)
+
             varout[:] = data
         else:
             logging.error('egads - netcdf_io.py - NetCdf - _write_variable - AttributeError, no file open')
@@ -1362,10 +1373,7 @@ class EgadsNetCdf(NetCdf):
                     except KeyError:
                         pass
                 varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
-            if fillvalue is not None:
-                varout[:] = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
-            else:
-                varout[:] = data.value
+
             for key, val in data.metadata.items():
                 if key != '_FillValue':
                     if isinstance(val, list):
@@ -1375,6 +1383,12 @@ class EgadsNetCdf(NetCdf):
                         setattr(varout, str(key), tmp[:-2])
                     else:
                         setattr(varout, str(key), val)
+
+            if fillvalue is not None:
+                varout[:] = numpy.where(numpy.isnan(data.value), fillvalue, data.value)
+            else:
+                varout[:] = data.value
+
         logging.debug('egads - netcdf_io.py - EgadsNetCdf - _write_variable - varname ' + str(varname)
                       + ' -> data write OK')
 

@@ -7,14 +7,24 @@ To do list:
   - check feasability of an online algorithm database.
   - add function to create algorithm template.
   - add function to add a folder, somewhere on the hard drive, to the list of algorithms.
-  - add new tests to test each function of each class
+  - add new tests to test each function of each class.
+  - add the possibility to add multiple attributes and groups for NetCdf and HDF classes.
 
 To fix list:
 ------------
 
 
+January 6 2021, Release version 1.2.8
+=====================================
+  FIXED:
+    - in EgadsNetCdf class, when writing data to file, attributes were added to the variable after the creation of the variable and addition of data. This leads to an issue with add_offset and scale_factor attributes. Now attributes are added after the creation of the variable and before the addition of data, fixing the issue.
+  
+  ADDED:
+    - two parameters have been added to NetCdf class / _write_variable method, scale_factor and add_offset, to offer the user the possibility to use them even if the class EgadsNetCdf is not used.
+
+
 July 15 2020, Release version 1.2.7
-==================================
+===================================
 The results of the following functions get_variable_list(), get_group_list() and get_dimension_list() for Hdf and NetCdf classes is the same type whatever the option used in each function. Now if details = True, get_variable_list() and get_group_list() return a list of string, each string is composed of the path to the group/variable + group/variable name. get_dimension_list() returns a dictionary of keys, composed of the path to the dimension + the dimension name, and values composed of the size of the dimension. It is the same schema than the one before 1.2.0.
 
 

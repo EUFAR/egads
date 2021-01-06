@@ -162,13 +162,13 @@ The following describe how to add dimensions or attributes to a file.
    >>> f.add_attribute('project', 'my project', 'test1/data/temperature')
    >>> f.add_attribute('project', 'my project', 'test1/data')
    
-Data can be output to variables using the ``write_variable()`` function as follows:
+If using :class:`~.EgadsNetCdf`, data can be output to variables using the ``write_variable()`` function as follows:
 
     >>> f.write_variable(data, varname, dims, ftype, fillvalue)
 
 .. function:: f.write_variable(data, varname[, dims=None, ftype='double', fillvalue=None])
    
-   Write the values contained in *data* in the variable *varname* in a NetCDF file. If *varname* contains a path to a group, the variable will be created in the specified group, but in that case the group has to be created before. If using :class:`~.NetCdf`, values for *data* passed into ``write_variable`` must be scalar or array. Otherwise, if using :class:`~.EgadsNetCdf`, an instance of :class:`~.EgadsData` must be passed into ``write_variable``. In this case, any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value.
+   Write the values contained in *data* in the variable *varname* in a NetCDF file. If *varname* contains a path to a group, the variable will be created in the specified group, but in that case the group has to be created before. An instance of :class:`~.EgadsData` must be passed into ``write_variable``. Any attributes that are contained within the :class:`~.EgadsData` instance are applied to the NetCDF variable as well. If an attribute with a name equal to ``_FillValue`` or ``missing_value`` is found, NaN in data will be automatically replaced by the missing value. If attributes with the name ``scale_factor`` and/or ``add_offset`` are found, those attributes are automatically applied to the data.
 
    :param data: values to be stored in the NetCDF file
    :type data: EgadsData|array|vector|scalar
@@ -183,6 +183,33 @@ Data can be output to variables using the ``write_variable()`` function as follo
    
    >>> f.write_variable(data, 'particle_size', ('time', ))
    >>> f.write_variable(data, 'test1/data/particle_size', ('time', ))
+
+
+If using :class:`~.NetCdf`, data can be output to variables using the ``write_variable()`` function as follows:
+
+    >>> f.write_variable(data, varname, dims, ftype, fillvalue, scale_factor, add_offset)
+
+.. function:: f.write_variable(data, varname[, dims=None, ftype='double', fillvalue=None, scale_factor=None, add_offset=None])
+   
+   Write the values contained in *data* in the variable *varname* in a NetCDF file. If *varname* contains a path to a group, the variable will be created in the specified group, but in that case the group has to be created before. Values for *data* passed into ``write_variable`` must be scalar or array.
+
+   :param data: values to be stored in the NetCDF file
+   :type data: EgadsData|array|vector|scalar
+   :param varname: the name of the variable, or the path of group + the name of the variable, in the NetCDF file
+   :type varname: string
+   :param dims: a tuple of dimension names for data (not needed if the variable already exists) ; optional
+   :type dims: tuple
+   :param ftype: the data type of the variable, the default value is *double*, other valid options are *float*, *int*, *short*, *char* and *byte* ; optional
+   :type ftype: string
+   :param fillvalue: if it is provided, it overrides the default NetCDF _FillValue ; optional, it doesn't exist if using :class:`~.EgadsNetCdf`
+   :type fillvalue: float|int
+   :param scale_factor: if data must be scaled, use this parameter ; optional
+   :type scale_factor: float|int
+   :param add_offset: if an offset must be added to data, use this parameter ; optional
+   :type add_offset: float|int
+   
+   >>> f.write_variable(data, 'particle_size', ('time', ))
+   >>> f.write_variable(data, 'test1/data/particle_size', ('time', ), scale_factor=1.256, add_offset=5.56)
 
 
 Conversion from NetCDF to NASA Ames file format
