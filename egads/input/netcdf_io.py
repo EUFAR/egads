@@ -1,6 +1,6 @@
 __author__ = "mfreer, ohenry"
 __date__ = "2016-12-6 15:47"
-__version__ = "1.26"
+__version__ = "1.27"
 __all__ = ["NetCdf", "EgadsNetCdf"]
 
 import logging
@@ -24,7 +24,7 @@ class NetCdf(FileCore):
     """
 
     TYPE_DICT = {'char': 'c', 'byte': 'b', 'short': 'i2', 'int': 'i4', 'float': 'f4', 'double': 'f8', 'int16': 'i2',
-                 'int32': 'i4', 'float32': 'f4', 'float64': 'f8'}
+                 'int32': 'i4', 'float32': 'f4', 'float64': 'f8', 'S1': 'S1', 'S2': 'S2'}
 
     def __del__(self):
         """
@@ -1372,7 +1372,8 @@ class EgadsNetCdf(NetCdf):
                         fillvalue = data.metadata['missing_value']
                     except KeyError:
                         pass
-                varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype.lower()], dims, fill_value=fillvalue)
+
+                varout = orig_group.createVariable(varname, self.TYPE_DICT[ftype], dims, fill_value=fillvalue)
 
             for key, val in data.metadata.items():
                 if key != '_FillValue':

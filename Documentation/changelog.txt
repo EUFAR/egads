@@ -14,6 +14,12 @@ To fix list:
 ------------
 
 
+December 18 2023, Release version 1.2.9
+=======================================
+  ADDED:
+    * two new formats have been added to netcdf classes.
+
+
 January 6 2021, Release version 1.2.8
 =====================================
   FIXED:
