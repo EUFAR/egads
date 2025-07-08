@@ -26,6 +26,9 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
     INPUT       n_i    array[time,bins]            cm-3   number concentration of
                                                           hydrometeors in bin i
                 d_i    vector[bins]                um     average diameter of bin i
+
+                e_i    vector[bins]                um     upper edge diameter of bin i
+
                 s_i    array[time, bins], optional _      shape factor of hydrometeor in size
                                                           category i to account for asphericity
                 rho_i  vector[bins], optional      g cm-3 density of hydrometeor in bin i
@@ -49,7 +52,7 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                                                                'Category':['Microphysics']})
 
         self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 'e_i', 's_i', 'rho_i'],
-                                                          'InputUnits':['cm^-3', 'um', '', 'g/cm^3'],
+                                                          'InputUnits':['cm^-3', 'um', 'um', '', 'g/cm^3'],
                                                           'InputTypes':['array[time,bins]',
                                                                         'vector[bins]',
                                                                         'vector[bins]',
@@ -82,12 +85,15 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
         rho_i = numpy.array(rho_i)
         if len(rho_i) == 1:
             rho_i = numpy.ones(len(d_i)) * rho_i
-        if s_i is 1.0:
+        if s_i == 1.0:
             s_i = numpy.ones(n_i.shape)
         LWC_alg = egads.algorithms.microphysics.MassConcDmt(return_Egads=False)  # @UndefinedVariable
         LWC_total = LWC_alg.run(n_i, d_i, s_i, rho_i)  # Assuming spherical, therefore shape factor is 1.
         D_mvd = []
         for j in range(len(n_i)):
+            if LWC_total[j] == 0: #To avoid dividing by 0 when interpolating
+                D_mvd.append(0)
+                continue
             LWC_i = []
             i = 0
             S_n = 0
@@ -97,6 +103,8 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                 i = i + 1
             i = i - 1
             S_n1 = numpy.sum(LWC_i[:i])
-            D_mvd.append(e_i[i - 1] + (0.5 - S_n1) * (S_n - S_n1) / (e_i[i] - e_i[i - 1]))
+            S_n = S_n
+            half_LWC = LWC_total[j] * 0.5 # Target to interpolate to
+            D_mvd.append(e_i[i - 1] + (half_LWC - S_n1) *(e_i[i] - e_i[i - 1]) / (S_n - S_n1))
         return D_mvd
 
