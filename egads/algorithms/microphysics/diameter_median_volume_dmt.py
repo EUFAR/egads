@@ -26,6 +26,9 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
     INPUT       n_i    array[time,bins]            cm-3   number concentration of
                                                           hydrometeors in bin i
                 d_i    vector[bins]                um     average diameter of bin i
+
+                e_i    vector[bins]                um     upper edge diameter of bin i
+
                 s_i    array[time, bins], optional _      shape factor of hydrometeor in size
                                                           category i to account for asphericity
                 rho_i  vector[bins], optional      g cm-3 density of hydrometeor in bin i
@@ -48,14 +51,16 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                                                                'standard_name':'',
                                                                'Category':['Microphysics']})
 
-        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 's_i', 'rho_i'],
-                                                          'InputUnits':['cm^-3', 'um', '', 'g/cm^3'],
+        self.metadata = egads_metadata.AlgorithmMetadata({'Inputs':['n_i', 'd_i', 'e_i', 's_i', 'rho_i'],
+                                                          'InputUnits':['cm^-3', 'um', 'um', '', 'g/cm^3'],
                                                           'InputTypes':['array[time,bins]',
+                                                                        'vector[bins]',
                                                                         'vector[bins]',
                                                                         'array[time, bins]_optional',
                                                                         'vector[bins]_optional'],
                                                           'InputDescription':['Number concentration of hydrometeors in bin i',
                                                                               'Average diameter of bin i',
+                                                                              'Upper edge of bin i diameter range',
                                                                               'Shape factor of hydrometeor in size category i to account for asphericity',
                                                                               'Density of hydrometeor in bin i, default is 1.0 g/cm^3'],
                                                           'Outputs':['D_mvd'],
@@ -73,19 +78,22 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                                                           'DateProcessed':self.now()},
                                                           self.output_metadata)
 
-    def run(self, n_i, d_i, s_i=1.0, rho_i=1.0):
-        return egads_core.EgadsAlgorithm.run(self, n_i, d_i, s_i, rho_i)
+    def run(self, n_i, d_i, e_i, s_i=1.0, rho_i=1.0):
+        return egads_core.EgadsAlgorithm.run(self, n_i, d_i, e_i, s_i, rho_i)
 
-    def _algorithm(self, n_i, d_i, s_i, rho_i):
+    def _algorithm(self, n_i, d_i, e_i, s_i, rho_i):
         rho_i = numpy.array(rho_i)
         if len(rho_i) == 1:
             rho_i = numpy.ones(len(d_i)) * rho_i
-        if s_i is 1.0:
+        if s_i == 1.0:
             s_i = numpy.ones(n_i.shape)
         LWC_alg = egads.algorithms.microphysics.MassConcDmt(return_Egads=False)  # @UndefinedVariable
         LWC_total = LWC_alg.run(n_i, d_i, s_i, rho_i)  # Assuming spherical, therefore shape factor is 1.
         D_mvd = []
         for j in range(len(n_i)):
+            if LWC_total[j] == 0: #To avoid dividing by 0 when interpolating
+                D_mvd.append(0)
+                continue
             LWC_i = []
             i = 0
             S_n = 0
@@ -95,6 +103,8 @@ class DiameterMedianVolumeDmt(egads_core.EgadsAlgorithm):
                 i = i + 1
             i = i - 1
             S_n1 = numpy.sum(LWC_i[:i])
-            D_mvd.append(d_i[i - 1] + (0.5 - S_n1 / S_n) * (d_i[i] - d_i[i - 1]))
+            S_n = S_n
+            half_LWC = LWC_total[j] * 0.5 # Target to interpolate to
+            D_mvd.append(e_i[i - 1] + (half_LWC - S_n1) *(e_i[i] - e_i[i - 1]) / (S_n - S_n1))
         return D_mvd
 
